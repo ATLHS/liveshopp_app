@@ -1,0 +1,63 @@
+import {StyleSheet, Text, View} from 'react-native';
+import {Controller} from 'react-hook-form';
+import {ErrorMessage} from '@hookform/error-message';
+import FormConstructor from '../FormConstructor/FormConstructor';
+import MessageHelper from '../MessageHelper/MessageHelper';
+import React from 'react';
+import {selectIsAuthenticate} from '../redux/slices/userSlice';
+import {useSelector} from 'react-redux';
+import colors from '../../styles/colors';
+
+const FieldWrapper = ({control, schema}) => {
+  const isAuthenticate = useSelector(state => state.user.isAuthenticate);
+  return schema.map((field, idx) => (
+    <View key={idx}>
+      <Controller
+        control={control}
+        name={field.name}
+        render={({...props}) => (
+          <>
+            <FormConstructor inputField={field} {...props} />
+            <ErrorMessage
+              errors={props.formState.errors}
+              name={field.name}
+              render={({message}) => <MessageHelper message={message} />}
+            />
+            {field.helper ? (
+              <View
+                style={
+                  isAuthenticate
+                    ? outlinedStyles.helperContainer
+                    : containedStyles.helperContainer
+                }>
+                <Text
+                  style={
+                    isAuthenticate
+                      ? outlinedStyles.helperText
+                      : containedStyles.helperText
+                  }>
+                  {field.helper}
+                </Text>
+              </View>
+            ) : (
+              <Text />
+            )}
+          </>
+        )}
+        rules={field.validation}
+      />
+    </View>
+  ));
+};
+
+const containedStyles = StyleSheet.create({
+  helperContainer: {width: 350},
+  helperText: {color: colors.LIGHT},
+});
+
+const outlinedStyles = StyleSheet.create({
+  helperContainer: {width: 350},
+  helperText: {color: colors.DARK},
+});
+
+export default FieldWrapper;
