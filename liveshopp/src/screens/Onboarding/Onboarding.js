@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, SafeAreaView, Image} from 'react-native';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import OutlinedButton from '../../components/OutlinedButton/OutlinedButton';
 import colors from '../../styles/colors';
+import {REACT_APP_BASE_URL} from '@env';
 
 const Onboarding = ({navigation}) => {
   return (

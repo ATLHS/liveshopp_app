@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {LIVESHOPP_CONTACT, STRIPE_PUBLIC_KEY, BASE_URL} from '@env';
+import {REACT_APP_LIVESHOPP_CONTACT, REACT_APP_STRIPE_PUBLIC_KEY, REACT_APP_BASE_URL} from '@env';
 import {
   StyleSheet,
   View,
@@ -51,7 +51,7 @@ function SettingsScreen({navigation}) {
   };
 
   const handleEmail = () => {
-    const to = [LIVESHOPP_CONTACT];
+    const to = [REACT_APP_LIVESHOPP_CONTACT];
     email(to, {
       subject: `Message de ${user.company_name || user.firstname} ❤️`,
       checkCanOpen: false,
@@ -134,13 +134,12 @@ function SettingsScreen({navigation}) {
 
   useFocusEffect(
     React.useCallback(() => {
-        console.log(BASE_URL, "base url keyyyy")
       initializePaymentSheet();
     }, []),
   );
 
   return (
-    <StripeProvider publishableKey={STRIPE_PUBLIC_KEY}>
+    <StripeProvider publishableKey={REACT_APP_STRIPE_PUBLIC_KEY}>
       <SafeAreaView
         style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
         <KeyboardAvoidingView

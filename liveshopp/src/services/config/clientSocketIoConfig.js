@@ -1,4 +1,4 @@
 const {io} = require('socket.io-client');
-import {BASE_URL} from '@env';
+import {REACT_APP_BASE_URL} from '@env';
 
-module.exports = socket = io(BASE_URL);
+module.exports = socket = io(REACT_APP_BASE_URL);

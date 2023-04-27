@@ -2,7 +2,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import React, {useEffect, useRef, useState} from 'react';
 import colors from '../../styles/colors';
 import {useSelector} from 'react-redux';
-import {GOOGLE_PLACES_API} from '@env';
+import {REACT_APP_GOOGLE_PLACES_API} from '@env';
 
 const Places = ({inputField, field, fieldState}) => {
   const {user} = useSelector(state => state.user);
@@ -24,7 +24,7 @@ const Places = ({inputField, field, fieldState}) => {
       }}
       enablePoweredByContainer={false}
       query={{
-        key: GOOGLE_PLACES_API,
+        key: REACT_APP_GOOGLE_PLACES_API,
         language: 'fr',
         components: 'country:fr',
       }}

@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {AGORA_APP_ID} from '@env';
+import React, {useState} from 'react';
+import {REACT_APP_AGORA_APP_ID} from '@env';
 import {
   StyleSheet,
   Text,
@@ -92,7 +92,7 @@ export const LivesScreen = ({navigation}) => {
       const agoraEngine = agoraEngineRef.current;
 
       agoraEngine.initialize({
-        appId: AGORA_APP_ID,
+        appId: REACT_APP_AGORA_APP_ID,
         channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
       });
 

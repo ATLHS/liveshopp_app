@@ -71,6 +71,7 @@ export const SignIn = ({navigation}) => {
         });
       })
       .catch(err => {
+        console.log(err)
         setMessage(err.message);
         setIsLoading(false);
       });
