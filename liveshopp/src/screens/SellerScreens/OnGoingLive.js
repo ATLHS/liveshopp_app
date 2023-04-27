@@ -89,6 +89,7 @@ export const OnGoingLive = ({navigation}) => {
       });
 
       agoraEngine.enableVideo();
+      agoraEngine.enableAudio();
     } catch (e) {
       console.log(e);
     }
@@ -105,7 +106,7 @@ export const OnGoingLive = ({navigation}) => {
       agoraEngineRef.current?.setChannelProfile(
         ChannelProfileType.ChannelProfileLiveBroadcasting,
       );
-      console.log(token, 'totktktktk agora ongoinglive')
+
       agoraEngineRef.current?.startPreview();
       agoraEngineRef.current?.joinChannel(token, liveData.live_name, uid, {
         clientRoleType: ClientRoleType.ClientRoleBroadcaster,

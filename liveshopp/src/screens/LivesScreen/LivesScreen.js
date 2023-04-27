@@ -39,38 +39,38 @@ import NoData from '../../components/NoData/NoData';
 export const LivesScreen = ({navigation}) => {
   const agoraEngineRef = IRtcEngine;
   const {isJoin, isGone, lives, remoteUid, liveData, sellerLives} = useSelector(
-    state => state.lives,
+      state => state.lives,
   );
   const {user} = useSelector(state => state.user);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
   useFocusEffect(
-    React.useCallback(() => {
-      dispatch(setIsHost(false));
-      if (isGone) {
-        goOut();
-      }
-      setupVideoSDKEngine()
-        .then(r => r)
-        .catch(err => err);
-    }, [isGone]),
+      React.useCallback(() => {
+        dispatch(setIsHost(false));
+        if (isGone) {
+          goOut();
+        }
+        setupVideoSDKEngine()
+            .then(r => r)
+            .catch(err => err);
+      }, [isGone]),
   );
 
   useFocusEffect(
-    React.useCallback(() => {
-      setIsLoading(true);
-      live
-        .getLives()
-        .then(res => res)
-        .then(data => {
-          dispatch(setLives(data.lives));
-          setIsLoading(false);
-        })
-        .catch(err => {
-          console.log(err, 'get lives error.');
-        });
-    }, []),
+      React.useCallback(() => {
+        setIsLoading(true);
+        live
+            .getLives()
+            .then(res => res)
+            .then(data => {
+              dispatch(setLives(data.lives));
+              setIsLoading(false);
+            })
+            .catch(err => {
+              console.log(err, 'get lives error.');
+            });
+      }, []),
   );
 
   const getOsPermission = async () => {
@@ -90,6 +90,7 @@ export const LivesScreen = ({navigation}) => {
       }
       agoraEngineRef.current = createAgoraRtcEngine();
       const agoraEngine = agoraEngineRef.current;
+
       agoraEngine.initialize({
         appId: AGORA_APP_ID,
         channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
@@ -98,7 +99,7 @@ export const LivesScreen = ({navigation}) => {
       agoraEngine.registerEventHandler({
         onJoinChannelSuccess: _connection => {
           console.log(
-            `User has successfully joined the channel : ${_connection.channelId}`,
+              `User has successfully joined the channel : ${_connection.channelId}`,
           );
         },
         onUserJoined: (_connection, Uid) => {
@@ -122,10 +123,9 @@ export const LivesScreen = ({navigation}) => {
     }
 
     const uid = +generateUid;
-
     try {
       agoraEngineRef.current?.setChannelProfile(
-        ChannelProfileType.ChannelProfileLiveBroadcasting,
+          ChannelProfileType.ChannelProfileLiveBroadcasting,
       );
 
       agoraEngineRef.current?.joinChannel(token, liveData.live_name, 0, {
@@ -150,59 +150,59 @@ export const LivesScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}
-          contentInset={{bottom: 100}}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.onGoingLive}>
-              {!isLoading &&
-                lives &&
-                lives
-                  .filter(live => live.seller_id !== user.id)
-                  .map((live, id) => (
-                    <LiveCard
-                      key={id}
-                      sellerName={live.sellerName}
-                      datetime={live.live_date_time}
-                      description={live.live_description}
-                      category={live.business_activity}
-                      status={live.live_status}
-                      onPress={() => goLive(live)}
-                      imageUrl={live.imageUrl || ''}
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}>
+          <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{flexGrow: 1}}
+              contentInset={{bottom: 100}}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View style={styles.onGoingLive}>
+                {!isLoading &&
+                    lives &&
+                    lives
+                        .filter(live => live.seller_id !== user.id)
+                        .map((live, id) => (
+                            <LiveCard
+                                key={id}
+                                sellerName={live.sellerName}
+                                datetime={live.live_date_time}
+                                description={live.live_description}
+                                category={live.business_activity}
+                                status={live.live_status}
+                                onPress={() => goLive(live)}
+                                imageUrl={live.imageUrl || ''}
+                            />
+                        ))}
+                {lives && !isLoading ? (
+                    <View
+                        style={{
+                          width: 140,
+                          height: 230,
+                          margin: 10,
+                          backgroundColor: 'transparent',
+                        }}
                     />
-                  ))}
-              {lives && !isLoading ? (
-                <View
-                  style={{
-                    width: 140,
-                    height: 230,
-                    margin: 10,
-                    backgroundColor: 'transparent',
-                  }}
-                />
-              ) : !lives && !isLoading ? (
-                <NoData
-                  title={'Aucun lives en cours'}
-                  message={
-                    'Les lives en cours apparaîtront ici, reviens un peu plus tard.'
-                  }
-                  buttonTitle={'Programmer un live maintenant'}
-                />
-              ) : (
-                <View style={{height: '100%', justifyContent: 'center'}}>
-                  <ActivityIndicator size="large" color="black" />
-                </View>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+                ) : !lives && !isLoading ? (
+                    <NoData
+                        title={'Aucun lives en cours'}
+                        message={
+                          'Les lives en cours apparaîtront ici, reviens un peu plus tard.'
+                        }
+                        buttonTitle={'Programmer un live maintenant'}
+                    />
+                ) : (
+                    <View style={{height: '100%', justifyContent: 'center'}}>
+                      <ActivityIndicator size="large" color="black" />
+                    </View>
+                )}
+              </View>
+            </TouchableWithoutFeedback>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

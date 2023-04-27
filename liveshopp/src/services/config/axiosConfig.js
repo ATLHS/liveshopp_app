@@ -1,8 +1,9 @@
 import axios from 'axios';
+import {BASE_URL} from '@env';
 
 const axiosInstance = axios.create({
     withCredentials: true,
-    baseURL: "http://192.168.1.170:5000",
+    baseURL: BASE_URL,
 });
 
 export default axiosInstance;
