@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     brandIcon: {
-        width: 170,
-        height: 170,
+        width: 140,
+        height: 140,
     },
     brandIconContainer: {
         alignItems: 'center',

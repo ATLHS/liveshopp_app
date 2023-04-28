@@ -26,7 +26,6 @@ const Places = ({inputField, field, fieldState}) => {
       query={{
         key: REACT_APP_GOOGLE_PLACES_API,
         language: 'fr',
-        components: 'country:fr',
       }}
       styles={{
         container: {

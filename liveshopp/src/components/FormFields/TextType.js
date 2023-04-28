@@ -48,6 +48,7 @@ const TextType = ({inputField, field}) => {
                 }
                 placeholder={inputField.label}
                 autoFocus={inputField.autoFocus || false}
+                autoCapitalize={inputField.type === 'password' || inputField.name === 'email' ? 'none' : 'sentences'}
                 onChangeText={value => field.onChange(value)}
                 defaultValue={inputField.defaultValue}
                 placeholderTextColor={isAuthenticate ? colors.DARK : colors.LIGHT}
