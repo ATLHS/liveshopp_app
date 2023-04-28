@@ -1,59 +1,89 @@
-import React from 'react';
-import {StyleSheet, TextInput} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import colors from '../../styles/colors';
 import {useSelector} from 'react-redux';
+import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 
 const TextType = ({inputField, field}) => {
-  const isAuthenticate = useSelector(state => state.user.isAuthenticate);
-  return (
-    <TextInput
-      style={
-        isAuthenticate
-          ? [
-              outlinedStyles.textInput,
-              !inputField.editable
-                ? {backgroundColor: colors.DISABLED}
-                : {backgroundColor: colors.LIGHT},
-            ]
-          : containedStyles.textInput
-      }
-      placeholder={inputField.label}
-      autoFocus={inputField.autoFocus || false}
-      onChangeText={value => field.onChange(value)}
-      defaultValue={inputField.defaultValue}
-      placeholderTextColor={isAuthenticate ? colors.DARK : colors.LIGHT}
-      secureTextEntry={inputField.type === 'password'}
-      selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}
-      editable={inputField.editable}
-    />
-  );
+    const isAuthenticate = useSelector(state => state.user.isAuthenticate);
+    const [showPassword, setShowPassword] = useState(false);
+    return (
+        <View>
+            {inputField.type === 'password' && <TouchableOpacity
+                style={{
+                    position: 'absolute',
+                    zIndex: 2,
+                    height: 60,
+                    width: 35,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    left: 313
+                }}
+                onPress={() => setShowPassword(!showPassword)}
+            >
+                {!showPassword ? <FontAwesomeIcon
+                        style={{}}
+                        icon={faEyeSlash}
+                        color={colors.LIGHT}
+                        size={15}
+                    /> :
+                    <FontAwesomeIcon
+                        style={{}}
+                        icon={faEye}
+                        color={colors.LIGHT}
+                        size={15}
+                    />}
+            </TouchableOpacity>}
+            <TextInput
+                style={
+                    isAuthenticate
+                        ? [
+                            outlinedStyles.textInput,
+                            !inputField.editable
+                                ? {backgroundColor: colors.DISABLED}
+                                : {backgroundColor: colors.LIGHT},
+                        ]
+                        : containedStyles.textInput
+                }
+                placeholder={inputField.label}
+                autoFocus={inputField.autoFocus || false}
+                onChangeText={value => field.onChange(value)}
+                defaultValue={inputField.defaultValue}
+                placeholderTextColor={isAuthenticate ? colors.DARK : colors.LIGHT}
+                secureTextEntry={inputField.type === 'password' && !showPassword}
+                selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}
+                editable={inputField.editable}
+            />
+        </View>
+    );
 };
 
 const containedStyles = StyleSheet.create({
-  textInput: {
-    color: 'white',
-    backgroundColor: 'black',
-    borderColor: 'white',
-    borderWidth: 1,
-    width: 350,
-    height: 60,
-    borderRadius: 6,
-    marginBottom: 15,
-    padding: 10,
-  },
+    textInput: {
+        color: 'white',
+        backgroundColor: 'black',
+        borderColor: 'white',
+        borderWidth: 1,
+        width: 350,
+        height: 60,
+        borderRadius: 6,
+        marginBottom: 15,
+        padding: 10,
+    },
 });
 
 const outlinedStyles = StyleSheet.create({
-  textInput: {
-    color: colors.DARK,
-    borderColor: colors.DARK,
-    borderWidth: 1,
-    width: 350,
-    height: 60,
-    borderRadius: 6,
-    marginBottom: 15,
-    padding: 10,
-  },
+    textInput: {
+        color: colors.DARK,
+        borderColor: colors.DARK,
+        borderWidth: 1,
+        width: 350,
+        height: 60,
+        borderRadius: 6,
+        marginBottom: 15,
+        padding: 10,
+    },
 });
 
 export default TextType;

@@ -1,15 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Keyboard,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  ScrollView,
-  Alert,
-  Platform,
+    StyleSheet,
+    Text,
+    View,
+    SafeAreaView,
+    Keyboard,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+    ScrollView,
+    Platform,
 } from 'react-native';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import {useForm} from 'react-hook-form';
@@ -19,117 +18,117 @@ import auth from '../../services/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EmailVerificationCodeSchema = [
-  {
-    name: 'code',
-    label: '',
-    type: 'code',
-    autoFocus: true,
-    validation: {
-      required: 'Indiquez le code reçu par e-mail.',
-      minLength: {
-        value: 4,
-        message: 'Indiquez le code reçu par e-mail.',
-      },
+    {
+        name: 'code',
+        label: '',
+        type: 'code',
+        autoFocus: true,
+        validation: {
+            required: 'Indiquez le code reçu par e-mail.',
+            minLength: {
+                value: 4,
+                message: 'Indiquez le code reçu par e-mail.',
+            },
+        },
     },
-  },
 ];
 
 export const EmailVerificationCode = ({navigation, route}) => {
-  const {handleSubmit, control} = useForm();
-  const [message, setMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const {user_id} = route.params;
+    const {handleSubmit, control} = useForm();
+    const [message, setMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const {user_id} = route.params;
 
-  useEffect(() => {
-    setMessage(route.params.message);
-  });
+    useEffect(() => {
+        setMessage(route.params.message);
+    });
 
-  const handleEmailVerificationCode = data => {
-    setIsLoading(true);
-    data.id = user_id;
-    auth
-      .handleEmailVerificationCode(data)
-      .then(res => res)
-      .then(data => {
-        setIsLoading(false);
-        AsyncStorage.setItem('@token', data.token);
-        navigation.navigate('Welcome', {
-          data,
-        });
-      })
-      .catch(err => {
-        setErrorMessage(err.message);
-        setIsLoading(false);
-      });
-  };
+    const handleEmailVerificationCode = data => {
+        setIsLoading(true);
+        data.id = user_id;
+        auth
+            .handleEmailVerificationCode(data)
+            .then(res => res)
+            .then(data => {
+                setIsLoading(false);
+                AsyncStorage.setItem('@token', data.token);
+                navigation.navigate('Welcome', {
+                    data,
+                });
+            })
+            .catch(err => {
+                setErrorMessage(err.message);
+                setIsLoading(false);
+            });
+    };
 
-  return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <ScrollView>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.formContainer}>
-              <View style={styles.headlineContainer}>
-                <Text style={styles.headline}>
-                  Entrez le code de confirmation
-                </Text>
-              </View>
-              <View style={styles.helper}>
-                <Text style={styles.helperText}>{message}</Text>
-              </View>
-              <View style={styles.errorHelper}>
-                <Text style={styles.errorHelperText}>{errorMessage}</Text>
-              </View>
-              <View style={styles.fieldContainer}>
-                <FieldWrapper
-                  control={control}
-                  schema={EmailVerificationCodeSchema}
-                />
-              </View>
-              <View style={styles.action}>
-                <ContainedButton
-                  title="Terminez l’inscription"
-                  onPress={handleSubmit(handleEmailVerificationCode)}
-                  loading={isLoading}
-                />
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+    return (
+        <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.container}>
+                <ScrollView>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.formContainer}>
+                            <View style={styles.headlineContainer}>
+                                <Text style={styles.headline}>
+                                    Entrez le code de confirmation
+                                </Text>
+                            </View>
+                            <View style={styles.helper}>
+                                <Text style={styles.helperText}>{message}</Text>
+                            </View>
+                            <View style={styles.errorHelper}>
+                                <Text style={styles.errorHelperText}>{errorMessage}</Text>
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <FieldWrapper
+                                    control={control}
+                                    schema={EmailVerificationCodeSchema}
+                                />
+                            </View>
+                            <View style={styles.action}>
+                                <ContainedButton
+                                    title="Terminez l’inscription"
+                                    onPress={handleSubmit(handleEmailVerificationCode)}
+                                    loading={isLoading}
+                                />
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  headlineContainer: {marginBottom: 30},
-  formContainer: {
-    flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 50,
-  },
-  fieldContainer: {margin: 10},
-  headline: {
-    color: colors.LIGHT,
-    fontFamily: 'Roboto-Regular',
-    fontSize: 30,
-    textAlign: 'left',
-    width: 350,
-  },
-  action: {},
-  resetPassword: {color: 'white'},
-  helperText: {color: 'white', textAlign: 'left', width: 350},
-  helper: {wwidth: 350, marginBottom: 30},
-  errorHelper: {width: 350, marginBottom: 10, textAlign: 'left'},
-  errorHelperText: {color: colors.PRIMARY},
+    container: {
+        flex: 1,
+    },
+    headlineContainer: {marginBottom: 30},
+    formContainer: {
+        flex: 1,
+        backgroundColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 50,
+    },
+    fieldContainer: {margin: 10},
+    headline: {
+        color: colors.LIGHT,
+        fontFamily: 'Roboto-Regular',
+        fontSize: 30,
+        textAlign: 'left',
+        width: 350,
+    },
+    action: {},
+    resetPassword: {color: 'white'},
+    helperText: {color: 'white', textAlign: 'left', width: 350},
+    helper: {wwidth: 350, marginBottom: 30},
+    errorHelper: {width: 350, marginBottom: 10, textAlign: 'left'},
+    errorHelperText: {color: colors.PRIMARY},
 });
 
 export default EmailVerificationCode;

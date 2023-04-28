@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import colors from '../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,60 +12,60 @@ import userOrder from '../../services/order';
 const Tab = createMaterialTopTabNavigator();
 
 const OrderTab = () => {
-  const {user} = useSelector(state => state.user);
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
+    const {user} = useSelector(state => state.user);
+    const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsLoading(true);
-      userOrder
-        .getAllOrder()
-        .then(res => res)
-        .then(data => {
-          dispatch(setInitialOrder(data.order));
-          setIsLoading(false);
-        })
-        .catch(err => {
-          console.log(err);
-          setIsLoading(false);
-        });
-    }, []),
-  );
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsLoading(true);
+            userOrder
+                .getAllOrder()
+                .then(res => res)
+                .then(data => {
+                    dispatch(setInitialOrder(data.order));
+                    setIsLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setIsLoading(false);
+                });
+        }, []),
+    );
 
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarIndicatorStyle: {backgroundColor: colors.DARK},
-      }}
-      initialRouteName={'OnGoingLives'}>
-      {user.profil === 'user' ? (
-        <Tab.Screen
-          options={{title: 'Mes Achats'}}
-          name="MyOrder"
-          component={MyOrder}
-        />
-      ) : (
-        <>
-          <Tab.Screen
-            options={{title: 'Mes pépites'}}
-            name="MyOrder"
-            component={MyOrder}
-          />
-          <Tab.Screen
-            options={{title: 'À expédier'}}
-            name="Processing"
-            component={OrderToShipped}
-          />
-          <Tab.Screen
-            options={{title: 'Expédié'}}
-            name="Shipped"
-            component={ShippedOrder}
-          />
-        </>
-      )}
-    </Tab.Navigator>
-  );
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                tabBarIndicatorStyle: {backgroundColor: colors.DARK},
+            }}
+            initialRouteName={'OnGoingLives'}>
+            {user.profil === 'user' ? (
+                <Tab.Screen
+                    options={{title: 'Mes Achats'}}
+                    name="MyOrder"
+                    component={MyOrder}
+                />
+            ) : (
+                <>
+                    <Tab.Screen
+                        options={{title: 'Mes pépites'}}
+                        name="MyOrder"
+                        component={MyOrder}
+                    />
+                    <Tab.Screen
+                        options={{title: 'À expédier'}}
+                        name="Processing"
+                        component={OrderToShipped}
+                    />
+                    <Tab.Screen
+                        options={{title: 'Expédié'}}
+                        name="Shipped"
+                        component={ShippedOrder}
+                    />
+                </>
+            )}
+        </Tab.Navigator>
+    );
 };
 
 export default OrderTab;

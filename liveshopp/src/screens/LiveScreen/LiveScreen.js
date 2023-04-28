@@ -9,9 +9,7 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
-  ScrollView,
   AppState,
-  ActivityIndicator,
   FlatList,
 } from 'react-native';
 import {useSelector} from 'react-redux';
@@ -280,7 +278,7 @@ export const LiveScreen = () => {
                     textAlign: 'center',
                     padding: 20,
                   }}>
-                  Le live devrait commencer d'ici peu, mets-toi à l'aise, 🍿 ça vas
+                  Le live devrait commencer d'ici peu, mets-toi à l'aise, 🍿 ça va
                   être le 🔥!
                 </Text>
               </View>
