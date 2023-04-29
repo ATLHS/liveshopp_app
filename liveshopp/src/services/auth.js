@@ -11,7 +11,7 @@ const auth = {
         return axiosConfig
             .post('/api/auth/user-signin', {data})
             .then(({data}) => data)
-            .catch(({response}) => console.log(response));
+            .catch(({response}) => Promise.reject(response.data));
     },
     handleUserSignup(data) {
         return axiosConfig

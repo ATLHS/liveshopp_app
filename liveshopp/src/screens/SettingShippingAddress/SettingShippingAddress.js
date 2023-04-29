@@ -33,7 +33,7 @@ const ShippingAddressFormSchema = () => [
     },
 ];
 
-export const SettingShippingAddress = () => {
+export const SettingShippingAddress = ({navigation}) => {
     const {handleSubmit, control} = useForm({
         defaultValues: {
             shipping_address: store.getState().user.user.shipping_address,
@@ -55,6 +55,7 @@ export const SettingShippingAddress = () => {
                 });
                 dispatch(setUser(data.user));
                 setIsLoading(false);
+                navigation.goBack();
             })
             .catch(err => {
                 Toast.show({

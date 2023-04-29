@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 import colors from '../../styles/colors';
 import SelectDropdown from 'react-native-select-dropdown';
-import {selectIsAuthenticate} from '../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
 
 const SelectType = ({inputField, field, fieldState}) => {

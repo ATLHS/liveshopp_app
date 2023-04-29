@@ -19,7 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {setUser} from '../../redux/slices/userSlice';
 
-export const SettingProfilScreen = () => {
+export const SettingProfilScreen = ({navigation}) => {
     const {user} = useSelector(state => state.user);
 
     const SettingProfilScreenFormUser = [{
@@ -112,6 +112,7 @@ export const SettingProfilScreen = () => {
                 });
                 dispatch(setUser(data.user));
                 setIsLoading(false);
+                navigation.goBack();
             })
             .catch(err => {
                 Toast.show({
