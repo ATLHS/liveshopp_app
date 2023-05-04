@@ -16,6 +16,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer);
 const channels = new Map();
 
+/*
 io.on("connection", (socket) => {
     socket.on("leaveRoom", ({liveData, user}) => {
         let channel = channels.get(liveData.channelName);
@@ -218,6 +219,7 @@ io.on("connection", (socket) => {
         sendCurrentAuctionCounterToEachRooms();
     });
 });
+*/
 
 
 // db config
