@@ -25,6 +25,7 @@ PODS:
   - AgoraRtcEngine_iOS/SuperResolution (4.1.0)
   - AgoraRtcEngine_iOS/VirtualBackground (4.1.0)
   - AgoraRtcEngine_iOS/VQA (4.1.0)
+  - BEMCheckBox (1.4.1)
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -455,6 +456,9 @@ PODS:
     - React-perflogger (= 0.71.3)
   - RNCAsyncStorage (1.18.1):
     - React-Core
+  - RNCCheckbox (0.5.15):
+    - BEMCheckBox (~> 1.4)
+    - React-Core
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
@@ -565,6 +569,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
@@ -574,6 +579,7 @@ SPEC REPOS:
   trunk:
     - AgoraIrisRTC_iOS
     - AgoraRtcEngine_iOS
+    - BEMCheckBox
     - CocoaAsyncSocket
     - Flipper
     - Flipper-Boost-iOSX
@@ -675,6 +681,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCCheckbox:
+    :path: "../node_modules/@react-native-community/checkbox"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -687,6 +695,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AgoraIrisRTC_iOS: 820fbab2d78d870a1bad4b1a02f950a390c73b48
   AgoraRtcEngine_iOS: 33f0136ad4196b2a31c8470e6b536fe77fb25f8b
+  BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -738,6 +747,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7bf0dafc7b727d93c8cb94eb00a9d3753c446c3e
   ReactCommon: 6f65ea5b7d84deb9e386f670dd11ce499ded7b40
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
+  RNCCheckbox: 43bcc6493611468af0e19f19f029dab3da8561c4
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608

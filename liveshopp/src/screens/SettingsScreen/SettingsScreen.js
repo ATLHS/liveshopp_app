@@ -37,8 +37,8 @@ function SettingsScreen({navigation}) {
 
     const handleSignOut = async () => {
         await AsyncStorage.removeItem('@token');
-        dispatch(setUser({profil: null}));
         dispatch(setIsAuthenticate(false));
+        dispatch(setUser({profil: null}));
     };
 
     const goToProfilSetting = () => {
@@ -272,7 +272,7 @@ function SettingsScreen({navigation}) {
                                 />
                                 <Headline title={'CGV'}/>
                                 <Touchable
-                                    title={'Conditions Générales de Vente'}
+                                    title={'Conditions Générales'}
                                     onPress={goToRGPD}
                                 />
                                 <Headline title={'Nous-contactez'}/>

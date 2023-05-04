@@ -3,12 +3,14 @@ const User = require("../models/user");
 
 
 module.exports = {
-    updateCustomer: async (customer, data) => {
+    updateCustomer: async (customer, data, isRef) => {
         const isSeller = customer.profil === 'seller';
         if (isSeller) {
             return UserSeller.findOneAndUpdate(
                 {_id: customer.id},
-                data,
+                isRef ? {
+                    $push: data,
+                } : data,
                 {
                     new: true,
                 }
@@ -16,7 +18,9 @@ module.exports = {
         } else {
             return User.findOneAndUpdate(
                 {_id: customer.id},
-                data,
+                isRef ? {
+                    $push: data,
+                } : data,
                 {
                     new: true,
                 }

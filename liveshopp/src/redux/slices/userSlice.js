@@ -13,8 +13,12 @@ export const userSlice = createSlice({
     setIsAuthenticate: (state, action) => {
       state.isAuthenticate = action.payload;
     },
+    setNewUserToBlock: (state, action) => {
+      state.user.blockedSeller = action.payload.blockedSeller;
+      state.user.blockedUser = action.payload.blockedUser;
+    },
   },
 });
-export const {setUser, setIsAuthenticate} = userSlice.actions;
+export const {setUser, setIsAuthenticate, setNewUserToBlock} = userSlice.actions;
 export const selectIsAuthenticate = state => state.isAuthenticate;
 export default userSlice.reducer;

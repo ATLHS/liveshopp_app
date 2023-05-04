@@ -9,6 +9,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {Pressable} from 'react-native';
 import colors from '../styles/colors';
+import rgpdScreen from "../screens/Rgpd/Rgpd";
+import {faAngleLeft} from "@fortawesome/free-solid-svg-icons/faAngleLeft";
+import React from "react";
 
 const Stack = createNativeStackNavigator();
 
@@ -91,6 +94,27 @@ const AuthStack = () => {
           headerShown: false,
         })}
       />
+        <Stack.Screen
+            name="rgpdScreen"
+            component={rgpdScreen}
+            options={({navigation}) => ({
+                headerShown: true,
+                headerShadowVisible: false, // applied here
+                headerLeft: () => (
+                    <Pressable onPress={() => navigation.pop()}>
+                        <FontAwesomeIcon
+                            icon={faAngleLeft}
+                            color={colors.DARK}
+                            size={30}
+                        />
+                    </Pressable>
+                ),
+                title: '',
+                headerStyle: {
+                    backgroundColor: colors.LIGHT,
+                },
+            })}
+        />
     </Stack.Navigator>
   );
 };

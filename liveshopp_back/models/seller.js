@@ -19,6 +19,9 @@ const sellerSchema = new mongoose.Schema(
         hasValidPaymentMethod: {type: Boolean, default: false},
         shipping_address: {type: String, default: ''},
         imageUrl: {type: String, default: ''},
+        blockedUser: [{type: mongoose.Schema.Types.ObjectId, default: 'User'}],
+        blockedSeller: [{type: mongoose.Schema.Types.ObjectId, default: 'Seller'}],
+
     },
     {timestamps: true},
 )

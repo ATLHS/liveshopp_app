@@ -17,6 +17,7 @@ import colors from '../../styles/colors';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import auth from '../../services/auth';
 import {useDispatch} from 'react-redux';
+import {Link} from "@react-navigation/native";
 
 const SellerSignupFormSchema = [
   {
@@ -125,6 +126,22 @@ const SellerSignupFormSchema = [
     helper:
       'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
   },
+  {
+    name: 'eula',
+    label: '',
+    type: 'checkbox',
+    validation: {
+      required: {
+        value: true,
+        message: 'Veuillez accepter les conditions générales d’utilisation.',
+      },
+    },
+    helper: {
+      helperLink: 'rgpdScreen',
+      helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les : ',
+      helperMessage2: 'de Liveshopp et confirmez avoir plus de 16 ans.'
+    }
+  },
 ];
 
 export const SellerSignUp = ({navigation}) => {
@@ -175,14 +192,14 @@ export const SellerSignUp = ({navigation}) => {
                   schema={SellerSignupFormSchema}
                 />
               </View>
-              <View style={styles.condition}>
+              {/*<View style={styles.condition}>
                 <Text style={styles.conditionText}>
                   En créant votre compte vous acceptez les Conditions générales
                   d’utilisation, les Conditions générales de vente et la
                   politique de confidentialité de Liveshopp et confirmez avoir
                   plus de 16 ans.
                 </Text>
-              </View>
+              </View>*/}
               <View style={styles.action}>
                 <ContainedButton
                   title="Let’s go !"

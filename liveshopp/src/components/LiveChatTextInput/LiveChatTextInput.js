@@ -19,7 +19,7 @@ export const LiveChatTextInput = ({onPress, live, isHost}) => {
   const {handleSubmit, control, reset} = useForm();
   const ref = useRef();
 
-  const clearMessageField = data => {
+  const clearMessageField = () => {
     ref.current?.clear();
   };
 

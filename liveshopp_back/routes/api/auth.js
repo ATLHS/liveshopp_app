@@ -16,8 +16,8 @@ router.post("/user-signin", async (req, res) => {
     // 2 check is user is confirmed
     // 3 check password
     // 4 create token and send it
-    const user = await User.findOne({email});
-    const seller = await UserSeller.findOne({email});
+    const user = await User.findOne({email}).populate('blockedUser blockedSeller', '_id');
+    const seller = await UserSeller.findOne({email}).populate('blockedUser blockedSeller', '_id');
 
     const customer = user || seller;
 
@@ -50,7 +50,9 @@ router.post("/user-signin", async (req, res) => {
                                     business_activity: customer.business_activity || null,
                                     shipping_address: customer.shipping_address,
                                     hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                                    imageUrl: customer.imageUrl
+                                    imageUrl: customer.imageUrl,
+                                    blockedUser: customer.blockedUser,
+                                    blockedSeller: customer.blockedSeller
                                 },
                                 token
                             });
@@ -283,7 +285,7 @@ router.post("/confirm-user-email", async (req, res) => {
     if (code && customer) {
         const isValidCode = customer.registeredConfirmedCode === Number(code);
         if (isValidCode) {
-            const updatedCustomer = await updateCustomer(customer, {isConfirmed: true});
+            const updatedCustomer = await updateCustomer(customer, {isConfirmed: true}, false);
             if (updatedCustomer) {
                 const payload = {
                     id: updatedCustomer._id, email: updatedCustomer.email,
@@ -311,7 +313,9 @@ router.post("/confirm-user-email", async (req, res) => {
                                 business_activity: customer.business_activity || null,
                                 shipping_address: customer.shipping_address,
                                 hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                                imageUrl: customer.imageUrl || null
+                                imageUrl: customer.imageUrl || null,
+                                blockedUser: customer.blockedUser,
+                                blockedSeller: customer.blockedSeller
                             },
                             token
                         });
@@ -333,8 +337,8 @@ router.post("/confirm-user-email", async (req, res) => {
 });
 
 router.get("/is-authenticate", verifyJwt, async (req, res) => {
-    const user = await User.findOne({_id: req.user.id});
-    const seller = await UserSeller.findOne({_id: req.user.id});
+    const user = await User.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
+    const seller = await UserSeller.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
 
     const customer = user || seller;
     if (customer) {
@@ -353,7 +357,9 @@ router.get("/is-authenticate", verifyJwt, async (req, res) => {
                     business_activity: customer.business_activity || null,
                     shipping_address: customer.shipping_address,
                     hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                    imageUrl: customer.imageUrl || null
+                    imageUrl: customer.imageUrl || null,
+                    blockedUser: customer.blockedUser,
+                    blockedSeller: customer.blockedSeller
                 },
                 isAuthenticate: true,
             });

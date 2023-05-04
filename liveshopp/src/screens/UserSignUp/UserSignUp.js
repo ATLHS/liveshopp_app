@@ -75,6 +75,22 @@ const UserSignupFormSchema = [
         helper:
             'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
     },
+    {
+        name: 'eula',
+        label: '',
+        type: 'checkbox',
+        validation: {
+            required: {
+                value: true,
+                message: 'Veuillez accepter les conditions générales d’utilisation.',
+            },
+        },
+        helper: {
+            helperLink: 'rgpdScreen',
+            helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les : ',
+            helperMessage2: 'de Liveshopp et confirmez avoir plus de 16 ans.'
+        }
+    },
 ];
 
 export const UserSignUp = ({navigation}) => {
@@ -119,14 +135,6 @@ export const UserSignUp = ({navigation}) => {
                             </View>
                             <View style={styles.fieldContainer}>
                                 <FieldWrapper control={control} schema={UserSignupFormSchema}/>
-                            </View>
-                            <View style={styles.condition}>
-                                <Text style={styles.conditionText}>
-                                    En créant votre compte vous acceptez les Conditions générales
-                                    d’utilisation, les Conditions générales de vente et la
-                                    politique de confidentialité de Liveshopp et confirmez avoir
-                                    plus de 16 ans.
-                                </Text>
                             </View>
                             <View style={styles.action}>
                                 <ContainedButton

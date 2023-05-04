@@ -144,6 +144,7 @@ export const LivesScreen = ({navigation}) => {
         } catch (e) {
             console.log(e);
         }
+    /**/
     };
 
     return (
@@ -160,7 +161,7 @@ export const LivesScreen = ({navigation}) => {
                             {!isLoading &&
                                 lives &&
                                 lives
-                                    .filter(live => live.seller_id !== user.id)
+                                    .filter(live => live.seller_id !== user.id && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id))
                                     .map((live, id) => (
                                         <LiveCard
                                             key={id}

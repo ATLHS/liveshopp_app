@@ -26,6 +26,12 @@ const customer = {
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },
+    signalCustomer(data) {
+        return axiosConfig
+            .post('/api/customer/signal-customer', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
 };
 
 export default customer;

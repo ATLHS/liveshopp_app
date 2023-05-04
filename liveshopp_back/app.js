@@ -10,6 +10,7 @@ const timer = require('time-counter');
 const Product = require('./models/product');
 const stripeUtils = require("./utils/stripeUtils");
 const generateUniqueId = require('generate-unique-id');
+const {updateCustomer} = require("./utils/updateCustomer");
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
@@ -77,9 +78,38 @@ io.on("connection", (socket) => {
             length: 20,
             useLetters: false
         });
-        channelRoom.messages.push({username: user.firstname, message: message.live_message, id });
+        channelRoom.messages.push({
+            userId: user.id,
+            profil: user.profil,
+            username: user.firstname,
+            message: message.live_message,
+            id
+        });
         io.to(liveData.channelName).emit("channelData", channelRoom);
     });
+
+    socket.on("blockCustomer", async (currentAuctionData) => {
+        const {user, userId, profil} = currentAuctionData;
+
+        const userCustomer = await User.findOne({_id: user.id});
+        const userSeller = await UserSeller.findOne({_id: user.id});
+
+        const customer = userCustomer || userSeller;
+
+        const customerToBlock = profil === "seller" ? {blockedSeller: userId} : {blockedUser: userId};
+
+        // check if the customer to block is already blocked
+        const isAlreadyBlocked = customer.blockedUser.concat(customer.blockedSeller).includes(userId);
+        if (isAlreadyBlocked) {
+            return;
+        }
+        const updatedCustomer = await updateCustomer(customer, customerToBlock, true);
+        if (updatedCustomer) {
+            const {blockedSeller, blockedUser} = updatedCustomer;
+            socket.emit('hasBeenBlocked', {blockedSeller, blockedUser});
+        }
+    });
+
 
     socket.on("pausedCurrentAuctionStatut", (channelName) => {
         const channelRoom = channels.get(channelName);

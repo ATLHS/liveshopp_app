@@ -4,12 +4,14 @@ const UserSeller = require("../../models/seller");
 const User = require("../../models/user");
 const Live = require("../../models/live");
 const Product = require("../../models/product");
+const Reported = require("../../models/reported");
 const {updateCustomer} = require("../../utils/updateCustomer.js");
 const stripeUtils = require("../../utils/stripeUtils");
+const {sendCodeToConfirmEmailRegistration} = require("../../utils/sendCodeConfirmationEmail");
 
 router.post("/update-customer-profil", verifyJwt, async (req, res) => {
-    const user = await User.findById(req.user.id);
-    const seller = await UserSeller.findById(req.user.id);
+    const user = await User.findById(req.user.id).populate('blockedUser blockedSeller', '_id');
+    const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller', '_id');
     const body = req.body.data;
 
     const customer = user || seller;
@@ -20,7 +22,7 @@ router.post("/update-customer-profil", verifyJwt, async (req, res) => {
     } : {firstname: body.firstname, lastname: body.lastname, phone: body.phone, email: body.email};
 
     if (customer) {
-        const updatedCustomer = await updateCustomer(customer, data);
+        const updatedCustomer = await updateCustomer(customer, data, false);
         if (updatedCustomer) {
             return res
                 .status(200)
@@ -37,7 +39,9 @@ router.post("/update-customer-profil", verifyJwt, async (req, res) => {
                         company_name: updatedCustomer.company_name || null,
                         shipping_address: updatedCustomer.shipping_address,
                         hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                        imageUrl: customer.imageUrl || null
+                        imageUrl: customer.imageUrl || null,
+                        blockedUser: customer.blockedUser,
+                        blockedSeller: customer.blockedSeller
                     },
                     message: "Votre profil a été modifié avec succès.",
                 });
@@ -54,13 +58,13 @@ router.post("/update-customer-profil", verifyJwt, async (req, res) => {
 });
 
 router.post("/update-user-shipping-address", verifyJwt, async (req, res) => {
-    const user = await User.findOne({_id: req.user.id});
-    const seller = await UserSeller.findOne({_id: req.user.id});
+    const user = await User.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
+    const seller = await UserSeller.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
 
     const customer = user || seller;
 
     if (customer) {
-        const updatedCustomer = await updateCustomer(customer, req.body.data);
+        const updatedCustomer = await updateCustomer(customer, req.body.data, false);
         if (updatedCustomer) {
             return res
                 .status(200)
@@ -77,7 +81,9 @@ router.post("/update-user-shipping-address", verifyJwt, async (req, res) => {
                         role: customer.role || null,
                         business_activity: customer.business_activity || null,
                         hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                        imageUrl: customer.imageUrl || null
+                        imageUrl: customer.imageUrl || null,
+                        blockedUser: customer.blockedUser,
+                        blockedSeller: customer.blockedSeller
                     },
                     message: "Votre adresse de livraison a été modifiée avec succès.",
                 });
@@ -94,13 +100,13 @@ router.post("/update-user-shipping-address", verifyJwt, async (req, res) => {
 });
 
 router.post("/update-user-payment-method-statut", verifyJwt, async (req, res) => {
-    const user = await User.findOne({_id: req.user.id});
-    const seller = await UserSeller.findOne({_id: req.user.id});
+    const user = await User.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
+    const seller = await UserSeller.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
 
     const customer = user || seller;
 
     if (customer) {
-        const updatedCustomer = await updateCustomer(customer, {hasValidPaymentMethod: true});
+        const updatedCustomer = await updateCustomer(customer, {hasValidPaymentMethod: true}, false);
         if (updatedCustomer) {
             return res
                 .status(200)
@@ -117,7 +123,9 @@ router.post("/update-user-payment-method-statut", verifyJwt, async (req, res) =>
                         role: customer.role || null,
                         business_activity: customer.business_activity || null,
                         hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                        imageUrl: customer.imageUrl || null
+                        imageUrl: customer.imageUrl || null,
+                        blockedUser: customer.blockedUser,
+                        blockedSeller: customer.blockedSeller
                     },
                     message: "Votre moyen de paiement a été configuré avec succès.",
                 });
@@ -194,6 +202,53 @@ router.post("/delete-customer", verifyJwt, async (req, res) => {
     } else {
         return res.status(400).json({
             message: "Un probleme est survenu, réessayez plus tard.",
+        });
+    }
+});
+
+router.post("/signal-customer", verifyJwt, async (req, res) => {
+    const user = await User.findOne({_id: req.user.id});
+    const seller = await UserSeller.findOne({_id: req.user.id});
+
+    const customer = user || seller;
+
+    const flagType = req.body.data.flag_type;
+
+    const isMessageFlagType = flagType === 'message';
+
+    const isAlreadyFlagThisByCustomer = await Reported.findOne({
+        flagger_id: customer._id,
+        flag_user_id: req.body.data.item ? req.body.data.item.userId : req.body.data.liveData.sellerId
+    })
+
+    if (isAlreadyFlagThisByCustomer) {
+        return res.status(400).json({
+            isReported: false,
+            message: "Vous avez déjà signaler cet utilisateur",
+        });
+    }
+
+    const reported = new Reported({
+        flagger_id: customer._id,
+        flagger_email: customer.email,
+        flag_type: flagType,
+        flag_user_id: isMessageFlagType ? req.body.data.item.userId : req.body.data.liveData.sellerId,
+        flag_user_username: isMessageFlagType ? req.body.data.item.username : req.body.data.liveData.sellerName,
+        flag_message: isMessageFlagType ? req.body.data.item.message : "",
+        flag_livename: isMessageFlagType ? "" : req.body.data.liveData.channelName,
+    });
+
+    const newReported = await reported.save();
+
+    if (newReported) {
+        return res.status(200).json({
+            isReported: true,
+            message: 'L\'utilisateur as bien était signalé',
+        });
+    } else {
+        return res.status(400).json({
+            isReported: false,
+            message: "Un probleme est survenu, réessayez plus tard",
         });
     }
 });
