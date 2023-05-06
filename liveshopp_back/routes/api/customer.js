@@ -253,4 +253,70 @@ router.post("/signal-customer", verifyJwt, async (req, res) => {
     }
 });
 
+router.get("/get-blocked-user", verifyJwt, async (req, res) => {
+    const user = await User.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
+    const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
+    const customer = user || seller;
+
+    if (customer) {
+        return res.status(200).json({
+            blockedUser: customer.blockedUser,
+            blockedSeller: customer.blockedSeller
+        });
+    } else {
+        return res.status(400).json({
+            isReported: false,
+            message: "Un probleme est survenu, réessayez plus tard",
+        });
+    }
+});
+
+router.post("/unblock-user", verifyJwt, async (req, res) => {
+    const {_id, profil} = req.body.data;
+
+    const user = await User.findById(req.user.id).populate('blockedUser blockedSeller');
+    const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller');
+    const customer = user || seller;
+
+    if (customer) {
+        if (profil === "seller") {
+            const blocked = customer.blockedSeller.filter(blockedSeller => blockedSeller._id.valueOf() !== _id);
+            const updatedCustomer = await updateCustomer(customer, {blockedSeller: blocked}, false);
+
+            if (updatedCustomer) {
+                return res.status(200).json({
+                    id: _id,
+                    profil: "seller",
+                    message: "L\'utilisateur à bien était débloqué",
+                });
+            } else {
+                return res.status(400).json({
+                    message: "Un probleme est survenu, réessayez plus tard",
+                });
+            }
+        }
+        if (profil === "user") {
+            const blocked = customer.blockedUser.filter(blockedUser => blockedUser._id.valueOf() !== _id);
+            const updatedCustomer = await updateCustomer(customer, {blockedUser: blocked}, false);
+
+            if (updatedCustomer) {
+                return res.status(200).json({
+                    id: _id,
+                    profil: "user",
+                    message: "L\'utilisateur à bien était débloqué",
+                });
+            } else {
+                return res.status(400).json({
+                    message: "Un probleme est survenu, réessayez plus tard",
+                });
+            }
+        }
+    } else {
+        return res.status(400).json({
+            isReported: false,
+            message: "Un probleme est survenu, réessayez plus tard",
+        });
+    }
+});
+
 module.exports = router;

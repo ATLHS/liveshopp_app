@@ -9,7 +9,7 @@ import socket from '../services/config/clientSocketIoConfig';
 import {setLiveData} from '../redux/slices/livesSlice';
 import axiosConfig from '../services/config/axiosConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setNewUserToBlock} from "../redux/slices/userSlice";
+import {setBlockedUser} from "../redux/slices/userSlice";
 
 const RootStack = ({isLoading}) => {
     const {user} = useSelector(state => state.user);
@@ -25,7 +25,7 @@ const RootStack = ({isLoading}) => {
                 console.log(socket.id, 'web socket connected');
             });
             socket.on('hasBeenBlocked', blockedInfo => {
-                dispatch(setNewUserToBlock(blockedInfo));
+                dispatch(setBlockedUser(blockedInfo));
             });
             socket.on('channelData', channelData => {
                 dispatch(setLiveData(channelData));

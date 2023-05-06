@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import {faEllipsisVertical} from "@fortawesome/free-solid-svg-icons";
 import {useNavigation} from "@react-navigation/native";
 import customer from "../services/customer";
+import BlockedUsers from "../screens/BlockedUsers/BlockedUsers";
 
 
 const Stack = createNativeStackNavigator();
@@ -154,7 +155,7 @@ const UserStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Modifier mon profil',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
@@ -175,7 +176,28 @@ const UserStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Adresse de livraison',
+                    headerStyle: {
+                        backgroundColor: colors.LIGHT,
+                    },
+                })}
+            />
+            <Stack.Screen
+                name="BlockedUsers"
+                component={BlockedUsers}
+                options={({navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerLeft: () => (
+                        <Pressable onPress={() => navigation.pop()}>
+                            <FontAwesomeIcon
+                                icon={faAngleLeft}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    title: 'Utilisateur bloqués',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
@@ -251,7 +273,7 @@ const UserStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Conditions générales',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },

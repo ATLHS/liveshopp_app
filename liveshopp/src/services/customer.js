@@ -2,7 +2,6 @@ import axiosConfig from './config/axiosConfig';
 
 const customer = {
     updateCustomerProfil(data) {
-        console.log(data);
         return axiosConfig
             .post('/api/customer/update-customer-profil', {data})
             .then(({data}) => data)
@@ -29,6 +28,18 @@ const customer = {
     signalCustomer(data) {
         return axiosConfig
             .post('/api/customer/signal-customer', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    getBlockedUser() {
+        return axiosConfig
+            .get('/api/customer/get-blocked-user')
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    unblockUser(data) {
+        return axiosConfig
+            .post('/api/customer/unblock-user', {data})
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },

@@ -32,6 +32,8 @@ import socket from '../../services/config/clientSocketIoConfig';
 import LiveCard from '../../components/liveCard/liveCard';
 import {useFocusEffect} from '@react-navigation/native';
 import NoData from '../../components/NoData/NoData';
+import customer from "../../services/customer";
+import {setBlockedUser} from "../../redux/slices/userSlice";
 
 export const LivesScreen = ({navigation}) => {
     const agoraEngineRef = IRtcEngine;
@@ -52,6 +54,25 @@ export const LivesScreen = ({navigation}) => {
                 .then(r => r)
                 .catch(err => err);
         }, [isGone]),
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            customer
+                .getBlockedUser()
+                .then(res => res)
+                .then(data => {
+                    const sellerIds = data.blockedSeller.map(seller => seller._id);
+                    const userIds = data.blockedUser.map(user => user._id);
+
+                    dispatch(setBlockedUser({blockedUser: userIds, blockedSeller: sellerIds}));
+                    setIsLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setIsLoading(false);
+                });
+        }, []),
     );
 
     useFocusEffect(
@@ -144,7 +165,7 @@ export const LivesScreen = ({navigation}) => {
         } catch (e) {
             console.log(e);
         }
-    /**/
+        /**/
     };
 
     return (

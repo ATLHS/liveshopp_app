@@ -14,6 +14,7 @@ import {setIsGone, setIsJoin, setLiveData} from '../redux/slices/livesSlice';
 import {View, Text} from 'react-native';
 import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import SettingShippingAddress from '../screens/SettingShippingAddress/SettingShippingAddress';
+import BlockedUsers from '../screens/BlockedUsers/BlockedUsers';
 import rgpdScreen from '../screens/Rgpd/Rgpd';
 import socket from '../services/config/clientSocketIoConfig';
 import Toast from 'react-native-toast-message';
@@ -144,7 +145,7 @@ const SellerStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Modifier mon profil',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
@@ -165,7 +166,28 @@ const SellerStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Adresse de livraison',
+                    headerStyle: {
+                        backgroundColor: colors.LIGHT,
+                    },
+                })}
+            />
+            <Stack.Screen
+                name="BlockedUsers"
+                component={BlockedUsers}
+                options={({navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerLeft: () => (
+                        <Pressable onPress={() => navigation.pop()}>
+                            <FontAwesomeIcon
+                                icon={faAngleLeft}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    title: 'Utilisateur bloqués',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
@@ -261,7 +283,7 @@ const SellerStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Conditions générales',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },

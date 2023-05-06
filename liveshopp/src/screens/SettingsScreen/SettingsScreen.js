@@ -49,6 +49,10 @@ function SettingsScreen({navigation}) {
         navigation.navigate('SettingShippingAddress');
     };
 
+    const goToBlockedUsers = () => {
+        navigation.navigate('BlockedUsers');
+    };
+
     const handleEmail = () => {
         const to = [REACT_APP_LIVESHOPP_CONTACT];
         email(to, {
@@ -269,6 +273,10 @@ function SettingsScreen({navigation}) {
                                 <Touchable
                                     title={'Adresse de livraison'}
                                     onPress={goSettingShippingAddress}
+                                />
+                                <Touchable
+                                    title={'Utilisateur bloqués'}
+                                    onPress={goToBlockedUsers}
                                 />
                                 <Headline title={'CGV'}/>
                                 <Touchable
