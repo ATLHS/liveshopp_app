@@ -12,6 +12,9 @@ import colors from '../../styles/colors';
 import customer from '../../services/customer';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from "@react-navigation/native";
+import Touchable from "../../components/Auth/Touchable/Touchable";
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
+import {faAnglesRight, faLock} from "@fortawesome/free-solid-svg-icons";
 
 export const SettingShippingAddress = ({navigation}) => {
     const dispatch = useDispatch();
@@ -86,38 +89,42 @@ export const SettingShippingAddress = ({navigation}) => {
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
                             {blockedUser.map((blocked, id) =>
-                                <TouchableOpacity key={id} onPress={() => unblockUser(blocked)}>
-                                    <View style={{
-                                        padding: 7,
-                                        width: 350,
-                                        backgroundColor: colors.LIGHT,
-                                        margin: 5,
-                                        borderRadius: 5,
-                                        borderColor: colors.DARK,
-                                        borderWidth: 1
-                                    }}>
-                                        <Text style={{
-                                            color: colors.DARK,
-                                            margin: 2,
-                                            fontFamily: 'Roboto-Regular',
-                                            fontSize: 15
-                                        }}><Text style={{
-                                            color: colors.DARK,
-                                            margin: 2,
-                                            fontFamily: 'Roboto-Regular',
-                                            fontWeight: 500,
-                                            fontSize: 15
-                                        }}>Pseudo : </Text>{blocked.company_name || blocked.firstname}</Text>
-                                        <Text style={{color: colors.DARK, margin: 2, fontSize: 15}}><Text style={{
-                                            color: colors.DARK,
-                                            margin: 2,
-                                            fontFamily: 'Roboto-Regular',
-                                            fontWeight: 500,
-                                            fontSize: 15
-                                        }}>Profil : </Text>
-                                            {blocked.profil === 'seller' ? 'Vendeur' : 'Utilisateur'}</Text>
+                                <TouchableOpacity key={id} style={styles.touchableStyle}
+                                                  onPress={() => unblockUser(blocked)}>
+                                    <View
+                                        style={{
+                                            paddingLeft: 20,
+                                            paddingRight: 20,
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                        }}>
+                                        <View>
+                                            <Text style={{
+                                                color: colors.DARK,
+                                                margin: 2,
+                                                fontFamily: 'Roboto-Regular',
+                                                fontSize: 15
+                                            }}><Text style={{
+                                                color: colors.DARK,
+                                                margin: 2,
+                                                fontFamily: 'Roboto-Regular',
+                                                fontWeight: 500,
+                                                fontSize: 15
+                                            }}>Pseudo : </Text>{blocked.company_name || blocked.firstname}</Text>
+                                            <Text style={{color: colors.DARK, margin: 2, fontSize: 15}}><Text style={{
+                                                color: colors.DARK,
+                                                margin: 2,
+                                                fontFamily: 'Roboto-Regular',
+                                                fontWeight: 500,
+                                                fontSize: 15
+                                            }}>Profil : </Text>
+                                                {blocked.profil === 'seller' ? 'Vendeur' : 'Utilisateur'}</Text>
+                                        </View>
+                                        <FontAwesomeIcon icon={faLock} size={20} color={colors.DARK}/>
                                     </View>
-                                </TouchableOpacity>)}
+                                </TouchableOpacity>
+                            )}
                         </View>
                     </TouchableWithoutFeedback>
                 </ScrollView>
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        marginTop: 20
+        marginTop: 20,
     },
     places: {
         flex: 1,
@@ -163,6 +170,22 @@ const styles = StyleSheet.create({
         top: 100,
     },
     resetPassword: {color: 'white'},
+    title: {
+        color: colors.DARK,
+        textAlign: 'left',
+        fontSize: 17,
+    },
+    touchableStyle: {
+        width: 350,
+        height: 60,
+        marginTop: 10,
+        marginBottom: 10,
+        borderColor: colors.DARK,
+        borderWidth: 1,
+        backgroundColor: colors.LIGHT,
+        borderRadius: 8,
+        justifyContent: 'center',
+    },
 });
 
 export default SettingShippingAddress;
