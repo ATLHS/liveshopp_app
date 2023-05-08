@@ -3,7 +3,7 @@ import {REACT_APP_BASE_URL} from '@env';
 
 const axiosInstance = axios.create({
     withCredentials: true,
-    baseURL: "http://192.168.1.170:5000",
+    baseURL: REACT_APP_BASE_URL,
 });
 
 export default axiosInstance;
