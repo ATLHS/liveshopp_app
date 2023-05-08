@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
         shipping_address: {type: String, default: ''},
         blockedUser: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
         blockedSeller: [{type: mongoose.Schema.Types.ObjectId, ref: 'Seller'}],
+        isBanned: {type: Boolean, default: false},
     },
     {timestamps: true},
 )

@@ -21,7 +21,7 @@ const sellerSchema = new mongoose.Schema(
         imageUrl: {type: String, default: ''},
         blockedUser: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
         blockedSeller: [{type: mongoose.Schema.Types.ObjectId, ref: 'Seller'}],
-
+        isBanned: {type: Boolean, default: false},
     },
     {timestamps: true},
 )

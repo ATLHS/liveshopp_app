@@ -53,6 +53,14 @@ function SettingsScreen({navigation}) {
         navigation.navigate('BlockedUsers');
     };
 
+    const goToAdminBlockedUsers = () => {
+        navigation.navigate('AdminBlockedUsers');
+    };
+
+    const goToAdminFlaggedUsers = () => {
+        navigation.navigate('AdminSignaledUsers');
+    };
+
     const handleEmail = () => {
         const to = [REACT_APP_LIVESHOPP_CONTACT];
         email(to, {
@@ -262,35 +270,58 @@ function SettingsScreen({navigation}) {
                                     </Pressable>
                                 </Modal>
                                 <Headline title={'Mon profil'}/>
-                                <Touchable
-                                    title={'Modifier mon profil'}
-                                    onPress={goToProfilSetting}
-                                />
-                                <Touchable
-                                    title={'Moyen de paiement'}
-                                    onPress={openPaymentSheet}
-                                />
-                                <Touchable
-                                    title={'Adresse de livraison'}
-                                    onPress={goSettingShippingAddress}
-                                />
-                                <Touchable
-                                    title={'Utilisateur bloqués'}
-                                    onPress={goToBlockedUsers}
-                                />
-                                <Headline title={'CGV'}/>
-                                <Touchable
-                                    title={'Conditions Générales'}
-                                    onPress={goToRGPD}
-                                />
-                                <Headline title={'Nous-contactez'}/>
-                                <Touchable title={'Nous-contactez'} onPress={handleEmail}/>
+                                {user.profil === 'admin' &&
+                                    <>
+                                        <View style={{marginBottom: 10}}>
+                                            <Text style={{fontSize: 17}}>Type : Admin</Text>
+                                            <Text style={{fontSize: 17}}>Nom : {user.firstname}</Text>
+                                            <Text style={{fontSize: 17}}>Prénom
+                                                : {user.lastname}</Text>
+                                        </View>
+
+                                        <Touchable
+                                            title={'Utilisateurs bloqués sur Liveshopp'}
+                                            onPress={goToAdminBlockedUsers}
+                                        />
+                                        <Touchable
+                                            title={'Utilisateurs signalé sur Liveshopp'}
+                                            onPress={goToAdminFlaggedUsers}
+                                        />
+                                    </>
+                                }
+                                {user.profil !== 'admin' &&
+                                    <>
+                                        <Touchable
+                                            title={'Modifier mon profil'}
+                                            onPress={goToProfilSetting}
+                                        />
+                                        <Touchable
+                                            title={'Moyen de paiement'}
+                                            onPress={openPaymentSheet}
+                                        />
+                                        <Touchable
+                                            title={'Adresse de livraison'}
+                                            onPress={goSettingShippingAddress}
+                                        />
+                                        <Touchable
+                                            title={'Utilisateurs bloqués'}
+                                            onPress={goToBlockedUsers}
+                                        />
+                                        <Headline title={'CGV'}/>
+                                        <Touchable
+                                            title={'Conditions Générales'}
+                                            onPress={goToRGPD}
+                                        />
+                                        <Headline title={'Nous-contactez'}/>
+                                        <Touchable title={'Nous-contactez'} onPress={handleEmail}/>
+                                    </>
+                                }
                                 <ContainedButton
                                     title="Déconnexion"
                                     onPress={handleSignOut}
                                     loading={isLoading}
                                 />
-                                <View style={{marginTop: 30}}>
+                                <View style={{marginTop: 20}}>
                                     <Touchable
                                         title={'Supprimer mon profil'}
                                         onPress={() => setModalVisible(!modalVisible)}

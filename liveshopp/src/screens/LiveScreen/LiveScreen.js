@@ -24,11 +24,8 @@ import colors from '../../styles/colors';
 import {LiveChatTextInput} from '../../components/LiveChatTextInput/LiveChatTextInput';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faEllipsis} from "@fortawesome/free-solid-svg-icons";
-import auth from "../../services/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axiosConfig from "../../services/config/axiosConfig";
-import {setIsAuthenticate, setUser} from "../../redux/slices/userSlice";
 import customer from "../../services/customer";
+import admin from "../../services/admin";
 
 export const LiveScreen = () => {
     const {isJoin, isHost, liveData, remoteUid} = useSelector(
@@ -149,7 +146,7 @@ export const LiveScreen = () => {
                             } else if (buttonIndex === 1) {
                                 // block user
                                 customer
-                                    .signalCustomer({item, flag_type: 'message'})
+                                    .signalCustomer({item, flag_type: 'message', liveData})
                                     .then(res => res)
                                     .then(data => {
                                         Alert.alert('', data.message, [
@@ -164,6 +161,36 @@ export const LiveScreen = () => {
                             }
                         },
                     );
+                }
+            },
+        );
+    }
+
+    const showObjectionableAdminAction = (data) => {
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                options: ['Annuler', 'Bannir cet utilisateur'],
+                destructiveButtonIndex: 1,
+                cancelButtonIndex: 0,
+                userInterfaceStyle: 'light',
+            },
+            buttonIndex => {
+                if (buttonIndex === 0) {
+                    return;
+                } else if (buttonIndex === 1) {
+                    admin
+                        .banUser(data)
+                        .then(res => res)
+                        .then(data => {
+                            Alert.alert('', data.message, [
+                                {text: 'OK'},
+                            ]);
+                        })
+                        .catch(err => {
+                            Alert.alert('', err.message, [
+                                {text: 'OK'},
+                            ]);
+                        });
                 }
             },
         );
@@ -285,7 +312,7 @@ export const LiveScreen = () => {
                                                 {item.username}
                                             </Text>
                                             {user.id !== item.userId &&
-                                                <TouchableOpacity onPress={() => showObjectionableAction(item)}>
+                                                <TouchableOpacity onPress={() => user.profil === 'admin' ? showObjectionableAdminAction({item, liveData}) : showObjectionableAction(item)}>
                                                     <FontAwesomeIcon
                                                         icon={faEllipsis}
                                                         color={colors.LIGHT}
@@ -396,17 +423,21 @@ export const LiveScreen = () => {
                                     !user.blockedUser.concat(user.blockedSeller).includes(item.userId) &&
                                     <View style={{marginBottom: 7, marginTop: 7}}>
                                         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                                            <Text
-                                                style={{
-                                                    color: colors.LIGHT,
-                                                    fontSize: 13,
-                                                    fontWeight: '700',
-                                                    marginBottom: 3,
-                                                }}>
-                                                {item.username}
-                                            </Text>
-                                            {user.id !== item.userId &&
-                                                <TouchableOpacity onPress={() => showObjectionableAction(item)}>
+                                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
+                                                <Text
+                                                    style={{
+                                                        color: colors.LIGHT,
+                                                        fontSize: 13,
+                                                        fontWeight: '700',
+                                                        marginBottom: 3,
+                                                        marginRight: 5
+                                                    }}>
+                                                    {item.username}
+                                                </Text>
+                                                {item.profil === 'admin' && <View style={{backgroundColor: colors.LIGHT, color: colors.DARK, borderRadius: 2, alignItems: 'center', marginBottom: 3, padding: 2, paddingRight: 4, paddingLeft: 4}}><Text style={{color: colors.DARK, fontWeight: '700', fontSize: 10}}>Admin</Text></View>}
+                                            </View>
+                                            {user.id !== item.userId && item.profil !== 'admin' &&
+                                                <TouchableOpacity onPress={() => user.profil === 'admin' ? showObjectionableAdminAction({item, liveData}) : showObjectionableAction(item)}>
                                                     <FontAwesomeIcon
                                                         icon={faEllipsis}
                                                         color={colors.LIGHT}

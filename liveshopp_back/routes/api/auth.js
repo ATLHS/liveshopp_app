@@ -52,7 +52,8 @@ router.post("/user-signin", async (req, res) => {
                                     hasValidPaymentMethod: customer.hasValidPaymentMethod,
                                     imageUrl: customer.imageUrl,
                                     blockedUser: customer.blockedUser,
-                                    blockedSeller: customer.blockedSeller
+                                    blockedSeller: customer.blockedSeller,
+                                    isBanned: customer.isBanned
                                 },
                                 token
                             });

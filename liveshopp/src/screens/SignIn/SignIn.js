@@ -63,6 +63,9 @@ export const SignIn = ({navigation}) => {
             .then(res => res)
             .then(data => {
                 setIsLoading(false);
+                if (data.user.isBanned) {
+                    return setMessage("Votre compte a été bloqué par Liveshopp, veuillez contacter notre équipe pour plus d'information, merci.");
+                }
                 AsyncStorage.setItem('@token', data.token).then(r => {
                     axiosConfig.defaults.headers.Authorization = `Bearer ${data.token}`;
                     dispatch(setUser(data.user));

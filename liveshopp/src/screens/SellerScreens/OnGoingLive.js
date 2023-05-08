@@ -54,13 +54,19 @@ export const OnGoingLive = ({navigation}) => {
     useFocusEffect(
         React.useCallback(() => {
             // Initialize Agora engine when the app starts
-            setupVideoSDKEngine()
-                .then(r => r)
-                .catch(err => err);
+
             if (isGone) {
                 goOut();
             }
         }, [isGone]),
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setupVideoSDKEngine()
+                .then(r => r)
+                .catch(err => err);
+        }, []),
     );
 
     const getPermission = async () => {

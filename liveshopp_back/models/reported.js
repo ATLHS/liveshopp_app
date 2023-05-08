@@ -11,6 +11,8 @@ const reported = new mongoose.Schema(
         flag_user_username: {type: String},
         flag_message: {type: String, default: ""},
         flag_livename: {type: String, default: ""},
+        live_data: {type: Object},
+        isBlocked: {type: Boolean, default: false},
     },
     {timestamps: true},
 )

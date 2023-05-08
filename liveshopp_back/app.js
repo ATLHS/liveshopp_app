@@ -11,10 +11,13 @@ const Product = require('./models/product');
 const stripeUtils = require("./utils/stripeUtils");
 const generateUniqueId = require('generate-unique-id');
 const {updateCustomer} = require("./utils/updateCustomer");
+const User = require("./models/user");
+const UserSeller = require("./models/seller");
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 const channels = new Map();
+global.io = io;
 
 io.on("connection", (socket) => {
     socket.on("leaveRoom", ({liveData, user}) => {
@@ -22,7 +25,7 @@ io.on("connection", (socket) => {
         socket.leave(channel.channelName);
         if (channel.userCount >= 1) channel.userCount--;
 
-        if (user.profil === "seller" && user.id === liveData.sellerId) {
+        if (user.profil === "seller" && user.id || user._id === liveData.sellerId) {
             channel.hostIsLive = false;
         }
         ;
@@ -237,13 +240,13 @@ const customer = require("./routes/api/customer");
 const live = require("./routes/api/live");
 const order = require("./routes/api/order");
 const stripe = require("./routes/api/stripe");
-const User = require("./models/user");
-const UserSeller = require("./models/seller");
+const admin = require("./routes/api/admin");
 
 app.use("/api/auth/", auth);
 app.use("/api/customer/", customer);
 app.use("/api/live/", live);
 app.use("/api/order/", order);
 app.use("/api/stripe/", stripe);
+app.use("/api/admin/", admin);
 
 httpServer.listen(port, () => console.log(`Server listening on port  ${port}`));

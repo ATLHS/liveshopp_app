@@ -10,7 +10,7 @@ import {
     ScrollView,
     Platform,
     PermissionsAndroid,
-    ActivityIndicator,
+    ActivityIndicator, Text,
 } from 'react-native';
 import colors from '../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -50,10 +50,15 @@ export const LivesScreen = ({navigation}) => {
             if (isGone) {
                 goOut();
             }
+        }, [isGone]),
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
             setupVideoSDKEngine()
                 .then(r => r)
                 .catch(err => err);
-        }, [isGone]),
+        }, []),
     );
 
     useFocusEffect(
@@ -210,7 +215,7 @@ export const LivesScreen = ({navigation}) => {
                                     message={
                                         'Les lives en cours apparaîtront ici, reviens un peu plus tard.'
                                     }
-                                    buttonTitle={'Programmer un live maintenant'}
+                                    buttonTitle={''}
                                 />
                             ) : (
                                 <View style={{height: '100%', justifyContent: 'center'}}>

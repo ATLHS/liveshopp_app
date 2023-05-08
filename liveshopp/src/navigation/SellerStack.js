@@ -55,7 +55,7 @@ const SellerStack = () => {
                 },
             }),
         );
-        navigation.navigate('LivesScreen');
+        isHost ? navigation.navigate('OnGoingLives') : navigation.navigate('LivesScreen');
     }
 
     const showObjectionableAction = () => {
