@@ -117,6 +117,7 @@ io.on("connection", (socket) => {
     socket.on("pausedCurrentAuctionStatut", (channelName) => {
         const channelRoom = channels.get(channelName);
         channelRoom.currentAuction.currentAuctionStatus = 'paused';
+        io.to(channelName).emit("currentAuctionData", channelRoom);
     });
 
 
@@ -250,3 +251,4 @@ app.use("/api/stripe/", stripe);
 app.use("/api/admin/", admin);
 
 httpServer.listen(port, () => console.log(`Server listening on port  ${port}`));
+

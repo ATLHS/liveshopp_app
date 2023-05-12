@@ -9,7 +9,7 @@ const TextArea = ({inputField, field, fieldState}) => {
       placeholder={inputField.label}
       autoFocus={inputField.autoFocus || false}
       onChangeText={value => field.onChange(value)}
-      placeholderTextColor="black"
+      placeholderTextColor='#707070'
       secureTextEntry={inputField.type === 'password'}
       selectionColor={colors.DARK}
       multiline={true}
@@ -21,9 +21,9 @@ const TextArea = ({inputField, field, fieldState}) => {
 const styles = StyleSheet.create({
   textInput: {
     color: 'black',
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
+    backgroundColor: '#F8F7F7',
+    fontSize: 13,
+    fontWeight: '600',
     width: 350,
     height: 150,
     borderRadius: 6,

@@ -26,7 +26,7 @@ const DateTimePicker = ({field}) => {
   return (
     <>
       <DatePicker
-        style={{height: 170}}
+        style={{height: 150}}
         minimumDate={initialDate}
         locale={'fr'}
         date={date}
@@ -43,7 +43,8 @@ const DateTimePicker = ({field}) => {
 };
 
 const styles = StyleSheet.create({
-  conditionText: {color: colors.DARK},
+  conditionText: {color: colors.DARK, fontSize: 13,
+    fontWeight: '600'},
   condition: {width: 350, marginTop: 10},
 });
 

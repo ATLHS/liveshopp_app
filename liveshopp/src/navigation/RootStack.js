@@ -32,9 +32,6 @@ const RootStack = ({isLoading}) => {
 
 
     socket.on('banUser', async data => {
-        console.log(user, 'user from ban')
-        console.log(data.updatedCustomer._id === user.id, "is the same id");
-
         if (data.updatedCustomer._id === user.id) {
             socket.emit('leaveRoom', {liveData: data.liveData.liveData, user: data.updatedCustomer});
             dispatch(setIsJoin(false));

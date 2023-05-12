@@ -56,11 +56,9 @@ const containedStyles = StyleSheet.create({
 
 const outlinedStyles = StyleSheet.create({
   phoneField: {
-    backgroundColor: colors.LIGHT,
-    borderColor: colors.DARK,
-    borderWidth: 1,
+    backgroundColor: '#F8F7F7',
+    height: 55,
     width: 350,
-    height: 60,
     borderRadius: 6,
     marginBottom: 15,
     flexDirection: 'row',

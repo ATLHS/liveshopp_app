@@ -41,8 +41,8 @@ const TextType = ({inputField, field}) => {
                         ? [
                             outlinedStyles.textInput,
                             !inputField.editable
-                                ? {backgroundColor: colors.DISABLED}
-                                : {backgroundColor: colors.LIGHT},
+                                ? {backgroundColor: '#F8F7F7'}
+                                : {backgroundColor: '#F8F7F7'},
                         ]
                         : containedStyles.textInput
                 }
@@ -51,7 +51,7 @@ const TextType = ({inputField, field}) => {
                 autoCapitalize={inputField.type === 'password' || inputField.name === 'email' ? 'none' : 'sentences'}
                 onChangeText={value => field.onChange(value)}
                 defaultValue={inputField.defaultValue}
-                placeholderTextColor={isAuthenticate ? colors.DARK : colors.LIGHT}
+                placeholderTextColor={isAuthenticate ? '#707070' : colors.LIGHT}
                 secureTextEntry={inputField.type === 'password' && !showPassword}
                 selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}
                 editable={inputField.editable}
@@ -67,7 +67,7 @@ const containedStyles = StyleSheet.create({
         borderColor: 'white',
         borderWidth: 1,
         width: 350,
-        height: 60,
+        height: 55,
         borderRadius: 6,
         marginBottom: 15,
         padding: 10,
@@ -77,10 +77,10 @@ const containedStyles = StyleSheet.create({
 const outlinedStyles = StyleSheet.create({
     textInput: {
         color: colors.DARK,
-        borderColor: colors.DARK,
-        borderWidth: 1,
+        fontSize: 13,
+        fontWeight: '600',
         width: 350,
-        height: 60,
+        height: 55,
         borderRadius: 6,
         marginBottom: 15,
         padding: 10,

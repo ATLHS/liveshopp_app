@@ -47,11 +47,7 @@ export const OrderToShipped = () => {
                                         )
                                         .map((live, id) => (
                                             <TouchableOpacity
-                                                key={id}
-                                                onPress={() => {
-                                                    setModalVisible(!modalVisible);
-                                                    setOrder(live);
-                                                }}>
+                                                key={id}>
                                                 <OrderCard
                                                     seller_name={live.seller.company_name}
                                                     live_name={live.live_name}

@@ -96,9 +96,9 @@ export const SettingNewLive = ({navigation}) => {
                     contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
-                            <View style={styles.headlineContainerMessage}>
+                            {/*<View style={styles.headlineContainerMessage}>
                                 <Text style={styles.headlineMessage}>CRÉE UN NOUVEAU LIVE</Text>
-                            </View>
+                            </View>*/}
                             <View style={styles.fieldContainer}>
                                 <FieldWrapper
                                     control={control}
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'center',
+        marginTop: 50
     },
     headlineContainerMessage: {
         marginBottom: 30,
@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
     },
     headlineMessage: {
         color: colors.DARK,
-        fontFamily: 'FugazOne-Regular',
-        fontSize: 30,
+        fontSize: 18,
+        fontWeight: '600',
         textAlign: 'center',
     },
     fieldContainer: {margin: 10, marginBottom: 30},

@@ -170,7 +170,6 @@ export const LivesScreen = ({navigation}) => {
         } catch (e) {
             console.log(e);
         }
-        /**/
     };
 
     return (
@@ -203,7 +202,7 @@ export const LivesScreen = ({navigation}) => {
                             {lives && !isLoading ? (
                                 <View
                                     style={{
-                                        width: 140,
+                                        width: 150,
                                         height: 230,
                                         margin: 10,
                                         backgroundColor: 'transparent',
@@ -236,11 +235,10 @@ const styles = StyleSheet.create({
     },
     onGoingLive: {
         flex: 1,
-        alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        margin: 10,
+        margin: 10
     },
     headlineContainer: {marginBottom: 30},
     formContainer: {

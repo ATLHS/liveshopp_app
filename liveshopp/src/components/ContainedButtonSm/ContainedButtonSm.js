@@ -23,11 +23,12 @@ const styles = StyleSheet.create({
   title: {
     color: colors.LIGHT,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: '600',
   },
   touchableStyle: {
     width: 300,
-    height: 60,
+    height: 50,
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: colors.PRIMARY,

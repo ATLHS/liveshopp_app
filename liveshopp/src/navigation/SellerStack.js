@@ -208,7 +208,7 @@ const SellerStack = () => {
                             />
                         </Pressable>
                     ),
-                    title: '',
+                    title: 'Crée un nouveau live',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },

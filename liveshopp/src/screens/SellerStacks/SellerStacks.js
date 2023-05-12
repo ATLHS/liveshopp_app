@@ -14,16 +14,33 @@ import SellerLiveTab from '../SellerScreens/SellerLiveTab';
 import {useDispatch} from 'react-redux';
 import LivesScreen from '../LivesScreen/LivesScreen';
 import {
-    setIsHost,
+    setIsHost, setLives,
     setSellerLives,
 } from '../../redux/slices/livesSlice';
 import seller from '../../services/seller';
 import OrderTab from '../OrderTab/OrderTab';
+import {useFocusEffect} from "@react-navigation/native";
+import live from "../../services/live";
 
 const Tab = createBottomTabNavigator();
 
 export const SellerStacks = ({navigation}) => {
     const dispatch = useDispatch();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            live
+                .getLives()
+                .then(res => res)
+                .then(data => {
+                    dispatch(setLives(data.lives));
+                })
+                .catch(err => {
+                    console.log(err, 'get lives error.');
+                });
+        }, []),
+    );
+
     const createNewLive = () => {
         navigation.navigate('SettingNewLive');
     };

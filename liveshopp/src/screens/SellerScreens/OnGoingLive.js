@@ -54,7 +54,6 @@ export const OnGoingLive = ({navigation}) => {
     useFocusEffect(
         React.useCallback(() => {
             // Initialize Agora engine when the app starts
-
             if (isGone) {
                 goOut();
             }

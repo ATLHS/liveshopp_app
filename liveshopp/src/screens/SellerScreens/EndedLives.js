@@ -62,8 +62,6 @@ export const EndedLives = () => {
                 <NoData
                   title={"Vous n'avez aucun live terminé"}
                   message={'Tous vos lives terminé \n apparaitron ici.'}
-                  buttonTitle={'Créer un live maintenant ?'}
-                  onPress={() => navigation.navigate('SettingNewLive')}
                 />
               ) : (
                 <View
