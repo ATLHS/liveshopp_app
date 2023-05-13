@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {RtcSurfaceView} from 'react-native-agora';
+import {createAgoraRtcEngine, IRtcEngine, RtcSurfaceView} from 'react-native-agora';
 import socket from '../../services/config/clientSocketIoConfig';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
@@ -23,11 +23,12 @@ import Toast from 'react-native-toast-message';
 import colors from '../../styles/colors';
 import {LiveChatTextInput} from '../../components/LiveChatTextInput/LiveChatTextInput';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faEllipsis} from "@fortawesome/free-solid-svg-icons";
+import {faArrowsRotate, faEllipsis, faRotate} from "@fortawesome/free-solid-svg-icons";
 import customer from "../../services/customer";
 import admin from "../../services/admin";
 
 export const LiveScreen = () => {
+    const agoraEngineRef = IRtcEngine;
     const {isJoin, isHost, liveData, remoteUid} = useSelector(
         state => state.lives,
     );
@@ -37,6 +38,7 @@ export const LiveScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            agoraEngineRef.current = createAgoraRtcEngine();
             if (liveData.currentAuction.currentAuctionStatus === 'stopping') {
                 showCurrentLiveNotificationToast();
             }
@@ -69,6 +71,10 @@ export const LiveScreen = () => {
     const startCurrentAuction = (channelName, data) => {
         socket.emit('startCurrentAuction', {channelName, data});
     };
+
+    const switchCamera = () => {
+        agoraEngineRef.current?.switchCamera();
+    }
 
     const showCurrentLiveNotificationToast = () => {
         // if user win we must have a userid
@@ -376,14 +382,15 @@ export const LiveScreen = () => {
                                 )
                             ) : (
                                 <>
-                                    <Text style={{
-                                        width: 350,
-                                        color: colors.LIGHT,
-                                        fontFamily: 'Roboto-Regular',
-                                        fontSize: 14,
-                                        fontWeight: 500,
-                                        padding: 15,
-                                    }}>{liveData.currentAuction.productName}</Text>
+                                    {liveData.currentAuction.currentAuctionStatus === 'running' &&
+                                        <Text style={{
+                                            width: 350,
+                                            color: colors.LIGHT,
+                                            fontFamily: 'Roboto-Regular',
+                                            fontSize: 14,
+                                            fontWeight: 500,
+                                            padding: 15,
+                                        }}>{liveData.currentAuction.productName}</Text>}
                                     {liveData.currentAuction.currentAuctionStatus ===
                                         'running' && <LiveAuctionInfo/>}
                                     {user.profil !== 'admin' && <UserLiveForm
@@ -401,6 +408,27 @@ export const LiveScreen = () => {
                                     />
                                 </>
                             )}
+                        </View>
+                        <View style={{
+                            position: 'absolute',
+                            width: 50,
+                            backgroundColor: 'transparent',
+                            height: 50,
+                            top: 100,
+                            right: 5,
+                            justifyContent: 'flex-start',
+                            alignItems: 'center'
+                        }}>
+                            {user.profil === 'seller' &&
+                                <TouchableOpacity
+                                    onPress={() => switchCamera()}>
+                                    <FontAwesomeIcon
+                                        icon={faArrowsRotate}
+                                        color={colors.LIGHT}
+                                        size={25}
+
+                                    />
+                                </TouchableOpacity>}
                         </View>
                     </View>
                 </KeyboardAvoidingView>

@@ -31,7 +31,6 @@ import {
 import {
     setIsJoin,
     setSellerLives,
-    setIsHost,
 } from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import {DateTime} from 'luxon';
@@ -114,6 +113,7 @@ export const OnGoingLive = ({navigation}) => {
             agoraEngineRef.current?.joinChannel(token, liveData.live_name, uid, {
                 clientRoleType: ClientRoleType.ClientRoleBroadcaster,
             });
+
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
             navigation.navigate('LiveScreen');

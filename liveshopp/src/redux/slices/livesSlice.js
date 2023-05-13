@@ -62,7 +62,6 @@ export const {
   setLiveData,
   setIsHost,
   setSellerLives,
-  setRemoteUid,
-  setCurrentAuction,
+  setRemoteUid
 } = livesSlice.actions;
 export default livesSlice.reducer;

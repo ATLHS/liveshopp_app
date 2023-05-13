@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     category: {
         color: colors.LIGHT,
         textAlign: 'left',
-        fontSize: 10,
+        fontSize: 13,
         fontWeight: 'bold',
     },
     touchableStyle: {
