@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   setUser,
   setIsAuthenticate,
-  selectIsAuthenticate,
 } from './src/redux/slices/userSlice';
 import axiosConfig from './src/services/config/axiosConfig';
 import ToastComponent from './src/components/ToastComponent/ToastComponent';

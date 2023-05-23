@@ -4,8 +4,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome, faUser, faBoxOpen} from '@fortawesome/free-solid-svg-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SettingsScreen from '../SettingsScreen/SettingsScreen';
-import LivesScreen from '../LivesScreen/LivesScreen';
 import OrderTab from '../OrderTab/OrderTab';
+import LivesTab from "../LivesTab/LivesTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,8 +25,8 @@ export const UserStacks = () => {
                         <FontAwesomeIcon icon={faHome} size={20} color={'white'}/>
                     ),
                 }}
-                name="LivesScreen"
-                component={LivesScreen}
+                name="Lives"
+                component={LivesTab}
             />
             <Tab.Screen
                 options={{

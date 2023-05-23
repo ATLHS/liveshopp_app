@@ -12,34 +12,18 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SettingsScreen from '../SettingsScreen/SettingsScreen';
 import SellerLiveTab from '../SellerScreens/SellerLiveTab';
 import {useDispatch} from 'react-redux';
-import LivesScreen from '../LivesScreen/LivesScreen';
 import {
     setIsHost, setLives,
     setSellerLives,
 } from '../../redux/slices/livesSlice';
 import seller from '../../services/seller';
 import OrderTab from '../OrderTab/OrderTab';
-import {useFocusEffect} from "@react-navigation/native";
-import live from "../../services/live";
+import LivesTab from '../LivesTab/LivesTab';
 
 const Tab = createBottomTabNavigator();
 
 export const SellerStacks = ({navigation}) => {
     const dispatch = useDispatch();
-
-    useFocusEffect(
-        React.useCallback(() => {
-            live
-                .getLives()
-                .then(res => res)
-                .then(data => {
-                    dispatch(setLives(data.lives));
-                })
-                .catch(err => {
-                    console.log(err, 'get lives error.');
-                });
-        }, []),
-    );
 
     const createNewLive = () => {
         navigation.navigate('SettingNewLive');
@@ -59,10 +43,9 @@ export const SellerStacks = ({navigation}) => {
                         <FontAwesomeIcon icon={faHome} size={20} color={'white'}/>
                     ),
                 }}
-                name="LivesScreen"
-                component={LivesScreen}
+                name="Lives"
+                component={LivesTab}
             />
-
             <Tab.Screen
                 options={{
                     title: 'MES LIVES',

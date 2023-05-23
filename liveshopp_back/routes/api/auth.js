@@ -342,6 +342,7 @@ router.get("/is-authenticate", verifyJwt, async (req, res) => {
     const seller = await UserSeller.findOne({_id: req.user.id}).populate('blockedUser blockedSeller', '_id');
 
     const customer = user || seller;
+
     if (customer) {
         return res
             .status(200)

@@ -15,7 +15,6 @@ const OrderTab = () => {
     const {user} = useSelector(state => state.user);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-
     useFocusEffect(
         React.useCallback(() => {
             setIsLoading(true);
@@ -37,8 +36,7 @@ const OrderTab = () => {
         <Tab.Navigator
             screenOptions={{
                 tabBarIndicatorStyle: {backgroundColor: colors.DARK},
-            }}
-            initialRouteName={'OnGoingLives'}>
+            }}>
             {user.profil === 'user' ? (
                 <Tab.Screen
                     options={{title: 'Mes Achats'}}

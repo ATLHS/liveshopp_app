@@ -10,16 +10,14 @@ import {
     ScrollView,
     Platform,
     PermissionsAndroid,
-    ActivityIndicator, Text,
+    ActivityIndicator,
 } from 'react-native';
 import colors from '../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-    setIsHost,
     setIsJoin,
-    setLives,
     setRemoteUid,
-    setIsGone,
+    setIsGone, setIsHost, setLives,
 } from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import {
@@ -43,10 +41,10 @@ export const LivesScreen = ({navigation}) => {
     const {user} = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
+    const [onGoingLives, setOnGoingLives] = useState([]);
 
     useFocusEffect(
         React.useCallback(() => {
-            dispatch(setIsHost(false));
             if (isGone) {
                 goOut();
             }
@@ -55,14 +53,35 @@ export const LivesScreen = ({navigation}) => {
 
     useFocusEffect(
         React.useCallback(() => {
+            dispatch(setIsHost(false));
+            setIsLoading(true);
+            live
+                .getLives()
+                .then(res => res)
+                .then(data => {
+                    dispatch(setLives(data.lives));
+                    setOnGoingLives(data.lives.filter(live => live.seller_id !== user.id && live.live_status === "live" && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id)));
+                    setIsLoading(false);
+                })
+                .catch(err => {
+                    console.log(err, 'get lives error.');
+                    setIsLoading(false);
+                });
+        }, []),
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setIsLoading(true);
             setupVideoSDKEngine()
-                .then(r => r)
+                .then(r => setIsLoading(false))
                 .catch(err => err);
         }, []),
     );
 
     useFocusEffect(
         React.useCallback(() => {
+            setIsLoading(true);
             customer
                 .getBlockedUser()
                 .then(res => res)
@@ -76,22 +95,6 @@ export const LivesScreen = ({navigation}) => {
                 .catch(err => {
                     console.log(err);
                     setIsLoading(false);
-                });
-        }, []),
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            setIsLoading(true);
-            live
-                .getLives()
-                .then(res => res)
-                .then(data => {
-                    dispatch(setLives(data.lives));
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.log(err, 'get lives error.');
                 });
         }, []),
     );
@@ -183,11 +186,48 @@ export const LivesScreen = ({navigation}) => {
                     contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.onGoingLive}>
-                            {!isLoading &&
-                                lives &&
+                            {isLoading ?
+                                <View style={{height: '100%', justifyContent: 'center'}}>
+                                    <ActivityIndicator size="large" color="black"/>
+                                </View>
+                                :
+                                onGoingLives.length ?
+                                    <>
+                                        {
+                                            onGoingLives.map((live, id) => (
+                                                <LiveCard
+                                                    key={id}
+                                                    sellerName={live.sellerName}
+                                                    datetime={live.live_date_time}
+                                                    description={live.live_description}
+                                                    category={live.business_activity}
+                                                    status={live.live_status}
+                                                    onPress={() => goLive(live)}
+                                                    imageUrl={live.imageUrl || ''}
+                                                />))
+                                        }
+                                        <View
+                                            style={{
+                                                width: 150,
+                                                height: 230,
+                                                margin: 10,
+                                                backgroundColor: 'transparent',
+                                            }}
+                                        />
+                                    </>
+                                    : <NoData
+                                        title={'Aucun lives en cours'}
+                                        message={
+                                            'Les lives en cours apparaîtront ici, reviens un peu plus tard.'
+                                        }
+                                        buttonTitle={''}
+                                    />}
+
+
+                            {/*{!isLoading &&
                                 lives
-                                    .filter(live => live.seller_id !== user.id && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id))
-                                    .map((live, id) => (
+                                    .filter(live => live.seller_id !== user.id && live.status === "live" && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id))
+                                onGoingLives.map((live, id) => (
                                         <LiveCard
                                             key={id}
                                             sellerName={live.sellerName}
@@ -208,7 +248,7 @@ export const LivesScreen = ({navigation}) => {
                                         backgroundColor: 'transparent',
                                     }}
                                 />
-                            ) : !lives && !isLoading ? (
+                            ) : !lives.filter(live => live.status === "live").length && !isLoading ? (
                                 <NoData
                                     title={'Aucun lives en cours'}
                                     message={
@@ -220,7 +260,7 @@ export const LivesScreen = ({navigation}) => {
                                 <View style={{height: '100%', justifyContent: 'center'}}>
                                     <ActivityIndicator size="large" color="black"/>
                                 </View>
-                            )}
+                            )}*/}
                         </View>
                     </TouchableWithoutFeedback>
                 </ScrollView>

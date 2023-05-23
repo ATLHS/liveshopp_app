@@ -20,7 +20,6 @@ import {useNavigation} from "@react-navigation/native";
 import customer from "../services/customer";
 import BlockedUsers from "../screens/BlockedUsers/BlockedUsers";
 
-
 const Stack = createNativeStackNavigator();
 
 const UserStack = () => {
@@ -53,7 +52,7 @@ const UserStack = () => {
                 },
             }),
         );
-        navigation.navigate('LivesScreen');
+        navigation.goBack();
     }
 
     const showObjectionableAction = () => {

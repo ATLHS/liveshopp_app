@@ -87,8 +87,8 @@ const UserSignupFormSchema = [
         },
         helper: {
             helperLink: 'rgpdScreen',
-            helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les : ',
-            helperMessage2: 'de Liveshopp et confirmez avoir plus de 16 ans.'
+            helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les ',
+            helperMessage2: 'de Liveshopp et confirme avoir plus de 16 ans.'
         }
     },
 ];

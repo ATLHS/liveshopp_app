@@ -27,7 +27,7 @@ const liveCard = ({
                         : require('../../../assets/images/liveshopp_back_lives.png')
                 }
                 imageStyle={{
-                    opacity: 0.3,
+                    opacity: 0.4,
                     width: 150,
                     height: 230,
                     borderRadius: 10,

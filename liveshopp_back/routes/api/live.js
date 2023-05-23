@@ -89,7 +89,7 @@ router.get('/get-seller-live', verifyJwt, async (req, res) => {
 
 
 router.get('/get-lives', verifyJwt, async (req, res) => {
-    const lives = await Live.find({live_status: 'live'});
+    const lives = await Live.find();
 
     if (lives) {
         return res.status(200).json({
