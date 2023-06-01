@@ -14,8 +14,8 @@ import {
     ActionSheetIOS,
     Alert,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
     createAgoraRtcEngine,
     IRtcEngine,
@@ -36,6 +36,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import customer from '../../services/customer';
 import admin from '../../services/admin';
+import {setIsGone, setIsJoin, setLiveData} from "../../redux/slices/livesSlice";
 
 export const LiveScreen = () => {
     const agoraEngineRef = IRtcEngine;
@@ -45,6 +46,8 @@ export const LiveScreen = () => {
     const {user} = useSelector(state => state.user);
     const [modalVisible, setModalVisible] = useState(false);
     const list = useRef(null);
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -61,16 +64,39 @@ export const LiveScreen = () => {
         }, [liveData.currentAuction.currentAuctionStatus, user]),
     );
 
-    useFocusEffect(
+    /*useFocusEffect(
         React.useCallback(() => {
             // if the user closes the application while the live screen is open, he is removed from the room.
             AppState.addEventListener('change', nextAppState => {
                 if (nextAppState === 'background' && liveData.channelName) {
                     socket.emit('leaveRoom', {liveData, user});
+                    dispatch(setIsJoin(false));
+                    dispatch(setIsGone(true));
+                    Toast.hide();
+                    dispatch(
+                        setLiveData({
+                            channelName: '',
+                            sellerId: '',
+                            auctionId: '',
+                            auctionsStatus: '',
+                            userCount: '',
+                            messages: [],
+                            currentAuction: {
+                                userId: '',
+                                username: '',
+                                productName: false,
+                                currentProductAmount: '',
+                                currentAuctionDelay: '',
+                                currentAuctionStatus: '',
+                                salePrice: '',
+                            },
+                        }),
+                    );
+                    navigation.navigate('LIVES');
                 }
             });
         }, [liveData.channelName]),
-    );
+    );*/
 
     useFocusEffect(
         React.useCallback(() => {

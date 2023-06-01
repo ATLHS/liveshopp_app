@@ -144,7 +144,7 @@ export const LivesScreen = ({navigation}) => {
             await agoraEngineRef.current?.joinChannel(
                 token,
                 liveData.live_name,
-                uid,
+                0,
                 {
                     clientRoleType: ClientRoleType.ClientRoleAudience,
                 },

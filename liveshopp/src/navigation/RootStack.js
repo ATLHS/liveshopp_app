@@ -10,8 +10,12 @@ import socket from '../services/config/clientSocketIoConfig';
 import {setIsGone, setIsJoin, setLiveData} from '../redux/slices/livesSlice';
 import axiosConfig from '../services/config/axiosConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setBlockedUser, setIsAuthenticate, setUser} from "../redux/slices/userSlice";
-import Toast from "react-native-toast-message";
+import {
+    setBlockedUser,
+    setIsAuthenticate,
+    setUser,
+} from '../redux/slices/userSlice';
+import Toast from 'react-native-toast-message';
 
 const RootStack = ({isLoading}) => {
     const {user} = useSelector(state => state.user);
@@ -30,10 +34,12 @@ const RootStack = ({isLoading}) => {
         socket.removeAllListeners();
     }, [isAuthenticate]);
 
-
     socket.on('banUser', async data => {
         if (data.updatedCustomer._id === user.id) {
-            socket.emit('leaveRoom', {liveData: data.liveData.liveData, user: data.updatedCustomer});
+            socket.emit('leaveRoom', {
+                liveData: data.liveData.liveData,
+                user: data.updatedCustomer,
+            });
             dispatch(setIsJoin(false));
             dispatch(setIsGone(true));
             Toast.hide();
@@ -78,16 +84,16 @@ const RootStack = ({isLoading}) => {
     return (
         <NavigationContainer>
             {isLoading ? (
-                <Loading/>
+                <Loading />
             ) : !isAuthenticate ? (
-                <AuthStack/>
-            ) : user.profil === 'admin' ?
-                <AdminStack/>
-                : user.profil === 'seller' ? (
-                    <SellerStack/>
-                ) : (
-                    <UserStack/>
-                )}
+                <AuthStack />
+            ) : user.profil === 'admin' ? (
+                <AdminStack />
+            ) : user.profil === 'seller' ? (
+                <SellerStack />
+            ) : (
+                <UserStack />
+            )}
         </NavigationContainer>
     );
 };
