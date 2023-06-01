@@ -25,10 +25,9 @@ io.on("connection", (socket) => {
         socket.leave(channel.channelName);
         if (channel.userCount >= 1) channel.userCount--;
 
-        if (user.profil === "seller" && user.id || user._id === liveData.sellerId) {
+        if (user.profil === "seller" && user.id === liveData.sellerId || user._id === liveData.sellerId) {
             channel.hostIsLive = false;
-        }
-        ;
+        };
         io.to(liveData.channelName).emit("channelData", channel);
     });
 
@@ -63,10 +62,10 @@ io.on("connection", (socket) => {
             io.to(liveData.live_name).emit("channelData", channels.get(liveData.live_name));
         } else {
             channels.get(liveData.live_name).userCount++;
+
             if (!channels.get(liveData.live_name).hostIsLive && user.profil === "seller" && user.id === liveData.seller_id) {
                 channels.get(liveData.live_name).hostIsLive = true;
-            }
-            ;
+            };
             // 3 if room exist send room data to the client who join the specified room
             io.to(liveData.live_name).emit("channelData", channels.get(liveData.live_name));
         }

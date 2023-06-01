@@ -6,11 +6,32 @@ import LivesScreen from "../LivesScreen/LivesScreen";
 import {setIsHost, setLives} from "../../redux/slices/livesSlice";
 import live from "../../services/live";
 import {useDispatch} from "react-redux";
+import {useFocusEffect} from "@react-navigation/native";
+import customer from "../../services/customer";
+import {setBlockedUser} from "../../redux/slices/userSlice";
 
 const Tab = createMaterialTopTabNavigator();
 
 const LivesTab = () => {
     const dispatch = useDispatch();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            dispatch(setIsHost(false));
+            customer
+                .getBlockedUser()
+                .then(res => res)
+                .then(data => {
+                    const sellerIds = data.blockedSeller.map(seller => seller._id);
+                    const userIds = data.blockedUser.map(user => user._id);
+
+                    dispatch(setBlockedUser({blockedUser: userIds, blockedSeller: sellerIds}));
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }, []),
+    );
 
     return (
         <Tab.Navigator
@@ -28,22 +49,6 @@ const LivesTab = () => {
                 options={{title: 'À VENIR'}}
                 name="Processing"
                 component={ComingLives}
-                listeners={{
-                    tabPress: e => {
-                        console.log("comming lives")
-                        dispatch(setIsHost(false));
-                        live
-                            .getLives()
-                            .then(res => res)
-                            .then(data => {
-                                console.log(data.lives, 'comming live')
-                                dispatch(setLives(data.lives));
-                            })
-                            .catch(err => {
-                                console.log(err, 'get lives error.');
-                            });
-                    }
-                }}
             />
         </Tab.Navigator>
     );

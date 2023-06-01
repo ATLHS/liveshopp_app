@@ -18,9 +18,9 @@ import BlockedUsers from '../screens/BlockedUsers/BlockedUsers';
 import rgpdScreen from '../screens/Rgpd/Rgpd';
 import socket from '../services/config/clientSocketIoConfig';
 import Toast from 'react-native-toast-message';
-import {faEllipsisVertical} from "@fortawesome/free-solid-svg-icons";
-import {useNavigation} from "@react-navigation/native";
-import customer from "../services/customer";
+import {faEllipsisVertical, faEye} from '@fortawesome/free-solid-svg-icons';
+import {useNavigation} from '@react-navigation/native';
+import customer from '../services/customer';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,12 +56,16 @@ const SellerStack = () => {
             }),
         );
         navigation.goBack();
-    }
+    };
 
     const showObjectionableAction = () => {
         ActionSheetIOS.showActionSheetWithOptions(
             {
-                options: ['Annuler', 'Bloquer cet utilisateur', 'Signaler cet utilisateur'],
+                options: [
+                    'Annuler',
+                    'Bloquer cet utilisateur',
+                    'Signaler cet utilisateur',
+                ],
                 destructiveButtonIndex: 2,
                 cancelButtonIndex: 0,
                 userInterfaceStyle: 'light',
@@ -76,14 +80,18 @@ const SellerStack = () => {
                             destructiveButtonIndex: 1,
                             cancelButtonIndex: 0,
                             userInterfaceStyle: 'light',
-                            title: 'Vous ne verrez plus les messages et les lives de cet de utilisateur'
+                            title: 'Vous ne verrez plus les messages et les lives de cet de utilisateur',
                         },
                         buttonIndex => {
                             if (buttonIndex === 0) {
                                 return;
                             } else if (buttonIndex === 1) {
                                 // block user
-                                socket.emit('blockCustomer', {user, userId: liveData.sellerId, profil: 'seller'});
+                                socket.emit('blockCustomer', {
+                                    user,
+                                    userId: liveData.sellerId,
+                                    profil: 'seller',
+                                });
                                 leaveRoom();
                             }
                         },
@@ -96,14 +104,17 @@ const SellerStack = () => {
                             destructiveButtonIndex: 1,
                             cancelButtonIndex: 0,
                             userInterfaceStyle: 'light',
-                            title: 'Tout comportement ne respectant pas les conditions générales sera sanctionné'
+                            title: 'Tout comportement ne respectant pas les conditions générales sera sanctionné',
                         },
                         buttonIndex => {
                             if (buttonIndex === 0) {
                                 return;
                             } else if (buttonIndex === 1) {
                                 customer
-                                    .signalCustomer({liveData, flag_type: 'live'})
+                                    .signalCustomer({
+                                        liveData,
+                                        flag_type: 'live',
+                                    })
                                     .then(res => res)
                                     .then(data => {
                                         Alert.alert('', data.message, [
@@ -121,7 +132,7 @@ const SellerStack = () => {
                 }
             },
         );
-    }
+    };
 
     return (
         <Stack.Navigator
@@ -129,7 +140,7 @@ const SellerStack = () => {
                 headerShown: false,
                 gestureDirection: 'vertical',
             }}>
-            <Stack.Screen name="SellerStacks" component={SellerStacks}/>
+            <Stack.Screen name="SellerStacks" component={SellerStacks} />
             <Stack.Screen
                 name="SettingProfilScreen"
                 component={SettingProfilScreen}
@@ -222,44 +233,105 @@ const SellerStack = () => {
                     headerShown: true,
                     headerShadowVisible: false, // applied here
                     headerTransparent: true,
+                    title: '',
                     navigationOptions: {
                         gesturesEnabled: false,
                     },
                     headerLeft: () => (
-                        <View style={{alignItems: 'center'}}>
-                            <FontAwesomeIcon icon={faUsers} color={colors.LIGHT} size={18}/>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: 28,
+                            }}>
                             <Text
                                 style={{
-                                    fontSize: 14,
-                                    marginTop: 5,
+                                    fontSize: 20,
                                     color: colors.LIGHT,
                                     fontFamily: 'Roboto-Regular',
-                                    fontWeight: 'bold',
+                                    marginRight: 5,
+                                    fontWeight: 500,
                                 }}>
-                                {liveData && liveData.userCount}
+                                {liveData.sellerName}
                             </Text>
+                            {!isHost && (
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        showObjectionableAction(
+                                            liveData.sellerId,
+                                        )
+                                    }>
+                                    <FontAwesomeIcon
+                                        icon={faEllipsisVertical}
+                                        color={colors.LIGHT}
+                                        size={17}
+                                    />
+                                </TouchableOpacity>
+                            )}
                         </View>
                     ),
                     headerRight: () => (
-                        <Pressable onPress={() => leaveRoom()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
-                        </Pressable>
+                        <>
+                            {liveData.hostIsLive && (
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: 80,
+                                        height: 25,
+                                        borderRadius: 3,
+                                        backgroundColor: '#ff2a53',
+                                        marginRight: 10,
+                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 11,
+                                            color: colors.LIGHT,
+                                            fontFamily: 'Roboto-Regular',
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                        }}>
+                                        EN DIRECT
+                                    </Text>
+                                </View>
+                            )}
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    width: 60,
+                                    height: 25,
+                                    borderRadius: 3,
+                                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                                    marginRight: 10,
+                                }}>
+                                <FontAwesomeIcon
+                                    icon={faEye}
+                                    color={colors.LIGHT}
+                                    size={10}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: 11,
+                                        color: colors.LIGHT,
+                                        fontFamily: 'Roboto-Regular',
+                                        fontWeight: 'bold',
+                                        marginLeft: 6,
+                                    }}>
+                                    {liveData && liveData.userCount}
+                                </Text>
+                            </View>
+                            <Pressable onPress={() => leaveRoom()}>
+                                <FontAwesomeIcon
+                                    icon={faXmark}
+                                    color={colors.LIGHT}
+                                    size={30}
+                                />
+                            </Pressable>
+                        </>
                     ),
-                    headerTitle: () => <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{
-                            fontSize: 20,
-                            color: colors.LIGHT,
-                            fontFamily: 'Roboto-Regular',
-                            marginRight: 5
-                        }}>{liveData.sellerName}</Text>
-                        {!isHost && <TouchableOpacity onPress={() => showObjectionableAction(liveData.sellerId)}>
-                            <FontAwesomeIcon
-                                icon={faEllipsisVertical}
-                                color={colors.LIGHT}
-                                size={17}
-                            />
-                        </TouchableOpacity>}
-                    </View>,
                     headerStyle: {
                         backgroundColor: 'transparent',
                     },

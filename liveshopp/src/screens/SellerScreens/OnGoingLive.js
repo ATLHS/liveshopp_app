@@ -28,10 +28,7 @@ import {
     createAgoraRtcEngine,
     IRtcEngine,
 } from 'react-native-agora';
-import {
-    setIsJoin,
-    setSellerLives,
-} from '../../redux/slices/livesSlice';
+import {setIsJoin, setSellerLives} from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import {DateTime} from 'luxon';
 import socket from '../../services/config/clientSocketIoConfig';
@@ -87,7 +84,8 @@ export const OnGoingLive = ({navigation}) => {
             const agoraEngine = agoraEngineRef.current;
             agoraEngine.initialize({
                 appId: REACT_APP_AGORA_APP_ID,
-                channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
+                channelProfile:
+                    ChannelProfileType.ChannelProfileLiveBroadcasting,
             });
 
             agoraEngine.enableVideo();
@@ -98,7 +96,9 @@ export const OnGoingLive = ({navigation}) => {
     };
 
     const goLive = async liveData => {
-        const {token, generateUid} = await live.getAgoraToken(liveData.live_name);
+        const {token, generateUid} = await live.getAgoraToken(
+            liveData.live_name,
+        );
         if (isJoin) {
             return;
         }
@@ -109,10 +109,15 @@ export const OnGoingLive = ({navigation}) => {
                 ChannelProfileType.ChannelProfileLiveBroadcasting,
             );
 
-            agoraEngineRef.current?.startPreview();
-            agoraEngineRef.current?.joinChannel(token, liveData.live_name, uid, {
-                clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-            });
+            await agoraEngineRef.current?.startPreview();
+            await agoraEngineRef.current?.joinChannel(
+                token,
+                liveData.live_name,
+                uid,
+                {
+                    clientRoleType: ClientRoleType.ClientRoleBroadcaster,
+                },
+            );
 
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
@@ -125,6 +130,7 @@ export const OnGoingLive = ({navigation}) => {
     const goOut = async () => {
         try {
             agoraEngineRef.current?.leaveChannel();
+            agoraEngineRef.current?.stopPreview();
             dispatch(setIsJoin(false));
         } catch (e) {
             console.log(e);
@@ -133,8 +139,7 @@ export const OnGoingLive = ({navigation}) => {
 
     const closeLive = () => {
         setIsLoading(true);
-        live
-            .closeLive(liveToClose)
+        live.closeLive(liveToClose)
             .then(res => res)
             .then(data => {
                 setIsLoading(false);
@@ -226,7 +231,12 @@ export const OnGoingLive = ({navigation}) => {
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
-                                        <View style={{margin: 10, borderRadius: 10, height: 30}}>
+                                        <View
+                                            style={{
+                                                margin: 10,
+                                                borderRadius: 10,
+                                                height: 30,
+                                            }}>
                                             <TouchableOpacity
                                                 style={{
                                                     height: 40,
@@ -236,7 +246,11 @@ export const OnGoingLive = ({navigation}) => {
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
                                                 }}
-                                                onPress={() => setModalVisible(!modalVisible)}>
+                                                onPress={() =>
+                                                    setModalVisible(
+                                                        !modalVisible,
+                                                    )
+                                                }>
                                                 <Text
                                                     style={{
                                                         color: colors.LIGHT,
@@ -252,8 +266,9 @@ export const OnGoingLive = ({navigation}) => {
                             </Pressable>
                         </Modal>
                         <View style={styles.onGoingLive}>
-                            {sellerLives.filter(live => live.live_status === 'live').length &&
-                            !isLoading ? (
+                            {sellerLives.filter(
+                                live => live.live_status === 'live',
+                            ).length && !isLoading ? (
                                 sellerLives
                                     .filter(live => live.live_status === 'live')
                                     .map((live, id) => (
@@ -268,30 +283,52 @@ export const OnGoingLive = ({navigation}) => {
                                                 borderRadius: 10,
                                             }}>
                                             <Pressable
-                                                style={styles.onGoingLiveContainer}
+                                                style={
+                                                    styles.onGoingLiveContainer
+                                                }
                                                 onPress={() => {
-                                                    setModalVisible(!modalVisible);
+                                                    setModalVisible(
+                                                        !modalVisible,
+                                                    );
                                                     setLiveToClose(live);
                                                 }}>
                                                 <ImageBackground
                                                     source={
                                                         user.imageUrl
-                                                            ? {uri: user.imageUrl}
+                                                            ? {
+                                                                  uri: user.imageUrl,
+                                                              }
                                                             : require('../../../assets/images/liveshopp_back_lives.png')
                                                     }
                                                     borderRadius={10}
-                                                    imageStyle={{opacity: 0.3, borderRadius: 15}}>
-                                                    <View style={styles.liveContainer}>
-                                                        <View style={styles.liveContainerInfos}>
-                                                            <View style={styles.liveContainerInfosIcons}>
+                                                    imageStyle={{
+                                                        opacity: 0.3,
+                                                        borderRadius: 15,
+                                                    }}>
+                                                    <View
+                                                        style={
+                                                            styles.liveContainer
+                                                        }>
+                                                        <View
+                                                            style={
+                                                                styles.liveContainerInfos
+                                                            }>
+                                                            <View
+                                                                style={
+                                                                    styles.liveContainerInfosIcons
+                                                                }>
                                                                 <View
                                                                     style={{
-                                                                        borderColor: 'white',
+                                                                        borderColor:
+                                                                            'white',
                                                                         borderWidth: 1,
-                                                                        textAlign: 'left',
-                                                                        fontWeight: 'bold',
+                                                                        textAlign:
+                                                                            'left',
+                                                                        fontWeight:
+                                                                            'bold',
                                                                         fontSize: 13,
-                                                                        backgroundColor: colors.LIGHT,
+                                                                        backgroundColor:
+                                                                            colors.LIGHT,
                                                                         padding: 1,
                                                                         paddingRight: 6,
                                                                         paddingLeft: 6,
@@ -299,33 +336,63 @@ export const OnGoingLive = ({navigation}) => {
                                                                     }}>
                                                                     <Text
                                                                         style={{
-                                                                            textAlign: 'left',
-                                                                            fontWeight: 'bold',
+                                                                            textAlign:
+                                                                                'left',
+                                                                            fontWeight:
+                                                                                'bold',
                                                                             color: colors.PRIMARY,
                                                                             fontSize: 10,
                                                                         }}>
                                                                         LIVE
                                                                     </Text>
                                                                 </View>
-                                                                <Text style={styles.liveContainerUsers}>
+                                                                <Text
+                                                                    style={
+                                                                        styles.liveContainerUsers
+                                                                    }>
                                                                     <FontAwesomeIcon
-                                                                        icon={faUsers}
-                                                                        color={colors.LIGHT}
-                                                                        size={20}
+                                                                        icon={
+                                                                            faUsers
+                                                                        }
+                                                                        color={
+                                                                            colors.LIGHT
+                                                                        }
+                                                                        size={
+                                                                            20
+                                                                        }
                                                                     />{' '}
-                                                                    {liveData.userCount}
+                                                                    {
+                                                                        liveData.userCount
+                                                                    }
                                                                 </Text>
                                                             </View>
-                                                            <View style={styles.liveContainerLiveInfos}>
-                                                                <Text style={styles.title}>
-                                                                    {live.live_name}
+                                                            <View
+                                                                style={
+                                                                    styles.liveContainerLiveInfos
+                                                                }>
+                                                                <Text
+                                                                    style={
+                                                                        styles.title
+                                                                    }>
+                                                                    {
+                                                                        live.live_name
+                                                                    }
                                                                 </Text>
                                                                 <Text
-                                                                    numberOfLines={5}
-                                                                    style={styles.description}>
-                                                                    {live.live_description}
+                                                                    numberOfLines={
+                                                                        5
+                                                                    }
+                                                                    style={
+                                                                        styles.description
+                                                                    }>
+                                                                    {
+                                                                        live.live_description
+                                                                    }
                                                                 </Text>
-                                                                <Text style={styles.hour}>
+                                                                <Text
+                                                                    style={
+                                                                        styles.hour
+                                                                    }>
                                                                     {DateTime.fromISO(
                                                                         live.live_date_time,
                                                                     ).toLocaleString(
@@ -339,22 +406,27 @@ export const OnGoingLive = ({navigation}) => {
                                                         <ContainedButtonSm
                                                             title="Rejoindre le live"
                                                             loading={isLoading}
-                                                            onPress={() => goLive(live)}
+                                                            onPress={() =>
+                                                                goLive(live)
+                                                            }
                                                         />
                                                     </View>
                                                 </ImageBackground>
                                             </Pressable>
                                         </View>
                                     ))
-                            ) : !sellerLives.filter(live => live.live_status === 'live')
-                                .length && !isLoading ? (
+                            ) : !sellerLives.filter(
+                                  live => live.live_status === 'live',
+                              ).length && !isLoading ? (
                                 <NoData
                                     title={"Vous n'avez aucun live en cours"}
                                     message={
                                         'Un live programmés apparaîtra ici 30 min avant que le show commence.'
                                     }
                                     buttonTitle={'Créer un live maintenant ?'}
-                                    onPress={() => navigation.navigate('SettingNewLive')}
+                                    onPress={() =>
+                                        navigation.navigate('SettingNewLive')
+                                    }
                                 />
                             ) : (
                                 <View
@@ -363,7 +435,10 @@ export const OnGoingLive = ({navigation}) => {
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     }}>
-                                    <ActivityIndicator size="large" color={colors.DARK}/>
+                                    <ActivityIndicator
+                                        size="large"
+                                        color={colors.DARK}
+                                    />
                                 </View>
                             )}
                         </View>

@@ -17,7 +17,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
     setIsJoin,
     setRemoteUid,
-    setIsGone, setIsHost, setLives,
+    setIsGone,
+    setLives,
 } from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import {
@@ -30,45 +31,14 @@ import socket from '../../services/config/clientSocketIoConfig';
 import LiveCard from '../../components/liveCard/liveCard';
 import {useFocusEffect} from '@react-navigation/native';
 import NoData from '../../components/NoData/NoData';
-import customer from "../../services/customer";
-import {setBlockedUser} from "../../redux/slices/userSlice";
 
 export const LivesScreen = ({navigation}) => {
     const agoraEngineRef = IRtcEngine;
-    const {isJoin, isGone, lives} = useSelector(
-        state => state.lives,
-    );
+    const {isJoin, isGone} = useSelector(state => state.lives);
     const {user} = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [onGoingLives, setOnGoingLives] = useState([]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            if (isGone) {
-                goOut();
-            }
-        }, [isGone]),
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            dispatch(setIsHost(false));
-            setIsLoading(true);
-            live
-                .getLives()
-                .then(res => res)
-                .then(data => {
-                    dispatch(setLives(data.lives));
-                    setOnGoingLives(data.lives.filter(live => live.seller_id !== user.id && live.live_status === "live" && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id)));
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.log(err, 'get lives error.');
-                    setIsLoading(false);
-                });
-        }, []),
-    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -82,21 +52,35 @@ export const LivesScreen = ({navigation}) => {
     useFocusEffect(
         React.useCallback(() => {
             setIsLoading(true);
-            customer
-                .getBlockedUser()
+            live.getLives()
                 .then(res => res)
                 .then(data => {
-                    const sellerIds = data.blockedSeller.map(seller => seller._id);
-                    const userIds = data.blockedUser.map(user => user._id);
-
-                    dispatch(setBlockedUser({blockedUser: userIds, blockedSeller: sellerIds}));
+                    dispatch(setLives(data.lives));
+                    setOnGoingLives(
+                        data.lives.filter(
+                            live =>
+                                live.seller_id !== user.id &&
+                                live.live_status === 'live' &&
+                                !user.blockedUser
+                                    .concat(user.blockedSeller)
+                                    .includes(live.seller_id),
+                        ),
+                    );
                     setIsLoading(false);
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log(err, 'get lives error.');
                     setIsLoading(false);
                 });
         }, []),
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            if (isGone) {
+                goOut();
+            }
+        }, [isGone]),
     );
 
     const getOsPermission = async () => {
@@ -119,7 +103,8 @@ export const LivesScreen = ({navigation}) => {
 
             agoraEngine.initialize({
                 appId: REACT_APP_AGORA_APP_ID,
-                channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
+                channelProfile:
+                    ChannelProfileType.ChannelProfileLiveBroadcasting,
             });
 
             agoraEngine.registerEventHandler({
@@ -143,7 +128,9 @@ export const LivesScreen = ({navigation}) => {
     };
 
     const goLive = async liveData => {
-        const {token, generateUid} = await live.getAgoraToken(liveData.live_name);
+        const {token, generateUid} = await live.getAgoraToken(
+            liveData.live_name,
+        );
         if (isJoin) {
             return;
         }
@@ -154,9 +141,14 @@ export const LivesScreen = ({navigation}) => {
                 ChannelProfileType.ChannelProfileLiveBroadcasting,
             );
 
-            agoraEngineRef.current?.joinChannel(token, liveData.live_name, 0, {
-                clientRoleType: ClientRoleType.ClientRoleAudience,
-            });
+            await agoraEngineRef.current?.joinChannel(
+                token,
+                liveData.live_name,
+                uid,
+                {
+                    clientRoleType: ClientRoleType.ClientRoleAudience,
+                },
+            );
 
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
@@ -186,48 +178,20 @@ export const LivesScreen = ({navigation}) => {
                     contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.onGoingLive}>
-                            {isLoading ?
-                                <View style={{height: '100%', justifyContent: 'center'}}>
-                                    <ActivityIndicator size="large" color="black"/>
+                            {isLoading ? (
+                                <View
+                                    style={{
+                                        height: '100%',
+                                        justifyContent: 'center',
+                                    }}>
+                                    <ActivityIndicator
+                                        size="large"
+                                        color="black"
+                                    />
                                 </View>
-                                :
-                                onGoingLives.length ?
-                                    <>
-                                        {
-                                            onGoingLives.map((live, id) => (
-                                                <LiveCard
-                                                    key={id}
-                                                    sellerName={live.sellerName}
-                                                    datetime={live.live_date_time}
-                                                    description={live.live_description}
-                                                    category={live.business_activity}
-                                                    status={live.live_status}
-                                                    onPress={() => goLive(live)}
-                                                    imageUrl={live.imageUrl || ''}
-                                                />))
-                                        }
-                                        <View
-                                            style={{
-                                                width: 150,
-                                                height: 230,
-                                                margin: 10,
-                                                backgroundColor: 'transparent',
-                                            }}
-                                        />
-                                    </>
-                                    : <NoData
-                                        title={'Aucun lives en cours'}
-                                        message={
-                                            'Les lives en cours apparaîtront ici, reviens un peu plus tard.'
-                                        }
-                                        buttonTitle={''}
-                                    />}
-
-
-                            {/*{!isLoading &&
-                                lives
-                                    .filter(live => live.seller_id !== user.id && live.status === "live" && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id))
-                                onGoingLives.map((live, id) => (
+                            ) : onGoingLives.length ? (
+                                <>
+                                    {onGoingLives.map((live, id) => (
                                         <LiveCard
                                             key={id}
                                             sellerName={live.sellerName}
@@ -239,16 +203,16 @@ export const LivesScreen = ({navigation}) => {
                                             imageUrl={live.imageUrl || ''}
                                         />
                                     ))}
-                            {lives && !isLoading ? (
-                                <View
-                                    style={{
-                                        width: 150,
-                                        height: 230,
-                                        margin: 10,
-                                        backgroundColor: 'transparent',
-                                    }}
-                                />
-                            ) : !lives.filter(live => live.status === "live").length && !isLoading ? (
+                                    <View
+                                        style={{
+                                            width: 150,
+                                            height: 230,
+                                            margin: 10,
+                                            backgroundColor: 'transparent',
+                                        }}
+                                    />
+                                </>
+                            ) : (
                                 <NoData
                                     title={'Aucun lives en cours'}
                                     message={
@@ -256,11 +220,7 @@ export const LivesScreen = ({navigation}) => {
                                     }
                                     buttonTitle={''}
                                 />
-                            ) : (
-                                <View style={{height: '100%', justifyContent: 'center'}}>
-                                    <ActivityIndicator size="large" color="black"/>
-                                </View>
-                            )}*/}
+                            )}
                         </View>
                     </TouchableWithoutFeedback>
                 </ScrollView>
@@ -278,7 +238,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        margin: 10
+        margin: 10,
     },
     headlineContainer: {marginBottom: 30},
     formContainer: {

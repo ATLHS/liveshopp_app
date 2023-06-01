@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
     StyleSheet,
-    Text,
     View,
     SafeAreaView,
     Keyboard,
@@ -30,7 +29,13 @@ const LiveCreationFormSchema = () => [
                 value: true,
                 message: 'Veuillez indiquer le nom du live.',
             },
+            pattern: {
+                value: /^[a-zA-Z\s0-9]*$/i,
+                message: 'Le nom du live est invalide',
+            },
         },
+        helper:
+            'Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n',
         editable: true,
         defaultValue: '',
     },
@@ -96,9 +101,6 @@ export const SettingNewLive = ({navigation}) => {
                     contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
-                            {/*<View style={styles.headlineContainerMessage}>
-                                <Text style={styles.headlineMessage}>CRÉE UN NOUVEAU LIVE</Text>
-                            </View>*/}
                             <View style={styles.fieldContainer}>
                                 <FieldWrapper
                                     control={control}
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 50,
     },
     headlineContainerMessage: {
         marginBottom: 30,

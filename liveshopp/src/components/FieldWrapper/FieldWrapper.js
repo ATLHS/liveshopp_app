@@ -7,7 +7,7 @@ import React from 'react';
 import {selectIsAuthenticate} from '../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
 import colors from '../../styles/colors';
-import {Link} from "@react-navigation/native";
+import {Link} from '@react-navigation/native';
 
 const FieldWrapper = ({control, schema}) => {
     const isAuthenticate = useSelector(state => state.user.isAuthenticate);
@@ -22,7 +22,9 @@ const FieldWrapper = ({control, schema}) => {
                         <ErrorMessage
                             errors={props.formState.errors}
                             name={field.name}
-                            render={({message}) => <MessageHelper message={message}/>}
+                            render={({message}) => (
+                                <MessageHelper message={message} />
+                            )}
                         />
                         {field.helper ? (
                             <View
@@ -37,19 +39,29 @@ const FieldWrapper = ({control, schema}) => {
                                             ? outlinedStyles.helperText
                                             : containedStyles.helperText
                                     }>
-                                    {field.helper.helperLink ? <View>
-                                        <Text style={{color: colors.LIGHT}}>{field.helper.helperMessage1}</Text>
-                                        <Text style={{color: 'grey'}}><Link
-                                            to={{screen: 'rgpdScreen'}}>
-                                            conditions générales d’utilisation
-                                        </Link>
-                                        </Text>
-                                        <Text style={{color: colors.LIGHT}}>{field.helper.helperMessage2}</Text>
-                                    </View> : field.helper}
+                                    {field.helper.helperLink ? (
+                                        <View>
+                                            <Text style={{color: colors.LIGHT}}>
+                                                {field.helper.helperMessage1}
+                                            </Text>
+                                            <Text style={{color: 'grey'}}>
+                                                <Link
+                                                    to={{screen: 'rgpdScreen'}}>
+                                                    conditions générales
+                                                    d’utilisation
+                                                </Link>
+                                            </Text>
+                                            <Text style={{color: colors.LIGHT}}>
+                                                {field.helper.helperMessage2}
+                                            </Text>
+                                        </View>
+                                    ) : (
+                                        field.helper
+                                    )}
                                 </Text>
                             </View>
                         ) : (
-                            <Text/>
+                            <Text />
                         )}
                     </>
                 )}

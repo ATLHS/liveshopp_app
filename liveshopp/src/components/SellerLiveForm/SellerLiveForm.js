@@ -16,7 +16,7 @@ import {faClock, faEuroSign} from '@fortawesome/free-solid-svg-icons';
 const currentSellerLiveForm = [
     {
         name: 'product_name',
-        label: 'Réf produit',
+        label: "Nom de l'article",
         type: 'textProduct',
         validation: {
             required: {
@@ -101,7 +101,10 @@ export const SellerLiveForm = ({navigation, onPress}) => {
                                 )}
                                 <TextInput
                                     style={{
-                                        width: textField.name === 'product_name' ? 180 : 60,
+                                        width:
+                                            textField.name === 'product_name'
+                                                ? 180
+                                                : 60,
                                         borderWidth: 0,
                                         margin: 6,
                                         borderRadius: 5,
@@ -113,16 +116,23 @@ export const SellerLiveForm = ({navigation, onPress}) => {
                                     }}
                                     placeholder={textField.label}
                                     autoFocus={textField.autoFocus || false}
-                                    onChangeText={value => field.onChange(value)}
+                                    onChangeText={value =>
+                                        field.onChange(value)
+                                    }
                                     defaultValue={textField.defaultValue}
                                     placeholderTextColor="#CCCCCC"
                                     selectionColor={colors.LIGHT}
                                     editable={textField.editable}
                                     maxLength={
-                                        textField.name === 'product_auction_time' ? 1 : 500
+                                        textField.name ===
+                                        'product_auction_time'
+                                            ? 1
+                                            : 500
                                     }
                                     keyboardType={
-                                        textField.name === 'product_name' ? 'default' : 'number-pad'
+                                        textField.name === 'product_name'
+                                            ? 'default'
+                                            : 'number-pad'
                                     }
                                 />
                             </View>
@@ -137,7 +147,7 @@ export const SellerLiveForm = ({navigation, onPress}) => {
                 {!isLoading ? (
                     <Text style={styles.title}>Lancer l’enchère</Text>
                 ) : (
-                    <ActivityIndicator size="small" color={colors.DARK}/>
+                    <ActivityIndicator size="small" color={colors.DARK} />
                 )}
             </TouchableOpacity>
         </View>

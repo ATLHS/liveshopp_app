@@ -12,44 +12,41 @@ import {
 } from 'react-native';
 import colors from '../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-    setIsJoin,
-    setIsGone, setIsHost, setLives,
-} from '../../redux/slices/livesSlice';
+import {setIsJoin, setIsGone, setLives} from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import socket from '../../services/config/clientSocketIoConfig';
 import LiveCard from '../../components/liveCard/liveCard';
 import {useFocusEffect} from '@react-navigation/native';
 import NoData from '../../components/NoData/NoData';
-import customer from "../../services/customer";
-import {setBlockedUser} from "../../redux/slices/userSlice";
 
 export const LivesScreen = ({navigation}) => {
-    const {isGone, lives} = useSelector(
-        state => state.lives,
-    );
+    const {isGone} = useSelector(state => state.lives);
     const {user} = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
+    const [comingLives, setComingLives] = useState([]);
 
     useFocusEffect(
         React.useCallback(() => {
-            if (isGone) {
-                goOut();
-            }
-        }, [isGone]),
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            dispatch(setIsHost(false));
-            live
-                .getLives()
+            setIsLoading(true);
+            live.getLives()
                 .then(res => res)
                 .then(data => {
                     dispatch(setLives(data.lives));
+                    setComingLives(
+                        data.lives.filter(
+                            live =>
+                                live.seller_id !== user.id &&
+                                live.live_status === 'coming_soon' &&
+                                !user.blockedUser
+                                    .concat(user.blockedSeller)
+                                    .includes(live.seller_id),
+                        ),
+                    );
+                    setIsLoading(false);
                 })
                 .catch(err => {
+                    setIsLoading(false);
                     console.log(err, 'get lives error.');
                 });
         }, []),
@@ -57,21 +54,10 @@ export const LivesScreen = ({navigation}) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            customer
-                .getBlockedUser()
-                .then(res => res)
-                .then(data => {
-                    const sellerIds = data.blockedSeller.map(seller => seller._id);
-                    const userIds = data.blockedUser.map(user => user._id);
-
-                    dispatch(setBlockedUser({blockedUser: userIds, blockedSeller: sellerIds}));
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    console.log(err);
-                    setIsLoading(false);
-                });
-        }, []),
+            if (isGone) {
+                goOut();
+            }
+        }, [isGone]),
     );
 
     const goLive = async liveData => {
@@ -103,11 +89,20 @@ export const LivesScreen = ({navigation}) => {
                     contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.onGoingLive}>
-                            {!isLoading &&
-                                lives &&
-                                lives
-                                    .filter(live => live.seller_id !== user.id && live.live_status === 'coming_soon' && !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id))
-                                    .map((live, id) => (
+                            {isLoading ? (
+                                <View
+                                    style={{
+                                        height: '100%',
+                                        justifyContent: 'center',
+                                    }}>
+                                    <ActivityIndicator
+                                        size="large"
+                                        color="black"
+                                    />
+                                </View>
+                            ) : comingLives.length ? (
+                                <>
+                                    {comingLives.map((live, id) => (
                                         <LiveCard
                                             key={id}
                                             sellerName={live.sellerName}
@@ -119,16 +114,16 @@ export const LivesScreen = ({navigation}) => {
                                             imageUrl={live.imageUrl || ''}
                                         />
                                     ))}
-                            {lives && !isLoading ? (
-                                <View
-                                    style={{
-                                        width: 150,
-                                        height: 230,
-                                        margin: 10,
-                                        backgroundColor: 'transparent',
-                                    }}
-                                />
-                            ) : !lives.length && !isLoading ? (
+                                    <View
+                                        style={{
+                                            width: 150,
+                                            height: 230,
+                                            margin: 10,
+                                            backgroundColor: 'transparent',
+                                        }}
+                                    />
+                                </>
+                            ) : (
                                 <NoData
                                     title={'Aucun lives à venir'}
                                     message={
@@ -136,10 +131,6 @@ export const LivesScreen = ({navigation}) => {
                                     }
                                     buttonTitle={''}
                                 />
-                            ) : (
-                                <View style={{height: '100%', justifyContent: 'center'}}>
-                                    <ActivityIndicator size="large" color="black"/>
-                                </View>
                             )}
                         </View>
                     </TouchableWithoutFeedback>
@@ -158,7 +149,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         flexWrap: 'wrap',
-        margin: 10
+        margin: 10,
     },
     headlineContainer: {marginBottom: 30},
     formContainer: {
