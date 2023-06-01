@@ -7,7 +7,7 @@ const UserSeller = require("../../models/seller");
 const User = require("../../models/user");
 const saltRounds = 12;
 const {updateCustomer} = require("../../utils/updateCustomer.js");
-const {sendCodeToConfirmEmailRegistration} = require("../../utils/sendCodeConfirmationEmail");
+const {sendCodeToConfirmEmailRegistration, sendWelcomeEmail} = require("../../utils/sendCodeConfirmationEmail");
 const stripeUtils = require("../../utils/stripeUtils");
 
 router.post("/user-signin", async (req, res) => {
@@ -115,7 +115,7 @@ router.post("/user-signup", async (req, res) => {
 
                     //TO DO check if email is sent to
                     if (updatedUser) {
-                        sendCodeToConfirmEmailRegistration(updatedUser.email, registeredConfirmedCode)
+                        await sendCodeToConfirmEmailRegistration(updatedUser.email, registeredConfirmedCode)
                         return res.status(200).json({
                             user: {
                                 id: updatedUser._id, isConfirmed: updatedUser.isConfirmed,
@@ -150,7 +150,7 @@ router.post("/user-signup", async (req, res) => {
 
                     if (newUser) {
                         // send email confirmed code to the user
-                        sendCodeToConfirmEmailRegistration(newUser.email, registeredConfirmedCode)
+                        await sendCodeToConfirmEmailRegistration(newUser.email, registeredConfirmedCode)
                         return res.status(200).json({
                             user: {
                                 id: newUser.id,
@@ -208,7 +208,7 @@ router.post("/seller-signup", async (req, res) => {
 
                     //TO DO check if email is sent to
                     if (updatedSeller) {
-                        sendCodeToConfirmEmailRegistration(updatedSeller.email, registeredConfirmedCode)
+                        await sendCodeToConfirmEmailRegistration(updatedSeller.email, registeredConfirmedCode)
                         return res.status(200).json({
                             user: {
                                 id: updatedSeller._id, isConfirmed: updatedSeller.isConfirmed,
@@ -247,7 +247,7 @@ router.post("/seller-signup", async (req, res) => {
 
                     if (newSeller) {
                         // send email confirmed code to the user
-                        sendCodeToConfirmEmailRegistration(newSeller.email, registeredConfirmedCode)
+                        await sendCodeToConfirmEmailRegistration(newSeller.email, registeredConfirmedCode)
                         return res.status(200).json({
                             user: {
                                 id: newSeller.id,
@@ -298,6 +298,8 @@ router.post("/confirm-user-email", async (req, res) => {
                             message: "Un probleme est survenu, réessayez plus tard.",
                         });
                     }
+
+                    sendWelcomeEmail(customer);
 
                     return res
                         .status(200)
