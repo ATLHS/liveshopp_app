@@ -127,7 +127,7 @@ export const UserSignUp = ({navigation}) => {
                         <View style={styles.formContainer}>
                             <View style={styles.headlineContainer}>
                                 <Text style={styles.headline}>
-                                    Faire une bonne affaire n’a jamais était aussi simple.
+                                    Faire une bonne affaire n’a jamais été aussi simple.
                                 </Text>
                             </View>
                             <View style={styles.headlineContainerMessage}>

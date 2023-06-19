@@ -247,7 +247,7 @@ const SellerStack = () => {
                             }}>
                             <Text
                                 style={{
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     color: colors.LIGHT,
                                     fontFamily: 'Roboto-Regular',
                                     marginRight: 5,
@@ -281,7 +281,7 @@ const SellerStack = () => {
                                         width: 80,
                                         height: 25,
                                         borderRadius: 3,
-                                        backgroundColor: '#ff2a53',
+                                        backgroundColor: colors.PRIMARY,
                                         marginRight: 10,
                                     }}>
                                     <Text

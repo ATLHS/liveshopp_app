@@ -402,30 +402,30 @@ export const LiveScreen = () => {
                                                     </Text>
                                                     {item.profil ===
                                                         'admin' && (
-                                                        <View
-                                                            style={{
-                                                                backgroundColor:
-                                                                    colors.LIGHT,
-                                                                color: colors.DARK,
-                                                                borderRadius: 2,
-                                                                alignItems:
-                                                                    'center',
-                                                                marginBottom: 3,
-                                                                padding: 2,
-                                                                paddingRight: 4,
-                                                                paddingLeft: 4,
-                                                            }}>
-                                                            <Text
+                                                            <View
                                                                 style={{
+                                                                    backgroundColor:
+                                                                    colors.LIGHT,
                                                                     color: colors.DARK,
-                                                                    fontWeight:
-                                                                        '700',
-                                                                    fontSize: 10,
+                                                                    borderRadius: 2,
+                                                                    alignItems:
+                                                                        'center',
+                                                                    marginBottom: 3,
+                                                                    padding: 2,
+                                                                    paddingRight: 4,
+                                                                    paddingLeft: 4,
                                                                 }}>
-                                                                Admin
-                                                            </Text>
-                                                        </View>
-                                                    )}
+                                                                <Text
+                                                                    style={{
+                                                                        color: colors.DARK,
+                                                                        fontWeight:
+                                                                            '700',
+                                                                        fontSize: 10,
+                                                                    }}>
+                                                                    Admin
+                                                                </Text>
+                                                            </View>
+                                                        )}
                                                 </View>
                                                 {user.id !== item.userId &&
                                                     item.profil !== 'admin' && (
@@ -434,14 +434,14 @@ export const LiveScreen = () => {
                                                                 user.profil ===
                                                                 'admin'
                                                                     ? showObjectionableAdminAction(
-                                                                          {
-                                                                              item,
-                                                                              liveData,
-                                                                          },
-                                                                      )
+                                                                        {
+                                                                            item,
+                                                                            liveData,
+                                                                        },
+                                                                    )
                                                                     : showObjectionableAction(
-                                                                          item,
-                                                                      )
+                                                                        item,
+                                                                    )
                                                             }>
                                                             <FontAwesomeIcon
                                                                 icon={
@@ -476,7 +476,7 @@ export const LiveScreen = () => {
                                                 width: 350,
                                                 color: colors.LIGHT,
                                                 fontFamily: 'Roboto-Regular',
-                                                fontSize: 14,
+                                                fontSize: 20,
                                                 fontWeight: 500,
                                                 padding: 15,
                                             }}>
@@ -485,7 +485,7 @@ export const LiveScreen = () => {
                                                     .productName
                                             }
                                         </Text>
-                                        <LiveAuctionInfo />
+                                        <LiveAuctionInfo/>
                                     </>
                                 ) : (
                                     <SellerLiveForm
@@ -495,6 +495,7 @@ export const LiveScreen = () => {
                                                 data,
                                             )
                                         }
+                                        currentAuctionIsRunning={liveData.currentAuction.currentAuctionStatus === 'running'}
                                     />
                                 )
                             ) : (
@@ -518,7 +519,7 @@ export const LiveScreen = () => {
                                     )}
                                     {liveData.currentAuction
                                         .currentAuctionStatus === 'running' && (
-                                        <LiveAuctionInfo />
+                                        <LiveAuctionInfo/>
                                     )}
                                     {user.profil !== 'admin' && (
                                         <UserLiveForm
@@ -666,30 +667,30 @@ export const LiveScreen = () => {
                                                     </Text>
                                                     {item.profil ===
                                                         'admin' && (
-                                                        <View
-                                                            style={{
-                                                                backgroundColor:
-                                                                    colors.LIGHT,
-                                                                color: colors.DARK,
-                                                                borderRadius: 2,
-                                                                alignItems:
-                                                                    'center',
-                                                                marginBottom: 3,
-                                                                padding: 2,
-                                                                paddingRight: 4,
-                                                                paddingLeft: 4,
-                                                            }}>
-                                                            <Text
+                                                            <View
                                                                 style={{
+                                                                    backgroundColor:
+                                                                    colors.LIGHT,
                                                                     color: colors.DARK,
-                                                                    fontWeight:
-                                                                        '700',
-                                                                    fontSize: 10,
+                                                                    borderRadius: 2,
+                                                                    alignItems:
+                                                                        'center',
+                                                                    marginBottom: 3,
+                                                                    padding: 2,
+                                                                    paddingRight: 4,
+                                                                    paddingLeft: 4,
                                                                 }}>
-                                                                Admin
-                                                            </Text>
-                                                        </View>
-                                                    )}
+                                                                <Text
+                                                                    style={{
+                                                                        color: colors.DARK,
+                                                                        fontWeight:
+                                                                            '700',
+                                                                        fontSize: 10,
+                                                                    }}>
+                                                                    Admin
+                                                                </Text>
+                                                            </View>
+                                                        )}
                                                 </View>
                                                 {user.id !== item.userId &&
                                                     item.profil !== 'admin' && (
@@ -698,14 +699,14 @@ export const LiveScreen = () => {
                                                                 user.profil ===
                                                                 'admin'
                                                                     ? showObjectionableAdminAction(
-                                                                          {
-                                                                              item,
-                                                                              liveData,
-                                                                          },
-                                                                      )
+                                                                        {
+                                                                            item,
+                                                                            liveData,
+                                                                        },
+                                                                    )
                                                                     : showObjectionableAction(
-                                                                          item,
-                                                                      )
+                                                                        item,
+                                                                    )
                                                             }>
                                                             <FontAwesomeIcon
                                                                 icon={

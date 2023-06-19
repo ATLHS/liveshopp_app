@@ -109,8 +109,8 @@ export const OnGoingLive = ({navigation}) => {
                 ChannelProfileType.ChannelProfileLiveBroadcasting,
             );
 
-            await agoraEngineRef.current?.startPreview();
-            await agoraEngineRef.current?.joinChannel(
+            agoraEngineRef.current?.startPreview();
+            agoraEngineRef.current?.joinChannel(
                 token,
                 liveData.live_name,
                 0,
@@ -421,7 +421,7 @@ export const OnGoingLive = ({navigation}) => {
                                 <NoData
                                     title={"Vous n'avez aucun live en cours"}
                                     message={
-                                        'Un live programmés apparaîtra ici 30 min avant que le show commence.'
+                                        'Un live programmé apparaîtra ici 30 min avant que le show commence.'
                                     }
                                     buttonTitle={'Créer un live maintenant ?'}
                                     onPress={() =>

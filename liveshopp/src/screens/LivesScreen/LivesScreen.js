@@ -141,7 +141,7 @@ export const LivesScreen = ({navigation}) => {
                 ChannelProfileType.ChannelProfileLiveBroadcasting,
             );
 
-            await agoraEngineRef.current?.joinChannel(
+            agoraEngineRef.current?.joinChannel(
                 token,
                 liveData.live_name,
                 0,
@@ -214,7 +214,7 @@ export const LivesScreen = ({navigation}) => {
                                 </>
                             ) : (
                                 <NoData
-                                    title={'Aucun lives en cours'}
+                                    title={'Aucun live en cours'}
                                     message={
                                         'Les lives en cours apparaîtront ici, reviens un peu plus tard.'
                                     }

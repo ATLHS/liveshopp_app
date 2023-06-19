@@ -15,10 +15,10 @@ export const LiveAuctionInfo = () => {
                 borderRadius: 10,
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-start',
                 padding: 15,
             }}>
-            <View style={{width: 80, height: 40, justifyContent: 'flex-end'}}>
+            <View style={{width: 100, height: 40, justifyContent: 'flex-end', marginRight: 10}}>
                 <Text
                     style={{
                         color: colors.LIGHT,
@@ -30,14 +30,14 @@ export const LiveAuctionInfo = () => {
                 <Text
                     style={{
                         color: colors.LIGHT,
-                        fontSize: 10,
+                        fontSize: 11,
                         fontFamily: 'Roboto-Regular',
                         fontWeight: '800',
                     }}>
                     Enchère en cours
                 </Text>
             </View>
-            <View style={{width: 80, height: 40, justifyContent: 'flex-end'}}>
+            <View style={{width: 85, height: 40, justifyContent: 'flex-end', marginRight: 10}}>
                 <Text
                     style={{
                         color: colors.LIGHT,
@@ -50,18 +50,18 @@ export const LiveAuctionInfo = () => {
                 <Text
                     style={{
                         color: colors.LIGHT,
-                        fontSize: 10,
+                        fontSize: 11,
                         fontFamily: 'Roboto-Regular',
                         fontWeight: '800',
                     }}>
                     Temps restant
                 </Text>
             </View>
-            <View style={{width: 120, height: 40, justifyContent: 'flex-end'}}>
+            <View style={{width: 100, height: 40, justifyContent: 'flex-end'}}>
                 <Text
                     style={{
                         color: colors.LIGHT,
-                        fontSize: 11,
+                        fontSize: 12,
                         fontFamily: 'FugazOne-Regular',
                         marginBottom: 2,
                     }}>
@@ -70,7 +70,7 @@ export const LiveAuctionInfo = () => {
                 <Text
                     style={{
                         color: colors.LIGHT,
-                        fontSize: 10,
+                        fontSize: 11,
                         fontFamily: 'Roboto-Regular',
                         fontWeight: '800',
                     }}>

@@ -125,9 +125,9 @@ export const LivesScreen = ({navigation}) => {
                                 </>
                             ) : (
                                 <NoData
-                                    title={'Aucun lives à venir'}
+                                    title={'Aucun live à venir'}
                                     message={
-                                        'Les lives à venir apparaitron ici.'
+                                        'Les lives à venir apparaîtront ici.'
                                     }
                                     buttonTitle={''}
                                 />

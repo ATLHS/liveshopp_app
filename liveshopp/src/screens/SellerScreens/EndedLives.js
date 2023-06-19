@@ -69,7 +69,7 @@ export const EndedLives = () => {
                                 <NoData
                                     title={"Vous n'avez aucun live terminé"}
                                     message={
-                                        'Tous vos lives terminé \n apparaitron ici.'
+                                        'Tous vos lives terminé \n apparaîtront ici.'
                                     }
                                 />
                             ) : (

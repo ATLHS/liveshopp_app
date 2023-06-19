@@ -193,7 +193,7 @@ export const CommingSoonLives = ({navigation}) => {
                   ).length && !isLoading ? (
                   <NoData
                     title={"Vous n'avez aucun live à venir"}
-                    message={'Tous vos lives programmés \n apparaitron ici.'}
+                    message={'Tous vos lives programmés \n apparaîtront ici.'}
                     buttonTitle={'Créer un live maintenant ?'}
                     onPress={() => navigation.navigate('SettingNewLive')}
                   />

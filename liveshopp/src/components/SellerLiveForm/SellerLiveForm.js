@@ -12,6 +12,7 @@ import colors from '../../styles/colors';
 import {useDispatch} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faClock, faEuroSign} from '@fortawesome/free-solid-svg-icons';
+import {useFocusEffect} from "@react-navigation/native";
 
 const currentSellerLiveForm = [
     {
@@ -46,11 +47,18 @@ const currentSellerLiveForm = [
     },
 ];
 
-export const SellerLiveForm = ({navigation, onPress}) => {
+export const SellerLiveForm = ({navigation, onPress, currentAuctionIsRunning}) => {
     const {handleSubmit, control} = useForm();
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+
+    /*useFocusEffect(
+        React.useCallback(() => {
+            if (!currentAuctionIsRunning) setDisabled(false);
+        }, [currentAuctionIsRunning]),
+    );*/
 
     return (
         <View style={{flexDirection: 'column', alignItems: 'center'}}>
@@ -142,12 +150,16 @@ export const SellerLiveForm = ({navigation, onPress}) => {
                 ))}
             </View>
             <TouchableOpacity
-                onPress={handleSubmit(data => onPress(data))}
-                style={styles.startAuction}>
-                {!isLoading ? (
+                onPress={handleSubmit(data => {
+                    onPress(data);
+                    setDisabled(true);
+                })}
+                style={styles.startAuction}
+                disabled={disabled}>
+                {!disabled ? (
                     <Text style={styles.title}>Lancer l’enchère</Text>
                 ) : (
-                    <ActivityIndicator size="small" color={colors.DARK} />
+                    <ActivityIndicator size="small" color={colors.LIGHT}/>
                 )}
             </TouchableOpacity>
         </View>
