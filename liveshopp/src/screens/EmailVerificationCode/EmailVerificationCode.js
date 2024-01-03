@@ -38,11 +38,11 @@ export const EmailVerificationCode = ({navigation, route}) => {
     const [message, setMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const {user_id} = route.params;
+    const {user_id, resetPassword} = route.params;
 
     useEffect(() => {
         setMessage(route.params.message);
-    });
+    }, []);
 
     const handleEmailVerificationCode = data => {
         setIsLoading(true);
@@ -63,6 +63,24 @@ export const EmailVerificationCode = ({navigation, route}) => {
             });
     };
 
+    const handleResetPassword = data => {
+        setIsLoading(true);
+        data.id = user_id;
+        auth
+            .checkResetPasswordCode(data)
+            .then(res => res)
+            .then(data => {
+                setIsLoading(false);
+                navigation.navigate('ResetCustomerPassword', {
+                    user_id: data.user.id,
+                });
+            })
+            .catch(err => {
+                setErrorMessage(err.message);
+                setIsLoading(false);
+            });
+    };
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
             <KeyboardAvoidingView
@@ -73,7 +91,11 @@ export const EmailVerificationCode = ({navigation, route}) => {
                         <View style={styles.formContainer}>
                             <View style={styles.headlineContainer}>
                                 <Text style={styles.headline}>
-                                    Entrez le code de confirmation
+                                    {`Entrez le code de ${
+                                        resetPassword
+                                            ? 'vérification'
+                                            : 'confirmation'
+                                    }.`}
                                 </Text>
                             </View>
                             <View style={styles.helper}>
@@ -91,7 +113,7 @@ export const EmailVerificationCode = ({navigation, route}) => {
                             <View style={styles.action}>
                                 <ContainedButton
                                     title="Terminez l’inscription"
-                                    onPress={handleSubmit(handleEmailVerificationCode)}
+                                    onPress={handleSubmit(resetPassword ? handleResetPassword : handleEmailVerificationCode)}
                                     loading={isLoading}
                                 />
                             </View>

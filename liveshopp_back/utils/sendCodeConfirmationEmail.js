@@ -18,14 +18,27 @@ let transporter = nodemailer.createTransport({
 module.exports = {
     sendCodeToConfirmEmailRegistration: async (userEmail, code) => {
         const template = `<div>Hello,</div><br/>
-                          <div>Votre code de confirmation Liveshopp est : </div>
-                          <b>${code}</b><br/><br/>
+                          <div>Votre code de confirmation Liveshopp est le suivant : </div><br/>
+                          <b style="font-size: 25px">${code}</b><br/><br/>
                           <div>L'équipe Liveshopp 👋</div>`
 
-        let info = await transporter.sendMail({
+        await transporter.sendMail({
             from: '"Liveshopp" <application@liveshopp.fr>', // sender address
             to: userEmail, // list of receivers
             subject: "Code de confirmation", // Subject line
+            html: template,
+        });
+    },
+    sendCodeToResetPassword: async (userEmail, code) => {
+        const template = `<div>Hello,</div><br/>
+                          <div>Votre code de vérification Liveshopp est : </div><br/>
+                          <b style="font-size: 25px">${code}</b><br/><br/>
+                          <div>L'équipe Liveshopp 👋</div>`
+
+        await transporter.sendMail({
+            from: '"Liveshopp" <application@liveshopp.fr>', // sender address
+            to: userEmail, // list of receivers
+            subject: "Code de vérification", // Subject line
             html: template,
         });
     },

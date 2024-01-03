@@ -31,6 +31,25 @@ const auth = {
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },
+    resetPassword(data) {
+        console.log("hello");
+        return axiosConfig
+            .post('/api/auth/reset-password', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    checkResetPasswordCode(data) {
+        return axiosConfig
+            .post('/api/auth/check-reset-password-code', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    resetCustomerPassword(data) {
+        return axiosConfig
+            .post('/api/auth/reset-customer-password', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
 };
 
 export default auth;

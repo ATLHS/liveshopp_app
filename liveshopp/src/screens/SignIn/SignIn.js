@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,7 +8,7 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     ScrollView,
-    Platform,
+    Platform, Pressable,
 } from 'react-native';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import {useForm} from 'react-hook-form';
@@ -19,6 +19,8 @@ import auth from '../../services/auth';
 import {setUser, setIsAuthenticate} from '../../redux/slices/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosConfig from '../../services/config/axiosConfig';
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
+import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 
 const signInFormSchema = [
     {
@@ -50,11 +52,15 @@ const signInFormSchema = [
     },
 ];
 
-export const SignIn = ({navigation}) => {
+export const SignIn = ({navigation, route}) => {
     const {handleSubmit, control} = useForm();
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (route.params && route.params.message) setMessage(route.params.message);
+    }, [route]);
 
     const handleSignin = data => {
         setIsLoading(false);
@@ -79,12 +85,17 @@ export const SignIn = ({navigation}) => {
             });
     };
 
+    const goToResetPassword = () => {
+        navigation.navigate('ResetPassword');
+    };
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.container}>
-                <ScrollView>
+                <ScrollView
+                    contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
                             <View style={styles.headlineContainer}>
@@ -95,6 +106,12 @@ export const SignIn = ({navigation}) => {
                             </View>
                             <View style={styles.fieldContainer}>
                                 <FieldWrapper control={control} schema={signInFormSchema}/>
+                            </View>
+
+                            <View style={styles.helper}>
+                                <TouchableWithoutFeedback onPress={() => goToResetPassword()}>
+                                    <Text style={styles.helperText}>Mot de passe oublié ?</Text>
+                                </TouchableWithoutFeedback>
                             </View>
                             <View style={styles.action}>
                                 <ContainedButton
@@ -129,7 +146,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     headlineMessage: {color: colors.LIGHT},
-    fieldContainer: {margin: 10},
+    fieldContainer: {margin: 10, marginBottom: 0},
     headline: {
         color: colors.LIGHT,
         fontFamily: 'Roboto-Regular',
@@ -137,6 +154,8 @@ const styles = StyleSheet.create({
     },
     action: {},
     resetPassword: {color: 'white'},
+    helperText: {color: 'white', textAlign: 'left', width: 350, textDecorationLine: 'underline'},
+    helper: {width: 350, position: 'relative', top: -20},
 });
 
 export default SignIn;

@@ -7,7 +7,7 @@ const UserSeller = require("../../models/seller");
 const User = require("../../models/user");
 const saltRounds = 12;
 const {updateCustomer} = require("../../utils/updateCustomer.js");
-const {sendCodeToConfirmEmailRegistration, sendWelcomeEmail} = require("../../utils/sendCodeConfirmationEmail");
+const {sendCodeToConfirmEmailRegistration, sendWelcomeEmail, sendCodeToResetPassword} = require("../../utils/sendCodeConfirmationEmail");
 const stripeUtils = require("../../utils/stripeUtils");
 
 router.post("/user-signin", async (req, res) => {
@@ -270,6 +270,98 @@ router.post("/seller-signup", async (req, res) => {
                 message: "Un probleme est survenu, réessayez plus tard.",
             });
         }
+    }
+});
+
+router.post("/reset-password", async (req, res) => {
+    const {email} = req.body.data;
+    const user = await User.findOne({email});
+    const seller = await UserSeller.findOne({email});
+
+    const customer = user || seller;
+
+    if (customer && customer.isConfirmed) {
+        const registeredConfirmedCode = randomNumber.randomFourDigitNumber();
+        const updatedCustomer = await updateCustomer(customer, {resetPasswordCode: registeredConfirmedCode}, false);
+
+        if (updatedCustomer) {
+            await sendCodeToResetPassword(updatedCustomer.email, registeredConfirmedCode)
+            return res.status(200).json({
+                user: {
+                    id: updatedCustomer._id,
+                }, message: `Entrez le code de vérification reçu à l'adresse e-mail : ${updatedCustomer.email}.`,
+            });
+        } else {
+            return res.status(400).json({
+                message: "Un probleme est survenu, réessayez plus tard.",
+            });
+        }
+    } else {
+        return res.status(400).json({
+            message: "Aucun utilisateur existe avec cette adresse e-mail.",
+        });
+    }
+});
+
+router.post("/check-reset-password-code", async (req, res) => {
+    const {
+        code,
+        id,
+    } = req.body.data;
+    const user = await User.findOne({_id: id});
+    const seller = await UserSeller.findOne({_id: id});
+
+    const customer = user || seller;
+
+    if (code && customer) {
+        const isValidCode = customer.resetPasswordCode === Number(code);
+        if (isValidCode) {
+            return res.status(200).json({
+                user: {
+                    id: customer._id,
+                },
+            });
+        } else {
+            return res.status(400).json({
+                message: "Code incorrect veuillez réessayer.",
+            });
+        }
+    } else {
+        return res.status(400).json({
+            message: "Un probleme est survenu, réessayez plus tard.",
+        });
+    }
+});
+
+router.post("/reset-customer-password", async (req, res) => {
+    const {
+        password_1,
+        id,
+    } = req.body.data;
+    const user = await User.findOne({_id: id});
+    const seller = await UserSeller.findOne({_id: id});
+
+    const customer = user || seller;
+
+    if (password_1 && customer) {
+        const hash = bcrypt.hashSync(password_1, saltRounds);
+
+        const updatedCustomer = await updateCustomer(customer, {password: hash}, false);
+
+        if (updatedCustomer) {
+            /*await sendResetPasswordConfirmation(updatedCustomer.email, registeredConfirmedCode);*/
+            return res.status(200).json({
+                message: "Votre mot de passe a été réinitialisé avec succès 🎉",
+            });
+        } else {
+            return res.status(400).json({
+                message: "Un probleme est survenu, réessayez plus tard.",
+            });
+        }
+    } else {
+        return res.status(400).json({
+            message: "Un probleme est survenu, réessayez plus tard.",
+        });
     }
 });
 
