@@ -59,6 +59,21 @@ const UserSignupFormSchema = [
         },
     },
     {
+        name: 'phone',
+        label: 'Numéro de téléphone mobile',
+        type: 'tel',
+        validation: {
+            required: {
+                value: true,
+                message: 'Veuillez indiquer un numéro de téléphone.',
+            },
+            pattern: {
+                value: /^[0-9]+$/ && /^0[67]\d{8}$/,
+                message: 'Veuillez indiquer un numéro valide.',
+            },
+        },
+    },
+    {
         name: 'password',
         label: 'Mot de passe',
         type: 'password',

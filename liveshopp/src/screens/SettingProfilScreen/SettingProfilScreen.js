@@ -50,6 +50,24 @@ export const SettingProfilScreen = ({navigation}) => {
             defaultValue: user.firstname,
         },
         {
+            name: 'phone',
+            label: user.phone ? 'Numéro de téléphone mobile' : '',
+            type: 'tel',
+            validation: {
+                required: {
+                    value: user.phone ? true : false,
+                    message: 'Veuillez indiquer un numéro de téléphone.',
+                },
+                pattern: {
+                    value: /^[0-9]+$/ && /^0[67]\d{8}$/,
+                    message: 'Veuillez indiquer un numéro valide.',
+                },
+            },
+            options: ['Direction', 'Marketing', 'Commercial', 'R&D'],
+            editable: true,
+            defaultValue: user.phone || '',
+        },
+        {
             name: 'email',
             label: 'Email',
             type: 'text',

@@ -16,11 +16,12 @@ router.post("/update-customer-profil", verifyJwt, async (req, res) => {
     const body = req.body.data;
 
     const customer = user || seller;
-    const data = customer.profil === 'user' ? {
+    const data = {
         firstname: body.firstname,
         lastname: body.lastname,
-        email: body.email
-    } : {firstname: body.firstname, lastname: body.lastname, phone: body.phone, email: body.email};
+        email: body.email,
+        phone: body.phone
+    };
 
     if (customer) {
         const updatedCustomer = await updateCustomer(customer, data, false);

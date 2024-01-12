@@ -83,7 +83,7 @@ router.post("/user-signup", async (req, res) => {
     // 2 check is user is confirmed
     // 3 check password
     // 4 create token and send it
-    const {firstname, lastname, email, password} = req.body.data;
+    const {firstname, lastname, email, phone, password} = req.body.data;
     const registeredConfirmedCode = randomNumber.randomFourDigitNumber();
     const user = await User.findOne({email});
     const seller = await UserSeller.findOne({email});
@@ -133,12 +133,14 @@ router.post("/user-signup", async (req, res) => {
         const createdCustomer = await stripeUtils.createCustomer({
             firstname,
             email,
+            phone
         });
         if (createdCustomer) {
             bcrypt.hash(password, saltRounds, async (err, hash) => {
                     const user = new User({
                         firstname,
                         lastname,
+                        phone,
                         email,
                         password: hash,
                         isConfirmed: false,
