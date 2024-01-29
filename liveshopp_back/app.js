@@ -11,6 +11,7 @@ const Product = require('./models/product');
 const stripeUtils = require("./utils/stripeUtils");
 const generateUniqueId = require('generate-unique-id');
 const {updateCustomer} = require("./utils/updateCustomer");
+const {isLessThanTenSeconds} = require("./utils/isLessThanTenSeconds");
 const User = require("./models/user");
 const UserSeller = require("./models/seller");
 
@@ -125,10 +126,21 @@ io.on("connection", (socket) => {
 
         const channelRoom = channels.get(channelName);
 
-        channelRoom.currentAuction.currentProductAmount = Number(channelRoom.currentAuction.currentProductAmount) + Number(data.bid);
-        channelRoom.currentAuction.userId = data.userId;
-        channelRoom.currentAuction.username = data.username;
-        channelRoom.currentAuction.shipping_address = data.shipping_address;
+        const {currentAuction} = channelRoom;
+
+        currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + Number(data.bid);
+        currentAuction.userId = data.userId;
+        currentAuction.username = data.username;
+        currentAuction.shipping_address = data.shipping_address;
+
+        let counter = currentAuction.currentAuctionDelay;
+
+        // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
+        if (isLessThanTenSeconds(counter.time)) {
+            counter.stop();
+            // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
+            counter.updateTimer('00:00:20');
+        }
 
         io.to(channelName).emit("currentAuctionData", channelRoom);
     });
@@ -155,7 +167,6 @@ io.on("connection", (socket) => {
                     };
                     const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
 
-
                     if (chargedCustomer.status === 'succeeded') {
                         // register current sale product info in db
                         const product = new Product({
@@ -181,6 +192,11 @@ io.on("connection", (socket) => {
                         } else {
                             io.to(key).emit("error", {message: 'erreur'});
                         }
+                    } else {
+                        // TO DO : Send a notification to the seller and to the user to inform them that the payment did not go through.
+                        value.currentAuction.userId = '';
+                        value.currentAuction.currentAuctionStatus = 'stopping';
+                        io.to(key).emit("currentAuctionData", value);
                     }
                 } else {
                     value.currentAuction.currentAuctionStatus = 'stopping';
@@ -222,7 +238,6 @@ io.on("connection", (socket) => {
     });
 });
 
-
 // db config
 const url = process.env.ATLAS_URL;
 mongoose
@@ -249,5 +264,8 @@ app.use("/api/order/", order);
 app.use("/api/stripe/", stripe);
 app.use("/api/admin/", admin);
 
-httpServer.listen(port, () => console.log(`Server listening on port  ${port}`));
+httpServer.listen(port, () => { console.log(`Server listening on port  ${port}`); });
+
+
+module.exports = {app, httpServer}
 

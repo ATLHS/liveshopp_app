@@ -1,6 +1,6 @@
 {
   "name": "liveshopp_front",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -35,10 +35,12 @@
     "react-native": "0.71.3",
     "react-native-agora": "^4.1.1",
     "react-native-animated-emoji": "^0.1.4",
+    "react-native-check-version": "^1.1.1",
     "react-native-confetti-cannon": "^1.5.2",
     "react-native-confirmation-code-field": "^7.3.1",
     "react-native-country-flag": "^1.1.9",
     "react-native-date-picker": "^4.2.9",
+    "react-native-device-info": "^10.12.0",
     "react-native-dotenv": "^3.4.8",
     "react-native-email": "^2.1.0",
     "react-native-fade-in-out": "^1.0.6",
@@ -53,6 +55,7 @@
     "react-native-svg": "^13.8.0",
     "react-native-tab-view": "^3.4.1",
     "react-native-toast-message": "^2.1.5",
+    "react-native-version-app": "^0.2.0",
     "react-redux": "^8.0.5",
     "react-rewards": "^2.0.4",
     "redux": "^4.2.1",

@@ -36,7 +36,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import customer from '../../services/customer';
 import admin from '../../services/admin';
-import {setIsGone, setIsJoin, setLiveData} from "../../redux/slices/livesSlice";
+import {setIsGone, setIsJoin, setLiveData} from '../../redux/slices/livesSlice';
 
 export const LiveScreen = () => {
     const agoraEngineRef = IRtcEngine;
@@ -402,30 +402,30 @@ export const LiveScreen = () => {
                                                     </Text>
                                                     {item.profil ===
                                                         'admin' && (
-                                                            <View
-                                                                style={{
-                                                                    backgroundColor:
+                                                        <View
+                                                            style={{
+                                                                backgroundColor:
                                                                     colors.LIGHT,
+                                                                color: colors.DARK,
+                                                                borderRadius: 2,
+                                                                alignItems:
+                                                                    'center',
+                                                                marginBottom: 3,
+                                                                padding: 2,
+                                                                paddingRight: 4,
+                                                                paddingLeft: 4,
+                                                            }}>
+                                                            <Text
+                                                                style={{
                                                                     color: colors.DARK,
-                                                                    borderRadius: 2,
-                                                                    alignItems:
-                                                                        'center',
-                                                                    marginBottom: 3,
-                                                                    padding: 2,
-                                                                    paddingRight: 4,
-                                                                    paddingLeft: 4,
+                                                                    fontWeight:
+                                                                        '700',
+                                                                    fontSize: 10,
                                                                 }}>
-                                                                <Text
-                                                                    style={{
-                                                                        color: colors.DARK,
-                                                                        fontWeight:
-                                                                            '700',
-                                                                        fontSize: 10,
-                                                                    }}>
-                                                                    Admin
-                                                                </Text>
-                                                            </View>
-                                                        )}
+                                                                Admin
+                                                            </Text>
+                                                        </View>
+                                                    )}
                                                 </View>
                                                 {user.id !== item.userId &&
                                                     item.profil !== 'admin' && (
@@ -434,14 +434,14 @@ export const LiveScreen = () => {
                                                                 user.profil ===
                                                                 'admin'
                                                                     ? showObjectionableAdminAction(
-                                                                        {
-                                                                            item,
-                                                                            liveData,
-                                                                        },
-                                                                    )
+                                                                          {
+                                                                              item,
+                                                                              liveData,
+                                                                          },
+                                                                      )
                                                                     : showObjectionableAction(
-                                                                        item,
-                                                                    )
+                                                                          item,
+                                                                      )
                                                             }>
                                                             <FontAwesomeIcon
                                                                 icon={
@@ -485,7 +485,7 @@ export const LiveScreen = () => {
                                                     .productName
                                             }
                                         </Text>
-                                        <LiveAuctionInfo/>
+                                        <LiveAuctionInfo />
                                     </>
                                 ) : (
                                     <SellerLiveForm
@@ -495,7 +495,11 @@ export const LiveScreen = () => {
                                                 data,
                                             )
                                         }
-                                        currentAuctionIsRunning={liveData.currentAuction.currentAuctionStatus === 'running'}
+                                        currentAuctionIsRunning={
+                                            liveData.currentAuction
+                                                .currentAuctionStatus ===
+                                            'running'
+                                        }
                                     />
                                 )
                             ) : (
@@ -519,7 +523,7 @@ export const LiveScreen = () => {
                                     )}
                                     {liveData.currentAuction
                                         .currentAuctionStatus === 'running' && (
-                                        <LiveAuctionInfo/>
+                                        <LiveAuctionInfo />
                                     )}
                                     {user.profil !== 'admin' && (
                                         <UserLiveForm
@@ -603,9 +607,6 @@ export const LiveScreen = () => {
                                     mets-toi à l'aise, 🍿 ça va être le 🔥!
                                 </Text>
                             </View>
-                            {/*<View style={{margin: 20}}>
-                <ActivityIndicator size="large" color={colors.LIGHT} />
-              </View>*/}
                         </View>
                         <View
                             style={{
@@ -667,30 +668,30 @@ export const LiveScreen = () => {
                                                     </Text>
                                                     {item.profil ===
                                                         'admin' && (
-                                                            <View
-                                                                style={{
-                                                                    backgroundColor:
+                                                        <View
+                                                            style={{
+                                                                backgroundColor:
                                                                     colors.LIGHT,
+                                                                color: colors.DARK,
+                                                                borderRadius: 2,
+                                                                alignItems:
+                                                                    'center',
+                                                                marginBottom: 3,
+                                                                padding: 2,
+                                                                paddingRight: 4,
+                                                                paddingLeft: 4,
+                                                            }}>
+                                                            <Text
+                                                                style={{
                                                                     color: colors.DARK,
-                                                                    borderRadius: 2,
-                                                                    alignItems:
-                                                                        'center',
-                                                                    marginBottom: 3,
-                                                                    padding: 2,
-                                                                    paddingRight: 4,
-                                                                    paddingLeft: 4,
+                                                                    fontWeight:
+                                                                        '700',
+                                                                    fontSize: 10,
                                                                 }}>
-                                                                <Text
-                                                                    style={{
-                                                                        color: colors.DARK,
-                                                                        fontWeight:
-                                                                            '700',
-                                                                        fontSize: 10,
-                                                                    }}>
-                                                                    Admin
-                                                                </Text>
-                                                            </View>
-                                                        )}
+                                                                Admin
+                                                            </Text>
+                                                        </View>
+                                                    )}
                                                 </View>
                                                 {user.id !== item.userId &&
                                                     item.profil !== 'admin' && (
@@ -699,14 +700,14 @@ export const LiveScreen = () => {
                                                                 user.profil ===
                                                                 'admin'
                                                                     ? showObjectionableAdminAction(
-                                                                        {
-                                                                            item,
-                                                                            liveData,
-                                                                        },
-                                                                    )
+                                                                          {
+                                                                              item,
+                                                                              liveData,
+                                                                          },
+                                                                      )
                                                                     : showObjectionableAction(
-                                                                        item,
-                                                                    )
+                                                                          item,
+                                                                      )
                                                             }>
                                                             <FontAwesomeIcon
                                                                 icon={

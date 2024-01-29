@@ -45,7 +45,7 @@ module.exports = {
             return paymentIntent;
         } catch (err) {
             // Error code will be authentication_required if authentication is needed
-            console.log(err);
+            return err;
         }
     },
     deleteCustomer: (id) => {

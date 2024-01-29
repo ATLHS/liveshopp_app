@@ -360,6 +360,8 @@ PODS:
     - AgoraIrisRTC_iOS (= 4.1.0-rc.2)
     - AgoraRtcEngine_iOS (= 4.1.0)
     - React-Core
+  - react-native-app-info (0.2.0):
+    - React-Core
   - react-native-date-picker (4.2.13):
     - React-Core
   - react-native-pager-view (6.2.0):
@@ -459,6 +461,8 @@ PODS:
   - RNCCheckbox (0.5.15):
     - BEMCheckBox (~> 1.4)
     - React-Core
+  - RNDeviceInfo (10.12.0):
+    - React-Core
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
@@ -552,6 +556,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-agora (from `../node_modules/react-native-agora`)
+  - react-native-app-info (from `../node_modules/react-native-version-app`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -570,6 +575,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
@@ -647,6 +653,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-agora:
     :path: "../node_modules/react-native-agora"
+  react-native-app-info:
+    :path: "../node_modules/react-native-version-app"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-pager-view:
@@ -683,6 +691,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCCheckbox:
     :path: "../node_modules/@react-native-community/checkbox"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -730,6 +740,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 9f7c9137605e72ca0343db4cea88006cb94856dd
   React-logger: 957e5dc96d9dbffc6e0f15e0ee4d2b42829ff207
   react-native-agora: 23e08e4a386714bb477effb01014966029e84fee
+  react-native-app-info: 5c7f396841e0511093c08de289a7cb2b6924a7d4
   react-native-date-picker: 04e866ba4e7857f83abd504ad42e787f0f02ae00
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-safe-area-context: f5549f36508b1b7497434baa0cd97d7e470920d4
@@ -748,6 +759,7 @@ SPEC CHECKSUMS:
   ReactCommon: 6f65ea5b7d84deb9e386f670dd11ce499ded7b40
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCCheckbox: 43bcc6493611468af0e19f19f029dab3da8561c4
+  RNDeviceInfo: db5c64a060e66e5db3102d041ebe3ef307a85120
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
