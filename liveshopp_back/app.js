@@ -1,7 +1,23 @@
 require("dotenv").config();
 const {createServer} = require("http");
+const Sentry = require("@sentry/node");
+const { nodeProfilingIntegration } = require("@sentry/profiling-node")
 const express = require("express");
 const app = express();
+
+// Sentry MUST be initiated right after app() creation
+Sentry.init({
+    debug: true,
+    dsn: process.env.SENTRY_DSN,
+    integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Sentry.Integrations.Express({ app }),
+        nodeProfilingIntegration(),
+    ],
+    tracesSampleRate: 1.0,      // Capture 100% of the transactions
+    profilesSampleRate: 1.0,    // Sampling rate relative to tracesSampleRate
+})
+
 const {Server} = require("socket.io");
 const cors = require("cors");
 const port = 5000;
@@ -14,6 +30,24 @@ const {updateCustomer} = require("./utils/updateCustomer");
 const {isLessThanTenSeconds} = require("./utils/isLessThanTenSeconds");
 const User = require("./models/user");
 const UserSeller = require("./models/seller");
+
+// The Sentry request handler middleware must be added before any other handlers
+app.use(Sentry.Handlers.requestHandler());
+// Performance Monitoring: Create spans and traces for every incoming request
+app.use(Sentry.Handlers.tracingHandler());
+// The Sentry error handler middleware must be registered before any other error middleware and after all controllers
+app.use(
+    Sentry.Handlers.errorHandler({
+        shouldHandleError(error) {
+            console.log(error, error.status)
+            // Capture all errors
+            if (error.status >= 400) {
+                return true
+            }
+            return false
+        },
+    })
+);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
@@ -264,8 +298,14 @@ app.use("/api/order/", order);
 app.use("/api/stripe/", stripe);
 app.use("/api/admin/", admin);
 
+// Optional fallthrough error handler
+app.use(function onError(err, req, res, next) {
+  // The error id is attached to `res.sentry` to be returned
+  // and optionally displayed to the user for support.
+  res.statusCode = 500;
+  res.end(res.sentry + "\n");
+});
+
 httpServer.listen(port, () => { console.log(`Server listening on port  ${port}`); });
 
-
 module.exports = {app, httpServer}
-
