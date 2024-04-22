@@ -7,7 +7,6 @@ const app = express();
 
 // Sentry MUST be initiated right after app() creation
 Sentry.init({
-    debug: true,
     dsn: process.env.SENTRY_DSN,
     integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
