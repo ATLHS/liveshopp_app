@@ -1,7 +1,7 @@
 require("dotenv").config();
 const {createServer} = require("http");
 const Sentry = require("@sentry/node");
-const { nodeProfilingIntegration } = require("@sentry/profiling-node")
+// const { nodeProfilingIntegration } = require("@sentry/profiling-node")
 const express = require("express");
 const app = express();
 
@@ -11,7 +11,7 @@ Sentry.init({
     integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
         new Sentry.Integrations.Express({ app }),
-        nodeProfilingIntegration(),
+        // nodeProfilingIntegration(),
     ],
     tracesSampleRate: 1.0,      // Capture 100% of the transactions
     profilesSampleRate: 1.0,    // Sampling rate relative to tracesSampleRate
