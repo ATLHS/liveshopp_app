@@ -274,7 +274,7 @@ io.on("connection", (socket) => {
 // db config
 const url = process.env.ATLAS_URL;
 mongoose
-    .connect(url, {useNewUrlParser: true})
+    .connect(url)
     .then(() => console.log(`Database connected successfully`))
     .catch((err) => console.log(err));
 
@@ -305,6 +305,6 @@ app.use(function onError(err, req, res, next) {
   res.end(res.sentry + "\n");
 });
 
-httpServer.listen(port, () => { console.log(`Server listening on port  ${port}`); });
+httpServer.listen(port, () => { console.log(`Server listening on port ${port}`); });
 
 module.exports = {app, httpServer}
