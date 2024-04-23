@@ -18,9 +18,8 @@ Sentry.init({
 });
 
 const { Server } = require('socket.io');
-const { instrument } = require('@socket.io/admin-ui');
 const cors = require('cors');
-const port = 3000;
+const port = 5000;
 const mongoose = require('mongoose');
 const timer = require('time-counter');
 const Product = require('./models/product');
@@ -50,21 +49,7 @@ app.use(
 );
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: ['https://admin.socket.io'],
-    credentials: true,
-  },
-});
-instrument(io, {
-  auth: {
-    type: 'basic',
-    username: process.env.SOCKET_ADMIN_USERNAME,
-    password: process.env.SOCKET_ADMIN_PASSWORD,
-  },
-  mode: 'development',
-});
-
+const io = new Server(httpServer);
 const channels = new Map();
 global.io = io;
 
