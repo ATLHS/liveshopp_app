@@ -305,6 +305,10 @@ app.use(function onError(err, req, res, next) {
   res.end(res.sentry + "\n");
 });
 
-httpServer.listen(port, () => { console.log(`Server listening on port  ${port}`); });
+app.get('/debug-sentry', function mainHandler(req, res) {
+    throw new Error('My first Sentry error!')
+});
+
+httpServer.listen(port, () => { console.log(`Server listening on port ${port}`); });
 
 module.exports = {app, httpServer}
