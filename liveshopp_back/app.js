@@ -274,7 +274,7 @@ io.on("connection", (socket) => {
 // db config
 const url = process.env.ATLAS_URL;
 mongoose
-    .connect(url, {useNewUrlParser: true})
+    .connect(url)
     .then(() => console.log(`Database connected successfully`))
     .catch((err) => console.log(err));
 
