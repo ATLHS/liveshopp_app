@@ -5,7 +5,7 @@ export APP="/opt/"
 echo "========== After Install =========="
 
 cd $HOME
-rsync -av --progress $HOME $APP --exclude install
+rsync -av --progress $HOME $APP --exclude install --exclude node_modules
 
 cd $APP
 node -e "console.log('Running Node.js ' + process.version)"
