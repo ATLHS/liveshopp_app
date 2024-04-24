@@ -12,7 +12,7 @@ cd "/opt/"
 echo "Folder at the /opt/ directory : " && ls
 
 echo "Installing backend dependencies"
-#sudo npm i
-#
+sudo npm ci --production
+
 #cd "/opt/liveshopp_web_front/"
 #sudo npm i

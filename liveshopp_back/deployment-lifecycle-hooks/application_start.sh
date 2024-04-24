@@ -16,3 +16,5 @@ cd "/opt/"
 
 pm2 delete all
 pm2 start "ecosystem.config.js" --env env
+
+echo "pm2 start ecosys --env ${env}"
