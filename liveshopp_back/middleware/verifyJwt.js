@@ -9,6 +9,11 @@ const verifyJwt = (req, res, next) => {
     const bearerToken = bearer[1];
     jwt.verify(bearerToken, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
+        // FIXME
+        //
+        // Should send correct (401?) response status
+        // Same comment everywhere it returns an error code
+        //
         return res.status(400).json({
           isAuthenticate: false,
           message: 'Requête non authentifiée',
@@ -18,6 +23,10 @@ const verifyJwt = (req, res, next) => {
       next();
     });
   } else {
+    // FIXME
+    //
+    // Should send proper missing authorization header
+    //
     return res.end();
   }
 };

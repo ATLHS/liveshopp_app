@@ -19,7 +19,6 @@ Sentry.init({
 
 const { Server } = require('socket.io');
 const cors = require('cors');
-const port = 5000;
 const mongoose = require('mongoose');
 const timer = require('time-counter');
 const Product = require('./models/product');
@@ -37,14 +36,7 @@ app.use(Sentry.Handlers.tracingHandler());
 // The Sentry error handler middleware must be registered before any other error middleware and after all controllers
 app.use(
   Sentry.Handlers.errorHandler({
-    shouldHandleError(error) {
-      console.log(error, error.status);
-      // Capture all errors
-      if (error.status >= 400) {
-        return true;
-      }
-      return false;
-    },
+    shouldHandleError: (error) => error.status >= 400,
   }),
 );
 
@@ -120,6 +112,12 @@ io.on('connection', (socket) => {
       message: message.live_message,
       id,
     });
+    // FIXME
+    //
+    // Why do we send ALL channelRoom data for EVERY message?
+    // This seems overkill and impact performance
+    // For every new message, we resend all past messages?
+    //
     io.to(liveData.channelName).emit('channelData', channelRoom);
   });
 
@@ -145,6 +143,10 @@ io.on('connection', (socket) => {
     }
   });
 
+  // FIXME
+  //
+  // Not a big problem but the name has a typo
+  //
   socket.on('pausedCurrentAuctionStatut', (channelName) => {
     const channelRoom = channels.get(channelName);
     channelRoom.currentAuction.currentAuctionStatus = 'paused';
@@ -168,6 +170,11 @@ io.on('connection', (socket) => {
     // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
     if (isLessThanTenSeconds(counter.time)) {
       counter.stop();
+      // FIXME
+      //
+      // It says increment counter of 15sc but the code says 20sc?
+      //
+
       // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
       counter.updateTimer('00:00:20');
     }
@@ -267,10 +274,9 @@ io.on('connection', (socket) => {
   });
 });
 
-// db config
-const url = process.env.ATLAS_URL;
+// Database config
 mongoose
-  .connect(url)
+  .connect(process.env.ATLAS_URL)
   .then(() => console.log(`Database connected successfully`))
   .catch((err) => console.log(err));
 
@@ -301,8 +307,8 @@ app.use(function onError(err, req, res, next) {
   res.end(res.sentry + '\n');
 });
 
-httpServer.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+httpServer.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}`);
 });
 
 module.exports = { app, httpServer };

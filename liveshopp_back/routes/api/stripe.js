@@ -18,6 +18,10 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
       customer: stripeCustomer.id,
     });
 
+    // FIXME
+    //
+    // Why are we using a Stripe TEST key here?
+    //
     res.status(200).json({
       setupIntent: setupIntent.client_secret,
       customer: stripeCustomer.id,
