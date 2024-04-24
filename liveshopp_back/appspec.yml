@@ -44,9 +44,9 @@ hooks:
   #   in the script specified in "location" starting from the root of the
   #   revision's file bundle.
 
-  ApplicationStop:
-    - location: /deployment-lifecycle-hooks/application_stop.sh
-      timeout: 180
+  # ApplicationStop:
+  #   - location: /deployment-lifecycle-hooks/application_stop.sh
+  #     timeout: 180
   AfterInstall:
     - location: /deployment-lifecycle-hooks/after_install.sh
       timeout: 1000

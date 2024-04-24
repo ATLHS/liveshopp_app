@@ -1,13 +1,15 @@
 #!/bin/sh
-export HOME="/home/ubuntu/"
-sudo chown -R ubuntu "/home/ubuntu/"
-echo "Start application_stop lifecycle event hooks"
+# export HOME="/home/ubuntu/"
+# export APP="/opt/"
 
-node -e "console.log('Running Node.js ' + process.version)"
+# sudo chown -R ubuntu $HOME
+# echo "========== Application Stop =========="
 
-echo "Start ApplicationStop lifecycle event hooks"
-cd "/home/ubuntu/"
+# node -e "console.log('Running Node.js ' + process.version)"
 
-cd "/opt/" && ls
+# echo "Start ApplicationStop lifecycle event hooks"
+# cd $HOME
 
-echo "Done !"
+# cd $APP && ls
+
+# echo "Done !"
