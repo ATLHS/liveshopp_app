@@ -34,8 +34,7 @@ const LiveCreationFormSchema = () => [
                 message: 'Le nom du live est invalide',
             },
         },
-        helper:
-            'Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n',
+        helper: 'Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n',
         editable: true,
         defaultValue: '',
     },
@@ -55,6 +54,15 @@ const LiveCreationFormSchema = () => [
         name: 'live_date_time',
         label: 'date',
         type: 'datetime',
+        helperMessage:
+            'Un intervalle de 1h30 entre le début et la fin de chaque live est requis.',
+        style: {height: 150},
+        minuteInterval: 5,
+        minimumDelay: DateTime.now()
+            .setZone('Europe/Paris')
+            .startOf('minutes') // Début de l'heure actuelle
+            .plus({ minutes: 5 - (DateTime.now().minute % 5)})
+            .toJSDate(),
     },
 ];
 
@@ -65,10 +73,9 @@ export const SettingNewLive = ({navigation}) => {
 
     const handleLiveCreation = data => {
         setIsLoading(true);
-        data.live_date_time =
-            data.live_date_time == null
-                ? DateTime.now().plus({minutes: 30}).toLocal().toJSDate()
-                : data.live_date_time;
+
+        data.live_date_time = data.live_date_time;
+
         seller
             .createNewLive(data)
             .then(res => res)

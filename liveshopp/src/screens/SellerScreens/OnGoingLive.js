@@ -319,31 +319,25 @@ export const OnGoingLive = ({navigation}) => {
                                                                 }>
                                                                 <View
                                                                     style={{
-                                                                        borderColor:
-                                                                            'white',
+                                                                        borderColor: colors.PRIMARY,
                                                                         borderWidth: 1,
-                                                                        textAlign:
-                                                                            'left',
-                                                                        fontWeight:
-                                                                            'bold',
+                                                                        textAlign: 'left',
+                                                                        fontWeight: 'bold',
                                                                         fontSize: 13,
-                                                                        backgroundColor:
-                                                                            colors.LIGHT,
-                                                                        padding: 1,
-                                                                        paddingRight: 6,
-                                                                        paddingLeft: 6,
-                                                                        borderRadius: 2,
+                                                                        backgroundColor: colors.PRIMARY,
+                                                                        padding: 4,
+                                                                        paddingRight: 10,
+                                                                        paddingLeft: 10,
+                                                                        borderRadius: 4,
                                                                     }}>
                                                                     <Text
                                                                         style={{
-                                                                            textAlign:
-                                                                                'left',
-                                                                            fontWeight:
-                                                                                'bold',
-                                                                            color: colors.PRIMARY,
-                                                                            fontSize: 10,
+                                                                            textAlign: 'left',
+                                                                            fontWeight: 'bold',
+                                                                            color: colors.LIGHT,
+                                                                            fontSize: 12,
                                                                         }}>
-                                                                        LIVE
+                                                                        En direct
                                                                     </Text>
                                                                 </View>
                                                                 <Text

@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap',
         margin: 10,
+        alignItems: 'flex-start',
     },
     headlineContainer: {marginBottom: 30},
     formContainer: {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -29,9 +29,13 @@ const currentUserLiveForm = [
 
 export const UserLiveForm = ({navigation, onPress, liveData}) => {
   const {user} = useSelector(state => state.user);
-  const {handleSubmit, control} = useForm();
-  const [value, setValue] = useState(10);
+  const {handleSubmit, control, setValue} = useForm();
+  const [bidAmountSelection, setBidAmountSelection] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setValue('bid', 10)
+  }, [])
 
   const disableUserForm =
     liveData.currentAuction.currentAuctionStatus === 'stopping' ||
@@ -72,11 +76,11 @@ export const UserLiveForm = ({navigation, onPress, liveData}) => {
                           fontSize: 17,
                           fontFamily: 'FugazOne-Regular',
                         }}>
-                        {value} €
+                        {bidAmountSelection} €
                       </Text>
                     </View>
                     <Slider
-                      value={field.value || value}
+                      value={field.value || bidAmountSelection}
                       step={10}
                       trackStyle={{height: 3}}
                       containerStyle={{width: 265}}
@@ -102,7 +106,7 @@ export const UserLiveForm = ({navigation, onPress, liveData}) => {
                       minimumValue={10}
                       maximumValue={50}
                       onValueChange={value => {
-                        setValue(value);
+                        setBidAmountSelection(value);
                         field.onChange(value[0]);
                       }}
                     />

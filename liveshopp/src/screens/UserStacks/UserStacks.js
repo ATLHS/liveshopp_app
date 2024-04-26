@@ -1,61 +1,115 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { StyleSheet, View} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faHome, faUser, faBoxOpen} from '@fortawesome/free-solid-svg-icons';
+import {
+    faHome,
+    faUser,
+    faBoxOpen,
+} from '@fortawesome/free-solid-svg-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SettingsScreen from '../SettingsScreen/SettingsScreen';
+import {
+    AutocompleteDropdownContextProvider,
+} from 'react-native-autocomplete-dropdown';
 import OrderTab from '../OrderTab/OrderTab';
-import LivesTab from "../LivesTab/LivesTab";
+import LivesTab from '../LivesTab/LivesTab';
+import colors from '../../styles/colors';
+import AutocompleteDropdownSearch from '../../components/AutocompleteDropdownSearch/AutocompleteDropdownSearch';
 
 const Tab = createBottomTabNavigator();
 
-export const UserStacks = () => {
+const UserStacks = ({navigation}) => {
     return (
-        <Tab.Navigator
-            screenOptions={{
-                tabBarStyle: {backgroundColor: 'black'},
-                headerStyle: {backgroundColor: 'black'},
-                headerTitleStyle: {color: 'white', fontFamily: 'FugazOne-Regular'},
-                tabBarShowLabel: false,
-            }}>
-            <Tab.Screen
-                options={{
-                    title: 'LIVES',
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesomeIcon icon={faHome} size={20} color={'white'}/>
-                    ),
-                }}
-                name="Lives"
-                component={LivesTab}
-            />
-            <Tab.Screen
-                options={{
-                    title: 'MES COMMANDES',
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesomeIcon icon={faBoxOpen} size={20} color={'white'}/>
-                    ),
-                }}
-                name="Order"
-                component={OrderTab}
-            />
-            <Tab.Screen
-                options={{
-                    title: 'MON PROFIL',
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesomeIcon icon={faUser} size={20} color={'white'}/>
-                    ),
-                }}
-                name="Settings"
-                component={SettingsScreen}
-            />
-        </Tab.Navigator>
+        <AutocompleteDropdownContextProvider>
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarStyle: styles.tabBar,
+                    headerStyle: styles.header,
+                    headerTitleStyle: styles.headerTitle,
+                    tabBarShowLabel: false,
+                }}>
+                <Tab.Screen
+                    options={{
+                        title: 'LIVES',
+                        tabBarIcon: ({size}) => (
+                            <FontAwesomeIcon
+                                icon={faHome}
+                                size={styles.tabBarIconSize.fontSize}
+                                color={styles.tabBarIconColor.color}
+                            />
+                        ),
+                        header: () => (
+                            <View style={styles.headerContainer}>
+                                <AutocompleteDropdownSearch
+                                    navigation={navigation}
+                                />
+                            </View>
+                        ),
+                    }}
+                    name="Lives"
+                    component={LivesTab}
+                />
+                <Tab.Screen
+                    options={{
+                        title: 'MES COMMANDES',
+                        tabBarIcon: ({color, size}) => (
+                            <FontAwesomeIcon
+                                icon={faBoxOpen}
+                                size={styles.tabBarIconSize.fontSize}
+                                color={styles.tabBarIconColor.color}
+                            />
+                        ),
+                    }}
+                    name="Order"
+                    component={OrderTab}
+                />
+                <Tab.Screen
+                    options={{
+                        title: 'MON PROFIL',
+                        tabBarIcon: ({size}) => (
+                            <FontAwesomeIcon
+                                icon={faUser}
+                                size={styles.tabBarIconSize.fontSize}
+                                color={styles.tabBarIconColor.color}
+                            />
+                        ),
+                    }}
+                    name="Settings"
+                    component={SettingsScreen}
+                />
+            </Tab.Navigator>
+        </AutocompleteDropdownContextProvider>
     );
 };
 
 const styles = StyleSheet.create({
-    profilHeadline: {marginBottom: 30},
-    container: {
-        flex: 1,
+    tabBar: {
+        backgroundColor: 'white',
+    },
+    dropdown: {
+        margin: 16,
+        height: 50,
+        borderBottomColor: 'gray',
+        borderBottomWidth: 0.5,
+    },
+    header: {
+        backgroundColor: 'white',
+    },
+    headerTitle: {
+        color: 'black',
+        fontFamily: 'FugazOne-Regular',
+    },
+    headerContainer: {
+        backgroundColor: 'white',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        height: 100,
+    },
+    tabBarIconColor: {
+        color: colors.DARK,
+    },
+    tabBarIconSize: {
+        fontSize: 20,
     },
 });
 

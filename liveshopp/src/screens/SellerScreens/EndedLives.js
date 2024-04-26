@@ -48,7 +48,7 @@ export const EndedLives = () => {
                                               category={live.business_activity}
                                               status={live.live_status}
                                               onPress={null}
-                                              imageUrl={live.liveImageUrl}
+                                              imageUrl={live.imageUrl}
                                           />
                                       ))
                                 : ''}
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     endedLive: {
         flex: 1,
-        alignItems: 'center',
+        alignItems: 'flex-start',
         flexDirection: 'row',
         justifyContent: 'center',
         flexWrap: 'wrap',

@@ -10,6 +10,7 @@ const TextArea = ({inputField, field, fieldState}) => {
       autoFocus={inputField.autoFocus || false}
       onChangeText={value => field.onChange(value)}
       placeholderTextColor='#707070'
+      defaultValue={inputField.defaultValue}
       secureTextEntry={inputField.type === 'password'}
       selectionColor={colors.DARK}
       multiline={true}

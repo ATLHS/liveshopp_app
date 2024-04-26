@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {
     StyleSheet,
-    Text,
     View,
     SafeAreaView,
     Keyboard,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
+    TouchableOpacity,
     ScrollView,
     Platform,
+    Image,
 } from 'react-native';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import {useForm} from 'react-hook-form';
@@ -18,6 +19,9 @@ import customer from '../../services/customer';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import {setUser} from '../../redux/slices/userSlice';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
 
 export const SettingProfilScreen = ({navigation}) => {
     const {user} = useSelector(state => state.user);
@@ -35,6 +39,7 @@ export const SettingProfilScreen = ({navigation}) => {
             },
             editable: true,
             defaultValue: user.lastname,
+            row: true,
         },
         {
             name: 'firstname',
@@ -48,6 +53,7 @@ export const SettingProfilScreen = ({navigation}) => {
             },
             editable: true,
             defaultValue: user.firstname,
+            row: true,
         },
         {
             name: 'phone',
@@ -99,6 +105,7 @@ export const SettingProfilScreen = ({navigation}) => {
             },
             editable: true,
             defaultValue: user.lastname,
+            row: true,
         },
         {
             name: 'firstname',
@@ -112,6 +119,7 @@ export const SettingProfilScreen = ({navigation}) => {
             },
             editable: true,
             defaultValue: user.firstname,
+            row: true,
         },
         {
             name: 'company_name',
@@ -119,6 +127,34 @@ export const SettingProfilScreen = ({navigation}) => {
             type: 'text',
             editable: false,
             defaultValue: user.company_name,
+        },
+        {
+            name: 'websiteUrl',
+            label: 'Site internet',
+            type: 'text',
+            editable: true,
+            defaultValue: user.websiteUrl || '',
+        },
+        {
+            name: 'instagram',
+            label: 'Instagram',
+            type: 'text',
+            editable: true,
+            defaultValue: user.instagram || '',
+        },
+        {
+            name: 'tiktok',
+            label: 'Tiktok',
+            type: 'text',
+            editable: true,
+            defaultValue: user.tiktok || '',
+        },
+        {
+            name: 'bio',
+            label: 'Bio',
+            type: 'textarea',
+            editable: true,
+            defaultValue: user.bio || '',
         },
         {
             name: 'business_activity',
@@ -176,11 +212,76 @@ export const SettingProfilScreen = ({navigation}) => {
             role: user.role || null,
             phone: user.phone || null,
             email: user.email,
+            bio: user.bio || null,
+            tiktok: user.tiktok || null,
+            instagram: user.instagram || null,
+            websiteUrl: user.websiteUrl || null,
         },
     });
     const dispatch = useDispatch();
-    const [message, setMessage] = useState('');
+
     const [isLoading, setIsLoading] = useState(false);
+    const [imageUri, setImageUri] = useState(user.imageUrl || null);
+
+    const [refreshCounter, setRefreshCounter] = useState(0);
+
+    const setProfilPicture = async () => {
+        const result = await launchImageLibrary({
+            mediaType: 'photo',
+            includeBase64: true,
+        });
+
+        if (result.didCancel) return;
+
+        setIsLoading(true);
+
+        customer
+            .setProfilPicture(result.assets[0])
+            .then(res => res)
+            .then(data => {
+                setImageUri(data.user.imageUrl);
+                setRefreshCounter(prevCounter => prevCounter + 1);
+                Toast.show({
+                    type: 'success',
+                    text1: data.message,
+                });
+                dispatch(setUser(data.user));
+
+                setIsLoading(false);
+            })
+            .catch(err => {
+                Toast.show({
+                    type: 'error',
+                    text1: err.message,
+                });
+                setIsLoading(false);
+            });
+    };
+
+    const deleteProfilPicture = async () => {
+        setIsLoading(true);
+        customer
+            .deleteProfilPicture()
+            .then(res => res)
+            .then(data => {
+                setImageUri(null);
+                setRefreshCounter(prevCounter => prevCounter + 1);
+                Toast.show({
+                    type: 'success',
+                    text1: data.message,
+                });
+                dispatch(setUser(data.user));
+
+                setIsLoading(false);
+            })
+            .catch(err => {
+                Toast.show({
+                    type: 'error',
+                    text1: err.message,
+                });
+                setIsLoading(false);
+            });
+    };
 
     const handleProfilSetting = data => {
         setIsLoading(true);
@@ -217,9 +318,45 @@ export const SettingProfilScreen = ({navigation}) => {
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
                             <View style={styles.headlineContainerMessage}>
-                                <Text style={styles.headlineMessage}>
-                                    {message}
-                                </Text>
+                                <View style={styles.profilPictureContainer}>
+                                    {imageUri ? (
+                                        <Image
+                                            key={refreshCounter}
+                                            style={styles.contactProfilPicture}
+                                            source={{uri: imageUri}}
+                                        />
+                                    ) : (
+                                        <Image
+                                            style={styles.contactProfilPicture}
+                                            source={require('../../../assets/images/contact.png')}
+                                        />
+                                    )}
+                                    <View
+                                        style={
+                                            styles.ProfilPictureActionContainer
+                                        }>
+                                        <TouchableOpacity
+                                            style={styles.deletetProfilPicture}
+                                            onPress={deleteProfilPicture}
+                                            disabled={isLoading || !imageUri}>
+                                            <FontAwesomeIcon
+                                                icon={faTrash}
+                                                color={colors.LIGHT}
+                                                size={11}
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.setProfilPicture}
+                                            onPress={setProfilPicture}
+                                            disabled={isLoading}>
+                                            <FontAwesomeIcon
+                                                icon={faPlus}
+                                                color={colors.LIGHT}
+                                                size={11}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
                             <View style={styles.fieldContainer}>
                                 <FieldWrapper
@@ -253,12 +390,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     headlineContainerMessage: {
-        marginBottom: 30,
+        marginTop: 20,
         width: 350,
-        textAlign: 'center',
+        alignItems: 'center',
+        marginBottom: 40,
+        borderRadius: 8,
+    },
+    contactProfilPicture: {
+        width: 90,
+        height: 90,
+        borderRadius: 5,
     },
     headlineMessage: {color: colors.DARK},
-    fieldContainer: {margin: 10, marginBottom: 30},
+    fieldContainer: {margin: 10, marginBottom: 30, marginTop: 15},
     headline: {
         color: colors.LIGHT,
         fontFamily: 'Roboto-Regular',
@@ -268,6 +412,62 @@ const styles = StyleSheet.create({
     },
     action: {},
     resetPassword: {color: 'white'},
+    setNewProfilPicture: {
+        position: 'absolute',
+        width: 30,
+        height: 30,
+        backgroundColor: colors.DARK,
+        left: 70,
+        bottom: -10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 8,
+        borderColor: colors.LIGHT,
+        borderWidth: 4,
+    },
+    touchableStyle: {
+        borderRadius: 8,
+    },
+    profilPictureText: {
+        color: colors.DARK,
+        fontSize: 15,
+        fontFamily: 'Roboto-Regular',
+    },
+    profilPictureContainer: {
+        width: 90,
+        height: 90,
+        marginTop: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+    },
+    ProfilPictureActionContainer: {
+        marginTop: 10,
+        flexDirection: 'row',
+        width: 90,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+    },
+    deletetProfilPicture: {
+        width: 30,
+        height: 30,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginRight: 10,
+    },
+    setProfilPicture: {
+        width: 30,
+        height: 30,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginLeft: 10,
+    },
 });
 
 export default SettingProfilScreen;
