@@ -1,18 +1,14 @@
 #!/bin/sh
 export HOME="/home/ubuntu/"
-echo "Start AfterInstall lifecycle event hooks"
+export APP="/opt/"
 
-cd "/home/ubuntu/"
+echo "========== After Install =========="
 
-echo "Folder at the root directory : " && ls
+cd $HOME
+rsync -av --progress $HOME $APP --exclude install --exclude node_modules --exclude test --exclude .pm2
 
-rsync -av --progress "/home/ubuntu/" "/opt/" --exclude install
+cd $APP
+node -e "console.log('Running Node.js ' + process.version)"
 
-cd "/opt/"
-echo "Folder at the /opt/ directory : " && ls
-
-echo "Installing backend dependencies"
-#sudo npm i
-#
-#cd "/opt/liveshopp_web_front/"
-#sudo npm i
+echo "Installing app dependencies"
+sudo npm ci --omit=dev
