@@ -18,7 +18,6 @@ const updateLiveStatus = async () => {
     }, {
         live_status: 'live',
     })
-
 }
 
 
@@ -37,7 +36,6 @@ router.post('/create-live', verifyJwt, async (req, res) => {
         hour: 1,
         minutes: 30
     })).contains(DateTime.fromISO(nextLive))).some(even => even === true);
-
 
     if (liveIsOverlapping) {
         return res.status(400).json({
@@ -73,7 +71,7 @@ router.post('/create-live', verifyJwt, async (req, res) => {
 
 router.get('/get-seller-live', verifyJwt, async (req, res) => {
     await updateLiveStatus();
-    const lives = await Live.find({seller_id: req.user.id});
+    let lives = await Live.find({seller_id: req.user.id});
 
     if (lives) {
         return res.status(200).json({

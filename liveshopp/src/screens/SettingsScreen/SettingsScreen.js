@@ -232,7 +232,9 @@ function SettingsScreen({navigation}) {
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
                                                         }}
-                                                        onPress={deleteCustomerProfil}>
+                                                        onPress={
+                                                            deleteCustomerProfil
+                                                        }>
                                                         <Text
                                                             style={{
                                                                 color: colors.LIGHT,

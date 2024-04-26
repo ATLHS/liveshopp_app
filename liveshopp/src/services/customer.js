@@ -43,6 +43,24 @@ const customer = {
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },
+    setProfilPicture(data) {
+        return axiosConfig
+            .post('/api/customer/set-profil-picture', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    deleteProfilPicture() {
+        return axiosConfig
+            .delete('/api/customer/delete-profil-picture', {})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    getSellers() {
+        return axiosConfig
+            .get('/api/customer/get-sellers')
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
 };
 
 export default customer;

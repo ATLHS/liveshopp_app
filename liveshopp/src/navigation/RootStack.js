@@ -39,6 +39,11 @@ const RootStack = ({isLoading}) => {
                 currentVersion,
             });
 
+            if (__DEV__) {
+                console.log('App is running in dev mode =', __DEV__);
+                return;
+            }
+
             if (version.needsUpdate) {
                 Alert.alert(
                     'Mise à jour requise',

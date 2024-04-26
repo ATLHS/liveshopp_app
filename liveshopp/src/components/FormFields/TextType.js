@@ -55,6 +55,7 @@ const TextType = ({inputField, field}) => {
                 secureTextEntry={inputField.type === 'password' && !showPassword}
                 selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}
                 editable={inputField.editable}
+                keyboardType={inputField.keyboardType ? inputField.keyboardType : 'default'}
             />
         </View>
     );

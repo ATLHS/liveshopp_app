@@ -53,7 +53,11 @@ router.post("/user-signin", async (req, res) => {
                                     imageUrl: customer.imageUrl,
                                     blockedUser: customer.blockedUser,
                                     blockedSeller: customer.blockedSeller,
-                                    isBanned: customer.isBanned
+                                    isBanned: customer.isBanned,
+                                    bio: customer.bio || null,
+                                    tiktok: customer.tiktok || null,
+                                    instagram: customer.instagram || null,
+                                    websiteUrl: customer.websiteUrl || null
                                 },
                                 token
                             });
@@ -412,7 +416,11 @@ router.post("/confirm-user-email", async (req, res) => {
                                 hasValidPaymentMethod: customer.hasValidPaymentMethod,
                                 imageUrl: customer.imageUrl || null,
                                 blockedUser: customer.blockedUser,
-                                blockedSeller: customer.blockedSeller
+                                blockedSeller: customer.blockedSeller,
+                                bio: customer.bio || null,
+                                tiktok: customer.tiktok || null,
+                                instagram: customer.instagram || null,
+                                websiteUrl: customer.websiteUrl || null
                             },
                             token
                         });
@@ -457,7 +465,11 @@ router.get("/is-authenticate", verifyJwt, async (req, res) => {
                     hasValidPaymentMethod: customer.hasValidPaymentMethod,
                     imageUrl: customer.imageUrl || null,
                     blockedUser: customer.blockedUser,
-                    blockedSeller: customer.blockedSeller
+                    blockedSeller: customer.blockedSeller,
+                    bio: customer.bio || null,
+                    tiktok: customer.tiktok || null,
+                    instagram: customer.instagram || null,
+                    websiteUrl: customer.websiteUrl || null
                 },
                 isAuthenticate: true,
             });

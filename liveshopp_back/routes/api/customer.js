@@ -9,6 +9,24 @@ const {updateCustomer} = require("../../utils/updateCustomer.js");
 const stripeUtils = require("../../utils/stripeUtils");
 const {sendCodeToConfirmEmailRegistration} = require("../../utils/sendCodeConfirmationEmail");
 const BannedUsers = require('../../models/banned');
+const { PutObjectCommand, S3Client, DeleteObjectCommand} = require('@aws-sdk/client-s3');
+const fs = require("fs");
+const path = require("path");
+
+const options = {
+    region: process.env.AWS_REGION,
+    successActionStatus: process.env.AWS_SUCCESS_ACTION_STATUS,
+}
+
+let userCredentials = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+}
+
+const client = new S3Client({
+    region: options.region,
+    credentials: userCredentials
+})
 
 router.post("/update-customer-profil", verifyJwt, async (req, res) => {
     const user = await User.findById(req.user.id).populate('blockedUser blockedSeller', '_id');
@@ -16,11 +34,20 @@ router.post("/update-customer-profil", verifyJwt, async (req, res) => {
     const body = req.body.data;
 
     const customer = user || seller;
-    const data = {
+    const data = customer.profil === 'user' ? {
         firstname: body.firstname,
         lastname: body.lastname,
         email: body.email,
-        phone: body.phone
+        phone: body.phone,
+    } : {
+        firstname: body.firstname,
+        lastname: body.lastname,
+        email: body.email,
+        phone: body.phone,
+        bio: body.bio,
+        tiktok: body.tiktok,
+        instagram: body.instagram,
+        websiteUrl: body.websiteUrl
     };
 
     if (customer) {
@@ -43,7 +70,11 @@ router.post("/update-customer-profil", verifyJwt, async (req, res) => {
                         hasValidPaymentMethod: customer.hasValidPaymentMethod,
                         imageUrl: customer.imageUrl || null,
                         blockedUser: customer.blockedUser,
-                        blockedSeller: customer.blockedSeller
+                        blockedSeller: customer.blockedSeller,
+                        bio: customer.bio || null,
+                        tiktok: customer.tiktok || null,
+                        instagram: customer.instagram || null,
+                        websiteUrl: customer.websiteUrl || null
                     },
                     message: "Votre profil a été modifié avec succès.",
                 });
@@ -85,7 +116,11 @@ router.post("/update-user-shipping-address", verifyJwt, async (req, res) => {
                         hasValidPaymentMethod: customer.hasValidPaymentMethod,
                         imageUrl: customer.imageUrl || null,
                         blockedUser: customer.blockedUser,
-                        blockedSeller: customer.blockedSeller
+                        blockedSeller: customer.blockedSeller,
+                        bio: customer.bio || null,
+                        tiktok: customer.tiktok || null,
+                        instagram: customer.instagram || null,
+                        websiteUrl: customer.websiteUrl || null
                     },
                     message: "Votre adresse de livraison a été modifiée avec succès.",
                 });
@@ -124,10 +159,14 @@ router.post("/update-user-payment-method-statut", verifyJwt, async (req, res) =>
                         company_name: customer.company_name || null,
                         role: customer.role || null,
                         business_activity: customer.business_activity || null,
-                        hasValidPaymentMethod: customer.hasValidPaymentMethod,
+                        hasValidPaymentMethod: updatedCustomer.hasValidPaymentMethod,
                         imageUrl: customer.imageUrl || null,
                         blockedUser: customer.blockedUser,
-                        blockedSeller: customer.blockedSeller
+                        blockedSeller: customer.blockedSeller,
+                        bio: customer.bio || null,
+                        tiktok: customer.tiktok || null,
+                        instagram: customer.instagram || null,
+                        websiteUrl: customer.websiteUrl || null
                     },
                     message: "Votre moyen de paiement a été configuré avec succès.",
                 });
@@ -161,6 +200,151 @@ router.post("/get-customer", verifyJwt, async (req, res) => {
     }
 });
 
+router.post("/set-profil-picture", verifyJwt, async (req, res) => {
+    const user = await User.findOne({_id: req.user.id});
+    const seller = await UserSeller.findOne({_id: req.user.id});
+    const body = req.body.data;
+
+    const buffer = new Buffer(body.base64, 'base64');
+    const customer = user || seller;
+    const bucketName = "profil-picture";
+
+    if (customer) {
+        try {
+            // Envoyer l'image vers Amazon S3
+            const uploadResponse = await client.send(new PutObjectCommand({
+                Body: buffer,
+                Bucket: bucketName,
+                Key: 'picture/' + customer._id,
+                ContentType: body.type,
+            }));
+
+            if(uploadResponse.$metadata.httpStatusCode === 200) {
+                const imageUrl = `https://profil-picture.s3.${process.env.AWS_REGION}.amazonaws.com/picture/${customer._id}`;
+
+                customer.imageUrl = imageUrl;
+                await customer.save();
+
+                const isSeller = customer.profil === 'seller';
+
+                if (isSeller) {
+                    let lives = await Live.find({seller_id: customer._id});
+
+                    if(lives.length) {
+                        for (const live of lives) {
+                            live.imageUrl = imageUrl;
+                            await live.save();
+                        }
+                    }
+                }
+
+                return res.status(200).json({
+                    user: {
+                        id: customer._id,
+                        email: customer.email,
+                        profil: customer.profil,
+                        firstname: customer.firstname,
+                        lastname: customer.lastname,
+                        phone: customer.phone || null,
+                        shipping_address: customer.shipping_address,
+                        company_name: customer.company_name || null,
+                        role: customer.role || null,
+                        business_activity: customer.business_activity || null,
+                        hasValidPaymentMethod: customer.hasValidPaymentMethod,
+                        imageUrl: customer.imageUrl,
+                        blockedUser: customer.blockedUser,
+                        blockedSeller: customer.blockedSeller,
+                        bio: customer.bio || null,
+                        tiktok: customer.tiktok || null,
+                        instagram: customer.instagram || null,
+                        websiteUrl: customer.websiteUrl || null
+                    },
+                    message: "Votre photo de profil a été configuré avec succès.",
+                });
+            } else {
+                return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+            }
+        } catch (error) {
+            return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+        }
+    } else {
+        return res.status(400).json({
+            message: "Un probleme est survenu, réessayez plus tard.",
+        });
+    }
+});
+
+router.delete("/delete-profil-picture", verifyJwt, async (req, res) => {
+    const user = await User.findOne({_id: req.user.id});
+    const seller = await UserSeller.findOne({_id: req.user.id});
+
+    const customer = user || seller;
+    const bucketName = "profil-picture";
+
+    const isSeller = customer.profil === 'seller';
+
+    // delete profil pictures from all frames
+    if (isSeller) {
+        let lives = await Live.find({seller_id: customer._id});
+
+        if(lives.length) {
+            for (const live of lives) {
+                live.imageUrl = "";
+                await live.save();
+            }
+        }
+    }
+
+
+    if (customer) {
+        try {
+            // Envoyer l'image vers Amazon S3
+            const uploadResponse = await client.send(new DeleteObjectCommand({
+                Bucket: bucketName,
+                Key: 'picture/' + customer._id,
+            }));
+
+            if(uploadResponse.$metadata.httpStatusCode === 204) {
+                customer.imageUrl = "";
+                await customer.save();
+
+                return res.status(200).json({
+                    user: {
+                        id: customer._id,
+                        email: customer.email,
+                        profil: customer.profil,
+                        firstname: customer.firstname,
+                        lastname: customer.lastname,
+                        phone: customer.phone || null,
+                        shipping_address: customer.shipping_address,
+                        company_name: customer.company_name || null,
+                        role: customer.role || null,
+                        business_activity: customer.business_activity || null,
+                        hasValidPaymentMethod: customer.hasValidPaymentMethod,
+                        imageUrl: customer.imageUrl,
+                        blockedUser: customer.blockedUser,
+                        blockedSeller: customer.blockedSeller,
+                        bio: customer.bio || null,
+                        tiktok: customer.tiktok || null,
+                        instagram: customer.instagram || null,
+                        websiteUrl: customer.websiteUrl || null
+                    },
+                    message: "Votre photo de profil a été suprimé avec succès.",
+                });
+            } else {
+                return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+            }
+        } catch (error) {
+            return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+        }
+    } else {
+        return res.status(400).json({
+            message: "Un probleme est survenu, réessayez plus tard.",
+        });
+    }
+});
+
+
 router.post("/delete-customer", verifyJwt, async (req, res) => {
     const user = await User.findOne({_id: req.user.id});
     const seller = await UserSeller.findOne({_id: req.user.id});
@@ -186,6 +370,7 @@ router.post("/delete-customer", verifyJwt, async (req, res) => {
 
     // delete stripe customer
     const deletedCustomer = await stripeUtils.deleteCustomer(customer.stripeCustomerId);
+
     if (deletedCustomer) {
         // delete all product from a customer
         const deleteAllCustomerProduct = await Product.deleteMany({seller_id: customer._id});
@@ -279,6 +464,36 @@ router.get("/get-blocked-user", verifyJwt, async (req, res) => {
     } else {
         return res.status(400).json({
             isReported: false,
+            message: "Un probleme est survenu, réessayez plus tard",
+        });
+    }
+});
+
+router.post("/get-blocked-user", verifyJwt, async (req, res) => {
+    const user = await User.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
+    const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
+    const customer = user || seller;
+
+    if (customer) {
+        return res.status(200).json({
+            blockedUser: customer.blockedUser,
+            blockedSeller: customer.blockedSeller
+        });
+    } else {
+        return res.status(400).json({
+            isReported: false,
+            message: "Un probleme est survenu, réessayez plus tard",
+        });
+    }
+});
+
+router.get("/get-sellers", verifyJwt, async (req, res) => {
+    const seller = await UserSeller.find();
+
+    if (seller) {
+        return res.status(200).json(seller);
+    } else {
+        return res.status(400).json({
             message: "Un probleme est survenu, réessayez plus tard",
         });
     }

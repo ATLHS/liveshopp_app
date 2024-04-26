@@ -38,11 +38,13 @@ const OrderTab = () => {
                 tabBarIndicatorStyle: {backgroundColor: colors.DARK},
             }}>
             {user.profil === 'user' ? (
-                <Tab.Screen
-                    options={{title: 'Mes Achats'}}
-                    name="MyOrder"
-                    component={MyOrder}
-                />
+                <>
+                    <Tab.Screen
+                        options={{title: 'MES COMMANDES'}}
+                        name="MyOrder"
+                        component={MyOrder}
+                    />
+                </>
             ) : (
                 <>
                     <Tab.Screen

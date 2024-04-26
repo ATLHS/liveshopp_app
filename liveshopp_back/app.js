@@ -45,6 +45,7 @@ io.on("connection", (socket) => {
                 sellerName: liveData.sellerName,
                 auctionId: liveData._id,
                 auctionsStatus: liveData.live_status,
+                liveSchedule: liveData.live_date_time,
                 userCount: 1,
                 messages: [],
                 hostIsLive: user.profil === "seller" && user.id === liveData.seller_id,
@@ -53,9 +54,11 @@ io.on("connection", (socket) => {
                     username: '',
                     productName: '',
                     currentProductAmount: '',
+                    product_reserved_price: '',
                     currentAuctionDelay: new timer(),
                     currentAuctionStatus: 'paused',
                     salePrice: '',
+                    currentMessageInfo: '',
                 }
             }
             channels.set(liveData.live_name, channelRoomData);
@@ -63,6 +66,7 @@ io.on("connection", (socket) => {
             io.to(liveData.live_name).emit("channelData", channels.get(liveData.live_name));
         } else {
             channels.get(liveData.live_name).userCount++;
+            channels.get(liveData.live_name).auctionsStatus = liveData.live_status;
 
             if (!channels.get(liveData.live_name).hostIsLive && user.profil === "seller" && user.id === liveData.seller_id) {
                 channels.get(liveData.live_name).hostIsLive = true;
@@ -133,13 +137,17 @@ io.on("connection", (socket) => {
         currentAuction.username = data.username;
         currentAuction.shipping_address = data.shipping_address;
 
+        if (currentAuction.product_reserved_price && currentAuction.currentProductAmount >= currentAuction.product_reserved_price) {
+            channelRoom.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
+        }
+
         let counter = currentAuction.currentAuctionDelay;
 
         // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
         if (isLessThanTenSeconds(counter.time)) {
             counter.stop();
             // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
-            counter.updateTimer('00:00:20');
+            counter.updateTimer('00:00:15');
         }
 
         io.to(channelName).emit("currentAuctionData", channelRoom);
@@ -151,55 +159,63 @@ io.on("connection", (socket) => {
             // get the current timer of each channel room and check if timer is done
             value.currentAuction.currentAuctionDelay.on('done', async () => {
                 if (value.currentAuction.userId) {
-                    // charge the current user auction winner before with stripe
-                    const userId = value.currentAuction.userId;
-                    const amountToCharge = parseInt(value.currentAuction.currentProductAmount.toString() * 100);
-
-                    const user = await User.findOne({_id: userId});
-                    const seller = await UserSeller.findOne({_id: userId});
-
-                    const customer = user || seller;
-
-                    const paymentIntentMetadata = {
-                        seller_id: value.sellerId,
-                        seller_name: value.sellerName,
-                        amount: value.currentAuction.currentProductAmount
-                    };
-                    const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
-
-                    if (chargedCustomer.status === 'succeeded') {
-                        // register current sale product info in db
-                        const product = new Product({
-                            seller_id: value.sellerId,
-                            live_name: key,
-                            auctionId: value.auctionId,
-                            auctionsStatus: value.auctionsStatus,
-                            userId: value.currentAuction.userId,
-                            productName: value.currentAuction.productName,
-                            salePrice: value.currentAuction.currentProductAmount,
-                            shipping_address: value.currentAuction.shipping_address,
-                            seller: value.sellerId,
-                        });
-                        // save in db the purchased product
-                        const newProductSaved = await product.save();
-
+                    if (value.currentAuction.product_reserved_price && value.currentAuction.currentProductAmount < value.currentAuction.product_reserved_price) {
                         value.currentAuction.currentAuctionStatus = 'stopping';
-                        value.currentAuction.salePrice = Number(value.currentAuction.currentProductAmount);
-
+                        value.currentAuction.currentMessageInfo = 'Oops! Le prix de réserve n\'a pas été atteint.';
                         // send notification to the room
-                        if (newProductSaved) {
-                            io.to(key).emit("currentAuctionData", value);
-                        } else {
-                            io.to(key).emit("error", {message: 'erreur'});
-                        }
-                    } else {
-                        // TO DO : Send a notification to the seller and to the user to inform them that the payment did not go through.
-                        value.currentAuction.userId = '';
-                        value.currentAuction.currentAuctionStatus = 'stopping';
                         io.to(key).emit("currentAuctionData", value);
+                    } else {
+                        // charge the current user auction winner before with stripe
+                        const userId = value.currentAuction.userId;
+                        const amountToCharge = parseInt(value.currentAuction.currentProductAmount.toString() * 100);
+
+                        const user = await User.findOne({_id: userId});
+                        const seller = await UserSeller.findOne({_id: userId});
+
+                        const customer = user || seller;
+
+                        const paymentIntentMetadata = {
+                            seller_id: value.sellerId,
+                            seller_name: value.sellerName,
+                            amount: value.currentAuction.currentProductAmount
+                        };
+                        const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
+
+                        if (chargedCustomer.status === 'succeeded') {
+                            // register current sale product info in db
+                            const product = new Product({
+                                seller_id: value.sellerId,
+                                live_name: key,
+                                auctionId: value.auctionId,
+                                auctionsStatus: value.auctionsStatus,
+                                userId: value.currentAuction.userId,
+                                productName: value.currentAuction.productName,
+                                salePrice: value.currentAuction.currentProductAmount,
+                                shipping_address: value.currentAuction.shipping_address,
+                                seller: value.sellerId,
+                            });
+                            // save in db the purchased product
+                            const newProductSaved = await product.save();
+
+                            value.currentAuction.currentAuctionStatus = 'stopping';
+                            value.currentAuction.salePrice = Number(value.currentAuction.currentProductAmount);
+
+                            // send notification to the room
+                            if (newProductSaved) {
+                                io.to(key).emit("currentAuctionData", value);
+                            } else {
+                                io.to(key).emit("error", {message: 'erreur'});
+                            }
+                        } else {
+                            // TO DO : Send a notification to the seller and to the user to inform them that the payment did not go through.
+                            value.currentAuction.currentMessageInfo = '';
+                            value.currentAuction.currentAuctionStatus = 'stopping';
+                            io.to(key).emit("currentAuctionData", value);
+                        }
                     }
                 } else {
                     value.currentAuction.currentAuctionStatus = 'stopping';
+                    value.currentAuction.currentMessageInfo = '';
                     // send notification to the room
                     io.to(key).emit("currentAuctionData", value);
                 }
@@ -222,11 +238,13 @@ io.on("connection", (socket) => {
 
         channelRoom.currentAuction.productName = data.product_name;
         channelRoom.currentAuction.currentProductAmount = data.product_price;
+        channelRoom.currentAuction.product_reserved_price = data.product_reserved_price || false;
         channelRoom.currentAuction.currentAuctionDelay = countDown;
         channelRoom.currentAuction.currentAuctionStatus = 'running';
         channelRoom.currentAuction.username = '';
         channelRoom.currentAuction.userId = '';
         channelRoom.currentAuction.salePrice = '';
+        channelRoom.currentAuction.currentMessageInfo = data.product_reserved_price ? 'Prix de réserve non atteint...' : '';
 
         // start the timer for the current auction
         countDown.start();
@@ -246,8 +264,12 @@ mongoose
     .catch((err) => console.log(err));
 
 app.use(cors());
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+app.use(express.urlencoded({
+    extended: true,
+    limit: '35mb',
+    parameterLimit: 50000,
+}));
+app.use(express.json({limit: '35mb'}));
 app.use(express.static("public"));
 
 const auth = require("./routes/api/auth");
@@ -256,6 +278,7 @@ const live = require("./routes/api/live");
 const order = require("./routes/api/order");
 const stripe = require("./routes/api/stripe");
 const admin = require("./routes/api/admin");
+const videos = require("./routes/api/video");
 
 app.use("/api/auth/", auth);
 app.use("/api/customer/", customer);
@@ -263,6 +286,7 @@ app.use("/api/live/", live);
 app.use("/api/order/", order);
 app.use("/api/stripe/", stripe);
 app.use("/api/admin/", admin);
+app.use("/api/videos/", videos);
 
 httpServer.listen(port, () => { console.log(`Server listening on port  ${port}`); });
 

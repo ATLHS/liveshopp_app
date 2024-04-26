@@ -9,15 +9,19 @@ import ResetPassword from '../screens/ResetPassword/ResetPassword';
 import Welcome from '../screens/Welcome/Welcome';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
-import {Pressable} from 'react-native';
+import {Pressable, StatusBar} from 'react-native';
 import colors from '../styles/colors';
 import rgpdScreen from "../screens/Rgpd/Rgpd";
 import {faAngleLeft} from "@fortawesome/free-solid-svg-icons/faAngleLeft";
-import React from "react";
+import React, {useEffect} from "react";
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
+    useEffect(() => {
+        StatusBar.setBarStyle('light-content');
+    }, []);
+
     return (
         <Stack.Navigator
             screenOptions={{

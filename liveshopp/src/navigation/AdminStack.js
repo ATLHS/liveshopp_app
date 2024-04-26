@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import colors from '../styles/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
-import {ActionSheetIOS, Alert, Pressable, TouchableOpacity} from 'react-native';
+import {ActionSheetIOS, Alert, Pressable, StatusBar, TouchableOpacity} from 'react-native';
 import LiveScreen from '../screens/LiveScreen/LiveScreen';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {useDispatch, useSelector} from 'react-redux';
@@ -29,6 +29,10 @@ const SellerStack = () => {
     const {isHost} = useSelector(state => state.lives);
     const dispatch = useDispatch();
     const navigation = useNavigation();
+
+    useEffect(() => {
+        StatusBar.setBarStyle('dark-content');
+    }, []);
 
     const showObjectionableAdminAction = (data) => {
         ActionSheetIOS.showActionSheetWithOptions(

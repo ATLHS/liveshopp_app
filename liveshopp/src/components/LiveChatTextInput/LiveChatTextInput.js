@@ -47,7 +47,7 @@ export const LiveChatTextInput = ({onPress, live, isHost}) => {
                                             paddingLeft: 10,
                                             color: colors.LIGHT,
                                             backgroundColor:
-                                                'rgba(0, 0, 0, 0.5)',
+                                                'rgba(0, 0, 0, 0.4)',
                                             fontWeight: '600',
                                         }}
                                         ref={ref}
