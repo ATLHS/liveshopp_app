@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key></key>
-	<string></string>
+	<key/>
+	<string/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>fr</string>
 	<key>CFBundleDisplayName</key>
@@ -39,8 +39,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Ceci vous permet d'être vu par votre communauté lors des enchères en live.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ajouter une photos de profil.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Ceci vous permet d'être entendu par votre communauté lors des enchères en live.</string>
 	<key>UIAppFonts</key>
