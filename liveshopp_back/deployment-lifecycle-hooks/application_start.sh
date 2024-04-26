@@ -1,18 +1,12 @@
 #!/bin/sh
 export HOME="/home/ubuntu/"
-sudo chown -R ubuntu "/home/ubuntu/"
+export APP="/opt/"
 
-echo "Start application_start lifecycle event hooks"
-
-cd "/home/ubuntu/"
-
-echo "Start ApplicationStart lifecycle event hooks"
+echo "========== Application Start =========="
 
 echo "Start Nginx"
 sudo systemctl start nginx
 
-echo "Start pm2"
-cd "/opt/"
-
-pm2 delete all
-pm2 start "ecosystem.config.js" --env env
+echo "Start PM2"
+cd $APP
+pm2 restart "ecosystem.config.js" --env prod

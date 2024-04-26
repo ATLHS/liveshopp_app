@@ -44,10 +44,10 @@ hooks:
   #   in the script specified in "location" starting from the root of the
   #   revision's file bundle.
 
-  ApplicationStop:
-    - location: ./liveshopp_back/deployment-lifecycle-hooks/application_stop.sh
-      timeout: 180
-      runas: ubuntu
+  # ApplicationStop:
+  #   - location: ./liveshopp_back/deployment-lifecycle-hooks/application_stop.sh
+  #     timeout: 180
+  #     runas: ubuntu
   AfterInstall:
     - location: ./liveshopp_back/deployment-lifecycle-hooks/after_install.sh
       timeout: 1000
