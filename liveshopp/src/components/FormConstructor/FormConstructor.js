@@ -7,6 +7,7 @@ import TextArea from '../FormFields/TextArea';
 import DateTimePicker from '../FormFields/DateTimePicker';
 import Places from '../FormFields/Places';
 import CheckboxField from "../FormFields/CheckboxField";
+import VideoField from "../FormFields/VideoField";
 
 const FormConstructor = ({inputField, field, fieldState}) => {
   switch (inputField.type) {
@@ -73,6 +74,14 @@ const FormConstructor = ({inputField, field, fieldState}) => {
     case 'checkbox':
       return (
           <CheckboxField
+              inputField={inputField}
+              field={field}
+              fieldState={fieldState}
+          />
+      );
+      case 'video':
+      return (
+          <VideoField
               inputField={inputField}
               field={field}
               fieldState={fieldState}

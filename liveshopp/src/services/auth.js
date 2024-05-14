@@ -32,7 +32,6 @@ const auth = {
             .catch(({response}) => Promise.reject(response.data));
     },
     resetPassword(data) {
-        console.log("hello");
         return axiosConfig
             .post('/api/auth/reset-password', {data})
             .then(({data}) => data)

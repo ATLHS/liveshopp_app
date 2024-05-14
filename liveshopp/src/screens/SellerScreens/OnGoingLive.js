@@ -91,7 +91,7 @@ export const OnGoingLive = ({navigation}) => {
             agoraEngine.enableVideo();
             agoraEngine.enableAudio();
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -110,20 +110,15 @@ export const OnGoingLive = ({navigation}) => {
             );
 
             agoraEngineRef.current?.startPreview();
-            agoraEngineRef.current?.joinChannel(
-                token,
-                liveData.live_name,
-                0,
-                {
-                    clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-                },
-            );
+            agoraEngineRef.current?.joinChannel(token, liveData.live_name, 0, {
+                clientRoleType: ClientRoleType.ClientRoleBroadcaster,
+            });
 
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
             navigation.navigate('LiveScreen');
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -133,7 +128,7 @@ export const OnGoingLive = ({navigation}) => {
             agoraEngineRef.current?.stopPreview();
             dispatch(setIsJoin(false));
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -152,7 +147,7 @@ export const OnGoingLive = ({navigation}) => {
                 setIsLoading(false);
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 setIsLoading(false);
             });
     };
@@ -293,17 +288,19 @@ export const OnGoingLive = ({navigation}) => {
                                                     setLiveToClose(live);
                                                 }}>
                                                 <ImageBackground
+                                                    key={id}
                                                     source={
                                                         user.imageUrl
                                                             ? {
                                                                   uri: user.imageUrl,
+                                                                  cache: 'reload',
                                                               }
                                                             : require('../../../assets/images/liveshopp_back_lives.png')
                                                     }
                                                     borderRadius={10}
                                                     imageStyle={{
-                                                        opacity: 0.3,
-                                                        borderRadius: 15,
+                                                        opacity: 0.7,
+                                                        borderRadius: 10,
                                                     }}>
                                                     <View
                                                         style={
@@ -319,12 +316,16 @@ export const OnGoingLive = ({navigation}) => {
                                                                 }>
                                                                 <View
                                                                     style={{
-                                                                        borderColor: colors.PRIMARY,
+                                                                        borderColor:
+                                                                            colors.PRIMARY,
                                                                         borderWidth: 1,
-                                                                        textAlign: 'left',
-                                                                        fontWeight: 'bold',
+                                                                        textAlign:
+                                                                            'left',
+                                                                        fontWeight:
+                                                                            'bold',
                                                                         fontSize: 13,
-                                                                        backgroundColor: colors.PRIMARY,
+                                                                        backgroundColor:
+                                                                            colors.PRIMARY,
                                                                         padding: 4,
                                                                         paddingRight: 10,
                                                                         paddingLeft: 10,
@@ -332,12 +333,15 @@ export const OnGoingLive = ({navigation}) => {
                                                                     }}>
                                                                     <Text
                                                                         style={{
-                                                                            textAlign: 'left',
-                                                                            fontWeight: 'bold',
+                                                                            textAlign:
+                                                                                'left',
+                                                                            fontWeight:
+                                                                                'bold',
                                                                             color: colors.LIGHT,
                                                                             fontSize: 12,
                                                                         }}>
-                                                                        En direct
+                                                                        En
+                                                                        direct
                                                                     </Text>
                                                                 </View>
                                                                 <Text

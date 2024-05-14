@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SellerStacks from '../screens/SellerStacks/SellerStacks';
 import SettingProfilScreen from '../screens/SettingProfilScreen/SettingProfilScreen';
 import colors from '../styles/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
-import {ActionSheetIOS, Alert, Pressable, TouchableOpacity} from 'react-native';
+import {ActionSheetIOS, Alert, Pressable, StatusBar, TouchableOpacity} from 'react-native';
 import SettingNewLive from '../screens/SettingNewLive/SettingNewLive';
 import LiveScreen from '../screens/LiveScreen/LiveScreen';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
@@ -18,9 +18,12 @@ import BlockedUsers from '../screens/BlockedUsers/BlockedUsers';
 import rgpdScreen from '../screens/Rgpd/Rgpd';
 import socket from '../services/config/clientSocketIoConfig';
 import Toast from 'react-native-toast-message';
-import {faEllipsisVertical, faEye} from '@fortawesome/free-solid-svg-icons';
+import {faCheck, faEllipsisVertical, faEye} from '@fortawesome/free-solid-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 import customer from '../services/customer';
+import SellerProfilView from '../screens/SellerProfilView/SellerProfilView';
+import SetNewAuctionVideo from '../screens/SetNewAuctionVideo/SetNewAuctionVideo';
+import BidConfirmationScreen from '../screens/BidConfirmationScreen/BidConfirmationScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +33,10 @@ const SellerStack = () => {
     const {isHost} = useSelector(state => state.lives);
     const dispatch = useDispatch();
     const navigation = useNavigation();
+
+    useEffect(() => {
+        StatusBar.setBarStyle('dark-content');
+    }, []);
 
     const leaveRoom = () => {
         socket.emit('leaveRoom', {liveData, user});
@@ -157,6 +164,30 @@ const SellerStack = () => {
                         </Pressable>
                     ),
                     title: 'Modifier mon profil',
+                    headerStyle: {
+                        backgroundColor: colors.LIGHT,
+                    },
+                })}
+            />
+            <Stack.Screen
+                name="SellerProfilView"
+                component={SellerProfilView}
+                options={({route, navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => {
+                                navigation.pop();
+                            }}>
+                            <FontAwesomeIcon
+                                icon={faAngleLeft}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    title: route.params.title || '',
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
@@ -304,7 +335,7 @@ const SellerStack = () => {
                                     width: 60,
                                     height: 25,
                                     borderRadius: 3,
-                                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
                                     marginRight: 10,
                                 }}>
                                 <FontAwesomeIcon
@@ -359,6 +390,48 @@ const SellerStack = () => {
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
+                })}
+            />
+            <Stack.Screen
+                name="auctionVideoSettings"
+                component={SetNewAuctionVideo}
+                options={({navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerLeft: () => (
+                        <Pressable onPress={() => navigation.pop()}>
+                            <FontAwesomeIcon
+                                icon={faAngleLeft}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    title: 'Enchère vidéo',
+                    headerStyle: {
+                        backgroundColor: colors.LIGHT,
+                    },
+                })}
+            />
+            <Stack.Screen
+                name="BidConfirmationScreen"
+                component={BidConfirmationScreen}
+                options={({navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerRight: () => (
+                        <Pressable onPress={() => navigation.pop()}>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    headerLeft: () => (
+                        ''
+                    ),
+                    title: '',
                 })}
             />
         </Stack.Navigator>

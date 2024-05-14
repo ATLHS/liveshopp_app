@@ -118,7 +118,7 @@ const RootStack = ({isLoading}) => {
         try {
             dispatch(setLiveData(channelData));
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     });
 

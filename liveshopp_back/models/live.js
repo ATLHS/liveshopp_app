@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const Schema = new mongoose.Schema();
-
 const lives = new mongoose.Schema(
   {
     seller_id: { type: String },

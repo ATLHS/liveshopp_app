@@ -12,6 +12,7 @@ const BannedUsers = require('../../models/banned');
 const { PutObjectCommand, S3Client, DeleteObjectCommand} = require('@aws-sdk/client-s3');
 const fs = require("fs");
 const path = require("path");
+const VideosItem = require("../../models/auction_videos_items");
 
 const options = {
     region: process.env.AWS_REGION,
@@ -222,42 +223,40 @@ router.post("/set-profil-picture", verifyJwt, async (req, res) => {
             if(uploadResponse.$metadata.httpStatusCode === 200) {
                 const imageUrl = `https://profil-picture.s3.${process.env.AWS_REGION}.amazonaws.com/picture/${customer._id}`;
 
-                customer.imageUrl = imageUrl;
-                await customer.save();
+                const customerModel = customer.profil === "seller" ? UserSeller : User;
+
+                const updatedCustomer = await customerModel.findOneAndUpdate(
+                    {_id: customer._id},
+                    {imageUrl: imageUrl},
+                    {new: true}
+                );
 
                 const isSeller = customer.profil === 'seller';
 
                 if (isSeller) {
-                    let lives = await Live.find({seller_id: customer._id});
-
-                    if(lives.length) {
-                        for (const live of lives) {
-                            live.imageUrl = imageUrl;
-                            await live.save();
-                        }
-                    }
+                     await Live.updateMany({seller_id: customer._id}, {imageUrl});
                 }
 
                 return res.status(200).json({
                     user: {
-                        id: customer._id,
-                        email: customer.email,
-                        profil: customer.profil,
-                        firstname: customer.firstname,
-                        lastname: customer.lastname,
-                        phone: customer.phone || null,
-                        shipping_address: customer.shipping_address,
-                        company_name: customer.company_name || null,
-                        role: customer.role || null,
-                        business_activity: customer.business_activity || null,
-                        hasValidPaymentMethod: customer.hasValidPaymentMethod,
-                        imageUrl: customer.imageUrl,
-                        blockedUser: customer.blockedUser,
-                        blockedSeller: customer.blockedSeller,
-                        bio: customer.bio || null,
-                        tiktok: customer.tiktok || null,
-                        instagram: customer.instagram || null,
-                        websiteUrl: customer.websiteUrl || null
+                        id: updatedCustomer._id,
+                        email: updatedCustomer.email,
+                        profil: updatedCustomer.profil,
+                        firstname: updatedCustomer.firstname,
+                        lastname: updatedCustomer.lastname,
+                        phone: updatedCustomer.phone || null,
+                        shipping_address: updatedCustomer.shipping_address,
+                        company_name: updatedCustomer.company_name || null,
+                        role: updatedCustomer.role || null,
+                        business_activity: updatedCustomer.business_activity || null,
+                        hasValidPaymentMethod: updatedCustomer.hasValidPaymentMethod,
+                        imageUrl: updatedCustomer.imageUrl,
+                        blockedUser: updatedCustomer.blockedUser,
+                        blockedSeller: updatedCustomer.blockedSeller,
+                        bio: updatedCustomer.bio || null,
+                        tiktok: updatedCustomer.tiktok || null,
+                        instagram: updatedCustomer.instagram || null,
+                        websiteUrl: updatedCustomer.websiteUrl || null
                     },
                     message: "Votre photo de profil a été configuré avec succès.",
                 });
@@ -265,7 +264,8 @@ router.post("/set-profil-picture", verifyJwt, async (req, res) => {
                 return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
             }
         } catch (error) {
-            return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+            console.error(error)
+            return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image.oo" });
         }
     } else {
         return res.status(400).json({
@@ -469,15 +469,28 @@ router.get("/get-blocked-user", verifyJwt, async (req, res) => {
     }
 });
 
-router.post("/get-blocked-user", verifyJwt, async (req, res) => {
-    const user = await User.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
-    const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
-    const customer = user || seller;
+router.post("/signal-auction-video", verifyJwt, async (req, res) => {
+    const user = await User.findOne({_id: req.user.id});
+    const seller = await UserSeller.findOne({_id: req.user.id});
+    const body = req.body.data;
 
-    if (customer) {
+    const isAlreadyReported = await VideosItem.findOne({
+        _id: body.item._id,
+        isReportedForModeration: true
+    })
+
+    if (isAlreadyReported) {
+        return res.status(400).json({
+            message: "Un signalement est déjà en cours pour cette enchère vidéo.",
+        });
+    }
+
+    const reportedAuctionVideo = await VideosItem.findOneAndUpdate({ _id: body.item._id }, {isReportedForModeration: true}, {new: true})
+
+    if (reportedAuctionVideo) {
         return res.status(200).json({
-            blockedUser: customer.blockedUser,
-            blockedSeller: customer.blockedSeller
+            isReported: true,
+            message: 'L\'enchère vidéo a bien été signalée.',
         });
     } else {
         return res.status(400).json({
@@ -499,6 +512,50 @@ router.get("/get-sellers", verifyJwt, async (req, res) => {
     }
 });
 
+router.post("/block", verifyJwt, async (req, res) => {
+    const user = await User.findOne({_id: req.user.id});
+    const seller = await UserSeller.findOne({_id: req.user.id});
+    const body = req.body.data;
+
+    const customer = user || seller;
+
+    const customerToBlock = body.profil === "seller" ? {blockedSeller: body.item.seller_id} : {blockedUser: body.item.userId};
+
+    // check if the customer to block is already blocked
+    const isAlreadyBlocked = customer.blockedUser.concat(customer.blockedSeller).includes(body.item.seller_id || body.item.userId);
+
+    if (isAlreadyBlocked) {
+        return;
+    }
+    const updatedCustomer = await updateCustomer(customer, customerToBlock, true);
+
+    if (updatedCustomer) {
+        return res.status(200).json({
+            user: {
+                id: updatedCustomer._id,
+                email: updatedCustomer.email,
+                profil: updatedCustomer.profil,
+                firstname: updatedCustomer.firstname,
+                lastname: updatedCustomer.lastname,
+                phone: updatedCustomer.phone || null,
+                shipping_address: updatedCustomer.shipping_address,
+                company_name: updatedCustomer.company_name || null,
+                role: updatedCustomer.role || null,
+                business_activity: updatedCustomer.business_activity || null,
+                hasValidPaymentMethod: updatedCustomer.hasValidPaymentMethod,
+                imageUrl: updatedCustomer.imageUrl,
+                blockedUser: updatedCustomer.blockedUser,
+                blockedSeller: updatedCustomer.blockedSeller,
+                bio: updatedCustomer.bio || null,
+                tiktok: updatedCustomer.tiktok || null,
+                instagram: updatedCustomer.instagram || null,
+                websiteUrl: updatedCustomer.websiteUrl || null
+            },
+            message: `L\'utilisateur ${body.item.sellerName} à bien était bloqué`,
+        });
+    }
+});
+
 router.post("/unblock-user", verifyJwt, async (req, res) => {
     const {_id, profil} = req.body.data;
 
@@ -516,6 +573,7 @@ router.post("/unblock-user", verifyJwt, async (req, res) => {
                     id: _id,
                     profil: "seller",
                     message: "L\'utilisateur à bien était débloqué",
+                    updatedCustomer
                 });
             } else {
                 return res.status(400).json({
@@ -532,6 +590,7 @@ router.post("/unblock-user", verifyJwt, async (req, res) => {
                     id: _id,
                     profil: "user",
                     message: "L\'utilisateur à bien était débloqué",
+                    updatedCustomer
                 });
             } else {
                 return res.status(400).json({

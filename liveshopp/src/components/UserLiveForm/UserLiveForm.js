@@ -82,24 +82,24 @@ export const UserLiveForm = ({navigation, onPress, liveData}) => {
                     <Slider
                       value={field.value || bidAmountSelection}
                       step={10}
-                      trackStyle={{height: 3}}
+                      trackStyle={{height: 2}}
                       containerStyle={{width: 265}}
                       renderThumbComponent={() => (
-                        <View
-                          style={{
-                            backgroundColor: colors.DARK,
-                            height: 35,
-                            width: 35,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 3,
-                          }}>
-                          <FontAwesomeIcon
-                            icon={faAnglesRight}
-                            size={17}
-                            color={'white'}
-                          />
-                        </View>
+                          <View
+                              style={{
+                                backgroundColor: colors.DARK,
+                                height: 35,
+                                width: 35,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 5
+                              }}>
+                            <FontAwesomeIcon
+                                icon={faAnglesRight}
+                                size={17}
+                                color={'white'}
+                            />
+                          </View>
                       )}
                       maximumTrackTintColor={colors.DARK}
                       minimumTrackTintColor={colors.DARK}

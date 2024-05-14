@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     StyleSheet,
     View,
@@ -22,9 +22,16 @@ import {setUser} from '../../redux/slices/userSlice';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {setSellerLives} from "../../redux/slices/livesSlice";
 
 export const SettingProfilScreen = ({navigation}) => {
     const {user} = useSelector(state => state.user);
+    const [imageUri, setImageUri] = useState(user.imageUrl || null);
+    const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {}, [user, imageUri]);
+
 
     const SettingProfilScreenFormUser = [
         {
@@ -218,10 +225,7 @@ export const SettingProfilScreen = ({navigation}) => {
             websiteUrl: user.websiteUrl || null,
         },
     });
-    const dispatch = useDispatch();
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [imageUri, setImageUri] = useState(user.imageUrl || null);
 
     const [refreshCounter, setRefreshCounter] = useState(0);
 
@@ -231,16 +235,18 @@ export const SettingProfilScreen = ({navigation}) => {
             includeBase64: true,
         });
 
-        if (result.didCancel) return;
+        if (result.didCancel) {
+            return;
+        }
 
         setIsLoading(true);
-
+        setImageUri(null);
         customer
             .setProfilPicture(result.assets[0])
             .then(res => res)
             .then(data => {
                 setImageUri(data.user.imageUrl);
-                setRefreshCounter(prevCounter => prevCounter + 1);
+                // setRefreshCounter(prevCounter => prevCounter + 1);
                 Toast.show({
                     type: 'success',
                     text1: data.message,
@@ -265,7 +271,7 @@ export const SettingProfilScreen = ({navigation}) => {
             .then(res => res)
             .then(data => {
                 setImageUri(null);
-                setRefreshCounter(prevCounter => prevCounter + 1);
+                // setRefreshCounter(prevCounter => prevCounter + 1);
                 Toast.show({
                     type: 'success',
                     text1: data.message,
@@ -321,9 +327,9 @@ export const SettingProfilScreen = ({navigation}) => {
                                 <View style={styles.profilPictureContainer}>
                                     {imageUri ? (
                                         <Image
-                                            key={refreshCounter}
+                                            key={user.imageUri}
                                             style={styles.contactProfilPicture}
-                                            source={{uri: imageUri}}
+                                            source={{uri: imageUri, cache: 'reload'}}
                                         />
                                     ) : (
                                         <Image

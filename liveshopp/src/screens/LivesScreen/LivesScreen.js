@@ -52,6 +52,8 @@ export const LivesScreen = ({navigation}) => {
     useFocusEffect(
         React.useCallback(() => {
             setIsLoading(true);
+            dispatch(setLives([]));
+
             live.getLives()
                 .then(res => res)
                 .then(data => {
@@ -69,7 +71,7 @@ export const LivesScreen = ({navigation}) => {
                     setIsLoading(false);
                 })
                 .catch(err => {
-                    console.log(err, 'get lives error.');
+                    console.error(err, 'get lives error.');
                     setIsLoading(false);
                 });
         }, []),
@@ -123,7 +125,7 @@ export const LivesScreen = ({navigation}) => {
 
             agoraEngine.enableVideo();
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -141,20 +143,15 @@ export const LivesScreen = ({navigation}) => {
                 ChannelProfileType.ChannelProfileLiveBroadcasting,
             );
 
-            agoraEngineRef.current?.joinChannel(
-                token,
-                liveData.live_name,
-                0,
-                {
-                    clientRoleType: ClientRoleType.ClientRoleAudience,
-                },
-            );
+            agoraEngineRef.current?.joinChannel(token, liveData.live_name, 0, {
+                clientRoleType: ClientRoleType.ClientRoleAudience,
+            });
 
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
             navigation.navigate('LiveScreen');
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -163,7 +160,7 @@ export const LivesScreen = ({navigation}) => {
             agoraEngineRef.current?.leaveChannel();
             dispatch(setIsGone(false));
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

@@ -5,7 +5,6 @@ import {
     SafeAreaView,
     KeyboardAvoidingView,
     Platform,
-    ScrollView,
     Pressable,
     Text,
     TouchableOpacity,
@@ -21,19 +20,41 @@ import orderService from '../../services/order';
 import Toast from 'react-native-toast-message';
 import {setInitialOrder} from '../../redux/slices/oderSlice';
 import NoData from '../../components/NoData/NoData';
+import {useFocusEffect} from '@react-navigation/native';
 
-export const OrderToShipped = () => {
+const OrderToShipped = () => {
     const {user} = useSelector(state => state.user);
     const {initialOrder} = useSelector(state => state.order);
     const [modalVisible, setModalVisible] = useState(false);
     const [order, setOrder] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
+    const [selectedOrder, setSelectedOrder] = useState({});
 
-    const updateOrderStatusHasShipped = () => {
+    useFocusEffect(
+        React.useCallback(() => {
+            if (
+                initialOrder.filter(
+                    order =>
+                        (order.seller_id || order.seller._id) === user.id &&
+                        order.deliveryStatut === "En attente d'expédition",
+                ).length
+            ) {
+                setOrder(
+                    initialOrder.filter(
+                        order =>
+                            (order.seller_id || order.seller._id) === user.id &&
+                            order.deliveryStatut === "En attente d'expédition",
+                    ),
+                );
+            }
+        }, [initialOrder, modalVisible, selectedOrder]),
+    );
+
+    const updateOrderStatusHasShipped = selectedOrder => {
         setIsLoading(true);
         orderService
-            .updateOrderStatus(order)
+            .updateOrderStatus(selectedOrder)
             .then(res => res)
             .then(data => {
                 dispatch(setInitialOrder(data.order));
@@ -45,7 +66,7 @@ export const OrderToShipped = () => {
                 });
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
                 setIsLoading(false);
             });
     };
@@ -55,171 +76,96 @@ export const OrderToShipped = () => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.container}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{flexGrow: 1}}
-                    contentInset={{bottom: 100}}>
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <>
-                            <Modal
-                                animationType="fade"
-                                transparent={true}
-                                visible={modalVisible}>
-                                <Pressable
-                                    onPress={() => setModalVisible(false)}
-                                    style={{
-                                        flex: 1,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        backgroundColor: 'rgba(0,0,0,0.60)',
-                                    }}>
-                                    <View
-                                        style={{
-                                            height: 230,
-                                            width: 270,
-                                            borderRadius: 10,
-                                            backgroundColor: colors.LIGHT,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            padding: 30,
-                                        }}>
-                                        <View
-                                            style={{
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                width: '100%',
-                                            }}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 15,
-                                                    textAlign: 'center',
-                                                    fontFamily: 'FugazOne-Regular',
-                                                }}>
-                                                CONFIRMER L'ENVOI DE L'ARTICLE :{' '}
-                                            </Text>
-                                            <Text style={{fontSize: 18, margin: 5}}>
-                                                {order.productName}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: 15,
-                                                    margin: 5,
-                                                    color: colors.PRIMARY,
-                                                    textAlign: 'center',
-                                                }}>
-                                                Attention cette action est définitive
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'center',
-                                                width: '100%',
-                                            }}>
-                                            <View style={{margin: 10, height: 30}}>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        height: 40,
-                                                        width: 100,
-                                                        backgroundColor: 'black',
-                                                        borderRadius: 10,
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                    }}
-                                                    onPress={() => setModalVisible(!modalVisible)}>
-                                                    <Text
-                                                        style={{
-                                                            color: colors.LIGHT,
-                                                            textAlign: 'center',
-                                                            fontSize: 15,
-                                                        }}>
-                                                        Annulé
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                            <View style={{margin: 10, borderRadius: 10, height: 30}}>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        height: 40,
-                                                        width: 100,
-                                                        backgroundColor: 'black',
-                                                        borderRadius: 10,
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                    }}
-                                                    onPress={updateOrderStatusHasShipped}>
-                                                    <Text
-                                                        style={{
-                                                            color: colors.LIGHT,
-                                                            textAlign: 'center',
-                                                            fontSize: 15,
-                                                        }}>
-                                                        Confirmé
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <>
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={modalVisible}>
+                            <Pressable
+                                onPress={() => setModalVisible(false)}
+                                style={styles.modalBackground}>
+                                <View style={styles.modalContent}>
+                                    <View style={styles.modalTextContainer}>
+                                        <Text style={styles.modalText}>
+                                            CONFIRMER L'ENVOI DE L'ARTICLE :{' '}
+                                        </Text>
+                                        <Text style={styles.modalProduct}>
+                                            {selectedOrder.productName}
+                                        </Text>
+                                        <Text style={styles.modalAlert}>
+                                            Attention cette action est
+                                            définitive
+                                        </Text>
                                     </View>
-                                </Pressable>
-                            </Modal>
-                            <View style={styles.endedLive}>
-                                {initialOrder.length &&
-                                initialOrder.filter(
-                                    order =>
-                                        order.seller_id === user.id &&
-                                        order.deliveryStatut === "En attente d'expédition",
-                                ).length
-                                    ? initialOrder
-                                        .filter(
-                                            order =>
-                                                order.seller_id === user.id &&
-                                                order.deliveryStatut === "En attente d'expédition",
-                                        )
-                                        .map((live, id) => (
-                                            <TouchableOpacity
-                                                key={id}
-                                                onPress={() => {
-                                                    setModalVisible(!modalVisible);
-                                                    setOrder(live);
-                                                }}>
-                                                <OrderCard
-                                                    seller_name={live.seller.company_name}
-                                                    live_name={live.live_name}
-                                                    live_id={live.auctionId}
-                                                    product_name={live.productName}
-                                                    product_price={live.salePrice}
-                                                    shipping_address={live.shipping_address}
-                                                    delivery_status={live.deliveryStatut}
-                                                />
-                                            </TouchableOpacity>
-                                        ))
-                                    : ''}
-                                {!initialOrder.filter(
-                                    order =>
-                                        order.seller_id === user.id &&
-                                        order.deliveryStatut === "En attente d'expédition",
-                                ).length && (
-                                    <NoData
-                                        title={"Vous n'avez aucun article à expédier."}
-                                        message={
-                                            'Les articles vendus lors de vos enchères en live et à expédier apparaîtront ici.'
-                                        }
+                                    <View style={styles.modalButtons}>
+                                        <TouchableOpacity
+                                            style={styles.modalButton}
+                                            onPress={() =>
+                                                setModalVisible(!modalVisible)
+                                            }>
+                                            <Text
+                                                style={styles.modalButtonText}>
+                                                Annulé
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.modalButton}
+                                            onPress={() =>
+                                                updateOrderStatusHasShipped(
+                                                    selectedOrder,
+                                                )
+                                            }>
+                                            <Text
+                                                style={styles.modalButtonText}>
+                                                Confirmé
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </Pressable>
+                        </Modal>
+                        <View style={styles.endedLive}>
+                            {order.length && (
+                                <OrderCard
+                                    order={order}
+                                    setModalVisible={modalVisible =>
+                                        setModalVisible(modalVisible)
+                                    }
+                                    setSelectedOrder={order =>
+                                        setSelectedOrder(order)
+                                    }
+                                    modalVisible={modalVisible}
+                                    enableActionOnOrder={true}
+                                />
+                            )}
+                            {!initialOrder.filter(
+                                order =>
+                                    (order.seller_id || order.seller._id) ===
+                                        user.id &&
+                                    order.deliveryStatut ===
+                                        "En attente d'expédition",
+                            ).length && (
+                                <NoData
+                                    title={
+                                        "Vous n'avez aucun article à expédier."
+                                    }
+                                    message={
+                                        'Les articles vendus lors de vos enchères et à expédier apparaîtront ici.'
+                                    }
+                                />
+                            )}
+                            {isLoading && (
+                                <View style={styles.loadingContainer}>
+                                    <ActivityIndicator
+                                        size="large"
+                                        color={colors.DARK}
                                     />
-                                )}
-                                {isLoading && (
-                                    <View
-                                        style={{
-                                            height: '100%',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}>
-                                        <ActivityIndicator size="large" color={colors.DARK}/>
-                                    </View>
-                                )}
-                            </View>
-                        </>
-                    </TouchableWithoutFeedback>
-                </ScrollView>
+                                </View>
+                            )}
+                        </View>
+                    </>
+                </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
@@ -236,6 +182,65 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap',
         margin: 10,
+    },
+    modalBackground: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.60)',
+    },
+    modalContent: {
+        height: 230,
+        width: 270,
+        borderRadius: 10,
+        backgroundColor: colors.LIGHT,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 30,
+    },
+    modalTextContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
+    modalText: {
+        fontSize: 15,
+        textAlign: 'center',
+        fontFamily: 'FugazOne-Regular',
+    },
+    modalProduct: {
+        fontSize: 18,
+        marginVertical: 5,
+    },
+    modalAlert: {
+        fontSize: 15,
+        marginVertical: 5,
+        color: colors.PRIMARY,
+        textAlign: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    modalButton: {
+        height: 40,
+        width: 100,
+        backgroundColor: 'black',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    modalButtonText: {
+        color: colors.LIGHT,
+        textAlign: 'center',
+        fontSize: 15,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

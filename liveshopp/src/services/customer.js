@@ -43,9 +43,21 @@ const customer = {
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },
+    blockUser(data) {
+        return axiosConfig
+            .post('/api/customer/block', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
     setProfilPicture(data) {
         return axiosConfig
             .post('/api/customer/set-profil-picture', {data})
+            .then(({data}) => data)
+            .catch(({response}) => Promise.reject(response.data));
+    },
+    signalAuctionVideo(data) {
+        return axiosConfig
+            .post('/api/customer/signal-auction-video', {data})
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },

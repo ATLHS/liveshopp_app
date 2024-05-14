@@ -1,104 +1,207 @@
-import React from 'react';
-import {Text, StyleSheet, View, TouchableWithoutFeedback} from 'react-native';
+import React, {useState} from 'react';
+import {
+    Text,
+    StyleSheet,
+    View,
+    TouchableWithoutFeedback,
+    FlatList,
+    TouchableOpacity,
+} from 'react-native';
 import colors from '../../styles/colors';
-import {faEllipsis, faTruckFast, faTruckRampBox} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
+import {
+    faEllipsis,
+    faLocationDot,
+    faStore,
+    faTruck,
+    faTruckFast,
+    faTruckRampBox,
+} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const OrderCard = ({
-                       seller_name,
-                       live_name,
-                       live_id,
-                       product_name,
-                       product_price,
-                       shipping_address,
-                       delivery_status,
-                   }) => {
+    order,
+    setModalVisible,
+    setSelectedOrder,
+    modalVisible,
+    enableActionOnOrder,
+}) => {
+    const deliveryStatutIcon = deliveryStatus => {
+        return deliveryStatus === "En attente d'expédition"
+            ? faTruck
+            : faTruckFast;
+    };
     return (
-        <View
-            style={{
-                width: 350,
-                height: 230,
-                marginTop: 10,
-                marginBottom: 10,
-                borderRadius: 8,
-                justifyContent: 'center',
-                borderWidth: 2,
-                borderColor: 'black',
-                alignItems: 'flex-start',
-                padding: 15,
-                backgroundColor: colors.LIGHT
-            }}>
-            <View style={{margin: 5, width: 350}}>
-                <View style={{margin: 5}}>
-                    <View style={styles.title}>
-                        <Text style={{fontWeight: 'bold', fontSize: 12}}>Vendeur : </Text><Text
-                        style={{fontSize: 12}}>{seller_name}</Text>
-                    </View>
-                    <View style={styles.title}>
-                        <Text style={{fontWeight: 'bold', fontSize: 12}}>Nom du live : </Text>
-                        <Text style={{fontSize: 12}}>
-                            {live_name}
-                        </Text>
-                    </View>
-                    <View style={styles.title}>
-                        <Text style={{fontWeight: 'bold', fontSize: 12}}>Identifiant du live : </Text>
-                        <Text style={{fontSize: 12}}>
-                            {live_id}
-                        </Text>
-                    </View>
-                </View>
-                <View style={{margin: 5}}>
-                    <View style={styles.title}>
-                        <Text style={{fontWeight: 'bold', fontSize: 12}}>Article : </Text>
-                        <Text style={{fontSize: 12}}>
-                            {product_name}
-                        </Text>
-                    </View>
-                    <View style={styles.title}>
-                        <Text style={{fontWeight: 'bold', fontSize: 12}}>Prix de vente : </Text>
-                        <Text style={{fontSize: 12}}>
-                            {product_price} €
-                        </Text>
-                    </View>
-                    <View style={{
-                        color: colors.DARK,
-                        textAlign: 'left',
-                        fontSize: 12,
-                        marginBottom: 10,
-                        width: '100%',
+        <FlatList
+            contentContainerStyle={{
+                flexGrow: 1,
+            }}
+            showsVerticalScrollIndicator={false}
+            contentInset={{bottom: 100}}
+            data={order}
+            renderItem={({item}) => (
+                <TouchableOpacity
+                    onPress={() => {
+                        if (enableActionOnOrder) {
+                            setSelectedOrder(item);
+                            setModalVisible(!modalVisible);
+                        }
                     }}>
-                        <Text style={{fontWeight: 'bold', fontSize: 12}}>Adresse de livraison : </Text>
-                        <Text style={{fontSize: 12}}>
-                            {shipping_address}
-                        </Text>
-                    </View>
-                </View>
-                <View style={{margin: 5}}>
-                    <View style={{
-                        height: 30,
-                        width: delivery_status === 'Expédié' ? 100 : 200,
-                        backgroundColor: delivery_status === 'Expédié' ? colors.SUCCESS : colors.PRIMARY,
-                        borderRadius: 3,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row'
-                    }}>
-                        <Text style={{color: colors.LIGHT, fontSize: 13, marginRight: 10}}>{delivery_status}</Text>
-                        {delivery_status === 'Expédié' ? <FontAwesomeIcon
-                            icon={faTruckFast}
-                            color={colors.LIGHT}
-                            size={20}
+                    <View
+                        style={{
+                            flex: 1,
+                            width: 370,
+                            borderRadius: 6,
+                            borderStyle: 'solid',
+                            borderWidth: 0,
+                            marginBottom: 10,
+                            marginTop: 12,
+                            borderColor: colors.DARK,
+                            position: 'relative',
+                            backgroundColor: '#F4F4F4',
+                            flexBasis: 'auto',
+                            padding: 15,
+                        }}>
+                        <View
+                            style={{
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                            }}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'space-between',
+                                }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: 800,
+                                        }}>
+                                        {item.productName}
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: 800,
+                                        }}>
+                                        {item.salePrice}€
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    marginBottom: 20,
+                                }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 14,
+                                            fontWeight: 800,
+                                        }}>
+                                        Réf :{' '}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontSize: 13,
+                                            fontWeight: 500,
+                                        }}>
+                                        {item.auctionId}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    marginBottom: 5,
+                                }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}>
+                                    <FontAwesomeIcon icon={faStore} size={15} />
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            fontWeight: 500,
+                                            marginLeft: 5,
+                                        }}>
+                                        {item.seller.company_name}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                    marginBottom: 20,
+                                }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}>
+                                    <FontAwesomeIcon
+                                        icon={faLocationDot}
+                                        size={15}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            fontWeight: 500,
+                                            marginLeft: 5,
+                                        }}>
+                                        {item.shipping_address}
+                                    </Text>
+                                </View>
+                            </View>
 
-                        /> : <FontAwesomeIcon
-                            icon={faTruckRampBox}
-                            color={colors.LIGHT}
-                            size={20}
-
-                        />}
+                            <View
+                                style={{
+                                    flexDirection: 'column',
+                                }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'flex-end',
+                                    }}>
+                                    <FontAwesomeIcon
+                                        icon={deliveryStatutIcon(
+                                            item.deliveryStatut,
+                                        )}
+                                        size={15}
+                                        style={{marginBottom: 0}}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            fontWeight: 500,
+                                            marginLeft: 5,
+                                            height: 16,
+                                        }}>
+                                        {item.deliveryStatut}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>
-        </View>
+                </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+        />
     );
 };
 
@@ -109,7 +212,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginBottom: 5,
         width: '100%',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
 });
 

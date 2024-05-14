@@ -37,7 +37,7 @@ export const SellerProfilView = ({route}) => {
                     );
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.error(err);
                 });
         }, [comingLives]),
     );

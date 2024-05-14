@@ -47,7 +47,7 @@ export const LivesScreen = ({navigation}) => {
                 })
                 .catch(err => {
                     setIsLoading(false);
-                    console.log(err, 'get lives error.');
+                    console.error(err, 'get lives error.');
                 });
         }, []),
     );
@@ -66,7 +66,7 @@ export const LivesScreen = ({navigation}) => {
             dispatch(setIsJoin(false));
             navigation.navigate('LiveScreen');
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -74,7 +74,7 @@ export const LivesScreen = ({navigation}) => {
         try {
             dispatch(setIsGone(false));
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

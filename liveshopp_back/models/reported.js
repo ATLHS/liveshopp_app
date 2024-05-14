@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const Schema = new mongoose.Schema();
-
 const reported = new mongoose.Schema(
   {
     flagger_id: { type: String },

@@ -1,13 +1,14 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import UserStacks from '../screens/UserStacks/UserStacks';
 import SettingProfilScreen from '../screens/SettingProfilScreen/SettingProfilScreen';
+import SellerProfilView from '../screens/SellerProfilView/SellerProfilView';
 import colors from '../styles/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
 import {
     ActionSheetIOS,
     Alert,
-    Pressable,
+    Pressable, StatusBar,
     Text,
     TouchableOpacity,
     View,
@@ -19,13 +20,14 @@ import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {useDispatch, useSelector} from 'react-redux';
 import SettingShippingAddress from '../screens/SettingShippingAddress/SettingShippingAddress';
 import socket from '../services/config/clientSocketIoConfig';
-import React from 'react';
+import React, {useEffect} from 'react';
 import rgpdScreen from '../screens/Rgpd/Rgpd';
 import Toast from 'react-native-toast-message';
 import {faEllipsisVertical, faEye} from '@fortawesome/free-solid-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 import customer from '../services/customer';
 import BlockedUsers from '../screens/BlockedUsers/BlockedUsers';
+import BidConfirmationScreen from '../screens/BidConfirmationScreen/BidConfirmationScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +36,10 @@ const UserStack = () => {
     const liveData = useSelector(state => state.lives.liveData);
     const dispatch = useDispatch();
     const navigation = useNavigation();
+
+    useEffect(() => {
+        StatusBar.setBarStyle('dark-content');
+    }, []);
 
     const leaveRoom = () => {
         socket.emit('leaveRoom', {liveData, user});
@@ -178,6 +184,30 @@ const UserStack = () => {
                 })}
             />
             <Stack.Screen
+                name="SellerProfilView"
+                component={SellerProfilView}
+                options={({route, navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => {
+                                navigation.pop();
+                            }}>
+                            <FontAwesomeIcon
+                                icon={faAngleLeft}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    title: route.params.title || '',
+                    headerStyle: {
+                        backgroundColor: colors.LIGHT,
+                    },
+                })}
+            />
+            <Stack.Screen
                 name="SettingShippingAddress"
                 component={SettingShippingAddress}
                 options={({navigation}) => ({
@@ -294,7 +324,7 @@ const UserStack = () => {
                                     width: 60,
                                     height: 25,
                                     borderRadius: 3,
-                                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
                                     marginRight: 10,
                                 }}>
                                 <FontAwesomeIcon
@@ -349,6 +379,27 @@ const UserStack = () => {
                     headerStyle: {
                         backgroundColor: colors.LIGHT,
                     },
+                })}
+            />
+            <Stack.Screen
+                name="BidConfirmationScreen"
+                component={BidConfirmationScreen}
+                options={({navigation}) => ({
+                    headerShown: true,
+                    headerShadowVisible: false, // applied here
+                    headerRight: () => (
+                        <Pressable onPress={() => navigation.pop()}>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.DARK}
+                                size={30}
+                            />
+                        </Pressable>
+                    ),
+                    headerLeft: () => (
+                        ''
+                    ),
+                    title: '',
                 })}
             />
         </Stack.Navigator>
