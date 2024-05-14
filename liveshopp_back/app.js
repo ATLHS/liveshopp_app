@@ -184,15 +184,14 @@ io.on("connection", (socket) => {
                         if (chargedCustomer.status === 'succeeded') {
                             // register current sale product info in db
                             const product = new Product({
-                                seller_id: value.sellerId,
-                                live_name: key,
+                                seller: value.sellerId,
+                                live_name: 'Live enchères',
                                 auctionId: value.auctionId,
                                 auctionsStatus: value.auctionsStatus,
                                 userId: value.currentAuction.userId,
                                 productName: value.currentAuction.productName,
                                 salePrice: value.currentAuction.currentProductAmount,
                                 shipping_address: value.currentAuction.shipping_address,
-                                seller: value.sellerId,
                             });
                             // save in db the purchased product
                             const newProductSaved = await product.save();
@@ -261,7 +260,7 @@ const url = process.env.ATLAS_URL;
 mongoose
     .connect(url)
     .then(() => console.log(`Database connected successfully`))
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 
 app.use(cors());
 app.use(express.urlencoded({
@@ -288,7 +287,7 @@ app.use("/api/stripe/", stripe);
 app.use("/api/admin/", admin);
 app.use("/api/videos/", videos);
 
-httpServer.listen(port, () => { console.log(`Server listening on port  ${port}`); });
+httpServer.listen(process.env.PORT, () => { console.log(`Server listening on port  ${process.env.PORT}`); });
 
 
 module.exports = {app, httpServer}

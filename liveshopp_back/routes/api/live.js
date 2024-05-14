@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const randomNumber = require('../../utils/randomDigitNumber.js');
 const {verifyJwt} = require('../../middleware/verifyJwt');
 const UserSeller = require('../../models/seller');
 const Live = require('../../models/live');
@@ -7,6 +6,7 @@ const {generateAgoraChannelToken} = require('../../utils/generateAgoraToken');
 const {DateTime, Interval} = require("luxon");
 const User = require("../../models/user");
 const generateUniqueId = require('generate-unique-id');
+const Product = require('../../models/product');
 
 const updateLiveStatus = async () => {
     await Live.findOneAndUpdate({
@@ -121,13 +121,16 @@ router.post('/delete-live', verifyJwt, async (req, res) => {
 });
 
 router.post('/close-live', verifyJwt, async (req, res) => {
-    const {_id, seller_id} = req.body.data;
+    const liveDataToClose = req.body.data;
+
+    await Product.updateMany({auctionId: liveDataToClose._id, auctionsStatus: 'live'}, {auctionsStatus: 'ended'});
 
     await Live.findOneAndUpdate(
-        {_id, seller_id},
+        {_id: liveDataToClose._id, seller_id: liveDataToClose.seller_id},
         {
             live_status: 'ended',
         });
+
     const lives = await Live.find({seller_id: req.user.id});
 
     if (lives) {

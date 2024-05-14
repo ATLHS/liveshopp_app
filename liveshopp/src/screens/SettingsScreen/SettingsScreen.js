@@ -84,7 +84,7 @@ function SettingsScreen({navigation}) {
                 return data;
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -106,7 +106,7 @@ function SettingsScreen({navigation}) {
         const {error} = await presentPaymentSheet();
 
         if (error) {
-            console.log(error.message);
+            console.error(error.message);
         } else {
             customer
                 .updateCustomerPaymentMethodStatut()
@@ -119,7 +119,7 @@ function SettingsScreen({navigation}) {
                     });
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.error(err);
                 });
         }
     };

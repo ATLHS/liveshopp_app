@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     StyleSheet,
     View,
@@ -18,6 +18,9 @@ import NoData from '../../components/NoData/NoData';
 export const EndedLives = () => {
     const {sellerLives} = useSelector(state => state.lives);
     const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {}, [sellerLives])
+    const {user} = useSelector(state => state.user);
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
             <KeyboardAvoidingView
@@ -48,7 +51,8 @@ export const EndedLives = () => {
                                               category={live.business_activity}
                                               status={live.live_status}
                                               onPress={null}
-                                              imageUrl={live.imageUrl}
+                                              imageUrl={user.imageUrl}
+                                              imageKey={user.imageUrl}
                                           />
                                       ))
                                 : ''}

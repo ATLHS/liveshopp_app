@@ -9,13 +9,11 @@ import {
     Pressable,
     TouchableOpacity,
     Modal,
-    AppState,
-    FlatList,
     ActionSheetIOS,
     Alert,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import {
     createAgoraRtcEngine,
     IRtcEngine,
@@ -30,14 +28,24 @@ import colors from '../../styles/colors';
 import {LiveChatTextInput} from '../../components/LiveChatTextInput/LiveChatTextInput';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
+    faArrowDown,
     faArrowsRotate,
     faEllipsis,
-    faRotate,
 } from '@fortawesome/free-solid-svg-icons';
 import customer from '../../services/customer';
 import admin from '../../services/admin';
-import {setIsGone, setIsJoin, setLiveData} from '../../redux/slices/livesSlice';
+import {DateTime} from 'luxon';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import BottomSheet from 'react-native-simple-bottom-sheet';
+import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
+import {RadialGradient, LinearGradient} from 'react-native-gradients';
 
+const colorList = [
+    {offset: '20%', color: 'transparent', opacity: '0'},
+    {offset: '0%', color: 'black', opacity: '0.6'},
+    {offset: '90%', color: 'transparent', opacity: '0'},
+    {offset: '100%', color: 'black', opacity: '0.6'},
+];
 export const LiveScreen = () => {
     const agoraEngineRef = IRtcEngine;
     const {isJoin, isHost, liveData, remoteUid} = useSelector(
@@ -46,8 +54,20 @@ export const LiveScreen = () => {
     const {user} = useSelector(state => state.user);
     const [modalVisible, setModalVisible] = useState(false);
     const list = useRef(null);
-    const dispatch = useDispatch();
-    const navigation = useNavigation();
+    const panelRef = useRef(null);
+
+    const renderUserLiveForm = () => {
+        if (user.profil !== 'admin' && user.profil !== 'seller') {
+            return (
+                <UserLiveForm
+                    liveData={liveData}
+                    onPress={data =>
+                        bidOnCurrentAuction(liveData.channelName, data)
+                    }
+                />
+            );
+        }
+    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -63,40 +83,6 @@ export const LiveScreen = () => {
             }
         }, [liveData.currentAuction.currentAuctionStatus, user]),
     );
-
-    /*useFocusEffect(
-        React.useCallback(() => {
-            // if the user closes the application while the live screen is open, he is removed from the room.
-            AppState.addEventListener('change', nextAppState => {
-                if (nextAppState === 'background' && liveData.channelName) {
-                    socket.emit('leaveRoom', {liveData, user});
-                    dispatch(setIsJoin(false));
-                    dispatch(setIsGone(true));
-                    Toast.hide();
-                    dispatch(
-                        setLiveData({
-                            channelName: '',
-                            sellerId: '',
-                            auctionId: '',
-                            auctionsStatus: '',
-                            userCount: '',
-                            messages: [],
-                            currentAuction: {
-                                userId: '',
-                                username: '',
-                                productName: false,
-                                currentProductAmount: '',
-                                currentAuctionDelay: '',
-                                currentAuctionStatus: '',
-                                salePrice: '',
-                            },
-                        }),
-                    );
-                    navigation.navigate('LIVES');
-                }
-            });
-        }, [liveData.channelName]),
-    );*/
 
     useFocusEffect(
         React.useCallback(() => {
@@ -117,7 +103,7 @@ export const LiveScreen = () => {
         if (liveData.currentAuction.userId) {
             Toast.show({
                 type: 'auctionToast',
-                text1: `ADJUGÉ, VENDUE À ${liveData.currentAuction.username.toUpperCase()}`,
+                text1: `ADJUGÉE, VENDUE À ${liveData.currentAuction.username.toUpperCase()} 🎉`,
                 topOffset: 100,
             });
         }
@@ -340,6 +326,15 @@ export const LiveScreen = () => {
                                 </Pressable>
                             </Modal>
                         )}
+                        <View
+                            style={{
+                                position: 'absolute',
+                                zIndex: 1,
+                                height: Dimensions.get('window').height,
+                                width: Dimensions.get('window').width,
+                            }}>
+                            <LinearGradient colorList={colorList} angle={90} />
+                        </View>
                         <RtcSurfaceView
                             canvas={{uid: isHost ? 0 : remoteUid}}
                             style={styles.videoView}
@@ -352,190 +347,42 @@ export const LiveScreen = () => {
                                 backgroundColor: 'transparent',
                                 justifyContent: 'center',
                                 alignItems: 'center',
+                                zIndex: 2,
                             }}>
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                contentInset={{
-                                    top: 0,
-                                    bottom: 40,
-                                    left: 0,
-                                    right: 0,
-                                }}
-                                ref={list}
-                                style={{
-                                    height: 150,
-                                    width: 325,
-                                    marginBottom: 15,
-                                    backgroundColor: 'transparent',
-                                }}
-                                data={liveData.messages}
-                                renderItem={({item}) =>
-                                    !user.blockedUser
-                                        .concat(user.blockedSeller)
-                                        .includes(item.userId) && (
-                                        <View
-                                            style={{
-                                                marginBottom: 7,
-                                                marginTop: 7,
-                                            }}>
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    justifyContent:
-                                                        'space-between',
-                                                }}>
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        justifyContent:
-                                                            'flex-end',
-                                                    }}>
-                                                    <Text
-                                                        style={{
-                                                            color: colors.LIGHT,
-                                                            fontSize: 13,
-                                                            fontWeight: '700',
-                                                            marginBottom: 3,
-                                                        }}>
-                                                        {item.username}
-                                                    </Text>
-                                                    {item.profil ===
-                                                        'admin' && (
-                                                        <View
-                                                            style={{
-                                                                backgroundColor:
-                                                                    colors.LIGHT,
-                                                                color: colors.DARK,
-                                                                borderRadius: 2,
-                                                                alignItems:
-                                                                    'center',
-                                                                marginBottom: 3,
-                                                                padding: 2,
-                                                                paddingRight: 4,
-                                                                paddingLeft: 4,
-                                                            }}>
-                                                            <Text
-                                                                style={{
-                                                                    color: colors.DARK,
-                                                                    fontWeight:
-                                                                        '700',
-                                                                    fontSize: 10,
-                                                                }}>
-                                                                Admin
-                                                            </Text>
-                                                        </View>
-                                                    )}
-                                                </View>
-                                                {user.id !== item.userId &&
-                                                    item.profil !== 'admin' && (
-                                                        <TouchableOpacity
-                                                            onPress={() =>
-                                                                user.profil ===
-                                                                'admin'
-                                                                    ? showObjectionableAdminAction(
-                                                                          {
-                                                                              item,
-                                                                              liveData,
-                                                                          },
-                                                                      )
-                                                                    : showObjectionableAction(
-                                                                          item,
-                                                                      )
-                                                            }>
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faEllipsis
-                                                                }
-                                                                color={
-                                                                    colors.LIGHT
-                                                                }
-                                                                size={20}
-                                                            />
-                                                        </TouchableOpacity>
-                                                    )}
-                                            </View>
-                                            <Text
-                                                style={{
-                                                    color: colors.LIGHT,
-                                                    fontSize: 14,
-                                                }}>
-                                                {item.message}
-                                            </Text>
-                                        </View>
-                                    )
+                            <LiveChatMessagesList
+                                list={list}
+                                liveData={liveData}
+                                user={user}
+                                showObjectionableAction={
+                                    showObjectionableAction
                                 }
-                                keyExtractor={item => item.id}
+                                showObjectionableAdminAction={
+                                    showObjectionableAdminAction
+                                }
                             />
-                            {isHost && user.profil === 'seller' ? (
-                                liveData.currentAuction.currentAuctionStatus ===
-                                'running' ? (
-                                    <>
-                                        <Text
-                                            style={{
-                                                width: 350,
-                                                color: colors.LIGHT,
-                                                fontFamily: 'Roboto-Regular',
-                                                fontSize: 20,
-                                                fontWeight: 500,
-                                                padding: 15,
-                                            }}>
-                                            {
-                                                liveData.currentAuction
-                                                    .productName
-                                            }
-                                        </Text>
-                                        <LiveAuctionInfo />
-                                    </>
-                                ) : (
-                                    <SellerLiveForm
-                                        onPress={data =>
-                                            startCurrentAuction(
-                                                liveData.channelName,
-                                                data,
-                                            )
-                                        }
-                                        currentAuctionIsRunning={
-                                            liveData.currentAuction
-                                                .currentAuctionStatus ===
-                                            'running'
-                                        }
-                                    />
-                                )
+
+                            {liveData.currentAuction.currentAuctionStatus ===
+                            'running' ? (
+                                <>
+                                    <LiveAuctionInfo />
+                                    {renderUserLiveForm()}
+                                </>
+                            ) : isHost && user.profil === 'seller' ? (
+                                <SellerLiveForm
+                                    onPress={data =>
+                                        startCurrentAuction(
+                                            liveData.channelName,
+                                            data,
+                                        )
+                                    }
+                                    currentAuctionIsRunning={
+                                        liveData.currentAuction
+                                            .currentAuctionStatus === 'running'
+                                    }
+                                    panelRef={panelRef}
+                                />
                             ) : (
                                 <>
-                                    {liveData.currentAuction
-                                        .currentAuctionStatus === 'running' && (
-                                        <Text
-                                            style={{
-                                                width: 350,
-                                                color: colors.LIGHT,
-                                                fontFamily: 'Roboto-Regular',
-                                                fontSize: 14,
-                                                fontWeight: 500,
-                                                padding: 15,
-                                            }}>
-                                            {
-                                                liveData.currentAuction
-                                                    .productName
-                                            }
-                                        </Text>
-                                    )}
-                                    {liveData.currentAuction
-                                        .currentAuctionStatus === 'running' && (
-                                        <LiveAuctionInfo />
-                                    )}
-                                    {user.profil !== 'admin' && (
-                                        <UserLiveForm
-                                            liveData={liveData}
-                                            onPress={data =>
-                                                bidOnCurrentAuction(
-                                                    liveData.channelName,
-                                                    data,
-                                                )
-                                            }
-                                        />
-                                    )}
                                     <LiveChatTextInput
                                         onPress={(message, liveData) =>
                                             emitNewLiveMessage(
@@ -552,6 +399,7 @@ export const LiveScreen = () => {
                         <View
                             style={{
                                 position: 'absolute',
+                                zIndex: 2,
                                 width: 50,
                                 backgroundColor: 'transparent',
                                 height: 50,
@@ -578,34 +426,66 @@ export const LiveScreen = () => {
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     style={styles.containerr}>
                     <View style={{flex: 1, alignItems: 'center'}}>
-                        <View
-                            style={{
-                                flex: 1,
-                                justifyContent: 'flex-start',
-                                alignItems: 'center',
-                            }}>
-                            <View style={{marginTop: 100}}>
-                                <Text
-                                    style={{
-                                        color: colors.LIGHT,
-                                        fontSize: 25,
-                                        textAlign: 'center',
-                                        fontWeight: 'bold',
-                                    }}>
-                                    {liveData.channelName}
-                                </Text>
-                            </View>
-                            <View style={{margin: 5, width: 350}}>
-                                <Text
-                                    style={{
-                                        color: colors.LIGHT,
-                                        fontSize: 17,
-                                        textAlign: 'center',
-                                        padding: 20,
-                                    }}>
-                                    Le live devrait commencer d'ici peu,
-                                    mets-toi à l'aise, 🍿 ça va être le 🔥!
-                                </Text>
+                        <View style={styles.waitingLiveMessage}>
+                            <Text style={styles.channelName}>
+                                {liveData.channelName}
+                            </Text>
+                            <View style={styles.liveStatus}>
+                                {liveData.auctionsStatus === 'coming_soon' ? (
+                                    <>
+                                        <View
+                                            style={{
+                                                marginBottom: 30,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}>
+                                            <Text style={styles.liveSchedule}>
+                                                {DateTime.fromISO(
+                                                    liveData.liveSchedule,
+                                                ).toLocaleString({
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    weekday: 'short',
+                                                })}
+                                                {' à '}
+                                                {DateTime.fromISO(
+                                                    liveData.liveSchedule,
+                                                ).toLocaleString(
+                                                    DateTime.TIME_SIMPLE,
+                                                )}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                marginBottom: 30,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                width: 200
+                                            }}>
+                                            <Text
+                                                style={{
+                                                    textAlign: 'center',
+                                                    color: colors.LIGHT,
+                                                }}>
+                                                En attendant, tu peux poser une
+                                                question au vendeur.
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}>
+                                            <FontAwesomeIcon
+                                                icon={faArrowDown}
+                                                size={25}
+                                                color={colors.LIGHT}
+                                            />
+                                        </View>
+                                    </>
+                                ) : (
+                                    <Text style={{color: colors.LIGHT}}>Le live devrait commencer d'ici peu !</Text>
+                                )}
                             </View>
                         </View>
                         <View
@@ -613,125 +493,20 @@ export const LiveScreen = () => {
                                 position: 'absolute',
                                 bottom: 25,
                                 width: '90%',
-                                marginLeft: 20,
                                 backgroundColor: 'transparent',
                                 justifyContent: 'center',
-                                marginBottom: 20,
+                                alignItems: 'center',
                             }}>
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                contentInset={{
-                                    top: 0,
-                                    bottom: 50,
-                                    left: 0,
-                                    right: 0,
-                                }}
-                                ref={list}
-                                style={{
-                                    height: 200,
-                                    width: 320,
-                                    marginLeft: 15,
-                                    marginBottom: 15,
-                                }}
-                                data={liveData.messages}
-                                renderItem={({item}) =>
-                                    !user.blockedUser
-                                        .concat(user.blockedSeller)
-                                        .includes(item.userId) && (
-                                        <View
-                                            style={{
-                                                marginBottom: 7,
-                                                marginTop: 7,
-                                            }}>
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    justifyContent:
-                                                        'space-between',
-                                                }}>
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                        justifyContent:
-                                                            'flex-end',
-                                                    }}>
-                                                    <Text
-                                                        style={{
-                                                            color: colors.LIGHT,
-                                                            fontSize: 13,
-                                                            fontWeight: '700',
-                                                            marginBottom: 3,
-                                                            marginRight: 5,
-                                                        }}>
-                                                        {item.username}
-                                                    </Text>
-                                                    {item.profil ===
-                                                        'admin' && (
-                                                        <View
-                                                            style={{
-                                                                backgroundColor:
-                                                                    colors.LIGHT,
-                                                                color: colors.DARK,
-                                                                borderRadius: 2,
-                                                                alignItems:
-                                                                    'center',
-                                                                marginBottom: 3,
-                                                                padding: 2,
-                                                                paddingRight: 4,
-                                                                paddingLeft: 4,
-                                                            }}>
-                                                            <Text
-                                                                style={{
-                                                                    color: colors.DARK,
-                                                                    fontWeight:
-                                                                        '700',
-                                                                    fontSize: 10,
-                                                                }}>
-                                                                Admin
-                                                            </Text>
-                                                        </View>
-                                                    )}
-                                                </View>
-                                                {user.id !== item.userId &&
-                                                    item.profil !== 'admin' && (
-                                                        <TouchableOpacity
-                                                            onPress={() =>
-                                                                user.profil ===
-                                                                'admin'
-                                                                    ? showObjectionableAdminAction(
-                                                                          {
-                                                                              item,
-                                                                              liveData,
-                                                                          },
-                                                                      )
-                                                                    : showObjectionableAction(
-                                                                          item,
-                                                                      )
-                                                            }>
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faEllipsis
-                                                                }
-                                                                color={
-                                                                    colors.LIGHT
-                                                                }
-                                                                size={20}
-                                                            />
-                                                        </TouchableOpacity>
-                                                    )}
-                                            </View>
-                                            <Text
-                                                style={{
-                                                    color: colors.LIGHT,
-                                                    fontSize: 14,
-                                                }}>
-                                                {item.message}
-                                            </Text>
-                                        </View>
-                                    )
+                            <LiveChatMessagesList
+                                list={list}
+                                liveData={liveData}
+                                user={user}
+                                showObjectionableAction={
+                                    showObjectionableAction
                                 }
-                                keyExtractor={item => item.id}
+                                showObjectionableAdminAction={
+                                    showObjectionableAdminAction
+                                }
                             />
                             <LiveChatTextInput
                                 onPress={(message, liveData) =>
@@ -762,6 +537,31 @@ const styles = StyleSheet.create({
     videoView: {
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width,
+    },
+    waitingLiveMessage: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 100,
+        marginHorizontal: 20,
+    },
+    channelName: {
+        color: colors.LIGHT,
+        fontSize: 25,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    liveStatus: {
+        color: colors.LIGHT,
+        fontSize: 17,
+        textAlign: 'center',
+        padding: 20,
+    },
+    liveSchedule: {
+        fontSize: 25,
+        fontWeight: '600',
+        color: colors.LIGHT,
     },
 });
 

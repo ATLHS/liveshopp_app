@@ -61,7 +61,7 @@ const LiveCreationFormSchema = () => [
         minimumDelay: DateTime.now()
             .setZone('Europe/Paris')
             .startOf('minutes') // Début de l'heure actuelle
-            .plus({ minutes: 5 - (DateTime.now().minute % 5)})
+            .plus({ minutes: 30 - (DateTime.now().minute % 30)})
             .toJSDate(),
     },
 ];

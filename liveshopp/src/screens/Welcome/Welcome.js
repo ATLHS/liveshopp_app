@@ -22,7 +22,6 @@ export const Welcome = ({navigation, route}) => {
         const {data} = route.params;
         setTimeout(() => {
             AsyncStorage.setItem('@token', data.token);
-            console.log(data.user, 'userr on sign in');
             dispatch(setUser(data.user));
             dispatch(setIsAuthenticate(true));
         }, 2000);

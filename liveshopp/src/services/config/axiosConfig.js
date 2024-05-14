@@ -1,7 +1,5 @@
 import axios from 'axios';
-import {REACT_APP_BASE_URL} from '@env';
-
-// "http://192.168.1.170:5000",
+import {REACT_APP_BASE_URL, REACT_APP_LOCAL_URL} from '@env';
 
 const axiosInstance = axios.create({
     withCredentials: true,

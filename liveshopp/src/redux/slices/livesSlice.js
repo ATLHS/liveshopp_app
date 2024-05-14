@@ -14,6 +14,7 @@ export const livesSlice = createSlice({
             sellerId: '',
             auctionId: '',
             auctionsStatus: '',
+            liveSchedule: null,
             userCount: '',
             messages: [],
             hostIsLive: false,

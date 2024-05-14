@@ -447,6 +447,18 @@ router.get("/is-authenticate", verifyJwt, async (req, res) => {
 
     const customer = user || seller;
 
+
+    if (customer.blockedSeller.length) {
+        for (let blocked of customer.blockedSeller) {
+            blocked._id.valueOf();
+        }
+    }
+    if (customer.blockedUser.length) {
+        for (let blocked of customer.blockedUser) {
+            blocked._id.valueOf();
+        }
+    }
+
     if (customer) {
         return res
             .status(200)

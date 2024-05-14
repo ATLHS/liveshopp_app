@@ -45,7 +45,6 @@ export const ResetPassword = ({navigation}) => {
         auth.resetPassword(data)
             .then(res => res)
             .then(data => {
-                console.log(data, 'data')
                 setIsLoading(false);
                 navigation.navigate('EmailVerificationCode', {
                     message: data.message,

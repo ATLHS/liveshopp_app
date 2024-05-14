@@ -79,7 +79,7 @@ export const SignIn = ({navigation, route}) => {
                 });
             })
             .catch(err => {
-                console.log(err)
+                console.error(err)
                 setMessage(err.message);
                 setIsLoading(false);
             });

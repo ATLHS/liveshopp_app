@@ -1,51 +1,53 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-native-date-picker';
-import {DateTime} from 'luxon';
-import {StyleSheet, Text, View} from 'react-native';
+import { DateTime } from 'luxon';
+import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../styles/colors';
 
-const DateTimePicker = ({field}) => {
-    const [initialDate, setInitialDate] = useState(
-        DateTime.now().plus({minutes: 30}).toJSDate(),
-    );
+const convertToParisDateTime = (date) => {
+    return DateTime.fromJSDate(date, { zone: 'utc' })
+        .setZone('Europe/Paris')
+        .startOf('minute');
+};
 
-    let date = field.value
-        ? DateTime.fromJSDate(field.value).toLocal().toJSDate()
-        : initialDate;
+const DateTimePicker = ({ inputField, field }) => {
+    const [initialDate, setInitialDate] = useState(inputField.minimumDelay);
 
     useEffect(() => {
-        const timer = setTimeout(
-            () => setInitialDate(DateTime.now().plus({minutes: 30}).toJSDate()),
-            5000,
-        );
-        return function cleanup() {
-            clearInterval(timer);
-        };
-    });
+        const parisDateTime = convertToParisDateTime(initialDate);
+        field.onChange(parisDateTime);
+    }, [])
+
+    const handleDateChange = (value) => {
+        const parisDateTime = convertToParisDateTime(value);
+        field.onChange(parisDateTime);
+    };
 
     return (
         <>
             <DatePicker
-                style={{height: 150}}
+                style={inputField.style}
                 minimumDate={initialDate}
                 locale={'fr'}
-                date={date}
-                onDateChange={value => field.onChange(value)}
+                date={initialDate}
+                onDateChange={handleDateChange}
                 theme={'auto'}
+                minuteInterval={inputField.minuteInterval}
             />
-            <View style={styles.condition}>
-                <Text style={styles.conditionText}>
-                    Un intervalle de 1h30 entre le début et la fin de chaque
-                    live est requis.
-                </Text>
-            </View>
+            {inputField.helperMessage && (
+                <View style={styles.condition}>
+                    <Text style={styles.conditionText}>
+                        {inputField.helperMessage}
+                    </Text>
+                </View>
+            )}
         </>
     );
 };
 
 const styles = StyleSheet.create({
-    conditionText: {color: colors.DARK, fontSize: 14},
-    condition: {width: 350, marginTop: 10},
+    conditionText: { color: colors.DARK, fontSize: 14 },
+    condition: { width: 350, marginTop: 10 },
 });
 
 export default DateTimePicker;

@@ -7,7 +7,7 @@ module.exports = {
         const isSeller = customer.profil === 'seller';
         if (isSeller) {
             return UserSeller.findOneAndUpdate(
-                {_id: customer.id},
+                {_id: customer.id || customer._id},
                 isRef ? {
                     $push: data,
                 } : data,
@@ -17,7 +17,7 @@ module.exports = {
             );
         } else {
             return User.findOneAndUpdate(
-                {_id: customer.id},
+                {_id: customer.id || customer._id},
                 isRef ? {
                     $push: data,
                 } : data,
@@ -28,6 +28,4 @@ module.exports = {
         }
     },
 };
-
-
 
