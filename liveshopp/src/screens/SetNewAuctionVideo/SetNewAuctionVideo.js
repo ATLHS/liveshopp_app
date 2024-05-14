@@ -99,7 +99,7 @@ const auctionVideoFormSchema = () => [
             .startOf('minutes') // Début de l'heure actuelle
             .plus({days: 0, minutes: 30 - (DateTime.now().minute % 30)})
             .toJSDate(),
-        minuteInterval: 5,
+        minuteInterval: 30,
         helperMessage: "Date et heure de clôture de l'enchère 3 jours minimum.",
     },
     {

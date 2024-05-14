@@ -57,7 +57,7 @@ const LiveCreationFormSchema = () => [
         helperMessage:
             'Un intervalle de 1h30 entre le début et la fin de chaque live est requis.',
         style: {height: 150},
-        minuteInterval: 5,
+        minuteInterval: 30,
         minimumDelay: DateTime.now()
             .setZone('Europe/Paris')
             .startOf('minutes') // Début de l'heure actuelle
