@@ -78,6 +78,9 @@ yarn-error.log
 !.yarn/sdks
 !.yarn/versions
 
+# Sentry
+sentry.properties
+
 # Custom
 
 NOTES.md

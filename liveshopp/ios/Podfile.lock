@@ -1386,6 +1386,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (5.22.2):
+    - hermes-engine
+    - React-Core
+    - React-hermes
+    - Sentry/HybridSDK (= 8.25.0)
   - RNSVG (15.2.0):
     - React-Core
   - RNVectorIcons (10.1.0):
@@ -1409,6 +1414,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - Sentry/HybridSDK (8.25.0)
   - SocketRocket (0.7.0)
   - Stripe (23.5.1):
     - StripeApplePay (= 23.5.1)
@@ -1517,6 +1523,7 @@ DEPENDENCIES:
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
@@ -1527,6 +1534,7 @@ SPEC REPOS:
     - AgoraIrisRTC_iOS
     - AgoraRtcEngine_iOS
     - BEMCheckBox
+    - Sentry
     - SocketRocket
     - Stripe
     - StripeApplePay
@@ -1671,6 +1679,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -1750,8 +1760,10 @@ SPEC CHECKSUMS:
   RNReactNativeHapticFeedback: ec56a5f81c3941206fd85625fa669ffc7b4545f9
   RNReanimated: 7ad0f08a845cb60955ee5d461d2156d7b9707118
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
+  RNSentry: f6a5aee809d646763640130714d1fdfe69aac36b
   RNSVG: 43b64ed39c14ce830d840903774154ca0c1f27ec
   RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
+  Sentry: cd86fc55628f5b7c572cabe66cc8f95a9d2f165a
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: d3dc7e6a9ac47a75ddb28ca9622f0e96c63398c9
   stripe-react-native: 23f5586ac954f54c5723c08be4f1a65d97f797eb

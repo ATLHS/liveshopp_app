@@ -12,6 +12,8 @@ Clone the repository and setup environment variables:
 git clone git@github.com:ATLHS/liveshopp_app.git
 cd liveshopp_app/liveshopp
 cp .env.sample .env
+cp sentry.properties.sample ios/sentry.properties
+cp sentry.properties.sample android/sentry.properties
 ```
 
 Install requirements:
@@ -39,9 +41,19 @@ FIXME
 
 Start server at http://localhost:5000
 
+### Without Xcode
+
 ```sh
 npm run ios
 npm run android
 ```
+
+### With Xcode
+
+```sh
+npm start
+```
+
+Then build and run from Xcode directly.
 
 Roger you're ready, let's go 🚀
