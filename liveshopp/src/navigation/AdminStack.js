@@ -3,7 +3,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import colors from '../styles/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
-import {ActionSheetIOS, Alert, Pressable, StatusBar, TouchableOpacity} from 'react-native';
+import {
+    ActionSheetIOS,
+    Alert,
+    Pressable,
+    StatusBar,
+    TouchableOpacity,
+} from 'react-native';
 import LiveScreen from '../screens/LiveScreen/LiveScreen';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {useDispatch, useSelector} from 'react-redux';
@@ -13,13 +19,13 @@ import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import rgpdScreen from '../screens/Rgpd/Rgpd';
 import socket from '../services/config/clientSocketIoConfig';
 import Toast from 'react-native-toast-message';
-import {faEllipsisVertical} from "@fortawesome/free-solid-svg-icons";
-import {useNavigation} from "@react-navigation/native";
-import AdminStacks from "../screens/AdminStacks/AdminStacks";
-import SettingProfilScreen from "../screens/SettingProfilScreen/SettingProfilScreen";
-import AdminBlockedUsers from "../screens/AdminBlockedUsers/AdminBlockedUsers";
-import AdminSignaledUsers from "../screens/AdminSignaledUsers/AdminSignaledUsers";
-import admin from "../services/admin";
+import {faEllipsisVertical} from '@fortawesome/free-solid-svg-icons';
+import {useNavigation} from '@react-navigation/native';
+import AdminStacks from '../screens/AdminStacks/AdminStacks';
+import SettingProfilScreen from '../screens/SettingProfilScreen/SettingProfilScreen';
+import AdminBlockedUsers from '../screens/AdminBlockedUsers/AdminBlockedUsers';
+import AdminSignaledUsers from '../screens/AdminSignaledUsers/AdminSignaledUsers';
+import admin from '../services/admin';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +40,7 @@ const SellerStack = () => {
         StatusBar.setBarStyle('dark-content');
     }, []);
 
-    const showObjectionableAdminAction = (data) => {
+    const showObjectionableAdminAction = data => {
         ActionSheetIOS.showActionSheetWithOptions(
             {
                 options: ['Annuler', 'Bannir cet utilisateur'],
@@ -50,19 +56,15 @@ const SellerStack = () => {
                         .banUser(data)
                         .then(res => res)
                         .then(data => {
-                            Alert.alert('', data.message, [
-                                {text: 'OK'},
-                            ]);
+                            Alert.alert('', data.message, [{text: 'OK'}]);
                         })
                         .catch(err => {
-                            Alert.alert('', err.message, [
-                                {text: 'OK'},
-                            ]);
+                            Alert.alert('', err.message, [{text: 'OK'}]);
                         });
                 }
             },
         );
-    }
+    };
 
     const leaveRoom = () => {
         socket.emit('leaveRoom', {liveData, user});
@@ -89,7 +91,7 @@ const SellerStack = () => {
             }),
         );
         navigation.navigate('LivesScreen');
-    }
+    };
 
     return (
         <Stack.Navigator
@@ -97,7 +99,7 @@ const SellerStack = () => {
                 headerShown: false,
                 gestureDirection: 'vertical',
             }}>
-            <Stack.Screen name="AdminStacks" component={AdminStacks}/>
+            <Stack.Screen name="AdminStacks" component={AdminStacks} />
             <Stack.Screen
                 name="SettingProfilScreen"
                 component={SettingProfilScreen}
@@ -174,7 +176,11 @@ const SellerStack = () => {
                     },
                     headerLeft: () => (
                         <View style={{alignItems: 'center'}}>
-                            <FontAwesomeIcon icon={faUsers} color={colors.LIGHT} size={18}/>
+                            <FontAwesomeIcon
+                                icon={faUsers}
+                                color={colors.LIGHT}
+                                size={18}
+                            />
                             <Text
                                 style={{
                                     fontSize: 14,
@@ -189,24 +195,42 @@ const SellerStack = () => {
                     ),
                     headerRight: () => (
                         <Pressable onPress={() => leaveRoom()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
-                    headerTitle: () => <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={{
-                            fontSize: 20,
-                            color: colors.LIGHT,
-                            fontFamily: 'Roboto-Regular',
-                            marginRight: 5
-                        }}>{liveData.sellerName}</Text>
-                        {!isHost && <TouchableOpacity onPress={() => showObjectionableAdminAction(liveData)}>
-                            <FontAwesomeIcon
-                                icon={faEllipsisVertical}
-                                color={colors.LIGHT}
-                                size={17}
-                            />
-                        </TouchableOpacity>}
-                    </View>,
+                    headerTitle: () => (
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    color: colors.LIGHT,
+                                    fontFamily: 'Roboto-Regular',
+                                    marginRight: 5,
+                                }}>
+                                {liveData.sellerName}
+                            </Text>
+                            {!isHost && (
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        showObjectionableAdminAction(liveData)
+                                    }>
+                                    <FontAwesomeIcon
+                                        icon={faEllipsisVertical}
+                                        color={colors.LIGHT}
+                                        size={17}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    ),
                     headerStyle: {
                         backgroundColor: 'transparent',
                     },

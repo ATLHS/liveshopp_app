@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-native-date-picker';
-import { DateTime } from 'luxon';
-import { StyleSheet, Text, View } from 'react-native';
+import {DateTime} from 'luxon';
+import {StyleSheet, Text, View} from 'react-native';
 import colors from '../../styles/colors';
 
-const convertToParisDateTime = (date) => {
-    return DateTime.fromJSDate(date, { zone: 'utc' })
+const convertToParisDateTime = date => {
+    return DateTime.fromJSDate(date, {zone: 'utc'})
         .setZone('Europe/Paris')
         .startOf('minute');
 };
 
-const DateTimePicker = ({ inputField, field }) => {
+const DateTimePicker = ({inputField, field}) => {
     const [initialDate, setInitialDate] = useState(inputField.minimumDelay);
 
     useEffect(() => {
         const parisDateTime = convertToParisDateTime(initialDate);
         field.onChange(parisDateTime);
-    }, [])
+    }, []);
 
-    const handleDateChange = (value) => {
+    const handleDateChange = value => {
         const parisDateTime = convertToParisDateTime(value);
         field.onChange(parisDateTime);
     };
@@ -46,8 +46,8 @@ const DateTimePicker = ({ inputField, field }) => {
 };
 
 const styles = StyleSheet.create({
-    conditionText: { color: colors.DARK, fontSize: 14 },
-    condition: { width: 350, marginTop: 10 },
+    conditionText: {color: colors.DARK, fontSize: 14},
+    condition: {width: 350, marginTop: 10},
 });
 
 export default DateTimePicker;

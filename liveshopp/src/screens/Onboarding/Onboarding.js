@@ -20,7 +20,9 @@ const Onboarding = ({navigation}) => {
                         <Text style={styles.brandName}>LIVESHOPP</Text>
                     </View>
                     <View style={styles.headlineContainer}>
-                        <Text style={styles.headline}>Vendez et achetez en live.</Text>
+                        <Text style={styles.headline}>
+                            Vendez et achetez en live.
+                        </Text>
                     </View>
                 </View>
                 <View style={styles.actions}>

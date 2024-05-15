@@ -36,8 +36,6 @@ import stripe from '../../services/stripe';
 import {REACT_APP_STRIPE_PUBLIC_KEY} from '@env';
 import {trigger} from 'react-native-haptic-feedback';
 import {Slider} from '@miblanchard/react-native-slider';
-import Video from 'react-native-video';
-import socket from '../../services/config/clientSocketIoConfig';
 import customer from '../../services/customer';
 import admin from '../../services/admin';
 

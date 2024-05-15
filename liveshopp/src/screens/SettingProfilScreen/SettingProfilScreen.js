@@ -22,7 +22,6 @@ import {setUser} from '../../redux/slices/userSlice';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
-import {setSellerLives} from "../../redux/slices/livesSlice";
 
 export const SettingProfilScreen = ({navigation}) => {
     const {user} = useSelector(state => state.user);
@@ -31,7 +30,6 @@ export const SettingProfilScreen = ({navigation}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {}, [user, imageUri]);
-
 
     const SettingProfilScreenFormUser = [
         {
@@ -226,7 +224,6 @@ export const SettingProfilScreen = ({navigation}) => {
         },
     });
 
-
     const [refreshCounter, setRefreshCounter] = useState(0);
 
     const setProfilPicture = async () => {
@@ -329,7 +326,10 @@ export const SettingProfilScreen = ({navigation}) => {
                                         <Image
                                             key={user.imageUri}
                                             style={styles.contactProfilPicture}
-                                            source={{uri: imageUri, cache: 'reload'}}
+                                            source={{
+                                                uri: imageUri,
+                                                cache: 'reload',
+                                            }}
                                         />
                                     ) : (
                                         <Image

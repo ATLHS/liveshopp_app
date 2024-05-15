@@ -1,16 +1,10 @@
 import React from 'react';
-import { StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-    faHome,
-    faUser,
-    faBoxOpen,
-} from '@fortawesome/free-solid-svg-icons';
+import {faHome, faUser, faBoxOpen} from '@fortawesome/free-solid-svg-icons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SettingsScreen from '../SettingsScreen/SettingsScreen';
-import {
-    AutocompleteDropdownContextProvider,
-} from 'react-native-autocomplete-dropdown';
+import {AutocompleteDropdownContextProvider} from 'react-native-autocomplete-dropdown';
 import OrderTab from '../OrderTab/OrderTab';
 import LivesTab from '../LivesTab/LivesTab';
 import colors from '../../styles/colors';

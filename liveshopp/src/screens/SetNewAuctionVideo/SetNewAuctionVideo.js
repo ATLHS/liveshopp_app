@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     StyleSheet,
     View,
@@ -13,7 +13,7 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import {useForm} from 'react-hook-form';
 import colors from '../../styles/colors';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {DateTime} from 'luxon';
 import Toast from 'react-native-toast-message';
 import {setSellerAuctionVideos} from '../../redux/slices/auctionsVideoSlice';

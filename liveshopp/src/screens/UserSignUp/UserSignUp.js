@@ -87,8 +87,7 @@ const UserSignupFormSchema = [
                 message: 'Veuillez indiquer un mot de passe valide.',
             },
         },
-        helper:
-            'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
+        helper: 'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
     },
     {
         name: 'eula',
@@ -97,14 +96,15 @@ const UserSignupFormSchema = [
         validation: {
             required: {
                 value: true,
-                message: 'Veuillez accepter les conditions générales d’utilisation.',
+                message:
+                    'Veuillez accepter les conditions générales d’utilisation.',
             },
         },
         helper: {
             helperLink: 'rgpdScreen',
             helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les ',
-            helperMessage2: 'de Liveshopp et confirme avoir plus de 16 ans.'
-        }
+            helperMessage2: 'de Liveshopp et confirme avoir plus de 16 ans.',
+        },
     },
 ];
 
@@ -115,8 +115,7 @@ export const UserSignUp = ({navigation}) => {
 
     const handleUserSignup = data => {
         setIsLoading(true);
-        auth
-            .handleUserSignup(data)
+        auth.handleUserSignup(data)
             .then(res => res)
             .then(data => {
                 setMessage(data.message);
@@ -142,14 +141,20 @@ export const UserSignUp = ({navigation}) => {
                         <View style={styles.formContainer}>
                             <View style={styles.headlineContainer}>
                                 <Text style={styles.headline}>
-                                    Faire une bonne affaire n’a jamais été aussi simple.
+                                    Faire une bonne affaire n’a jamais été aussi
+                                    simple.
                                 </Text>
                             </View>
                             <View style={styles.headlineContainerMessage}>
-                                <Text style={styles.headlineMessage}>{message}</Text>
+                                <Text style={styles.headlineMessage}>
+                                    {message}
+                                </Text>
                             </View>
                             <View style={styles.fieldContainer}>
-                                <FieldWrapper control={control} schema={UserSignupFormSchema}/>
+                                <FieldWrapper
+                                    control={control}
+                                    schema={UserSignupFormSchema}
+                                />
                             </View>
                             <View style={styles.action}>
                                 <ContainedButton
@@ -165,8 +170,15 @@ export const UserSignUp = ({navigation}) => {
                                         alignItems: 'flex-end',
                                         flexDirection: 'row',
                                     }}
-                                    onPress={() => navigation.replace('SellerSignup')}>
-                                    <Text style={{color: 'white', fontSize: 17, marginRight: 5}}>
+                                    onPress={() =>
+                                        navigation.replace('SellerSignup')
+                                    }>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 17,
+                                            marginRight: 5,
+                                        }}>
                                         Vendre
                                     </Text>
                                     <FontAwesomeIcon

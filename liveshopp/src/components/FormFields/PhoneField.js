@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, TextInput, Image, View} from 'react-native';
 import colors from '../../styles/colors';
 import CountryFlag from 'react-native-country-flag';
-import {selectIsAuthenticate} from '../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
 
 const PhoneField = ({inputField, field, fieldState}) => {

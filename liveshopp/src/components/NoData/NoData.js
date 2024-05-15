@@ -1,7 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, StyleSheet, View} from 'react-native';
 import colors from '../../styles/colors';
-import {DateTime} from 'luxon';
 
 const NoData = ({message, title, buttonTitle, onPress}) => {
   return (
