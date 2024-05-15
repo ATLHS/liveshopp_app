@@ -28,7 +28,6 @@
         "@rneui/themed": "^4.0.0-rc.8",
         "@stripe/stripe-react-native": "^0.26.0",
         "axios": "^1.6.8",
-        "concurrently": "^7.6.0",
         "luxon": "^3.4.4",
         "react": "18.2.0",
         "react-hook-form": "^7.51.4",
