@@ -1,25 +1,12 @@
 require("dotenv").config();
+require("./instrument");
 const {createServer} = require("http");
 const Sentry = require("@sentry/node");
-// const { nodeProfilingIntegration } = require("@sentry/profiling-node")
 const express = require("express");
 const app = express();
 
-// Sentry MUST be initiated right after app() creation
-Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    integrations: [
-        new Sentry.Integrations.Http({ tracing: true }),
-        new Sentry.Integrations.Express({ app }),
-        // nodeProfilingIntegration(),
-    ],
-    tracesSampleRate: 1.0,      // Capture 100% of the transactions
-    profilesSampleRate: 1.0,    // Sampling rate relative to tracesSampleRate
-})
-
 const {Server} = require("socket.io");
 const cors = require("cors");
-const port = 5000;
 const mongoose = require("mongoose");
 const timer = require('time-counter');
 const Product = require('./models/product');
