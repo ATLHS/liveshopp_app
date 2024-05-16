@@ -1,10 +1,10 @@
 require("dotenv").config();
 require("./instrument");
-const {createServer} = require("http");
-const Sentry = require("@sentry/node");
-const express = require("express");
-const app = express();
 
+const {createServer} = require("http");
+const express = require("express");
+const Sentry = require("@sentry/node");
+const app = express();
 const {Server} = require("socket.io");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -16,25 +16,6 @@ const {updateCustomer} = require("./utils/updateCustomer");
 const {isLessThanTenSeconds} = require("./utils/isLessThanTenSeconds");
 const User = require("./models/user");
 const UserSeller = require("./models/seller");
-
-// The Sentry request handler middleware must be added before any other handlers
-app.use(Sentry.Handlers.requestHandler());
-// Performance Monitoring: Create spans and traces for every incoming request
-app.use(Sentry.Handlers.tracingHandler());
-// The Sentry error handler middleware must be registered before any other error middleware and after all controllers
-app.use(
-    Sentry.Handlers.errorHandler({
-        shouldHandleError(error) {
-            console.log(error, error.status)
-            // Capture all errors
-            if (error.status >= 400) {
-                return true
-            }
-            return false
-        },
-    })
-);
-
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 const channels = new Map();
@@ -307,15 +288,8 @@ app.use("/api/stripe/", stripe);
 app.use("/api/admin/", admin);
 app.use("/api/videos/", videos);
 
-// Optional fallthrough error handler
-app.use(function onError(err, req, res, next) {
-  // The error id is attached to `res.sentry` to be returned
-  // and optionally displayed to the user for support.
-  res.statusCode = 500;
-  res.end(res.sentry + "\n");
-});
+Sentry.setupExpressErrorHandler(app);
 
 httpServer.listen(process.env.PORT, () => { console.log(`Server listening on port  ${process.env.PORT}`); });
-
 
 module.exports = {app, httpServer}
