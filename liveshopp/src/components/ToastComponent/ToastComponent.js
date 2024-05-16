@@ -1,6 +1,5 @@
 import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 import {Text, View} from 'react-native';
-import ConfettiCannon from 'react-native-confetti-cannon';
 import React from 'react';
 import colors from '../../styles/colors';
 

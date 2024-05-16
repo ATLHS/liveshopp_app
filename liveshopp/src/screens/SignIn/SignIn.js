@@ -8,7 +8,7 @@ import {
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
     ScrollView,
-    Platform, Pressable,
+    Platform,
 } from 'react-native';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import {useForm} from 'react-hook-form';
@@ -19,8 +19,6 @@ import auth from '../../services/auth';
 import {setUser, setIsAuthenticate} from '../../redux/slices/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosConfig from '../../services/config/axiosConfig';
-import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
-import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 
 const signInFormSchema = [
     {
@@ -59,18 +57,20 @@ export const SignIn = ({navigation, route}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (route.params && route.params.message) setMessage(route.params.message);
+        if (route.params && route.params.message)
+            setMessage(route.params.message);
     }, [route]);
 
     const handleSignin = data => {
         setIsLoading(false);
-        auth
-            .handleUserSignIn(data)
+        auth.handleUserSignIn(data)
             .then(res => res)
             .then(data => {
                 setIsLoading(false);
                 if (data.user.isBanned) {
-                    return setMessage("Votre compte a été bloqué par Liveshopp, veuillez contacter notre équipe pour plus d'information, merci.");
+                    return setMessage(
+                        "Votre compte a été bloqué par Liveshopp, veuillez contacter notre équipe pour plus d'information, merci.",
+                    );
                 }
                 AsyncStorage.setItem('@token', data.token).then(r => {
                     axiosConfig.defaults.headers.Authorization = `Bearer ${data.token}`;
@@ -79,7 +79,7 @@ export const SignIn = ({navigation, route}) => {
                 });
             })
             .catch(err => {
-                console.error(err)
+                console.error(err);
                 setMessage(err.message);
                 setIsLoading(false);
             });
@@ -94,23 +94,32 @@ export const SignIn = ({navigation, route}) => {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.container}>
-                <ScrollView
-                    contentInset={{bottom: 100}}>
+                <ScrollView contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
                             <View style={styles.headlineContainer}>
-                                <Text style={styles.headline}>Welcome back !</Text>
+                                <Text style={styles.headline}>
+                                    Welcome back !
+                                </Text>
                             </View>
                             <View style={styles.headlineContainerMessage}>
-                                <Text style={styles.headlineMessage}>{message}</Text>
+                                <Text style={styles.headlineMessage}>
+                                    {message}
+                                </Text>
                             </View>
                             <View style={styles.fieldContainer}>
-                                <FieldWrapper control={control} schema={signInFormSchema}/>
+                                <FieldWrapper
+                                    control={control}
+                                    schema={signInFormSchema}
+                                />
                             </View>
 
                             <View style={styles.helper}>
-                                <TouchableWithoutFeedback onPress={() => goToResetPassword()}>
-                                    <Text style={styles.helperText}>Mot de passe oublié ?</Text>
+                                <TouchableWithoutFeedback
+                                    onPress={() => goToResetPassword()}>
+                                    <Text style={styles.helperText}>
+                                        Mot de passe oublié ?
+                                    </Text>
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={styles.action}>
@@ -154,7 +163,12 @@ const styles = StyleSheet.create({
     },
     action: {},
     resetPassword: {color: 'white'},
-    helperText: {color: 'white', textAlign: 'left', width: 350, textDecorationLine: 'underline'},
+    helperText: {
+        color: 'white',
+        textAlign: 'left',
+        width: 350,
+        textDecorationLine: 'underline',
+    },
     helper: {width: 350, position: 'relative', top: -20},
 });
 

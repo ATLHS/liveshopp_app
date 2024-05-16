@@ -11,9 +11,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {Pressable, StatusBar} from 'react-native';
 import colors from '../styles/colors';
-import rgpdScreen from "../screens/Rgpd/Rgpd";
-import {faAngleLeft} from "@fortawesome/free-solid-svg-icons/faAngleLeft";
-import React, {useEffect} from "react";
+import rgpdScreen from '../screens/Rgpd/Rgpd';
+import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
+import React, {useEffect} from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +28,7 @@ const AuthStack = () => {
                 headerShown: false,
                 gestureDirection: 'vertical',
             }}>
-            <Stack.Screen name="Onboarding" component={Onboarding}/>
+            <Stack.Screen name="Onboarding" component={Onboarding} />
             <Stack.Screen
                 name="SignIn"
                 component={SignIn}
@@ -36,7 +36,11 @@ const AuthStack = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <Pressable onPress={() => navigation.pop()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
                     title: '',
@@ -52,7 +56,11 @@ const AuthStack = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <Pressable onPress={() => navigation.pop()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
                     title: '',
@@ -68,7 +76,11 @@ const AuthStack = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <Pressable onPress={() => navigation.pop()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
                     title: '',
@@ -84,7 +96,11 @@ const AuthStack = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <Pressable onPress={() => navigation.pop()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
                     title: '',
@@ -100,7 +116,11 @@ const AuthStack = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <Pressable onPress={() => navigation.pop()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
                     title: '',
@@ -116,7 +136,11 @@ const AuthStack = () => {
                     headerShown: true,
                     headerLeft: () => (
                         <Pressable onPress={() => navigation.popToTop()}>
-                            <FontAwesomeIcon icon={faXmark} color={colors.LIGHT} size={30}/>
+                            <FontAwesomeIcon
+                                icon={faXmark}
+                                color={colors.LIGHT}
+                                size={30}
+                            />
                         </Pressable>
                     ),
                     title: '',

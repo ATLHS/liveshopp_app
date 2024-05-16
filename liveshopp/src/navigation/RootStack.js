@@ -19,7 +19,6 @@ import {
 } from '../redux/slices/userSlice';
 import Toast from 'react-native-toast-message';
 import {checkVersion} from 'react-native-check-version';
-import {appVersion} from 'react-native-version-app';
 
 const RootStack = ({isLoading}) => {
     const {user} = useSelector(state => state.user);
@@ -27,7 +26,13 @@ const RootStack = ({isLoading}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const currentVersion = appVersion();
+        // FIXME
+        //
+        // Previously, we used the deprecated `react-native-version-app`
+        // Now it's temporarily hardcoded to remove the package.
+        // We should find a better solution.
+        //
+        const currentVersion = '1.2.0';
         const fetchData = async () => {
             const version = await checkVersion({
                 platform: Platform.OS,

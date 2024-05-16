@@ -5,20 +5,25 @@ import SettingProfilScreen from '../screens/SettingProfilScreen/SettingProfilScr
 import colors from '../styles/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
-import {ActionSheetIOS, Alert, Pressable, StatusBar, TouchableOpacity} from 'react-native';
+import {
+    ActionSheetIOS,
+    Alert,
+    Pressable,
+    StatusBar,
+    TouchableOpacity,
+} from 'react-native';
 import SettingNewLive from '../screens/SettingNewLive/SettingNewLive';
 import LiveScreen from '../screens/LiveScreen/LiveScreen';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {useDispatch, useSelector} from 'react-redux';
 import {setIsGone, setIsJoin, setLiveData} from '../redux/slices/livesSlice';
 import {View, Text} from 'react-native';
-import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import SettingShippingAddress from '../screens/SettingShippingAddress/SettingShippingAddress';
 import BlockedUsers from '../screens/BlockedUsers/BlockedUsers';
 import rgpdScreen from '../screens/Rgpd/Rgpd';
 import socket from '../services/config/clientSocketIoConfig';
 import Toast from 'react-native-toast-message';
-import {faCheck, faEllipsisVertical, faEye} from '@fortawesome/free-solid-svg-icons';
+import {faEllipsisVertical, faEye} from '@fortawesome/free-solid-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 import customer from '../services/customer';
 import SellerProfilView from '../screens/SellerProfilView/SellerProfilView';
@@ -428,9 +433,7 @@ const SellerStack = () => {
                             />
                         </Pressable>
                     ),
-                    headerLeft: () => (
-                        ''
-                    ),
+                    headerLeft: () => '',
                     title: '',
                 })}
             />

@@ -1,0 +1,7 @@
+
+auth.token=
+
+defaults.org=liveshopp
+defaults.project=react-native
+
+defaults.url=https://sentry.io/

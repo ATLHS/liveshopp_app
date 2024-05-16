@@ -47,8 +47,7 @@ export const EmailVerificationCode = ({navigation, route}) => {
     const handleEmailVerificationCode = data => {
         setIsLoading(true);
         data.id = user_id;
-        auth
-            .handleEmailVerificationCode(data)
+        auth.handleEmailVerificationCode(data)
             .then(res => res)
             .then(data => {
                 setIsLoading(false);
@@ -66,8 +65,7 @@ export const EmailVerificationCode = ({navigation, route}) => {
     const handleResetPassword = data => {
         setIsLoading(true);
         data.id = user_id;
-        auth
-            .checkResetPasswordCode(data)
+        auth.checkResetPasswordCode(data)
             .then(res => res)
             .then(data => {
                 setIsLoading(false);
@@ -102,7 +100,9 @@ export const EmailVerificationCode = ({navigation, route}) => {
                                 <Text style={styles.helperText}>{message}</Text>
                             </View>
                             <View style={styles.errorHelper}>
-                                <Text style={styles.errorHelperText}>{errorMessage}</Text>
+                                <Text style={styles.errorHelperText}>
+                                    {errorMessage}
+                                </Text>
                             </View>
                             <View style={styles.fieldContainer}>
                                 <FieldWrapper
@@ -113,7 +113,11 @@ export const EmailVerificationCode = ({navigation, route}) => {
                             <View style={styles.action}>
                                 <ContainedButton
                                     title="Terminez l’inscription"
-                                    onPress={handleSubmit(resetPassword ? handleResetPassword : handleEmailVerificationCode)}
+                                    onPress={handleSubmit(
+                                        resetPassword
+                                            ? handleResetPassword
+                                            : handleEmailVerificationCode,
+                                    )}
                                     loading={isLoading}
                                 />
                             </View>

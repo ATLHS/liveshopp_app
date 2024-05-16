@@ -90,7 +90,9 @@ export const BidConfirmationScreen = ({navigation, route}) => {
                                     marginBottom: 15,
                                 }}>
                                 {' '}
-                                À la fin de l'enchère, nous vous révélerons si vous avez atteint le prix de réserve fixé par le vendeur.
+                                À la fin de l'enchère, nous vous révélerons si
+                                vous avez atteint le prix de réserve fixé par le
+                                vendeur.
                             </Text>
                             <Text
                                 style={{

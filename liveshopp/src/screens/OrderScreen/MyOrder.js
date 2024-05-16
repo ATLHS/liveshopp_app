@@ -5,32 +5,13 @@ import {
     SafeAreaView,
     KeyboardAvoidingView,
     Platform,
-    ScrollView,
     ActivityIndicator,
-    Text,
-    FlatList,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import OrderCard from '../../components/OrderCard/OrderCard';
 import NoData from '../../components/NoData/NoData';
 import colors from '../../styles/colors';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-    faCircleInfo,
-    faEuroSign,
-    faGavel,
-    faLocation,
-    faLocationDot,
-    faStore,
-    faTag,
-    faTruck,
-    faTruckRampBox,
-} from '@fortawesome/free-solid-svg-icons';
-import CountDown from 'react-native-countdown-component';
 import {useFocusEffect} from '@react-navigation/native';
-import auctionVideoService from '../../services/auctionVideos';
-import {setSellersAuctionVideos} from '../../redux/slices/auctionsVideoSlice';
-import {DateTime} from 'luxon';
 
 export const MyOrder = () => {
     const {initialOrder} = useSelector(state => state.order);

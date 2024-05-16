@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
     Text,
     TouchableOpacity,
@@ -8,7 +8,6 @@ import {
 import colors from '../../styles/colors';
 
 const ContainedButtonSm = ({onPress, title, loading}) => {
-
     return (
         <TouchableOpacity style={styles.touchableStyle} onPress={onPress}>
             {!loading ? (

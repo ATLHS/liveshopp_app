@@ -8,13 +8,13 @@ import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft';
 import {
     ActionSheetIOS,
     Alert,
-    Pressable, StatusBar,
+    Pressable,
+    StatusBar,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native';
 import LiveScreen from '../screens/LiveScreen/LiveScreen';
-import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import {setIsGone, setIsJoin, setLiveData} from '../redux/slices/livesSlice';
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark';
 import {useDispatch, useSelector} from 'react-redux';
@@ -396,9 +396,7 @@ const UserStack = () => {
                             />
                         </Pressable>
                     ),
-                    headerLeft: () => (
-                        ''
-                    ),
+                    headerLeft: () => '',
                     title: '',
                 })}
             />

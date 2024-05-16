@@ -1,10 +1,17 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {Controller} from 'react-hook-form';
-import {ErrorMessage} from '@hookform/error-message';
+// FIXME
+//
+// Previously, we used `@hookform/error-message`
+// Which required react = 16 incompatible with `react-native` 0.74
+// Now it's temporarily disabled to remove the package.
+// We should find a better solution.
+//
+// import {ErrorMessage} from '@hookform/error-message';
+//
 import FormConstructor from '../FormConstructor/FormConstructor';
-import MessageHelper from '../MessageHelper/MessageHelper';
+// import MessageHelper from '../MessageHelper/MessageHelper';
 import React from 'react';
-import {selectIsAuthenticate} from '../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
 import colors from '../../styles/colors';
 import {Link} from '@react-navigation/native';
@@ -19,13 +26,13 @@ const FieldWrapper = ({control, schema}) => {
                 render={({...props}) => (
                     <>
                         <FormConstructor inputField={field} {...props} />
-                        <ErrorMessage
+                        {/* <ErrorMessage
                             errors={props.formState.errors}
                             name={field.name}
                             render={({message}) => (
                                 <MessageHelper message={message} />
                             )}
-                        />
+                        /> */}
                         {field.helper ? (
                             <View
                                 style={

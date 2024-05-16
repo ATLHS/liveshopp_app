@@ -152,7 +152,11 @@ function SettingsScreen({navigation}) {
     return (
         <StripeProvider publishableKey={REACT_APP_STRIPE_PUBLIC_KEY}>
             <SafeAreaView
-                style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                    alignItems: 'center',
+                }}>
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     style={styles.container}>
@@ -193,7 +197,8 @@ function SettingsScreen({navigation}) {
                                                     style={{
                                                         fontSize: 15,
                                                         textAlign: 'center',
-                                                        fontFamily: 'FugazOne-Regular',
+                                                        fontFamily:
+                                                            'FugazOne-Regular',
                                                     }}>
                                                     SUPPRIMER MON PROFIL ?{' '}
                                                 </Text>
@@ -207,10 +212,14 @@ function SettingsScreen({navigation}) {
                                                     {initialOrder.length &&
                                                     initialOrder.filter(
                                                         order =>
-                                                            (order.userId === user.id || order.sellerId === user.id &&
+                                                            order.userId ===
+                                                                user.id ||
+                                                            (order.sellerId ===
+                                                                user.id &&
                                                                 order.deliveryStatut ===
-                                                                "En attente d'expédition") ||
-                                                            order.deliveryStatut === 'Expédié',
+                                                                    "En attente d'expédition") ||
+                                                            order.deliveryStatut ===
+                                                                'Expédié',
                                                     ).length
                                                         ? "Attention ! des articles sont en attente d'expédition ou en cours d'expédition. Cette action supprime l'intégralité de vos données sans exception, et est définitive."
                                                         : "Attention ! Cette action supprime l'intégralité de vos données sans exception, et est définitive."}
@@ -222,15 +231,22 @@ function SettingsScreen({navigation}) {
                                                     justifyContent: 'center',
                                                     width: '100%',
                                                 }}>
-                                                <View style={{margin: 10, height: 30}}>
+                                                <View
+                                                    style={{
+                                                        margin: 10,
+                                                        height: 30,
+                                                    }}>
                                                     <TouchableOpacity
                                                         style={{
                                                             height: 40,
                                                             width: 70,
-                                                            backgroundColor: 'black',
+                                                            backgroundColor:
+                                                                'black',
                                                             borderRadius: 10,
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
+                                                            justifyContent:
+                                                                'center',
+                                                            alignItems:
+                                                                'center',
                                                         }}
                                                         onPress={
                                                             deleteCustomerProfil
@@ -238,7 +254,8 @@ function SettingsScreen({navigation}) {
                                                         <Text
                                                             style={{
                                                                 color: colors.LIGHT,
-                                                                textAlign: 'center',
+                                                                textAlign:
+                                                                    'center',
                                                                 fontSize: 20,
                                                             }}>
                                                             oui
@@ -246,21 +263,33 @@ function SettingsScreen({navigation}) {
                                                     </TouchableOpacity>
                                                 </View>
                                                 <View
-                                                    style={{margin: 10, borderRadius: 10, height: 30}}>
+                                                    style={{
+                                                        margin: 10,
+                                                        borderRadius: 10,
+                                                        height: 30,
+                                                    }}>
                                                     <TouchableOpacity
                                                         style={{
                                                             height: 40,
                                                             width: 70,
-                                                            backgroundColor: 'black',
+                                                            backgroundColor:
+                                                                'black',
                                                             borderRadius: 10,
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
+                                                            justifyContent:
+                                                                'center',
+                                                            alignItems:
+                                                                'center',
                                                         }}
-                                                        onPress={() => setModalVisible(!modalVisible)}>
+                                                        onPress={() =>
+                                                            setModalVisible(
+                                                                !modalVisible,
+                                                            )
+                                                        }>
                                                         <Text
                                                             style={{
                                                                 color: colors.LIGHT,
-                                                                textAlign: 'center',
+                                                                textAlign:
+                                                                    'center',
                                                                 fontSize: 20,
                                                             }}>
                                                             non
@@ -271,27 +300,36 @@ function SettingsScreen({navigation}) {
                                         </View>
                                     </Pressable>
                                 </Modal>
-                                <Headline title={'Mon profil'}/>
-                                {user.profil === 'admin' &&
+                                <Headline title={'Mon profil'} />
+                                {user.profil === 'admin' && (
                                     <>
                                         <View style={{marginBottom: 10}}>
-                                            <Text style={{fontSize: 17}}>Type : Admin</Text>
-                                            <Text style={{fontSize: 17}}>Nom : {user.firstname}</Text>
-                                            <Text style={{fontSize: 17}}>Prénom
-                                                : {user.lastname}</Text>
+                                            <Text style={{fontSize: 17}}>
+                                                Type : Admin
+                                            </Text>
+                                            <Text style={{fontSize: 17}}>
+                                                Nom : {user.firstname}
+                                            </Text>
+                                            <Text style={{fontSize: 17}}>
+                                                Prénom : {user.lastname}
+                                            </Text>
                                         </View>
 
                                         <Touchable
-                                            title={'Utilisateurs bloqués sur Liveshopp'}
+                                            title={
+                                                'Utilisateurs bloqués sur Liveshopp'
+                                            }
                                             onPress={goToAdminBlockedUsers}
                                         />
                                         <Touchable
-                                            title={'Utilisateurs signalé sur Liveshopp'}
+                                            title={
+                                                'Utilisateurs signalé sur Liveshopp'
+                                            }
                                             onPress={goToAdminFlaggedUsers}
                                         />
                                     </>
-                                }
-                                {user.profil !== 'admin' &&
+                                )}
+                                {user.profil !== 'admin' && (
                                     <>
                                         <Touchable
                                             title={'Modifier mon profil'}
@@ -309,15 +347,18 @@ function SettingsScreen({navigation}) {
                                             title={'Utilisateurs bloqués'}
                                             onPress={goToBlockedUsers}
                                         />
-                                        <Headline title={'CGV'}/>
+                                        <Headline title={'CGV'} />
                                         <Touchable
                                             title={'Conditions Générales'}
                                             onPress={goToRGPD}
                                         />
-                                        <Headline title={'Nous-contacter'}/>
-                                        <Touchable title={'Nous-contacter'} onPress={handleEmail}/>
+                                        <Headline title={'Nous-contacter'} />
+                                        <Touchable
+                                            title={'Nous-contacter'}
+                                            onPress={handleEmail}
+                                        />
                                     </>
-                                }
+                                )}
                                 <ContainedButton
                                     title="Déconnexion"
                                     onPress={handleSignOut}
@@ -326,7 +367,9 @@ function SettingsScreen({navigation}) {
                                 <View style={{marginTop: 20}}>
                                     <Touchable
                                         title={'Supprimer mon profil'}
-                                        onPress={() => setModalVisible(!modalVisible)}
+                                        onPress={() =>
+                                            setModalVisible(!modalVisible)
+                                        }
                                     />
                                 </View>
                             </View>

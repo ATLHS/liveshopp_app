@@ -1,13 +1,8 @@
 import React, {useRef, useState} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, View} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-    faClose,
-    faSearch,
-} from '@fortawesome/free-solid-svg-icons';
-import {
-    AutocompleteDropdown,
-} from 'react-native-autocomplete-dropdown';
+import {faClose, faSearch} from '@fortawesome/free-solid-svg-icons';
+import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
 import {useFocusEffect} from '@react-navigation/native';
 import customer from '../../services/customer';
 

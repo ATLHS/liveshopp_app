@@ -1,39 +1,18 @@
 import React, {useState} from 'react';
-import {REACT_APP_AGORA_APP_ID} from '@env';
 import {
     StyleSheet,
     Text,
     View,
     SafeAreaView,
-    Keyboard,
     KeyboardAvoidingView,
-    TouchableWithoutFeedback,
     Platform,
-    Pressable,
-    ImageBackground,
-    PermissionsAndroid,
-    ActivityIndicator,
-    TouchableOpacity,
-    Modal,
     FlatList,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import colors from '../../styles/colors';
-import ContainedButtonSm from '../../components/ContainedButtonSm/ContainedButtonSm';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-    ChannelProfileType,
-    ClientRoleType,
-    createAgoraRtcEngine,
-    IRtcEngine,
-} from 'react-native-agora';
-import {setIsJoin, setSellerLives} from '../../redux/slices/livesSlice';
-import live from '../../services/live';
 import {DateTime} from 'luxon';
-import socket from '../../services/config/clientSocketIoConfig';
-import Toast from 'react-native-toast-message';
 import NoData from '../../components/NoData/NoData';
 import auctionVideoService from '../../services/auctionVideos';
 import {setSellerAuctionVideos} from '../../redux/slices/auctionsVideoSlice';

@@ -6,13 +6,18 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Platform, Text, ScrollView, TouchableOpacity, ActionSheetIOS, Alert,
+    Platform,
+    Text,
+    ScrollView,
+    TouchableOpacity,
+    ActionSheetIOS,
+    Alert,
 } from 'react-native';
 import colors from '../../styles/colors';
-import {useFocusEffect} from "@react-navigation/native";
-import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
-import {faAnglesRight, faLock} from "@fortawesome/free-solid-svg-icons";
-import admin from "../../services/admin";
+import {useFocusEffect} from '@react-navigation/native';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faLock} from '@fortawesome/free-solid-svg-icons';
+import admin from '../../services/admin';
 
 export const AdminBlockedUsers = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +30,7 @@ export const AdminBlockedUsers = () => {
                 .getBannedUsers()
                 .then(res => res)
                 .then(data => {
-                    if(data.bannedUsers.length) {
+                    if (data.bannedUsers.length) {
                         setBlockedUser(data.bannedUsers);
                     }
                     setIsLoading(false);
@@ -55,16 +60,12 @@ export const AdminBlockedUsers = () => {
                         .then(res => res)
                         .then(data => {
                             setIsLoading(false);
-                            Alert.alert('', data.message, [
-                                {text: 'Ok'},
-                            ]);
-                            setBlockedUser(data.bannedUsers)
+                            Alert.alert('', data.message, [{text: 'Ok'}]);
+                            setBlockedUser(data.bannedUsers);
                         })
                         .catch(err => {
                             setIsLoading(false);
-                            Alert.alert('', err.message, [
-                                {text: 'Ok'},
-                            ]);
+                            Alert.alert('', err.message, [{text: 'Ok'}]);
                         });
             },
         );
@@ -81,9 +82,11 @@ export const AdminBlockedUsers = () => {
                     contentInset={{bottom: 100}}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.formContainer}>
-                            {blockedUser.map((blocked, id) =>
-                                <TouchableOpacity key={id} style={styles.touchableStyle}
-                                                  onPress={() => unblockUser(blocked)}>
+                            {blockedUser.map((blocked, id) => (
+                                <TouchableOpacity
+                                    key={id}
+                                    style={styles.touchableStyle}
+                                    onPress={() => unblockUser(blocked)}>
                                     <View
                                         style={{
                                             paddingLeft: 20,
@@ -93,31 +96,58 @@ export const AdminBlockedUsers = () => {
                                             justifyContent: 'space-between',
                                         }}>
                                         <View>
-                                            <Text style={{
-                                                color: colors.DARK,
-                                                margin: 2,
-                                                fontFamily: 'Roboto-Regular',
-                                                fontSize: 15
-                                            }}><Text style={{
-                                                color: colors.DARK,
-                                                margin: 2,
-                                                fontFamily: 'Roboto-Regular',
-                                                fontWeight: 500,
-                                                fontSize: 15
-                                            }}>Pseudo : </Text>{blocked.company_name || blocked.firstname}</Text>
-                                            <Text style={{color: colors.DARK, margin: 2, fontSize: 15}}><Text style={{
-                                                color: colors.DARK,
-                                                margin: 2,
-                                                fontFamily: 'Roboto-Regular',
-                                                fontWeight: 500,
-                                                fontSize: 15
-                                            }}>Profil : </Text>
-                                                {blocked.profil === 'seller' ? 'Vendeur' : 'Utilisateur'}</Text>
+                                            <Text
+                                                style={{
+                                                    color: colors.DARK,
+                                                    margin: 2,
+                                                    fontFamily:
+                                                        'Roboto-Regular',
+                                                    fontSize: 15,
+                                                }}>
+                                                <Text
+                                                    style={{
+                                                        color: colors.DARK,
+                                                        margin: 2,
+                                                        fontFamily:
+                                                            'Roboto-Regular',
+                                                        fontWeight: 500,
+                                                        fontSize: 15,
+                                                    }}>
+                                                    Pseudo :{' '}
+                                                </Text>
+                                                {blocked.company_name ||
+                                                    blocked.firstname}
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    color: colors.DARK,
+                                                    margin: 2,
+                                                    fontSize: 15,
+                                                }}>
+                                                <Text
+                                                    style={{
+                                                        color: colors.DARK,
+                                                        margin: 2,
+                                                        fontFamily:
+                                                            'Roboto-Regular',
+                                                        fontWeight: 500,
+                                                        fontSize: 15,
+                                                    }}>
+                                                    Profil :{' '}
+                                                </Text>
+                                                {blocked.profil === 'seller'
+                                                    ? 'Vendeur'
+                                                    : 'Utilisateur'}
+                                            </Text>
                                         </View>
-                                        <FontAwesomeIcon icon={faLock} size={20} color={colors.DARK}/>
+                                        <FontAwesomeIcon
+                                            icon={faLock}
+                                            size={20}
+                                            color={colors.DARK}
+                                        />
                                     </View>
                                 </TouchableOpacity>
-                            )}
+                            ))}
                         </View>
                     </TouchableWithoutFeedback>
                 </ScrollView>

@@ -27,16 +27,10 @@ import Toast from 'react-native-toast-message';
 import colors from '../../styles/colors';
 import {LiveChatTextInput} from '../../components/LiveChatTextInput/LiveChatTextInput';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-    faArrowDown,
-    faArrowsRotate,
-    faEllipsis,
-} from '@fortawesome/free-solid-svg-icons';
+import {faArrowDown, faArrowsRotate} from '@fortawesome/free-solid-svg-icons';
 import customer from '../../services/customer';
 import admin from '../../services/admin';
 import {DateTime} from 'luxon';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import BottomSheet from 'react-native-simple-bottom-sheet';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
 import {RadialGradient, LinearGradient} from 'react-native-gradients';
 
@@ -460,7 +454,7 @@ export const LiveScreen = () => {
                                                 marginBottom: 30,
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                width: 200
+                                                width: 200,
                                             }}>
                                             <Text
                                                 style={{
@@ -484,7 +478,9 @@ export const LiveScreen = () => {
                                         </View>
                                     </>
                                 ) : (
-                                    <Text style={{color: colors.LIGHT}}>Le live devrait commencer d'ici peu !</Text>
+                                    <Text style={{color: colors.LIGHT}}>
+                                        Le live devrait commencer d'ici peu !
+                                    </Text>
                                 )}
                             </View>
                         </View>
