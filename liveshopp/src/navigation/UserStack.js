@@ -90,7 +90,7 @@ const UserStack = () => {
                             destructiveButtonIndex: 1,
                             cancelButtonIndex: 0,
                             userInterfaceStyle: 'light',
-                            title: 'Vous ne verrez plus les messages et les lives de cet de utilisateur',
+                            title: 'Vous ne verrez plus les messages et les lives de cet utilisateur',
                         },
                         buttonIndex => {
                             if (buttonIndex === 0) {

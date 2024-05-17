@@ -95,7 +95,7 @@ export const CommingSoonLives = ({navigation}) => {
                                                     fontFamily:
                                                         'FugazOne-Regular',
                                                 }}>
-                                                SUPRIMÉ LE LIVE :{' '}
+                                                SUPRIMER LE LIVE :{' '}
                                             </Text>
                                             <Text
                                                 style={{

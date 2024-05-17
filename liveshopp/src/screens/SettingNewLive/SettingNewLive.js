@@ -116,7 +116,7 @@ export const SettingNewLive = ({navigation}) => {
                             </View>
                             <View style={styles.action}>
                                 <ContainedButton
-                                    title="Crée le live"
+                                    title="Créer le live"
                                     onPress={handleSubmit(handleLiveCreation)}
                                     loading={isLoading}
                                 />

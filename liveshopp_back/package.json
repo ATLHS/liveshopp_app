@@ -5,7 +5,8 @@
   "main": "nodemon app.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "dev": "DEBUG=express:*,engine,socket.io* nodemon app.js"
   },
   "author": "",
   "license": "ISC",

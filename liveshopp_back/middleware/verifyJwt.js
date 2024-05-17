@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const verifyJwt = (req, res, next) => {
   const bearerHeader = req.headers['authorization'];
-  //check if bearer is undefined
+  // Check if bearer is undefined
   if (bearerHeader) {
     const bearer = bearerHeader.split(' ');
     const bearerToken = bearer[1];
