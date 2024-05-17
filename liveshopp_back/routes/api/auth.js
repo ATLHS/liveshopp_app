@@ -31,8 +31,8 @@ router.post("/user-signin", async (req, res) => {
 
                     jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN}, (err, token) => {
                         if (err) {
-                            return res.status(400).json({
-                                message: "Un probleme est survenu, réessayez plus tard.",
+                            return res.status(500).json({
+                                message: "Un problème est survenu, réessayez plus tard.",
                             });
                         }
                         res
@@ -63,7 +63,7 @@ router.post("/user-signin", async (req, res) => {
                             });
                     });
                 } else {
-                    return res.status(400).json({
+                    return res.status(401).json({
                         message: "Adresse e-mail ou mot de passe incorrect.",
                     });
                 }
@@ -81,7 +81,9 @@ router.post("/user-signin", async (req, res) => {
     }
 });
 
-
+// FIXME
+// email should be lowered cased
+//
 router.post("/user-signup", async (req, res) => {
     // 1 check if email exist
     // 2 check is user is confirmed
@@ -92,30 +94,27 @@ router.post("/user-signup", async (req, res) => {
     const user = await User.findOne({email});
     const seller = await UserSeller.findOne({email});
 
-
     // check if email exist in seller db
-    if (seller && seller.email === email) return res.status(400).json({
-        message: `Un utilisateur avec l'adresse e-mail : ${email} existe déja.`,
+    if (seller && seller.email === email) return res.status(409).json({
+        message: `Un utilisateur avec l'adresse e-mail : ${email} existe déjà.`,
     });
 
     if (user) {
         if (user.isConfirmed) {
-            return res.status(400).json({
-                message: `Un utilisateur avec l'adresse e-mail : ${user.email} existe déja.`,
+            return res.status(409).json({
+                message: `Un utilisateur avec l'adresse e-mail : ${user.email} existe déjà.`,
             });
-        }
-        if (!user.isConfirmed) {
+        } else {
             const hashedPassword = await bcrypt.hash(password, saltRounds).then((hash) => hash);
             await User.findOneAndUpdate({_id: user.id}, {registeredConfirmedCode, password: hashedPassword}, {
                 new: true,
             }, async (err, updatedUser) => {
                 if (err) {
-                    return res.status(400).json({
-                        message: "Un probleme est survenu, réessayez plus tard.",
+                    return res.status(500).json({
+                        message: "Un problème est survenu, réessayez plus tard.",
                     });
                 } else {
-                    // send confirmed code to the user via Email
-                    // const isSent = sendSMS.sendConfirmationCodeSms(registeredConfirmedCode, formattedPhone(phone));
+                    // send confirmed code to the user via email
 
                     //TO DO check if email is sent to
                     if (updatedUser) {
@@ -126,8 +125,8 @@ router.post("/user-signup", async (req, res) => {
                             }, message: `Entrez le code reçu à l'adresse e-mail : ${updatedUser.email}.`,
                         });
                     } else {
-                        return res.status(400).json({
-                            message: "Un probleme est survenu, réessayez plus tard.",
+                        return res.status(500).json({
+                            message: "Un problème est survenu, réessayez plus tard.",
                         });
                     }
                 }
@@ -168,7 +167,7 @@ router.post("/user-signup", async (req, res) => {
                     } else {
                         return res.status(400).json({
                             user: {firstname: newUser.firstname},
-                            message: "Un probleme est survenu, réessayez plus tard.",
+                            message: "Un problème est survenu, réessayez plus tard.",
                         });
                     }
                 }
@@ -176,7 +175,7 @@ router.post("/user-signup", async (req, res) => {
         } else {
             return res.status(400).json({
                 user: {firstname: newUser.firstname},
-                message: "Un probleme est survenu, réessayez plus tard.",
+                message: "Un problème est survenu, réessayez plus tard.",
             });
         }
     }
@@ -189,14 +188,14 @@ router.post("/seller-signup", async (req, res) => {
     const user = await User.findOne({email});
 
     // check if user already exist with passing email
-    if (user && user.email === email) return res.status(400).json({
-        message: `Un utilisateur avec l'adresse e-mail : ${email} existe déja.`,
+    if (user && user.email === email) return res.status(409).json({
+        message: `Un utilisateur avec l'adresse e-mail : ${email} existe déjà.`,
     });
 
     if (seller) {
         if (seller.isConfirmed) {
-            return res.status(400).json({
-                message: `Un utilisateur avec l'adresse e-mail : ${seller.email} existe déja.`,
+            return res.status(409).json({
+                message: `Un utilisateur avec l'adresse e-mail : ${seller.email} existe déjà.`,
             });
         }
         if (!seller.isConfirmed) {
@@ -206,7 +205,7 @@ router.post("/seller-signup", async (req, res) => {
             }, async (err, updatedSeller) => {
                 if (err) {
                     return res.status(400).json({
-                        message: "Un probleme est survenu, réessayez plus tard.",
+                        message: "Un problème est survenu, réessayez plus tard.",
                     });
                 } else {
                     // send confirmed code to the user via Email
@@ -222,7 +221,7 @@ router.post("/seller-signup", async (req, res) => {
                         });
                     } else {
                         return res.status(400).json({
-                            message: "Un probleme est survenu, réessayez plus tard.",
+                            message: "Un problème est survenu, réessayez plus tard.",
                         });
                     }
                 }
@@ -265,7 +264,7 @@ router.post("/seller-signup", async (req, res) => {
                     } else {
                         return res.status(400).json({
                             user: {firstname: newSeller.firstname},
-                            message: "Un probleme est survenu, réessayez plus tard.",
+                            message: "Un problème est survenu, réessayez plus tard.",
                         });
                     }
                 }
@@ -273,7 +272,7 @@ router.post("/seller-signup", async (req, res) => {
         } else {
             return res.status(400).json({
                 user: {firstname: newSeller.firstname},
-                message: "Un probleme est survenu, réessayez plus tard.",
+                message: "Un problème est survenu, réessayez plus tard.",
             });
         }
     }
@@ -299,7 +298,7 @@ router.post("/reset-password", async (req, res) => {
             });
         } else {
             return res.status(400).json({
-                message: "Un probleme est survenu, réessayez plus tard.",
+                message: "Un problème est survenu, réessayez plus tard.",
             });
         }
     } else {
@@ -334,7 +333,7 @@ router.post("/check-reset-password-code", async (req, res) => {
         }
     } else {
         return res.status(400).json({
-            message: "Un probleme est survenu, réessayez plus tard.",
+            message: "Un problème est survenu, réessayez plus tard.",
         });
     }
 });
@@ -361,12 +360,12 @@ router.post("/reset-customer-password", async (req, res) => {
             });
         } else {
             return res.status(400).json({
-                message: "Un probleme est survenu, réessayez plus tard.",
+                message: "Un problème est survenu, réessayez plus tard.",
             });
         }
     } else {
         return res.status(400).json({
-            message: "Un probleme est survenu, réessayez plus tard.",
+            message: "Un problème est survenu, réessayez plus tard.",
         });
     }
 });
@@ -393,7 +392,7 @@ router.post("/confirm-user-email", async (req, res) => {
                 jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN}, (err, token) => {
                     if (err) {
                         return res.status(400).json({
-                            message: "Un probleme est survenu, réessayez plus tard.",
+                            message: "Un problème est survenu, réessayez plus tard.",
                         });
                     }
 
@@ -436,7 +435,7 @@ router.post("/confirm-user-email", async (req, res) => {
     } else {
         return res.status(400).json({
             user: {id: customer._id, isConfirmed: customer.isConfirmed},
-            message: "Un probleme est survenu, réessayez plus tard.",
+            message: "Un problème est survenu, réessayez plus tard.",
         });
     }
 });
@@ -487,7 +486,7 @@ router.get("/is-authenticate", verifyJwt, async (req, res) => {
             });
     } else {
         return res.status(400).json({
-            message: "Un probleme est survenu, réessayez plus tard.",
+            message: "Un problème est survenu, réessayez plus tard.",
         });
     }
 });

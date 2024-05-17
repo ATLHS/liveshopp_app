@@ -64,7 +64,6 @@ export const SignIn = ({navigation, route}) => {
     const handleSignin = data => {
         setIsLoading(false);
         auth.handleUserSignIn(data)
-            .then(res => res)
             .then(data => {
                 setIsLoading(false);
                 if (data.user.isBanned) {
