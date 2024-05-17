@@ -1,21 +1,25 @@
 require("dotenv").config();
 require("./instrument");
 
-const {createServer} = require("http");
 const express = require("express");
 const Sentry = require("@sentry/node");
-const app = express();
+const {createServer} = require("http");
+const morgan = require('morgan');
+
 const {Server} = require("socket.io");
 const cors = require("cors");
+const generateUniqueId = require('generate-unique-id');
 const mongoose = require("mongoose");
 const timer = require('time-counter');
+
 const Product = require('./models/product');
 const stripeUtils = require("./utils/stripeUtils");
-const generateUniqueId = require('generate-unique-id');
 const {updateCustomer} = require("./utils/updateCustomer");
 const {isLessThanTenSeconds} = require("./utils/isLessThanTenSeconds");
 const User = require("./models/user");
 const UserSeller = require("./models/seller");
+
+const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 const channels = new Map();
@@ -263,6 +267,7 @@ mongoose
     .then(() => console.log(`Database connected successfully`))
     .catch((err) => console.error(err));
 
+app.use(morgan('[:date[clf]] :remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 app.use(cors());
 app.use(express.urlencoded({
     extended: true,
