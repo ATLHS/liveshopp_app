@@ -4,7 +4,6 @@ require('./instrument');
 const express = require('express');
 const Sentry = require('@sentry/node');
 const { createServer } = require('http');
-const morgan = require('morgan');
 
 const { Server } = require('socket.io');
 const cors = require('cors');
@@ -16,6 +15,7 @@ const Product = require('./models/product');
 const stripeUtils = require('./utils/stripeUtils');
 const { updateCustomer } = require('./utils/updateCustomer');
 const { isLessThanTenSeconds } = require('./utils/isLessThanTenSeconds');
+const { morganMiddleware, log } = require('./middleware/logger');
 const User = require('./models/user');
 const UserSeller = require('./models/seller');
 
@@ -256,14 +256,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// db config
-const url = process.env.ATLAS_URL;
-mongoose
-  .connect(url)
-  .then(() => console.log(`Database connected successfully`))
-  .catch((err) => console.error(err));
-
-app.use(morgan('[:date[clf]] :remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+app.use(morganMiddleware);
 app.use(cors());
 app.use(
   express.urlencoded({
@@ -294,7 +287,7 @@ app.use('/api/videos/', videos);
 Sentry.setupExpressErrorHandler(app);
 
 httpServer.listen(process.env.PORT, () => {
-  console.log(`Server listening on port  ${process.env.PORT}`);
+  log.info(`Server listening on port ${process.env.PORT}`);
 });
 
 module.exports = { app, httpServer };
