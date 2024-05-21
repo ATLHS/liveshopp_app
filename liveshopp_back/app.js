@@ -8,7 +8,6 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const generateUniqueId = require('generate-unique-id');
-const mongoose = require('mongoose');
 const timer = require('time-counter');
 
 const Product = require('./models/product');
@@ -23,6 +22,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 const channels = new Map();
+
 global.io = io;
 
 io.on('connection', (socket) => {
