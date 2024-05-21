@@ -21,7 +21,7 @@ const log = winston.createLogger({
 // morgan('[:date[clf]] :remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"')
 const morganMiddleware = morgan(':method :url :status :res[content-length] - :response-time ms', {
   stream: {
-    write: (message) => log.http(message),
+    write: (message) => log.http(message.trim()),
   },
 });
 

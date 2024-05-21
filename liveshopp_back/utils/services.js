@@ -30,11 +30,7 @@ const redis = registerService('redis', () => {
     connectTimeout: 10000, // in milliseconds
   })
     .on('error', (err) => log.error('Redis Client Error', err))
-    .on('connect', () => log.info('Redis connected successfully'))
-    .on('connection', (stream) => {
-      log.info('someone connected!');
-      log.info(stream);
-    });
+    .on('connect', () => log.info('Redis connected successfully'));
 
   client.connect();
 

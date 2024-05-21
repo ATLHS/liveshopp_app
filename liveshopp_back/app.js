@@ -4,99 +4,82 @@ require('./instrument');
 const express = require('express');
 const Sentry = require('@sentry/node');
 const { createServer } = require('http');
-
 const { Server } = require('socket.io');
 const cors = require('cors');
 const generateUniqueId = require('generate-unique-id');
+const { morganMiddleware, log } = require('./middleware/logger');
 const timer = require('time-counter');
 
 const Product = require('./models/product');
+const User = require('./models/user');
+const UserSeller = require('./models/seller');
+
 const stripeUtils = require('./utils/stripeUtils');
 const { updateCustomer } = require('./utils/updateCustomer');
 const { isLessThanTenSeconds } = require('./utils/isLessThanTenSeconds');
-const { morganMiddleware, log } = require('./middleware/logger');
-const User = require('./models/user');
-const UserSeller = require('./models/seller');
+const { createChannel, getChannel, saveChannel, saveAuctionTimer } = require('./utils/channels');
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
-const channels = new Map();
 
 global.io = io;
 
 io.on('connection', (socket) => {
-  socket.on('leaveRoom', ({ liveData, user }) => {
-    let channel = channels.get(liveData.channelName);
-    socket.leave(channel.channelName);
+  socket.on('leaveRoom', async ({ liveData, user }) => {
+    const channelName = liveData.channelName;
+    const channel = await getChannel(channelName);
+
+    socket.leave(channelName);
     if (channel.userCount >= 1) channel.userCount--;
 
     if ((user.profil === 'seller' && user.id === liveData.sellerId) || user._id === liveData.sellerId) {
       channel.hostIsLive = false;
     }
-    io.to(liveData.channelName).emit('channelData', channel);
+    await saveChannel(channel);
+
+    io.to(channelName).emit('channelData', channel);
   });
 
-  socket.on('joinChannel', ({ liveData, user }) => {
+  socket.on('joinChannel', async ({ liveData, user }) => {
+    const channelName = liveData.live_name;
     // 1 add user to a room
-    socket.join(liveData.live_name);
+    socket.join(channelName);
     // 2 check if channel room exist
-    const channelRooms = channels.has(liveData.live_name);
+    let channel = await getChannel(channelName);
     // 3 if not => create room data linked to the seller
-    if (!channelRooms) {
-      const channelRoomData = {
-        channelName: liveData.live_name,
-        sellerId: liveData.seller_id,
-        sellerName: liveData.sellerName,
-        auctionId: liveData._id,
-        auctionsStatus: liveData.live_status,
-        liveSchedule: liveData.live_date_time,
-        userCount: 1,
-        messages: [],
-        hostIsLive: user.profil === 'seller' && user.id === liveData.seller_id,
-        currentAuction: {
-          userId: '',
-          username: '',
-          productName: '',
-          currentProductAmount: '',
-          product_reserved_price: '',
-          currentAuctionDelay: new timer(),
-          currentAuctionStatus: 'paused',
-          salePrice: '',
-          currentMessageInfo: '',
-        },
-      };
-      channels.set(liveData.live_name, channelRoomData);
-      // 4 send data to the client who join the specified room
-      io.to(liveData.live_name).emit('channelData', channels.get(liveData.live_name));
+    if (!channel) {
+      channel = await createChannel(liveData, user);
     } else {
-      channels.get(liveData.live_name).userCount++;
-      channels.get(liveData.live_name).auctionsStatus = liveData.live_status;
+      channel.userCount++;
+      channel.auctionsStatus = liveData.live_status;
 
-      if (!channels.get(liveData.live_name).hostIsLive && user.profil === 'seller' && user.id === liveData.seller_id) {
-        channels.get(liveData.live_name).hostIsLive = true;
+      if (!channel.hostIsLive && user.profil === 'seller' && user.id === liveData.seller_id) {
+        channel.hostIsLive = true;
       }
-      // 3 if room exist send room data to the client who join the specified room
-      io.to(liveData.live_name).emit('channelData', channels.get(liveData.live_name));
+      await saveChannel(channel);
     }
+
+    io.to(channelName).emit('channelData', channel);
   });
 
-  socket.on('newLiveMessage', (currentAuctionData) => {
+  socket.on('newLiveMessage', async (currentAuctionData) => {
     const { user, message, liveData } = currentAuctionData;
+    const channel = await getChannel(liveData.channelName);
 
-    const channelRoom = channels.get(liveData.channelName);
     const id = generateUniqueId({
       length: 20,
       useLetters: false,
     });
-    channelRoom.messages.push({
+    channel.messages.push({
       userId: user.id,
       profil: user.profil,
       username: user.firstname,
       message: message.live_message,
       id,
     });
-    io.to(liveData.channelName).emit('channelData', channelRoom);
+    await saveChannel(channel);
+    io.to(liveData.channelName).emit('channelData', channel);
   });
 
   socket.on('blockCustomer', async (currentAuctionData) => {
@@ -121,18 +104,17 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('pausedCurrentAuctionStatut', (channelName) => {
-    const channelRoom = channels.get(channelName);
-    channelRoom.currentAuction.currentAuctionStatus = 'paused';
-    io.to(channelName).emit('currentAuctionData', channelRoom);
+  socket.on('pausedCurrentAuctionStatut', async (channelName) => {
+    const channel = await getChannel(channelName);
+    channel.currentAuction.currentAuctionStatus = 'paused';
+    await saveChannel(channel);
+    io.to(channelName).emit('currentAuctionData', channel);
   });
 
-  socket.on('bid', (currentAuctionData) => {
+  socket.on('bid', async (currentAuctionData) => {
     const { channelName, data } = currentAuctionData;
-
-    const channelRoom = channels.get(channelName);
-
-    const { currentAuction } = channelRoom;
+    const channel = await getChannel(channelName);
+    const { currentAuction } = channel;
 
     currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + Number(data.bid);
     currentAuction.userId = data.userId;
@@ -140,7 +122,7 @@ io.on('connection', (socket) => {
     currentAuction.shipping_address = data.shipping_address;
 
     if (currentAuction.product_reserved_price && currentAuction.currentProductAmount >= currentAuction.product_reserved_price) {
-      channelRoom.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
+      channel.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
     }
 
     let counter = currentAuction.currentAuctionDelay;
@@ -149,110 +131,127 @@ io.on('connection', (socket) => {
     if (isLessThanTenSeconds(counter.time)) {
       counter.stop();
       // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
+      //
+      // FIXME
+      // Check if the counter starts again automatically
+      //
       counter.updateTimer('00:00:15');
     }
 
-    io.to(channelName).emit('currentAuctionData', channelRoom);
+    await saveChannel(channel);
+
+    io.to(channelName).emit('currentAuctionData', channel);
   });
 
-  const sendCurrentAuctionCounterToEachRooms = () => {
-    for (let [key, value] of channels) {
-      // get the current timer of each channel room and check if timer is done
-      value.currentAuction.currentAuctionDelay.on('done', async () => {
-        if (value.currentAuction.userId) {
-          if (value.currentAuction.product_reserved_price && value.currentAuction.currentProductAmount < value.currentAuction.product_reserved_price) {
-            value.currentAuction.currentAuctionStatus = 'stopping';
-            value.currentAuction.currentMessageInfo = "Oops! Le prix de réserve n'a pas été atteint.";
-            // send notification to the room
-            io.to(key).emit('currentAuctionData', value);
-          } else {
-            // charge the current user auction winner before with stripe
-            const userId = value.currentAuction.userId;
-            const amountToCharge = parseInt(value.currentAuction.currentProductAmount.toString() * 100);
+  const startAuctionCounterForChannel = (channel) => {
+    const channelName = channel.channelName;
 
-            const user = await User.findOne({ _id: userId });
-            const seller = await UserSeller.findOne({ _id: userId });
-
-            const customer = user || seller;
-
-            const paymentIntentMetadata = {
-              seller_id: value.sellerId,
-              seller_name: value.sellerName,
-              amount: value.currentAuction.currentProductAmount,
-            };
-            const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
-
-            if (chargedCustomer.status === 'succeeded') {
-              // register current sale product info in db
-              const product = new Product({
-                seller: value.sellerId,
-                live_name: 'Live enchères',
-                auctionId: value.auctionId,
-                auctionsStatus: value.auctionsStatus,
-                userId: value.currentAuction.userId,
-                productName: value.currentAuction.productName,
-                salePrice: value.currentAuction.currentProductAmount,
-                shipping_address: value.currentAuction.shipping_address,
-              });
-              // save in db the purchased product
-              const newProductSaved = await product.save();
-
-              value.currentAuction.currentAuctionStatus = 'stopping';
-              value.currentAuction.salePrice = Number(value.currentAuction.currentProductAmount);
-
-              // send notification to the room
-              if (newProductSaved) {
-                io.to(key).emit('currentAuctionData', value);
-              } else {
-                io.to(key).emit('error', { message: 'erreur' });
-              }
-            } else {
-              // TO DO : Send a notification to the seller and to the user to inform them that the payment did not go through.
-              value.currentAuction.currentMessageInfo = '';
-              value.currentAuction.currentAuctionStatus = 'stopping';
-              io.to(key).emit('currentAuctionData', value);
-            }
-          }
-        } else {
-          value.currentAuction.currentAuctionStatus = 'stopping';
-          value.currentAuction.currentMessageInfo = '';
+    // When auction is finished
+    channel.currentAuction.currentAuctionDelay.on('done', async () => {
+      const updatedChannel = await getChannel(channelName);
+      // A user bidded
+      if (updatedChannel.currentAuction.userId) {
+        if (updatedChannel.currentAuction.product_reserved_price && updatedChannel.currentAuction.currentProductAmount < updatedChannel.currentAuction.product_reserved_price) {
+          updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
+          updatedChannel.currentAuction.currentMessageInfo = "Le prix de réserve n'a pas été atteint.";
           // send notification to the room
-          io.to(key).emit('currentAuctionData', value);
+          io.to(channelName).emit('currentAuctionData', updatedChannel);
+        } else {
+          // charge the current user auction winner before with stripe
+          const userId = updatedChannel.currentAuction.userId;
+          const amountToCharge = parseInt(updatedChannel.currentAuction.currentProductAmount.toString() * 100);
+
+          const user = await User.findOne({ _id: userId });
+          const seller = await UserSeller.findOne({ _id: userId });
+
+          const customer = user || seller;
+
+          const paymentIntentMetadata = {
+            seller_id: updatedChannel.sellerId,
+            seller_name: updatedChannel.sellerName,
+            amount: updatedChannel.currentAuction.currentProductAmount,
+          };
+          const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
+
+          if (chargedCustomer.status === 'succeeded') {
+            // register current sale product info in db
+            const product = new Product({
+              seller: updatedChannel.sellerId,
+              live_name: 'Live enchères',
+              auctionId: updatedChannel.auctionId,
+              auctionsStatus: updatedChannel.auctionsStatus,
+              userId: updatedChannel.currentAuction.userId,
+              productName: updatedChannel.currentAuction.productName,
+              salePrice: updatedChannel.currentAuction.currentProductAmount,
+              shipping_address: updatedChannel.currentAuction.shipping_address,
+            });
+            // save in db the purchased product
+            const newProductSaved = await product.save();
+
+            updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
+            updatedChannel.currentAuction.salePrice = Number(updatedChannel.currentAuction.currentProductAmount);
+
+            // send notification to the room
+            if (newProductSaved) {
+              io.to(channelName).emit('currentAuctionData', updatedChannel);
+            } else {
+              io.to(channelName).emit('error', { message: 'erreur' });
+            }
+          } else {
+            // TO DO : Send a notification to the seller and to the user to inform them that the payment did not go through.
+            updatedChannel.currentAuction.currentMessageInfo = '';
+            updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
+            io.to(channelName).emit('currentAuctionData', updatedChannel);
+          }
         }
-      });
-      // get the current delay of each channel room and send the current delay in seconds
-      value.currentAuction.currentAuctionDelay.on('change', () => {
-        io.to(key).emit('currentAuctionData', value);
-      });
-    }
+      } else {
+        updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
+        updatedChannel.currentAuction.currentMessageInfo = '';
+        // send notification to the room
+        io.to(channelName).emit('currentAuctionData', updatedChannel);
+      }
+
+      await saveChannel(updatedChannel);
+    });
+
+    // Send synchronized timer to everyone
+    //
+    // FIXME should we save the current counter to Redis?
+    //
+    channel.currentAuction.currentAuctionDelay.on('change', async () => {
+      await saveAuctionTimer(channel);
+      const updatedChannel = await getChannel(channelName);
+      io.to(channelName).emit('currentAuctionData', updatedChannel);
+    });
   };
 
-  // start current auction
-  socket.on('startCurrentAuction', (currentAuctionData) => {
+  socket.on('startCurrentAuction', async (currentAuctionData) => {
     const { channelName, data } = currentAuctionData;
-    const channelRoom = channels.get(channelName);
+    const channel = await getChannel(channelName);
     const countDown = new timer({
       direction: 'down',
       startValue: `${data.product_auction_time}:00`,
     });
 
-    channelRoom.currentAuction.productName = data.product_name;
-    channelRoom.currentAuction.currentProductAmount = data.product_price;
-    channelRoom.currentAuction.product_reserved_price = data.product_reserved_price || false;
-    channelRoom.currentAuction.currentAuctionDelay = countDown;
-    channelRoom.currentAuction.currentAuctionStatus = 'running';
-    channelRoom.currentAuction.username = '';
-    channelRoom.currentAuction.userId = '';
-    channelRoom.currentAuction.salePrice = '';
-    channelRoom.currentAuction.currentMessageInfo = data.product_reserved_price ? 'Prix de réserve non atteint...' : '';
+    channel.currentAuction.productName = data.product_name;
+    channel.currentAuction.currentProductAmount = data.product_price;
+    channel.currentAuction.product_reserved_price = data.product_reserved_price || false;
+    channel.currentAuction.currentAuctionDelay = countDown;
+    channel.currentAuction.currentAuctionStatus = 'running';
+    channel.currentAuction.username = '';
+    channel.currentAuction.userId = '';
+    channel.currentAuction.salePrice = '';
+    channel.currentAuction.currentMessageInfo = data.product_reserved_price ? 'Prix de réserve non atteint...' : '';
 
     // start the timer for the current auction
     countDown.start();
 
-    io.to(channelName).emit('currentAuctionData', channelRoom);
+    await saveChannel(channel);
+
+    io.to(channelName).emit('currentAuctionData', channel);
 
     // send channel data and notification for each room
-    sendCurrentAuctionCounterToEachRooms();
+    startAuctionCounterForChannel(channel);
   });
 });
 
