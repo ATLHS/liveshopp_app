@@ -65,6 +65,7 @@ export const LiveScreen = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            console.log(user, 'userrr')
             agoraEngineRef.current = createAgoraRtcEngine();
             if (liveData.currentAuction.currentAuctionStatus === 'stopping') {
                 showCurrentLiveNotificationToast();

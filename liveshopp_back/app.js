@@ -81,6 +81,8 @@ io.on("connection", (socket) => {
     socket.on("newLiveMessage", (currentAuctionData) => {
         const {user, message, liveData} = currentAuctionData;
 
+        const pseudo = `${user.firstname}.${user.lastname.charAt(0)}`;
+
         const channelRoom = channels.get(liveData.channelName);
         const id = generateUniqueId({
             length: 20,
@@ -89,7 +91,7 @@ io.on("connection", (socket) => {
         channelRoom.messages.push({
             userId: user.id,
             profil: user.profil,
-            username: user.firstname,
+            username: pseudo,
             message: message.live_message,
             id
         });
