@@ -1,16 +1,14 @@
 const generateUniqueId = require('generate-unique-id');
 const timer = require('time-counter');
 
-const Product = require('../models/product');
 const User = require('../models/user');
 const UserSeller = require('../models/seller');
 
-const stripeUtils = require('./stripeUtils');
 const { updateCustomer } = require('./updateCustomer');
 const { isLessThanTenSeconds } = require('./isLessThanTenSeconds');
 const { createChannel, getChannel, saveChannel, saveAuctionTimer, getChannels } = require('./channels');
 const { log } = require('../middleware/logger');
-const { registerAuction } = require('./auctionSell');
+const { registerAuction } = require('./auctions');
 
 module.exports = (io, socket) => {
   const leaveRoom = async ({ liveData, user }) => {
@@ -116,6 +114,8 @@ module.exports = (io, socket) => {
 
     // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
     if (isLessThanTenSeconds(counter.time)) {
+      // FIXME this crash counter is undefined, needs to reinstance a new one
+      //
       counter.stop();
       // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
       //
@@ -165,75 +165,36 @@ module.exports = (io, socket) => {
     // When auction is finished
     channel.currentAuction.currentAuctionDelay.on('done', async () => {
       const updatedChannel = await getChannel(channelName);
+      let messageInfo = '';
+
       // A user bidded
       if (updatedChannel.currentAuction.userId) {
         if (updatedChannel.currentAuction.product_reserved_price && updatedChannel.currentAuction.currentProductAmount < updatedChannel.currentAuction.product_reserved_price) {
-          updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
-          updatedChannel.currentAuction.currentMessageInfo = "Le prix de réserve n'a pas été atteint.";
-          // send notification to the room
-          io.to(channelName).emit('currentAuctionData', updatedChannel);
+          messageInfo = "Le prix de réserve n'a pas été atteint.";
         } else {
-          // charge the current user auction winner before with stripe
-          const userId = updatedChannel.currentAuction.userId;
-          const amountToCharge = parseInt(updatedChannel.currentAuction.currentProductAmount.toString() * 100);
+          // Charge customer and create a Product in DB
+          registerAuction({
+            auction: updatedChannel.currentAuction,
+            auctionId: updatedChannel.auctionId,
+            auctionsStatus: updatedChannel.auctionsStatus,
+            sellerId: updatedChannel.sellerId,
+            sellerName: updatedChannel.sellerName,
+          });
 
-          const user = await User.findOne({ _id: userId });
-          const seller = await UserSeller.findOne({ _id: userId });
-
-          const customer = user || seller;
-
-          const paymentIntentMetadata = {
-            seller_id: updatedChannel.sellerId,
-            seller_name: updatedChannel.sellerName,
-            amount: updatedChannel.currentAuction.currentProductAmount,
-          };
-          const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
-
-          if (chargedCustomer.status === 'succeeded') {
-            // register current sale product info in db
-            const product = new Product({
-              seller: updatedChannel.sellerId,
-              live_name: 'Live enchères',
-              auctionId: updatedChannel.auctionId,
-              auctionsStatus: updatedChannel.auctionsStatus,
-              userId: updatedChannel.currentAuction.userId,
-              productName: updatedChannel.currentAuction.productName,
-              salePrice: updatedChannel.currentAuction.currentProductAmount,
-              shipping_address: updatedChannel.currentAuction.shipping_address,
-            });
-            // save in db the purchased product
-            const newProductSaved = await product.save();
-
-            updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
-            updatedChannel.currentAuction.salePrice = Number(updatedChannel.currentAuction.currentProductAmount);
-
-            // send notification to the room
-            if (newProductSaved) {
-              io.to(channelName).emit('currentAuctionData', updatedChannel);
-            } else {
-              io.to(channelName).emit('error', { message: 'erreur' });
-            }
-          } else {
-            // TO DO : Send a notification to the seller and to the user to inform them that the payment did not go through.
-            updatedChannel.currentAuction.currentMessageInfo = '';
-            updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
-            io.to(channelName).emit('currentAuctionData', updatedChannel);
-          }
+          updatedChannel.currentAuction.salePrice = Number(updatedChannel.currentAuction.currentProductAmount);
         }
-      } else {
-        updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
-        updatedChannel.currentAuction.currentMessageInfo = '';
-        // send notification to the room
-        io.to(channelName).emit('currentAuctionData', updatedChannel);
       }
+
+      updatedChannel.currentAuction.currentMessageInfo = messageInfo;
+      updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
+
+      // send notification to the room
+      io.to(channelName).emit('currentAuctionData', updatedChannel);
 
       await saveChannel(updatedChannel);
     });
 
     // Send synchronized timer to everyone
-    //
-    // FIXME should we save the current counter to Redis?
-    //
     channel.currentAuction.currentAuctionDelay.on('change', async () => {
       await saveAuctionTimer(channel);
       const updatedChannel = await getChannel(channelName);
