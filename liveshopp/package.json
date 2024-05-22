@@ -40,7 +40,7 @@
         "react-native-autocomplete-dropdown": "^3.1.5",
         "react-native-check-version": "^1.1.1",
         "react-native-confirmation-code-field": "^7.4.0",
-        "react-native-countdown-component": "^2.7.1",
+        "react-native-countdown-fixed": "^2.7.1",
         "react-native-country-flag": "^2.0.2",
         "react-native-date-picker": "^4.2.9",
         "react-native-device-info": "^10.13.2",

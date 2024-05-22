@@ -18,7 +18,7 @@ import auctionVideoService from '../../services/auctionVideos';
 import {setSellersAuctionVideos} from '../../redux/slices/auctionsVideoSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import CountDown from 'react-native-countdown-component';
+import CountDown from 'react-native-countdown-fixed';
 import {DateTime} from 'luxon';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -38,6 +38,7 @@ import {trigger} from 'react-native-haptic-feedback';
 import {Slider} from '@miblanchard/react-native-slider';
 import customer from '../../services/customer';
 import admin from '../../services/admin';
+import Video from 'react-native-video';
 
 const options = {
     enableVibrateFallback: true,
@@ -118,8 +119,8 @@ export const AuctionVideos = ({navigation}) => {
             setupIntentClientSecret: setupIntent,
         });
 
-        if (!error) {
-            console.log(error);
+        if (error) {
+            console.error(error);
         }
     };
 
@@ -397,23 +398,23 @@ export const AuctionVideos = ({navigation}) => {
                                                     color="black"
                                                 />
                                             )}
-                                            {/*<Video*/}
-                                            {/*    source={{*/}
-                                            {/*        uri: item.videoUrl,*/}
-                                            {/*    }} // Can be a URL or a local file.*/}
-                                            {/*    ref={ref => {*/}
-                                            {/*        player = ref;*/}
-                                            {/*    }}*/}
-                                            {/*    style={styles.backgroundVideo}*/}
-                                            {/*    fullscreen={true}*/}
-                                            {/*    onReadyForDisplay={() =>*/}
-                                            {/*        setReadyToDisplay(true)*/}
-                                            {/*    }*/}
-                                            {/*    repeat={true}*/}
-                                            {/*    audioOnly={false}*/}
-                                            {/*    resizeMode={'cover'}*/}
-                                            {/*    playInBackground={true}*/}
-                                            {/*/>*/}
+                                            <Video
+                                                source={{
+                                                    uri: item.videoUrl,
+                                                }} // Can be a URL or a local file.
+                                                ref={ref => {
+                                                    player = ref;
+                                                }}
+                                                style={styles.backgroundVideo}
+                                                fullscreen={true}
+                                                onReadyForDisplay={() =>
+                                                    setReadyToDisplay(true)
+                                                }
+                                                repeat={true}
+                                                audioOnly={false}
+                                                resizeMode={'cover'}
+                                                playInBackground={true}
+                                            />
                                         </View>
                                         <View>
                                             <View
@@ -499,10 +500,11 @@ export const AuctionVideos = ({navigation}) => {
                                                     until={differenceInSeconds(
                                                         item.auctionEndDate,
                                                     )}
-                                                    onFinish={() =>
+                                                    onFinish={() => {
                                                         handleEndingAuction(
                                                             item._id,
                                                         )
+                                                    }
                                                     }
                                                     size={15}
                                                     style={{

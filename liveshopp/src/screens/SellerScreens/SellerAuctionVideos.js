@@ -22,7 +22,7 @@ import {
     faStore,
     faTag,
 } from '@fortawesome/free-solid-svg-icons';
-import CountDown from 'react-native-countdown-component';
+import CountDown from 'react-native-countdown-fixed';
 
 export const SellerAuctionVideos = ({navigation}) => {
     const [isLoading, setIsLoading] = useState(false);
