@@ -8,7 +8,9 @@ const UserSeller = require('../models/seller');
 const stripeUtils = require('./stripeUtils');
 const { updateCustomer } = require('./updateCustomer');
 const { isLessThanTenSeconds } = require('./isLessThanTenSeconds');
-const { createChannel, getChannel, saveChannel, saveAuctionTimer } = require('./channels');
+const { createChannel, getChannel, saveChannel, saveAuctionTimer, getChannels } = require('./channels');
+const { log } = require('../middleware/logger');
+const { registerAuction } = require('./auctionSell');
 
 module.exports = (io, socket) => {
   const leaveRoom = async ({ liveData, user }) => {
@@ -237,6 +239,33 @@ module.exports = (io, socket) => {
       const updatedChannel = await getChannel(channelName);
       io.to(channelName).emit('currentAuctionData', updatedChannel);
     });
+  };
+
+  const restartCurrentAuctions = async () => {
+    log.warn(`Checking for unfinished auctions`);
+    const channels = await getChannels();
+    for (const channel of channels) {
+      if (channel.currentAuction.currentAuctionStatus === 'running') {
+        log.warn(`Restarting current auction timer for channel ${channel.channelName}`);
+
+        const countDown = new timer({
+          direction: 'down',
+          startValue: `${channel.currentAuction.currentAuctionDelay.time}`,
+        });
+
+        channel.currentAuction.currentAuctionDelay = countDown;
+
+        // Restart the timer for the current auction
+        countDown.start();
+
+        await saveChannel(channel);
+
+        io.to(channel.channelName).emit('currentAuctionData', channel);
+
+        // send channel data and notification for each room
+        startAuctionCounterForChannel(channel);
+      }
+    }
   };
 
   socket.on('bid', bid);

@@ -1,6 +1,5 @@
 const timer = require('time-counter');
 const { redis } = require('./services');
-const { log } = require('../middleware/logger');
 
 const channel = (liveData, user) => ({
   channelName: liveData.live_name,
@@ -35,6 +34,17 @@ const getChannel = async (name) => {
   return await redis.json.get(name);
 };
 
+const getChannels = async () => {
+  const keys = await redis.keys('*');
+  const results = await redis.json.mGet(keys, '$');
+  const channels = [];
+
+  for (const result of results) {
+    channels.push(result[0]);
+  }
+  return channels;
+};
+
 const saveChannel = async (channel) => {
   return await redis.json.set(channel.channelName, '$', channel);
 };
@@ -43,4 +53,4 @@ const saveAuctionTimer = async (channel) => {
   return await redis.json.set(channel.channelName, '$.currentAuction.currentAuctionDelay', channel.currentAuction.currentAuctionDelay);
 };
 
-module.exports = { createChannel, getChannel, saveAuctionTimer, saveChannel };
+module.exports = { createChannel, getChannel, getChannels, saveAuctionTimer, saveChannel };
