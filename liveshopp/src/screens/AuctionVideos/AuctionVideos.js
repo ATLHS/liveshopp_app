@@ -500,11 +500,10 @@ export const AuctionVideos = ({navigation}) => {
                                                     until={differenceInSeconds(
                                                         item.auctionEndDate,
                                                     )}
-                                                    onFinish={() => {
+                                                    onFinish={() =>
                                                         handleEndingAuction(
                                                             item._id,
                                                         )
-                                                    }
                                                     }
                                                     size={15}
                                                     style={{
