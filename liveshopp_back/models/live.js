@@ -16,4 +16,8 @@ const lives = new mongoose.Schema(
 
 const Live = mongoose.model('Live', lives);
 
+/**
+ * @typedef {typeof Live.schema.obj} LiveType
+ */
+
 module.exports = Live;

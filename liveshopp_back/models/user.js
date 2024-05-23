@@ -23,4 +23,8 @@ const userSchema = new mongoose.Schema(
 
 const User = mongoose.model('User', userSchema);
 
+/**
+ * @typedef {typeof User.schema.obj} UserType
+ */
+
 module.exports = User;

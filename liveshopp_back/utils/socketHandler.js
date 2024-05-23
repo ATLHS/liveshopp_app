@@ -1,3 +1,4 @@
+// @ts-check
 const generateUniqueId = require('generate-unique-id');
 const timer = require('time-counter');
 
@@ -9,7 +10,12 @@ const { isLessThanTenSeconds } = require('./isLessThanTenSeconds');
 const { createChannel, getChannel, saveChannel, saveAuctionTimer, getChannels } = require('./channels');
 const { log } = require('../middleware/logger');
 const { registerAuction } = require('./auctions');
+const Sentry = require('@sentry/node');
 
+/**
+ * @param {import('socket.io').Server} io
+ * @param {import('socket.io').Socket} socket
+ */
 module.exports = (io, socket) => {
   const leaveRoom = async ({ liveData, user }) => {
     const channelName = liveData.channelName;
@@ -26,30 +32,40 @@ module.exports = (io, socket) => {
     io.to(channelName).emit('channelData', channel);
   };
 
+  /**
+   *
+   * @param {Object} param0
+   * @param {import('../models/live').LiveType} param0.liveData
+   * @param {import('../models/user').UserType} param0.user
+   */
   const joinChannel = async ({ liveData, user }) => {
-    const channelName = liveData.live_name;
-    // 1 add user to a room
-    socket.join(channelName);
-    // 2 check if channel room exist
-    let channel = await getChannel(channelName);
-    // 3 if not => create room data linked to the seller
-    if (!channel) {
-      channel = await createChannel(liveData, user);
-    } else {
-      channel.userCount++;
-      channel.auctionsStatus = liveData.live_status;
+    try {
+      const channelName = liveData.live_name;
+      // 1 add user to a room
+      socket.join(channelName);
+      // 2 check if channel room exist
+      let channel = await getChannel(channelName);
+      // 3 if not => create room data linked to the seller
+      if (!channel) {
+        channel = await createChannel(liveData, user);
+      } else {
+        channel.userCount++;
+        channel.auctionsStatus = liveData.live_status;
 
-      if (!channel.hostIsLive && user.profil === 'seller' && user.id === liveData.seller_id) {
-        channel.hostIsLive = true;
+        if (!channel.hostIsLive && user.profil === 'seller' && user.id === liveData.seller_id) {
+          channel.hostIsLive = true;
+        }
+        await saveChannel(channel);
       }
-      await saveChannel(channel);
-    }
 
-    io.to(channelName).emit('channelData', channel);
+      io.to(channelName).emit('channelData', channel);
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
+    }
   };
 
-  const newLiveMessage = async (currentAuctionData) => {
-    const { user, message, liveData } = currentAuctionData;
+  const newLiveMessage = async ({ user, message, liveData }) => {
     const channel = await getChannel(liveData.channelName);
 
     const id = generateUniqueId({
@@ -64,17 +80,13 @@ module.exports = (io, socket) => {
       id,
     });
     await saveChannel(channel);
+    log.debug('save channel');
     io.to(liveData.channelName).emit('channelData', channel);
+    log.debug('emitted');
   };
 
-  const blockCustomer = async (currentAuctionData) => {
-    const { user, userId, profil } = currentAuctionData;
-
-    const userCustomer = await User.findOne({ _id: user.id });
-    const userSeller = await UserSeller.findOne({ _id: user.id });
-
-    const customer = userCustomer || userSeller;
-
+  const blockCustomer = async ({ user, userId, profil }) => {
+    const customer = (await User.findOne({ _id: user.id })) || (await UserSeller.findOne({ _id: user.id }));
     const customerToBlock = profil === 'seller' ? { blockedSeller: userId } : { blockedUser: userId };
 
     // check if the customer to block is already blocked
@@ -96,8 +108,7 @@ module.exports = (io, socket) => {
     io.to(channelName).emit('currentAuctionData', channel);
   };
 
-  const bid = async (currentAuctionData) => {
-    const { channelName, data } = currentAuctionData;
+  const bid = async ({ channelName, data }) => {
     const channel = await getChannel(channelName);
     const { currentAuction } = channel;
 
@@ -130,8 +141,7 @@ module.exports = (io, socket) => {
     io.to(channelName).emit('currentAuctionData', channel);
   };
 
-  const startCurrentAuction = async (currentAuctionData) => {
-    const { channelName, data } = currentAuctionData;
+  const startCurrentAuction = async ({ channelName, data }) => {
     const channel = await getChannel(channelName);
     const countDown = new timer({
       direction: 'down',
