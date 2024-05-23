@@ -11,6 +11,7 @@ const { createChannel, getChannel, saveChannel, saveAuctionTimer, getChannels } 
 const { log } = require('../middleware/logger');
 const { registerAuction } = require('./auctions');
 const Sentry = require('@sentry/node');
+const Live = require('../models/live');
 
 /**
  * @param {import('socket.io').Server} io
@@ -40,23 +41,26 @@ module.exports = (io, socket) => {
    */
   const joinChannel = async ({ liveData, user }) => {
     try {
-      const channelName = liveData.live_name;
+      const live = await Live.findById(liveData._id);
+      const channelName = live.live_name;
+
       // 1 add user to a room
       socket.join(channelName);
       // 2 check if channel room exist
       let channel = await getChannel(channelName);
       // 3 if not => create room data linked to the seller
       if (!channel) {
-        channel = await createChannel(liveData, user);
-      } else {
-        channel.userCount++;
-        channel.auctionsStatus = liveData.live_status;
-
-        if (!channel.hostIsLive && user.profil === 'seller' && user.id === liveData.seller_id) {
-          channel.hostIsLive = true;
-        }
-        await saveChannel(channel);
+        channel = await createChannel(live);
       }
+
+      channel.userCount++;
+      channel.auctionsStatus = live.live_status;
+
+      if (!channel.hostIsLive && user.profil === 'seller' && user.id === live.seller_id) {
+        channel.hostIsLive = true;
+      }
+
+      await saveChannel(channel);
 
       io.to(channelName).emit('channelData', channel);
     } catch (error) {
@@ -79,10 +83,10 @@ module.exports = (io, socket) => {
       message: message.live_message,
       id,
     });
+    
     await saveChannel(channel);
-    log.debug('save channel');
+    
     io.to(liveData.channelName).emit('channelData', channel);
-    log.debug('emitted');
   };
 
   const blockCustomer = async ({ user, userId, profil }) => {
