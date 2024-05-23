@@ -1,63 +1,59 @@
 const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET_KEY);
+const Sentry = require('@sentry/node');
 
-module.exports = {
-    createCustomer: (customerData) => {
-        return stripe.customers
-            .create({
-                name: customerData.company_name || customerData.firstname,
-                email: customerData.email,
-                phone: customerData.phone || ''
-            })
-            .then((customer) => {
-                return customer;
-            })
-            .catch(() => {
-                return false;
-            });
-    },
-    retrieveCustomer: (id) => {
-        return stripe.customers
-            .retrieve(id)
-            .then((customer) => {
-                return customer;
-            })
-            .catch((err) => {
-                console.error(err, 'err')
-                return false;
-            });
-    },
-    chargeCustomer: async (amountToCharge, customerId, paymentIntentMetadata) => {
-        const paymentMethods = await stripe.paymentMethods.list({
-            customer: customerId,
-            type: 'card',
-        });
-
-        try {
-            const paymentIntent = await stripe.paymentIntents.create({
-                amount: amountToCharge,
-                currency: 'eur',
-                customer: customerId,
-                payment_method: paymentMethods.data[0].id,
-                off_session: true,
-                confirm: true,
-                metadata: paymentIntentMetadata,
-            });
-
-            return paymentIntent;
-        } catch (err) {
-            console.error(err, 'err');
-            throw new Error(err.message);
-        }
-    },
-    deleteCustomer: (id) => {
-        return stripe.customers
-            .del(id)
-            .then((customer) => {
-                return customer.deleted;
-            })
-            .catch((err) => {
-                console.error(err, 'err')
-                return false;
-            });
-    },
+const createCustomer = async (customerData) => {
+  try {
+    return await stripe.customers.create({
+      name: customerData.company_name || customerData.firstname,
+      email: customerData.email,
+      phone: customerData.phone || '',
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    return false;
+  }
 };
+
+const retrieveCustomer = async (id) => {
+  try {
+    return await stripe.customers.retrieve(id);
+  } catch (error) {
+    Sentry.captureException(error);
+    return false;
+  }
+};
+
+const chargeCustomer = async (amountToCharge, customerId, paymentIntentMetadata) => {
+  try {
+    const paymentMethods = await stripe.paymentMethods.list({
+      customer: customerId,
+      type: 'card',
+    });
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amountToCharge,
+      currency: 'eur',
+      customer: customerId,
+      payment_method: paymentMethods.data[0].id,
+      off_session: true,
+      confirm: true,
+      metadata: paymentIntentMetadata,
+    });
+
+    return paymentIntent;
+  } catch (error) {
+    Sentry.captureException(error);
+    throw new Error(err.message);
+  }
+};
+
+const deleteCustomer = async (id) => {
+  try {
+    return await stripe.customers.del(id).deleted;
+  } catch (error) {
+    Sentry.captureException(error);
+    return false;
+  }
+};
+
+module.exports = { chargeCustomer, createCustomer, deleteCustomer, retrieveCustomer };
