@@ -94,7 +94,6 @@ router.post('/update-customer-profil', verifyJwt, async (req, res) => {
 router.post('/update-user-shipping-address', verifyJwt, async (req, res) => {
   const user = await User.findOne({ _id: req.user.id }).populate('blockedUser blockedSeller', '_id');
   const seller = await UserSeller.findOne({ _id: req.user.id }).populate('blockedUser blockedSeller', '_id');
-
   const customer = user || seller;
 
   if (customer) {

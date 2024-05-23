@@ -85,11 +85,11 @@ router.get('/get-seller-live', verifyJwt, async (req, res) => {
     return res.status(200).json({
       lives,
     });
-  } else {
-    return res.status(400).json({
-      message: 'Oops ! Un probleme est survenu, réessayez plus tard.',
-    });
   }
+  
+  return res.status(400).json({
+    message: 'Oops ! Un probleme est survenu, réessayez plus tard.',
+  });
 });
 
 router.get('/get-lives', verifyJwt, async (req, res, next) => {
@@ -99,11 +99,11 @@ router.get('/get-lives', verifyJwt, async (req, res, next) => {
     return res.status(200).json({
       lives,
     });
-  } else {
-    return res.status(400).json({
-      message: 'Oops ! Un probleme est survenu, réessayez plus tard.',
-    });
   }
+
+  return res.status(400).json({
+    message: 'Oops ! Un probleme est survenu, réessayez plus tard.',
+  });
 });
 
 router.post('/delete-live', verifyJwt, async (req, res) => {
