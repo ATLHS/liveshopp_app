@@ -37,7 +37,7 @@
     "arrowParens": "always",
     "bracketSpacing": true,
     "bracketSameLine": false,
-    "printWidth": 180,
+    "printWidth": 120,
     "singleQuote": true,
     "trailingComma": "all",
     "useTabs": false,

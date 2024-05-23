@@ -2,9 +2,15 @@ const Sentry = require('@sentry/node');
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  integrations: [Sentry.anrIntegration({ captureStackTrace: true })],
+  integrations: [
+    Sentry.anrIntegration({ captureStackTrace: true }),
+    Sentry.localVariablesIntegration(),
+    Sentry.onUnhandledRejectionIntegration({ mode: 'warn' }),
+    Sentry.onUncaughtExceptionIntegration({ exitEvenIfOtherHandlersAreRegistered: false }),
+  ],
   environment: process.env.NODE_ENV || 'production',
-  enabled: true,
+  enabled: process.env.NODE_ENV === 'production',
+  includeLocalVariables: true,
   tracesSampleRate: 1.0, // Capture 100% of the transactions
   profilesSampleRate: 1.0, // Sampling rate relative to tracesSampleRate
 });
