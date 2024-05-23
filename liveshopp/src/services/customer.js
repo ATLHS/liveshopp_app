@@ -15,7 +15,7 @@ const customer = {
     },
     updateCustomerPaymentMethodStatut(data) {
         return axiosConfig
-            .post('/api/customer/update-user-payment-method-statut', {data})
+            .post('/api/customer/update-user-payment-method-status', {data})
             .then(({data}) => data)
             .catch(({response}) => Promise.reject(response.data));
     },

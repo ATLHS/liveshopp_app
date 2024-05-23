@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { verifyJwt } = require('../../middleware/verifyJwt');
+const Sentry = require('@sentry/node');
 const UserSeller = require('../../models/seller');
 const User = require('../../models/user');
 const Live = require('../../models/live');
@@ -10,8 +11,6 @@ const stripeUtils = require('../../utils/stripeUtils');
 const { sendCodeToConfirmEmailRegistration } = require('../../utils/sendCodeConfirmationEmail');
 const BannedUsers = require('../../models/banned');
 const { PutObjectCommand, S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-const fs = require('fs');
-const path = require('path');
 const VideosItem = require('../../models/auction_videos_items');
 
 const options = {
@@ -136,47 +135,46 @@ router.post('/update-user-shipping-address', verifyJwt, async (req, res) => {
   }
 });
 
-router.post('/update-user-payment-method-statut', verifyJwt, async (req, res) => {
-  const user = await User.findOne({ _id: req.user.id }).populate('blockedUser blockedSeller', '_id');
-  const seller = await UserSeller.findOne({ _id: req.user.id }).populate('blockedUser blockedSeller', '_id');
+router.post('/update-user-payment-method-status', verifyJwt, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.user.id }).populate('blockedUser blockedSeller', '_id');
+    const seller = await UserSeller.findOne({ _id: req.user.id }).populate('blockedUser blockedSeller', '_id');
+    const customer = user || seller;
 
-  const customer = user || seller;
-
-  if (customer) {
-    const updatedCustomer = await updateCustomer(customer, { hasValidPaymentMethod: true }, false);
-    if (updatedCustomer) {
-      return res.status(200).json({
-        user: {
-          id: updatedCustomer._id,
-          email: updatedCustomer.email,
-          profil: updatedCustomer.profil,
-          firstname: updatedCustomer.firstname,
-          lastname: updatedCustomer.lastname,
-          phone: updatedCustomer.phone || null,
-          shipping_address: updatedCustomer.shipping_address,
-          company_name: customer.company_name || null,
-          role: customer.role || null,
-          business_activity: customer.business_activity || null,
-          hasValidPaymentMethod: updatedCustomer.hasValidPaymentMethod,
-          imageUrl: customer.imageUrl || null,
-          blockedUser: customer.blockedUser,
-          blockedSeller: customer.blockedSeller,
-          bio: customer.bio || null,
-          tiktok: customer.tiktok || null,
-          instagram: customer.instagram || null,
-          websiteUrl: customer.websiteUrl || null,
-        },
-        message: 'Votre moyen de paiement a été configuré avec succès.',
-      });
-    } else {
-      return res.status(400).json({
-        message: 'Un probleme est survenu, réessayez plus tard.',
-      });
+    if (customer) {
+      const updatedCustomer = await updateCustomer(customer, { hasValidPaymentMethod: true }, false);
+      if (updatedCustomer) {
+        return res.status(200).json({
+          user: {
+            id: updatedCustomer._id,
+            email: updatedCustomer.email,
+            profil: updatedCustomer.profil,
+            firstname: updatedCustomer.firstname,
+            lastname: updatedCustomer.lastname,
+            phone: updatedCustomer.phone || null,
+            shipping_address: updatedCustomer.shipping_address,
+            company_name: customer.company_name || null,
+            role: customer.role || null,
+            business_activity: customer.business_activity || null,
+            hasValidPaymentMethod: updatedCustomer.hasValidPaymentMethod,
+            imageUrl: customer.imageUrl || null,
+            blockedUser: customer.blockedUser,
+            blockedSeller: customer.blockedSeller,
+            bio: customer.bio || null,
+            tiktok: customer.tiktok || null,
+            instagram: customer.instagram || null,
+            websiteUrl: customer.websiteUrl || null,
+          },
+          message: 'Votre moyen de paiement a été configuré avec succès.',
+        });
+      }
     }
-  } else {
+
     return res.status(400).json({
       message: 'Un probleme est survenu, réessayez plus tard.',
     });
+  } catch (error) {
+    Sentry.captureException(error);
   }
 });
 
@@ -221,7 +219,11 @@ router.post('/set-profil-picture', verifyJwt, async (req, res) => {
 
         const customerModel = customer.profil === 'seller' ? UserSeller : User;
 
-        const updatedCustomer = await customerModel.findOneAndUpdate({ _id: customer._id }, { imageUrl: imageUrl }, { new: true });
+        const updatedCustomer = await customerModel.findOneAndUpdate(
+          { _id: customer._id },
+          { imageUrl: imageUrl },
+          { new: true },
+        );
 
         const isSeller = customer.profil === 'seller';
 
@@ -367,7 +369,10 @@ router.post('/delete-customer', verifyJwt, async (req, res) => {
     // delete all product from a customer
     const deleteAllCustomerProduct = await Product.deleteMany({ seller_id: customer._id });
 
-    const deletedCustomer = customer.profil === 'seller' ? await UserSeller.findOneAndDelete({ _id: customer._id }) : await User.findOneAndDelete({ _id: customer._id });
+    const deletedCustomer =
+      customer.profil === 'seller'
+        ? await UserSeller.findOneAndDelete({ _id: customer._id })
+        : await User.findOneAndDelete({ _id: customer._id });
 
     if (deleteAllCustomerProduct.acknowledged && deletedCustomer) {
       return res.status(200).json({
@@ -444,8 +449,14 @@ router.post('/signal-customer', verifyJwt, async (req, res) => {
 });
 
 router.get('/get-blocked-user', verifyJwt, async (req, res) => {
-  const user = await User.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
-  const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller', '_id company_name profil firstname');
+  const user = await User.findById(req.user.id).populate(
+    'blockedUser blockedSeller',
+    '_id company_name profil firstname',
+  );
+  const seller = await UserSeller.findById(req.user.id).populate(
+    'blockedUser blockedSeller',
+    '_id company_name profil firstname',
+  );
   const customer = user || seller;
 
   if (customer) {
@@ -477,7 +488,11 @@ router.post('/signal-auction-video', verifyJwt, async (req, res) => {
     });
   }
 
-  const reportedAuctionVideo = await VideosItem.findOneAndUpdate({ _id: body.item._id }, { isReportedForModeration: true }, { new: true });
+  const reportedAuctionVideo = await VideosItem.findOneAndUpdate(
+    { _id: body.item._id },
+    { isReportedForModeration: true },
+    { new: true },
+  );
 
   if (reportedAuctionVideo) {
     return res.status(200).json({
@@ -511,10 +526,13 @@ router.post('/block', verifyJwt, async (req, res) => {
 
   const customer = user || seller;
 
-  const customerToBlock = body.profil === 'seller' ? { blockedSeller: body.item.seller_id } : { blockedUser: body.item.userId };
+  const customerToBlock =
+    body.profil === 'seller' ? { blockedSeller: body.item.seller_id } : { blockedUser: body.item.userId };
 
   // check if the customer to block is already blocked
-  const isAlreadyBlocked = customer.blockedUser.concat(customer.blockedSeller).includes(body.item.seller_id || body.item.userId);
+  const isAlreadyBlocked = customer.blockedUser
+    .concat(customer.blockedSeller)
+    .includes(body.item.seller_id || body.item.userId);
 
   if (isAlreadyBlocked) {
     return;
