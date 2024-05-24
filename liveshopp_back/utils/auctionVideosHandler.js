@@ -1,3 +1,4 @@
+const { log } = require('../middleware/logger');
 const VideosItem = require('../models/auction_videos_items');
 const AuctionVideoItem = require('../models/auction_video');
 const {
@@ -66,7 +67,8 @@ const handleAuctionVideos = async (endingAuctionId) => {
       }
     }
   } catch (error) {
-    console.error('Error handling expired auctions:', error);
+    log.error('Error handling expired auctions:');
+    log.error(error);
   }
 };
 
@@ -77,7 +79,7 @@ const handleNoBidsPlaced = async (auctionItem) => {
   await auctionItem.save();
   await sendNoBidNotificationEmail(auctionItem);
   treatedUserEmailsWithError = [];
-  console.log(`No bids placed on item ${auctionItem._id}`);
+  log.info(`No bids placed on item ${auctionItem._id}`);
 };
 
 const isTheLastBidWithError = async (auctionItem, auction, currentItemIndex, totalItems) => {
@@ -92,7 +94,7 @@ const isTheLastBidWithError = async (auctionItem, auction, currentItemIndex, tot
 const handleNoShippingAddress = async (auctionItem, auction, currentItemIndex, totalItems) => {
   await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems);
   await sendNoShippingAddressEmail(auction);
-  console.log(`User id : ${auction.userId._id} has no shipping address specified.`);
+  log.info(`User id : ${auction.userId._id} has no shipping address specified.`);
 };
 
 const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
@@ -147,21 +149,21 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
       }
     }
 
-    console.log(`Payment successful for user id : ${auction.userId._id}`);
+    log.info(`Payment successful for user id : ${auction.userId._id}`);
   }
 };
 
 const handlePaymentError = async (auctionItem, auction, currentItemIndex, totalItems, error) => {
   await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems);
   await sendPaymentIssueEmail(auction);
-  console.error(`Payment error for user id : ${auction.userId._id} ${error}`);
+  log.error(`Payment error for user id : ${auction.userId._id} ${error}`);
 };
 
 const handleBidRejected = async (auctionItem, auction, currentItemIndex, totalItems) => {
   await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems);
   // Send to every bidder
   await sendBidRejectedDueToLowReservePrice(auction);
-  console.error(`User's bid : ${auction._id} for user id : ${auction.userId._id} is lower than reserve price`);
+  log.error(`User's bid : ${auction._id} for user id : ${auction.userId._id} is lower than reserve price`);
 };
 
 module.exports = handleAuctionVideos;
