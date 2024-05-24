@@ -1,35 +1,33 @@
 const router = require('express').Router();
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const generateUniqueId = require('generate-unique-id');
+const multer = require('multer');
+const Sentry = require('@sentry/node');
+const { log } = require('../../middleware/logger');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const { s3 } = require('../../utils/services');
 const VideosItem = require('../../models/auction_videos_items');
 const AuctionVideoItem = require('../../models/auction_video');
 const UserSeller = require('../../models/seller');
-const { PutObjectCommand } = require('@aws-sdk/client-s3');
-const generateUniqueId = require('generate-unique-id');
-const multer = require('multer');
 const upload = multer();
 const User = require('../../models/user');
 const handleAuctionVideos = require('../../utils/auctionVideosHandler');
 const adjustAuctionEndTimeForTenMinutes = require('../../utils/helpers');
 const { sendEmailAfterBid, sendEmailToInformOutbid } = require('../../utils/emails');
 
-const bucketName = 'auction-videos';
-
 // Set interval to run every 30 minutes
 // cron.schedule('*/30 * * * *', handleAuctionVideos);
 
 router.post('/create', verifyJwt, upload.single('video'), async (req, res) => {
-  const seller = await UserSeller.findOne({ _id: req.user.id });
-  const data = JSON.parse(req.body.data);
-  const videoFile = req.file;
-
-  if (!seller || !videoFile) {
-    return res.status(400).json({
-      message: 'Un problème est survenu, réessayez plus tard.',
-    });
-  }
-
   try {
+    const seller = await UserSeller.findById(req.user.id);
+    const data = JSON.parse(req.body.data);
+    const videoFile = req.file;
+
+    if (!seller || !videoFile) {
+      return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    }
+
     const generateUid = generateUniqueId({
       length: 20,
       useNumbers: true,
@@ -40,8 +38,8 @@ router.post('/create', verifyJwt, upload.single('video'), async (req, res) => {
 
     const uploadParams = {
       Body: videoData,
-      Bucket: bucketName,
-      Key: `video/${seller._id}/${generateUid}/${videoFile.filename}.mp4`, // Utilisez le nom d'origine du fichier
+      Bucket: 'auction-videos',
+      Key: `video/${seller._id}/${generateUid}/${videoFile.filename}.mp4`, // FIXME should use the original file name, setting randomely mp4 wont work
       ContentType: videoFile.mimetype,
     };
 
@@ -69,38 +67,42 @@ router.post('/create', verifyJwt, upload.single('video'), async (req, res) => {
         auctionVideos: videos,
         message: 'Votre vidéo enchère a bien été créée !',
       });
-    } else {
-      return res.status(500).json({ message: "Une erreur s'est produite lors de l'enregistrement de la vidéo." });
     }
+
+    return res.status(500).json({ message: "Une erreur s'est produite lors de l'enregistrement de la vidéo." });
   } catch (error) {
-    console.error('Error uploading video to S3:', error);
+    Sentry.captureException(error);
     return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de la vidéo." });
   }
 });
 
 router.get('/get-seller-auction-video', verifyJwt, async (req, res) => {
-  let sellerAuctionVideo = await VideosItem.find({ seller_id: req.user.id });
-  if (sellerAuctionVideo) {
-    return res.status(200).json({
-      auctionVideos: sellerAuctionVideo,
-    });
-  } else {
-    return res.status(400).json({
-      message: 'Oops ! Un probleme est survenu, réessayez plus tard.',
-    });
+  try {
+    const sellerAuctionVideo = await VideosItem.find({ seller_id: req.user.id });
+
+    if (sellerAuctionVideo) {
+      return res.status(200).json({ auctionVideos: sellerAuctionVideo });
+    }
+
+    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+  } catch (error) {
+    Sentry.captureException(error);
+    return res.sendStatus(500);
   }
 });
 
 router.post('/handle-ending-auction-video', verifyJwt, async (req, res) => {
-  const { endingAuctionId } = req.body.data;
-
-  await handleAuctionVideos(endingAuctionId);
-
   try {
+    const { endingAuctionId } = req.body.data;
+
+    await handleAuctionVideos(endingAuctionId);
+
     const sellersAuctionVideo = await VideosItem.find({ auctionStatus: 'onGoing' });
+
     return res.status(200).json({ auctionVideos: sellersAuctionVideo });
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    Sentry.captureException(error);
+    return res.sendStatus(500);
   }
 });
 
@@ -108,9 +110,11 @@ router.post('/handle-ending-auction-video', verifyJwt, async (req, res) => {
 router.get('/get-all-seller-auction-video', verifyJwt, async (req, res) => {
   try {
     const sellersAuctionVideo = await VideosItem.find({ auctionStatus: 'onGoing', isReportedForModeration: false });
+
     return res.status(200).json({ auctionVideos: sellersAuctionVideo });
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    Sentry.captureException(error);
+    return res.sendStatus(500);
   }
 });
 
@@ -118,8 +122,7 @@ router.get('/get-all-seller-auction-video', verifyJwt, async (req, res) => {
 router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
   try {
     const data = req.body.data;
-    const customer = (await User.findOne({ _id: req.user.id })) || (await UserSeller.findOne({ _id: req.user.id }));
-
+    const customer = (await User.findById(req.user.id)) || (await UserSeller.findById(req.user.id));
     const auctionItem = await VideosItem.findOne({ _id: data.selectedOffer._id, auctionStatus: 'onGoing' });
 
     // Check if there's already a bid for this item for the current user
@@ -133,11 +136,11 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
 
       // Check if the highest bidder is the same as the current bidder
       if (highestBidderId.equals(customer._id)) {
-        console.log('The current bidder is also the highest bidder.');
+        log.debug('The current bidder is also the highest bidder.');
       } else {
         // Send email notifications to the new second highest bidder who have lost the auction
-        const user = await (User.findOne({ _id: highestBidderId }) || UserSeller.findOne({ _id: highestBidderId }));
-        // const user = await (User.findOne({_id: customer._id}) || UserSeller.findOne({_id: customer._id}));
+        const user = await (User.findById(highestBidderId) || UserSeller.findById(highestBidderId));
+
         await sendEmailToInformOutbid(user, auctionItem);
       }
     }
@@ -160,7 +163,6 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
     // Update auction item details
     auctionItem.currentPrice = data.bid_offer;
     auctionItem.bestBidderUsername = customer.firstname;
-
     auctionItem.auctionEndDate = adjustAuctionEndTimeForTenMinutes(auctionItem.auctionEndDate);
 
     if (data.bid_offer >= auctionItem.reservePrice) {
@@ -178,8 +180,8 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
 
     return res.status(200).json({ auctionVideos: sellersAuctionVideos });
   } catch (error) {
-    console.error(error);
-    return res.status(400).json({ message: error.message });
+    Sentry.captureException(error);
+    return res.sendStatus(500);
   }
 });
 
