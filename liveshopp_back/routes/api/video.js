@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const { verifyJwt } = require('../../middleware/verifyJwt');
+const { s3 } = require('../../utils/services');
 const VideosItem = require('../../models/auction_videos_items');
 const AuctionVideoItem = require('../../models/auction_video');
 const UserSeller = require('../../models/seller');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const generateUniqueId = require('generate-unique-id');
 const multer = require('multer');
 const upload = multer();
@@ -13,14 +14,6 @@ const adjustAuctionEndTimeForTenMinutes = require('../../utils/helpers');
 const { sendEmailAfterBid, sendEmailToInformOutbid } = require('../../utils/emails');
 
 const bucketName = 'auction-videos';
-
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
 
 // Set interval to run every 30 minutes
 // cron.schedule('*/30 * * * *', handleAuctionVideos);
@@ -52,7 +45,7 @@ router.post('/create', verifyJwt, upload.single('video'), async (req, res) => {
       ContentType: videoFile.mimetype,
     };
 
-    await s3Client.send(new PutObjectCommand(uploadParams));
+    await s3.send(new PutObjectCommand(uploadParams));
 
     const auctionVideoUrl = `https://${process.env.CLOUDFRONT_DOMAIN_NAME}/${uploadParams.Key}`;
 
