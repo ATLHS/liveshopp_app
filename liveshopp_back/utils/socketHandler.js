@@ -19,20 +19,26 @@ const Live = require('../models/live');
  */
 module.exports = (io, socket) => {
   const leaveRoom = async ({ liveData, user }) => {
-    const channelName = liveData.channelName;
-    const channel = await getChannel(channelName);
+    try {
+      const channelName = liveData.channelName;
+      const channel = await getChannel(channelName);
 
-    socket.leave(channelName);
+      socket.leave(channelName);
 
-    const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
-    channel.userCount = connectedUsersCount;
+      const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
+      channel.userCount = connectedUsersCount;
 
-    if ((user.profil === 'seller' && user.id === liveData.sellerId) || user._id === liveData.sellerId) {
-      channel.hostIsLive = false;
+      if ((user.profil === 'seller' && user.id === liveData.sellerId) || user._id === liveData.sellerId) {
+        channel.hostIsLive = false;
+      }
+
+      await saveChannel(channel);
+
+      io.to(channelName).emit('channelData', channel);
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
     }
-    await saveChannel(channel);
-
-    io.to(channelName).emit('channelData', channel);
   };
 
   /**
@@ -74,182 +80,218 @@ module.exports = (io, socket) => {
   };
 
   const newLiveMessage = async ({ user, message, liveData }) => {
-    const channel = await getChannel(liveData.channelName);
+    try {
+      const channel = await getChannel(liveData.channelName);
 
-    const id = generateUniqueId({
-      length: 20,
-      useLetters: false,
-    });
-    channel.messages.push({
-      userId: user.id,
-      profil: user.profil,
-      username: user.firstname,
-      message: message.live_message,
-      id,
-    });
+      const id = generateUniqueId({
+        length: 20,
+        useLetters: false,
+      });
+      channel.messages.push({
+        userId: user.id,
+        profil: user.profil,
+        username: user.firstname,
+        message: message.live_message,
+        id,
+      });
 
-    await saveChannel(channel);
+      await saveChannel(channel);
 
-    io.to(liveData.channelName).emit('channelData', channel);
+      io.to(liveData.channelName).emit('channelData', channel);
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
+    }
   };
 
   const blockCustomer = async ({ user, userId, profil }) => {
-    const customer = (await User.findOne({ _id: user.id })) || (await UserSeller.findOne({ _id: user.id }));
-    const customerToBlock = profil === 'seller' ? { blockedSeller: userId } : { blockedUser: userId };
+    try {
+      const customer = (await User.findOne({ _id: user.id })) || (await UserSeller.findOne({ _id: user.id }));
+      const customerToBlock = profil === 'seller' ? { blockedSeller: userId } : { blockedUser: userId };
 
-    // check if the customer to block is already blocked
-    const isAlreadyBlocked = customer.blockedUser.concat(customer.blockedSeller).includes(userId);
-    if (isAlreadyBlocked) {
-      return;
-    }
-    const updatedCustomer = await updateCustomer(customer, customerToBlock, true);
-    if (updatedCustomer) {
-      const { blockedSeller, blockedUser } = updatedCustomer;
-      socket.emit('hasBeenBlocked', { blockedSeller, blockedUser });
+      // check if the customer to block is already blocked
+      const isAlreadyBlocked = customer.blockedUser.concat(customer.blockedSeller).includes(userId);
+      if (isAlreadyBlocked) {
+        return;
+      }
+
+      const updatedCustomer = await updateCustomer(customer, customerToBlock, true);
+      if (updatedCustomer) {
+        const { blockedSeller, blockedUser } = updatedCustomer;
+        socket.emit('hasBeenBlocked', { blockedSeller, blockedUser });
+      }
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
     }
   };
 
   const pausedCurrentAuctionStatut = async (channelName) => {
-    const channel = await getChannel(channelName);
-    channel.currentAuction.currentAuctionStatus = 'paused';
-    await saveChannel(channel);
-    io.to(channelName).emit('currentAuctionData', channel);
+    try {
+      const channel = await getChannel(channelName);
+      channel.currentAuction.currentAuctionStatus = 'paused';
+
+      await saveChannel(channel);
+
+      io.to(channelName).emit('currentAuctionData', channel);
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
+    }
   };
 
   const bid = async ({ channelName, data }) => {
-    const channel = await getChannel(channelName);
-    const { currentAuction } = channel;
+    try {
+      const channel = await getChannel(channelName);
+      const { currentAuction } = channel;
 
-    currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + Number(data.bid);
-    currentAuction.userId = data.userId;
-    currentAuction.username = data.username;
-    currentAuction.shipping_address = data.shipping_address;
+      currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + Number(data.bid);
+      currentAuction.userId = data.userId;
+      currentAuction.username = data.username;
+      currentAuction.shipping_address = data.shipping_address;
 
-    if (
-      currentAuction.product_reserved_price &&
-      currentAuction.currentProductAmount >= currentAuction.product_reserved_price
-    ) {
-      channel.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
+      if (
+        currentAuction.product_reserved_price &&
+        currentAuction.currentProductAmount >= currentAuction.product_reserved_price
+      ) {
+        channel.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
+      }
+      let counter = currentAuction.currentAuctionDelay;
+
+      // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
+      if (isLessThanTenSeconds(counter.time)) {
+        // FIXME this crash counter is undefined, needs to reinstance a new one
+        //
+        counter.stop();
+        // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
+        //
+        // FIXME
+        // Check if the counter starts again automatically
+        //
+        counter.updateTimer('00:00:15');
+      }
+
+      await saveChannel(channel);
+
+      io.to(channelName).emit('currentAuctionData', channel);
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
     }
-
-    let counter = currentAuction.currentAuctionDelay;
-
-    // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
-    if (isLessThanTenSeconds(counter.time)) {
-      // FIXME this crash counter is undefined, needs to reinstance a new one
-      //
-      counter.stop();
-      // If the remaining time is less than 10 seconds, set up a new timer for 15 seconds
-      //
-      // FIXME
-      // Check if the counter starts again automatically
-      //
-      counter.updateTimer('00:00:15');
-    }
-
-    await saveChannel(channel);
-
-    io.to(channelName).emit('currentAuctionData', channel);
   };
 
   const startCurrentAuction = async ({ channelName, data }) => {
-    const channel = await getChannel(channelName);
-    const countDown = new timer({
-      direction: 'down',
-      startValue: `${data.product_auction_time}:00`,
-    });
+    try {
+      const channel = await getChannel(channelName);
+      const countDown = new timer({
+        direction: 'down',
+        startValue: `${data.product_auction_time}:00`,
+      });
 
-    channel.currentAuction.productName = data.product_name;
-    channel.currentAuction.currentProductAmount = data.product_price;
-    channel.currentAuction.product_reserved_price = data.product_reserved_price || false;
-    channel.currentAuction.currentAuctionDelay = countDown;
-    channel.currentAuction.currentAuctionStatus = 'running';
-    channel.currentAuction.username = '';
-    channel.currentAuction.userId = '';
-    channel.currentAuction.salePrice = '';
-    channel.currentAuction.currentMessageInfo = data.product_reserved_price ? 'Prix de réserve non atteint...' : '';
+      channel.currentAuction.productName = data.product_name;
+      channel.currentAuction.currentProductAmount = data.product_price;
+      channel.currentAuction.product_reserved_price = data.product_reserved_price || false;
+      channel.currentAuction.currentAuctionDelay = countDown;
+      channel.currentAuction.currentAuctionStatus = 'running';
+      channel.currentAuction.username = '';
+      channel.currentAuction.userId = '';
+      channel.currentAuction.salePrice = '';
+      channel.currentAuction.currentMessageInfo = data.product_reserved_price ? 'Prix de réserve non atteint...' : '';
 
-    // start the timer for the current auction
-    countDown.start();
+      // start the timer for the current auction
+      countDown.start();
 
-    await saveChannel(channel);
+      await saveChannel(channel);
 
-    io.to(channelName).emit('currentAuctionData', channel);
+      io.to(channelName).emit('currentAuctionData', channel);
 
-    // send channel data and notification for each room
-    startAuctionCounterForChannel(channel);
+      // send channel data and notification for each room
+      startAuctionCounterForChannel(channel);
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
+    }
   };
 
   const startAuctionCounterForChannel = (channel) => {
-    const channelName = channel.channelName;
+    try {
+      const channelName = channel.channelName;
 
-    // When auction is finished
-    channel.currentAuction.currentAuctionDelay.on('done', async () => {
-      const updatedChannel = await getChannel(channelName);
-      let messageInfo = '';
+      // When auction is finished
+      channel.currentAuction.currentAuctionDelay.on('done', async () => {
+        const updatedChannel = await getChannel(channelName);
+        let messageInfo = '';
 
-      // A user bidded
-      if (updatedChannel.currentAuction.userId) {
-        if (
-          updatedChannel.currentAuction.product_reserved_price &&
-          updatedChannel.currentAuction.currentProductAmount < updatedChannel.currentAuction.product_reserved_price
-        ) {
-          messageInfo = "Le prix de réserve n'a pas été atteint.";
-        } else {
-          // Charge customer and create a Product in DB
-          registerAuction({
-            auction: updatedChannel.currentAuction,
-            auctionId: updatedChannel.auctionId,
-            auctionsStatus: updatedChannel.auctionsStatus,
-            sellerId: updatedChannel.sellerId,
-            sellerName: updatedChannel.sellerName,
-          });
+        // A user bidded
+        if (updatedChannel.currentAuction.userId) {
+          if (
+            updatedChannel.currentAuction.product_reserved_price &&
+            updatedChannel.currentAuction.currentProductAmount < updatedChannel.currentAuction.product_reserved_price
+          ) {
+            messageInfo = "Le prix de réserve n'a pas été atteint.";
+          } else {
+            // Charge customer and create a Product in DB
+            registerAuction({
+              auction: updatedChannel.currentAuction,
+              auctionId: updatedChannel.auctionId,
+              auctionsStatus: updatedChannel.auctionsStatus,
+              sellerId: updatedChannel.sellerId,
+              sellerName: updatedChannel.sellerName,
+            });
 
-          updatedChannel.currentAuction.salePrice = Number(updatedChannel.currentAuction.currentProductAmount);
+            updatedChannel.currentAuction.salePrice = Number(updatedChannel.currentAuction.currentProductAmount);
+          }
         }
-      }
 
-      updatedChannel.currentAuction.currentMessageInfo = messageInfo;
-      updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
+        updatedChannel.currentAuction.currentMessageInfo = messageInfo;
+        updatedChannel.currentAuction.currentAuctionStatus = 'stopping';
 
-      // send notification to the room
-      io.to(channelName).emit('currentAuctionData', updatedChannel);
+        // send notification to the room
+        io.to(channelName).emit('currentAuctionData', updatedChannel);
 
-      await saveChannel(updatedChannel);
-    });
+        await saveChannel(updatedChannel);
+      });
 
-    // Send synchronized timer to everyone
-    channel.currentAuction.currentAuctionDelay.on('change', async () => {
-      await saveAuctionTimer(channel);
-      const updatedChannel = await getChannel(channelName);
-      io.to(channelName).emit('currentAuctionData', updatedChannel);
-    });
+      // Send synchronized timer to everyone
+      channel.currentAuction.currentAuctionDelay.on('change', async () => {
+        await saveAuctionTimer(channel);
+        const updatedChannel = await getChannel(channelName);
+        io.to(channelName).emit('currentAuctionData', updatedChannel);
+      });
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
+    }
   };
 
   const restartCurrentAuctions = async () => {
-    log.warn(`Checking for unfinished auctions`);
-    const channels = await getChannels();
-    for (const channel of channels) {
-      if (channel.currentAuction.currentAuctionStatus === 'running') {
-        log.warn(`Restarting current auction timer for channel ${channel.channelName}`);
+    try {
+      const channels = await getChannels();
+      for (const channel of channels) {
+        if (channel.currentAuction.currentAuctionStatus === 'running') {
+          log.warn(`Restarting current auction timer for channel ${channel.channelName}`);
 
-        const countDown = new timer({
-          direction: 'down',
-          startValue: `${channel.currentAuction.currentAuctionDelay.time}`,
-        });
+          const countDown = new timer({
+            direction: 'down',
+            startValue: `${channel.currentAuction.currentAuctionDelay.time}`,
+          });
 
-        channel.currentAuction.currentAuctionDelay = countDown;
+          channel.currentAuction.currentAuctionDelay = countDown;
 
-        // Restart the timer for the current auction
-        countDown.start();
+          // Restart the timer for the current auction
+          countDown.start();
 
-        await saveChannel(channel);
+          await saveChannel(channel);
 
-        io.to(channel.channelName).emit('currentAuctionData', channel);
+          io.to(channel.channelName).emit('currentAuctionData', channel);
 
-        // send channel data and notification for each room
-        startAuctionCounterForChannel(channel);
+          // send channel data and notification for each room
+          startAuctionCounterForChannel(channel);
+        }
       }
+    } catch (error) {
+      log.error(error);
+      Sentry.captureException(error);
     }
   };
 

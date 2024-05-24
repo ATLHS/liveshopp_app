@@ -1,5 +1,5 @@
 const Sentry = require('@sentry/node');
-const { log } = require('middleware/logger');
+const { log } = require('../middleware/logger');
 const { mailer } = require('./services');
 
 const sendCodeToConfirmEmailRegistration = async (userEmail, code) => {

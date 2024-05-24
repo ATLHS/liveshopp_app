@@ -13,8 +13,12 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
 
   const customer = user || seller;
   const stripeCustomer = await stripeUtils.retrieveCustomer(customer.stripeCustomerId);
+
   if (stripeCustomer) {
-    const ephemeralKey = await stripe.ephemeralKeys.create({ customer: stripeCustomer.id }, { apiVersion: '2022-11-15' });
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+      { customer: stripeCustomer.id },
+      { apiVersion: '2022-11-15' },
+    );
     const setupIntent = await stripe.setupIntents.create({
       customer: stripeCustomer.id,
     });
@@ -25,11 +29,11 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
       publishableKey: process.env.STRIPE_TEST_PUBLIC_KEY,
       ephemeralKey: ephemeralKey.secret,
     });
-  } else {
-    return res.status(400).json({
-      message: 'Un probleme est survenu, réessayez plus tard.',
-    });
   }
+
+  return res.status(400).json({
+    message: 'Un probleme est survenu, réessayez plus tard.',
+  });
 });
 
 module.exports = router;
