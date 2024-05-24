@@ -39,9 +39,7 @@ router.post('/unban-user', verifyJwt, async (req, res) => {
       }
     }
 
-    return res.status(400).json({
-      message: 'Oops ! Un probleme est survenu, réessayez plus tard...',
-    });
+    return res.status(400).json({ message: 'Oops ! Un probleme est survenu, réessayez plus tard...' });
   } catch (error) {
     Sentry.captureException(error);
     return res.sendStatus(500);
@@ -99,9 +97,7 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
       }
     }
 
-    return res.status(400).json({
-      message: 'Oops ! Un probleme est survenu, réessayez plus tard.',
-    });
+    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
     return res.sendStatus(500);
