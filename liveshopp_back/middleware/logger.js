@@ -24,8 +24,12 @@ const log = winston.createLogger({
   transports: [new winston.transports.Console()],
 });
 
-// morgan('[:date[clf]] :remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"')
-const morganMiddleware = morgan(':method :url :status :res[content-length] - :response-time ms', {
+const httpLogFormat =
+  process.env.NODE_ENV === 'production'
+    ? ':remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'
+    : ':status :method :url - :response-time ms';
+
+const morganMiddleware = morgan(httpLogFormat, {
   stream: {
     write: (message) => log.http(message.trim()),
   },

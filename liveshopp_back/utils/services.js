@@ -1,5 +1,6 @@
 const { log } = require('../middleware/logger');
 const { mongoose } = require('mongoose');
+const nodemailer = require('nodemailer');
 const { createClient } = require('redis');
 
 // Register service helper
@@ -37,4 +38,21 @@ const redis = registerService('redis', () => {
   return client;
 });
 
-module.exports = { redis };
+const mailer = registerService('mailer', () => {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    tls: {
+      ciphers: 'SSLv3',
+    },
+    from: process.env.LIVESHOPP_EMAIL,
+    secureConnection: true,
+    auth: {
+      user: process.env.LIVESHOPP_EMAIL, // generated ethereal user
+      pass: process.env.LIVESHOPP_EMAIL_PASSWORD, // generated ethereal password
+    },
+  });
+});
+
+module.exports = { mailer, redis };
