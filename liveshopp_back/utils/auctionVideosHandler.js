@@ -8,7 +8,7 @@ const {
   sendBidOutbidEmailNotification,
   sendPaymentIssueEmail,
   sendBidRejectedDueToLowReservePrice,
-} = require('../utils/sendCodeConfirmationEmail');
+} = require('./emails');
 const stripeUtils = require('../utils/stripeUtils');
 const Product = require('../models/product');
 
@@ -103,7 +103,11 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
   };
   const amountToCharge = auction.amount * 100;
 
-  const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, auction.userId.stripeCustomerId, paymentIntentMetadata);
+  const chargedCustomer = await stripeUtils.chargeCustomer(
+    amountToCharge,
+    auction.userId.stripeCustomerId,
+    paymentIntentMetadata,
+  );
 
   if (chargedCustomer && chargedCustomer.status === 'succeeded') {
     auctionItem.auctionStatus = 'sold';
@@ -132,7 +136,9 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
 
     // Send an email to inform all other users that they have lost the auction.
     const userEmails = auctionsItems
-      .filter((item) => item.userId.email !== auction.userId.email && !treatedUserEmailsWithError.includes(item.userId.email))
+      .filter(
+        (item) => item.userId.email !== auction.userId.email && !treatedUserEmailsWithError.includes(item.userId.email),
+      )
       .map((item) => item.userId.email);
 
     if (userEmails) {

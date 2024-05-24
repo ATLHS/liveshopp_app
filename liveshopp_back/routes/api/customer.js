@@ -8,7 +8,6 @@ const Product = require('../../models/product');
 const Reported = require('../../models/reported');
 const { updateCustomer } = require('../../utils/updateCustomer.js');
 const stripeUtils = require('../../utils/stripeUtils');
-const { sendCodeToConfirmEmailRegistration } = require('../../utils/sendCodeConfirmationEmail');
 const BannedUsers = require('../../models/banned');
 const { PutObjectCommand, S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const VideosItem = require('../../models/auction_videos_items');

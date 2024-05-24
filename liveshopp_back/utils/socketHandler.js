@@ -6,7 +6,7 @@ const User = require('../models/user');
 const UserSeller = require('../models/seller');
 
 const { updateCustomer } = require('./updateCustomer');
-const { isLessThanTenSeconds } = require('./isLessThanTenSeconds');
+const { isLessThanTenSeconds } = require('./helpers');
 const { createChannel, getChannel, saveChannel, saveAuctionTimer, getChannels } = require('./channels');
 const { log } = require('../middleware/logger');
 const { registerAuction } = require('./auctions');

@@ -1,13 +1,17 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const randomNumber = require('../../utils/randomDigitNumber.js');
+const { randomFourDigitNumber } = require('../../utils/helpers.js');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const UserSeller = require('../../models/seller');
 const User = require('../../models/user');
 const saltRounds = 12;
 const { updateCustomer } = require('../../utils/updateCustomer.js');
-const { sendCodeToConfirmEmailRegistration, sendWelcomeEmail, sendCodeToResetPassword } = require('../../utils/sendCodeConfirmationEmail');
+const {
+  sendCodeToConfirmEmailRegistration,
+  sendWelcomeEmail,
+  sendCodeToResetPassword,
+} = require('../../utils/emails.js');
 const stripeUtils = require('../../utils/stripeUtils');
 
 router.post('/user-signin', async (req, res) => {
@@ -89,7 +93,7 @@ router.post('/user-signup', async (req, res) => {
   // 3 check password
   // 4 create token and send it
   const { firstname, lastname, email, phone, password } = req.body.data;
-  const registeredConfirmedCode = randomNumber.randomFourDigitNumber();
+  const registeredConfirmedCode = randomFourDigitNumber();
   const user = await User.findOne({ email });
   const seller = await UserSeller.findOne({ email });
 

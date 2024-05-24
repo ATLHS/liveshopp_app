@@ -9,8 +9,8 @@ const multer = require('multer');
 const upload = multer();
 const User = require('../../models/user');
 const handleAuctionVideos = require('../../utils/auctionVideosHandler');
-const adjustAuctionEndTimeForTenMinutes = require('../../utils/adjustAuctionEndTimeForTenMinutes');
-const { sendEmailAfterBid, sendEmailToInformOutbid } = require('../../utils/sendCodeConfirmationEmail');
+const adjustAuctionEndTimeForTenMinutes = require('../../utils/helpers');
+const { sendEmailAfterBid, sendEmailToInformOutbid } = require('../../utils/emails');
 
 const bucketName = 'auction-videos';
 
