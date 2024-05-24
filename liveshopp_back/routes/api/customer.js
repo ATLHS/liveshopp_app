@@ -185,7 +185,7 @@ router.post('/set-profil-picture', verifyJwt, async (req, res) => {
     const customer = user || seller;
 
     const body = req.body.data;
-    const buffer = new Buffer(body.base64, 'base64');
+    const buffer = Buffer.from(body.base64, 'base64');
 
     if (customer) {
       // Upload image to S3 bucket
