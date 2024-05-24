@@ -2,6 +2,7 @@ const { log } = require('../middleware/logger');
 const { mongoose } = require('mongoose');
 const nodemailer = require('nodemailer');
 const { createClient } = require('redis');
+const { S3Client } = require('@aws-sdk/client-s3');
 
 // Register service helper
 // Stores instances in `global` to prevent memory leaks in development
@@ -55,4 +56,17 @@ const mailer = registerService('mailer', () => {
   });
 });
 
-module.exports = { mailer, redis };
+/**
+ * @type {import('@aws-sdk/client-s3').S3Client}
+ */
+const s3 = registerService('s3', () => {
+  return new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
+});
+
+module.exports = { mailer, redis, s3 };
