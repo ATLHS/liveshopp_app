@@ -23,7 +23,9 @@ module.exports = (io, socket) => {
     const channel = await getChannel(channelName);
 
     socket.leave(channelName);
-    if (channel.userCount >= 1) channel.userCount--;
+
+    const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
+    channel.userCount = connectedUsersCount;
 
     if ((user.profil === 'seller' && user.id === liveData.sellerId) || user._id === liveData.sellerId) {
       channel.hostIsLive = false;
@@ -53,7 +55,9 @@ module.exports = (io, socket) => {
         channel = await createChannel(live);
       }
 
-      channel.userCount++;
+      const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
+
+      channel.userCount = connectedUsersCount;
       channel.auctionsStatus = live.live_status;
 
       if (!channel.hostIsLive && user.profil === 'seller' && user.id === live.seller_id) {
@@ -83,9 +87,9 @@ module.exports = (io, socket) => {
       message: message.live_message,
       id,
     });
-    
+
     await saveChannel(channel);
-    
+
     io.to(liveData.channelName).emit('channelData', channel);
   };
 
@@ -121,7 +125,10 @@ module.exports = (io, socket) => {
     currentAuction.username = data.username;
     currentAuction.shipping_address = data.shipping_address;
 
-    if (currentAuction.product_reserved_price && currentAuction.currentProductAmount >= currentAuction.product_reserved_price) {
+    if (
+      currentAuction.product_reserved_price &&
+      currentAuction.currentProductAmount >= currentAuction.product_reserved_price
+    ) {
       channel.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
     }
 
@@ -183,7 +190,10 @@ module.exports = (io, socket) => {
 
       // A user bidded
       if (updatedChannel.currentAuction.userId) {
-        if (updatedChannel.currentAuction.product_reserved_price && updatedChannel.currentAuction.currentProductAmount < updatedChannel.currentAuction.product_reserved_price) {
+        if (
+          updatedChannel.currentAuction.product_reserved_price &&
+          updatedChannel.currentAuction.currentProductAmount < updatedChannel.currentAuction.product_reserved_price
+        ) {
           messageInfo = "Le prix de réserve n'a pas été atteint.";
         } else {
           // Charge customer and create a Product in DB
