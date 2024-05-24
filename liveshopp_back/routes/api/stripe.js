@@ -23,7 +23,7 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
       customer: stripeCustomer.id,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       setupIntent: setupIntent.client_secret,
       customer: stripeCustomer.id,
       publishableKey: process.env.STRIPE_TEST_PUBLIC_KEY,
