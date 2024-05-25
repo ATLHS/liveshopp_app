@@ -29,9 +29,15 @@ const LiveChatMessagesList = ({
                         <View style={styles.container}>
                             <View style={styles.itemContainer}>
                                 <View style={styles.userInfoContainer}>
-                                    <Text style={styles.usernameText}>
-                                        {item.username}{' '}
-                                    </Text>
+                                    {item.userId === user.id ? (
+                                        <Text style={styles.usernameText}>
+                                            {item.username}{' '}
+                                        </Text>
+                                    ) : (
+                                        <Text style={styles.usersText}>
+                                            {item.username}{' '}
+                                        </Text>
+                                    )}
                                     {isAdmin && (
                                         <View style={styles.adminBadge}>
                                             <Text style={styles.adminBadgeText}>
@@ -90,6 +96,12 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     usernameText: {
+        color: '#FFCD71',
+        fontSize: 13,
+        fontWeight: '700',
+        marginBottom: 3,
+    },
+    usersText: {
         color: colors.LIGHT,
         fontSize: 13,
         fontWeight: '700',
