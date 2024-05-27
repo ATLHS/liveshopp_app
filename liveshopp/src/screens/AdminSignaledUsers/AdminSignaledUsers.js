@@ -127,7 +127,8 @@ export const AdminSignaledUsers = () => {
                                                                 margin: 2,
                                                                 fontFamily:
                                                                     'Roboto-Regular',
-                                                                fontWeight: 500,
+                                                                fontWeight:
+                                                                    '500',
                                                                 fontSize: 15,
                                                             }}>
                                                             Pseudo :{' '}
@@ -150,7 +151,8 @@ export const AdminSignaledUsers = () => {
                                                                 margin: 2,
                                                                 fontFamily:
                                                                     'Roboto-Regular',
-                                                                fontWeight: 500,
+                                                                fontWeight:
+                                                                    '500',
                                                                 fontSize: 15,
                                                             }}>
                                                             Type de signale :{' '}
@@ -171,7 +173,8 @@ export const AdminSignaledUsers = () => {
                                                                 margin: 2,
                                                                 fontFamily:
                                                                     'Roboto-Regular',
-                                                                fontWeight: 500,
+                                                                fontWeight:
+                                                                    '500',
                                                                 fontSize: 15,
                                                             }}>
                                                             {flagged.flag_livename

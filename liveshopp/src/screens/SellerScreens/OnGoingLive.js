@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     hour: {
         fontSize: 20,
         marginTop: 30,
-        fontWeight: 500,
+        fontWeight: '500',
         color: colors.LIGHT,
     },
     liveContainerLiveInfos: {

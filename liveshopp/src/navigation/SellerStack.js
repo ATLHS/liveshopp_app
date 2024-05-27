@@ -287,7 +287,7 @@ const SellerStack = () => {
                                     color: colors.LIGHT,
                                     fontFamily: 'Roboto-Regular',
                                     marginRight: 5,
-                                    fontWeight: 500,
+                                    fontWeight: '500',
                                 }}>
                                 {liveData.sellerName}
                             </Text>

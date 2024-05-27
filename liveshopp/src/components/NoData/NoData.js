@@ -15,7 +15,7 @@ const NoData = ({message, title, buttonTitle, onPress}) => {
         style={{
           fontFamily: 'Roboto-Regular',
           color: colors.DARK,
-          fontWeight: 800,
+          fontWeight: '800',
           textAlign: 'center',
         }}>
         {title}

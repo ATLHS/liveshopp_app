@@ -144,7 +144,7 @@ export const SellerProfilView = ({route}) => {
                                                 style={{
                                                     fontSize: 17,
                                                     marginBottom: 10,
-                                                    fontWeight: 700,
+                                                    fontWeight: '700',
                                                 }}>
                                                 <FontAwesomeIcon
                                                     icon={faCalendar}

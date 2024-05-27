@@ -110,7 +110,7 @@ export const AdminBlockedUsers = () => {
                                                         margin: 2,
                                                         fontFamily:
                                                             'Roboto-Regular',
-                                                        fontWeight: 500,
+                                                        fontWeight: '500',
                                                         fontSize: 15,
                                                     }}>
                                                     Pseudo :{' '}
@@ -130,7 +130,7 @@ export const AdminBlockedUsers = () => {
                                                         margin: 2,
                                                         fontFamily:
                                                             'Roboto-Regular',
-                                                        fontWeight: 500,
+                                                        fontWeight: '500',
                                                         fontSize: 15,
                                                     }}>
                                                     Profil :{' '}

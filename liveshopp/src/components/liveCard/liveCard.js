@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
         color: colors.DARK,
         textAlign: 'left',
         fontSize: 12,
-        fontWeight: 600,
+        fontWeight: '600',
     },
     touchableStyle: {
         width: 160,

@@ -72,7 +72,7 @@ const OrderCard = ({
                                     <Text
                                         style={{
                                             fontSize: 20,
-                                            fontWeight: 800,
+                                            fontWeight: '800',
                                         }}>
                                         {item.productName}
                                     </Text>
@@ -84,7 +84,7 @@ const OrderCard = ({
                                     <Text
                                         style={{
                                             fontSize: 20,
-                                            fontWeight: 800,
+                                            fontWeight: '800',
                                         }}>
                                         {item.salePrice}€
                                     </Text>
@@ -103,14 +103,14 @@ const OrderCard = ({
                                     <Text
                                         style={{
                                             fontSize: 14,
-                                            fontWeight: 800,
+                                            fontWeight: '800',
                                         }}>
                                         Réf :{' '}
                                     </Text>
                                     <Text
                                         style={{
                                             fontSize: 13,
-                                            fontWeight: 500,
+                                            fontWeight: '500',
                                         }}>
                                         {item.auctionId}
                                     </Text>
@@ -130,7 +130,7 @@ const OrderCard = ({
                                     <Text
                                         style={{
                                             fontSize: 15,
-                                            fontWeight: 500,
+                                            fontWeight: '500',
                                             marginLeft: 5,
                                         }}>
                                         {item.seller.company_name}
@@ -154,7 +154,7 @@ const OrderCard = ({
                                     <Text
                                         style={{
                                             fontSize: 15,
-                                            fontWeight: 500,
+                                            fontWeight: '500',
                                             marginLeft: 5,
                                         }}>
                                         {item.shipping_address}
@@ -181,7 +181,7 @@ const OrderCard = ({
                                     <Text
                                         style={{
                                             fontSize: 15,
-                                            fontWeight: 500,
+                                            fontWeight: '500',
                                             marginLeft: 5,
                                             height: 16,
                                         }}>
