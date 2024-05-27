@@ -5,6 +5,7 @@
     "scripts": {
         "android": "react-native run-android",
         "ios": "react-native run-ios",
+        "logs": "react-native log-ios",
         "lint": "eslint .",
         "start": "react-native start",
         "test": "jest"
@@ -13,7 +14,7 @@
         "@fortawesome/fontawesome-svg-core": "^6.5.2",
         "@fortawesome/free-brands-svg-icons": "^6.5.2",
         "@fortawesome/free-solid-svg-icons": "^6.5.2",
-        "@fortawesome/react-fontawesome": "0.2.0",
+        "@fortawesome/react-fontawesome": "0.2.1",
         "@fortawesome/react-native-fontawesome": "^0.3.1",
         "@freakycoder/react-native-helpers": "^2.3.0",
         "@gorhom/bottom-sheet": "^4.6.1",
@@ -66,7 +67,7 @@
         "react-native-searchable-dropdown-kj": "^1.9.2",
         "react-native-select-dropdown": "^3.2.1",
         "react-native-simple-bottom-sheet": "^1.0.4",
-        "react-native-svg": "^15.2.0",
+        "react-native-svg": "^15.3.0",
         "react-native-tab-view": "^3.5.2",
         "react-native-toast-message": "^2.2.0",
         "react-native-vector-icons": "^10.1.0",

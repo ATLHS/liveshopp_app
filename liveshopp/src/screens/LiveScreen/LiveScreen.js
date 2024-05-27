@@ -97,7 +97,7 @@ export const LiveScreen = () => {
         if (liveData.currentAuction.userId) {
             Toast.show({
                 type: 'auctionToast',
-                text1: `ADJUGÉE, VENDUE À ${liveData.currentAuction.username.toUpperCase()} 🎉`,
+                text1: `ADJUGÉ, VENDU À ${liveData.currentAuction.username.toUpperCase()} 🎉`,
                 topOffset: 100,
             });
         }

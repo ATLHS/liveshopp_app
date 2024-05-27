@@ -17,10 +17,15 @@ const userSchema = new mongoose.Schema(
     blockedUser: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     blockedSeller: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Seller' }],
     isBanned: { type: Boolean, default: false },
+    imageUrl: { type: String, default: '' },
   },
   { timestamps: true },
 );
 
 const User = mongoose.model('User', userSchema);
+
+/**
+ * @typedef {typeof User.schema.obj} UserType
+ */
 
 module.exports = User;

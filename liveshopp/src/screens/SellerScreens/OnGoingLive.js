@@ -193,7 +193,7 @@ export const OnGoingLive = ({navigation}) => {
                                                 textAlign: 'center',
                                                 fontFamily: 'FugazOne-Regular',
                                             }}>
-                                            CLÔTURÉ LE LIVE :{' '}
+                                            CLÔTURER LE LIVE :{' '}
                                         </Text>
                                         <Text style={{fontSize: 15, margin: 5}}>
                                             {liveToClose.live_name}

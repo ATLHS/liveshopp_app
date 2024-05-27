@@ -1,0 +1,53 @@
+const Sentry = require('@sentry/node');
+const stripeUtils = require('./stripeUtils');
+const { log } = require('../middleware/logger');
+
+const Product = require('../models/product');
+const User = require('../models/user');
+const UserSeller = require('../models/seller');
+
+// FIXME
+//
+// Ideally, this would be done asynchronously in a job queue
+//
+const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, sellerName }) => {
+  try {
+    const customer = (await User.findOne({ _id: auction.userId })) || (await UserSeller.findOne({ _id: auction.userId }));
+
+    const paymentIntentMetadata = {
+      seller_id: sellerId,
+      seller_name: sellerName,
+      amount: auction.currentProductAmount,
+    };
+    const amountToCharge = parseInt(auction.currentProductAmount.toString() * 100);
+    const paymentIntent = await stripeUtils.chargeCustomer(amountToCharge, customer.stripeCustomerId, paymentIntentMetadata);
+
+    if (paymentIntent.status === 'succeeded') {
+      // register current sale product info in db
+      const product = new Product({
+        seller: sellerId,
+        live_name: 'Live enchères',
+        auctionId: auctionId,
+        auctionsStatus: auctionsStatus,
+        userId: auction.userId,
+        productName: auction.productName,
+        salePrice: auction.currentProductAmount,
+        shipping_address: auction.shipping_address,
+      });
+
+      await product.save();
+
+      log.info(`Transaction succeeded for product ${auction.productName} sold to ${customer.email}`);
+    } else {
+      Sentry.captureMessage('Register auction Stripe error:', 'error');
+      log.error('Register auction Stripe error:');
+      log.error(paymentIntent);
+    }
+  } catch (error) {
+    Sentry.captureException(error);
+    log.error('Register auction error:');
+    log.error(error);
+  }
+};
+
+module.exports = { registerAuction };

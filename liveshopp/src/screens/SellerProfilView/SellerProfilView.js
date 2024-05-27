@@ -39,7 +39,7 @@ export const SellerProfilView = ({route}) => {
                 .catch(err => {
                     console.error(err);
                 });
-        }, [comingLives]),
+        }, []),
     );
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -137,7 +137,7 @@ export const SellerProfilView = ({route}) => {
                                 </View>
                                 <View>
                                     <Headline title={'Prochain live'} />
-                                    {comingLives.length > 0 ?
+                                    {comingLives.length > 0 ? (
                                         comingLives.map((comingLive, index) => (
                                             <Text
                                                 key={index}
@@ -166,8 +166,10 @@ export const SellerProfilView = ({route}) => {
                                                     DateTime.TIME_SIMPLE,
                                                 )}
                                             </Text>
-                                        )) : <Text></Text>
-                                    }
+                                        ))
+                                    ) : (
+                                        <Text></Text>
+                                    )}
                                 </View>
                             </View>
                         </View>
