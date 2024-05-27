@@ -64,7 +64,7 @@ function SettingsScreen({navigation}) {
     const handleEmail = () => {
         const to = [REACT_APP_LIVESHOPP_CONTACT];
         email(to, {
-            subject: `Message de ${user.company_name || user.firstname} ❤️`,
+            subject: `Message de ${user.company_name || user.firstname}`,
             checkCanOpen: false,
         }).catch(console.error);
     };

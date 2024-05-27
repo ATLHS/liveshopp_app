@@ -1,37 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import colors from '../../styles/colors';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
+import * as Animatable from 'react-native-animatable';
 
 export const LiveAuctionInfo = () => {
-    const { liveData } = useSelector(state => state.lives);
+    const {liveData} = useSelector(state => state.lives);
     const [time, setTime] = useState(Number);
+    const handleViewRef = useRef(null);
 
     useEffect(() => {
-        let [minutes, secondes] = liveData.currentAuction.currentAuctionDelay.time.split(":").map(Number);
-        let tempsEnSecondes = minutes * 60 + secondes;
-        setTime(tempsEnSecondes);
+        const [minutes, seconds] =
+            liveData.currentAuction.currentAuctionDelay.time
+                .split(':')
+                .map(Number);
+        const totalSeconds = minutes * 60 + seconds;
+        setTime(totalSeconds);
+
+        if (seconds <= 10) {
+            handleViewRef.current?.pulse();
+        }
     }, [liveData.currentAuction.currentAuctionDelay.time]);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.productName}>{liveData.currentAuction.productName}</Text>
+            <Text style={styles.productName}>
+                {liveData.currentAuction.productName}
+            </Text>
             {liveData.currentAuction.currentMessageInfo && (
                 <View style={styles.messageContainer}>
-                    <Text style={styles.messageText}>{liveData.currentAuction.currentMessageInfo}</Text>
+                    <Text style={styles.messageText}>
+                        {liveData.currentAuction.currentMessageInfo}
+                    </Text>
                 </View>
             )}
             <View style={styles.auctionInfoContainer}>
                 <View style={styles.auctionAmountContainer}>
-                    <Text style={styles.auctionAmountText}>{liveData.currentAuction.currentProductAmount} €</Text>
+                    <Text style={styles.auctionAmountText}>
+                        {liveData.currentAuction.currentProductAmount} €
+                    </Text>
                     <Text style={styles.auctionLabel}>Enchère en cours</Text>
                 </View>
                 <View style={styles.timeContainer}>
-                    <Text style={[styles.timeText, time < 10 && { color: colors.PRIMARY }]}>{liveData.currentAuction.currentAuctionDelay.time}</Text>
+                    <Animatable.Text
+                        ref={ref => (handleViewRef.current = ref)}
+                        easing="ease-out"
+                        iterationCount="infinite"
+                        style={[
+                            styles.timeText,
+                            time <= 10 && {color: colors.PRIMARY},
+                        ]}>
+                        {liveData.currentAuction.currentAuctionDelay.time}
+                    </Animatable.Text>
                     <Text style={styles.remainingTimeLabel}>Temps restant</Text>
                 </View>
                 <View style={styles.winnerContainer}>
-                    <Text style={styles.winnerText}>{liveData.currentAuction.username.toUpperCase()}</Text>
+                    <Text style={styles.winnerText}>
+                        {liveData.currentAuction.username.toUpperCase()}
+                    </Text>
                     <Text style={styles.winnerLabel}>Remporte l'enchère</Text>
                 </View>
             </View>

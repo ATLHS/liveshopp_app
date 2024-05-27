@@ -10,7 +10,7 @@ import {Controller} from 'react-hook-form';
 // import {ErrorMessage} from '@hookform/error-message';
 //
 import FormConstructor from '../FormConstructor/FormConstructor';
-// import MessageHelper from '../MessageHelper/MessageHelper';
+import MessageHelper from '../MessageHelper/MessageHelper';
 import React from 'react';
 import {useSelector} from 'react-redux';
 import colors from '../../styles/colors';
@@ -26,13 +26,7 @@ const FieldWrapper = ({control, schema}) => {
                 render={({...props}) => (
                     <>
                         <FormConstructor inputField={field} {...props} />
-                        {/* <ErrorMessage
-                            errors={props.formState.errors}
-                            name={field.name}
-                            render={({message}) => (
-                                <MessageHelper message={message} />
-                            )}
-                        /> */}
+                        <MessageHelper {...props} />
                         {field.helper ? (
                             <View
                                 style={
