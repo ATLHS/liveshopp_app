@@ -404,6 +404,10 @@ router.get('/is-authenticate', verifyJwt, async (req, res) => {
     const seller = await UserSeller.findById(req.user.id).populate('blockedUser blockedSeller', '_id');
     const customer = user || seller;
 
+    // FIXME
+    //
+    // Not sure this is used
+    //
     if (customer.blockedSeller.length) {
       for (let blocked of customer.blockedSeller) {
         blocked._id.valueOf();
