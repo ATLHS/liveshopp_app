@@ -26,7 +26,7 @@ registerService('mongoose', () => {
 /**
  * @type {import('redis').RedisClientType}
  */
-const redis = registerService('redis', () => {
+const redis = registerService('redis', async () => {
   const client = createClient({
     url: process.env.REDIS_URL,
     connectTimeout: 10000, // in milliseconds
@@ -35,7 +35,7 @@ const redis = registerService('redis', () => {
     .on('error', (err) => log.error('Redis Client Error', err))
     .on('connect', () => log.info('Redis connected successfully'));
 
-  client.connect();
+  await client.connect();
 
   return client;
 });

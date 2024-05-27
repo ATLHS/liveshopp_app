@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const Sentry = require('@sentry/node');
-const { log } = require('../../middleware/logger');
+
 const { s3 } = require('../../utils/services');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const UserSeller = require('../../models/seller');
