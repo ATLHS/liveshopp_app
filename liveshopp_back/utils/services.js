@@ -30,6 +30,7 @@ const redis = registerService('redis', () => {
   const client = createClient({
     url: process.env.REDIS_URL,
     connectTimeout: 10000, // in milliseconds
+    password: process.env.NODE_ENV === 'production' ? process.env.REDIS_AUTH_TOKEN : null,
   })
     .on('error', (err) => log.error('Redis Client Error', err))
     .on('connect', () => log.info('Redis connected successfully'));
