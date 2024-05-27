@@ -82,6 +82,7 @@ module.exports = (io, socket) => {
   const newLiveMessage = async ({ user, message, liveData }) => {
     try {
       const channel = await getChannel(liveData.channelName);
+      const pseudo = `${user.firstname} ${user.lastname.charAt(0)}.`;
 
       const id = generateUniqueId({
         length: 20,
@@ -90,7 +91,7 @@ module.exports = (io, socket) => {
       channel.messages.push({
         userId: user.id,
         profil: user.profil,
-        username: user.firstname,
+        username: pseudo,
         message: message.live_message,
         id,
       });
