@@ -405,6 +405,7 @@ export const AuctionVideos = ({navigation}) => {
                                                 ref={ref => {
                                                     player = ref;
                                                 }}
+                                                muted={true}
                                                 style={styles.backgroundVideo}
                                                 fullscreen={true}
                                                 onReadyForDisplay={() =>
