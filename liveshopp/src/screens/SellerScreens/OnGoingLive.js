@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {REACT_APP_AGORA_APP_ID} from '@env';
 import {
     StyleSheet,
     Text,
@@ -11,7 +10,6 @@ import {
     Platform,
     Pressable,
     ImageBackground,
-    PermissionsAndroid,
     ActivityIndicator,
     TouchableOpacity,
     Modal,
@@ -22,12 +20,6 @@ import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers';
 import colors from '../../styles/colors';
 import ContainedButtonSm from '../../components/ContainedButtonSm/ContainedButtonSm';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-    ChannelProfileType,
-    ClientRoleType,
-    createAgoraRtcEngine,
-    IRtcEngine,
-} from 'react-native-agora';
 import {setIsJoin, setSellerLives} from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import {DateTime} from 'luxon';
@@ -36,7 +28,6 @@ import Toast from 'react-native-toast-message';
 import NoData from '../../components/NoData/NoData';
 
 export const OnGoingLive = ({navigation}) => {
-    const agoraEngineRef = IRtcEngine;
     const {sellerLives, isJoin, isGone, liveData} = useSelector(
         state => state.lives,
     );
@@ -56,67 +47,17 @@ export const OnGoingLive = ({navigation}) => {
         }, [isGone]),
     );
 
-    useFocusEffect(
-        React.useCallback(() => {
-            setupVideoSDKEngine()
-                .then(r => r)
-                .catch(err => err);
-        }, []),
-    );
-
-    const getPermission = async () => {
-        if (Platform.OS === 'android') {
-            await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-            ]);
-        }
-    };
-
-    const setupVideoSDKEngine = async () => {
-        try {
-            // use the helper function to get permissions
-            if (Platform.OS === 'android') {
-                await getPermission();
-            }
-
-            agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-            agoraEngine.initialize({
-                appId: REACT_APP_AGORA_APP_ID,
-                channelProfile:
-                    ChannelProfileType.ChannelProfileLiveBroadcasting,
-            });
-
-            agoraEngine.enableVideo();
-            agoraEngine.enableAudio();
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
     const goLive = async liveData => {
-        const {token, generateUid} = await live.getAgoraToken(
-            liveData.live_name,
-        );
         if (isJoin) {
             return;
         }
 
-        const uid = +generateUid;
         try {
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileLiveBroadcasting,
-            );
-
-            agoraEngineRef.current?.startPreview();
-            agoraEngineRef.current?.joinChannel(token, liveData.live_name, 0, {
-                clientRoleType: ClientRoleType.ClientRoleBroadcaster,
-            });
-
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
-            navigation.navigate('LiveScreen');
+            navigation.navigate('LiveScreen', {
+                channelName: liveData.live_name,
+            });
         } catch (e) {
             console.error(e);
         }
@@ -124,8 +65,6 @@ export const OnGoingLive = ({navigation}) => {
 
     const goOut = async () => {
         try {
-            agoraEngineRef.current?.leaveChannel();
-            agoraEngineRef.current?.stopPreview();
             dispatch(setIsJoin(false));
         } catch (e) {
             console.error(e);
