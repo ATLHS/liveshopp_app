@@ -352,9 +352,9 @@ function SettingsScreen({navigation}) {
                                             title={'Conditions Générales'}
                                             onPress={goToRGPD}
                                         />
-                                        <Headline title={'Nous-contacter'} />
+                                        <Headline title={'Contact'} />
                                         <Touchable
-                                            title={'Nous-contacter'}
+                                            title={'Nous contacter'}
                                             onPress={handleEmail}
                                         />
                                     </>
