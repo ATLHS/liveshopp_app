@@ -64,7 +64,9 @@ export const LivesScreen = ({navigation}) => {
         try {
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(false));
-            navigation.navigate('LiveScreen');
+            navigation.navigate('LiveScreen', {
+              channelName: liveData.live_name,
+            });
         } catch (e) {
             console.error(e);
         }
