@@ -1,166 +1,165 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
-    StyleSheet,
-    View,
-    SafeAreaView,
-    Keyboard,
-    KeyboardAvoidingView,
-    TouchableWithoutFeedback,
-    ScrollView,
-    Platform,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
-import {useForm} from 'react-hook-form';
-import colors from '../../styles/colors';
-import ContainedButton from '../../components/ContainedButton/ContainedButton';
-import {useDispatch} from 'react-redux';
 import Toast from 'react-native-toast-message';
-import {setSellerLives} from '../../redux/slices/livesSlice';
-import {DateTime} from 'luxon';
+import { useDispatch } from 'react-redux';
+
+import { DateTime } from 'luxon';
+
+import ContainedButton from '../../components/ContainedButton/ContainedButton';
+import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
+import { setSellerLives } from '../../redux/slices/livesSlice';
 import seller from '../../services/seller';
+import colors from '../../styles/colors';
 
 const LiveCreationFormSchema = () => [
-    {
-        name: 'live_name',
-        label: 'Nom du live',
-        type: 'text',
-        validation: {
-            required: {
-                value: true,
-                message: 'Veuillez indiquer le nom du live.',
-            },
-            pattern: {
-                value: /^[a-zA-Z\s0-9]*$/i,
-                message: 'Le nom du live est invalide',
-            },
-        },
-        helper: 'Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n',
-        editable: true,
-        defaultValue: '',
+  {
+    name: 'live_name',
+    label: 'Nom du live',
+    type: 'text',
+    validation: {
+      required: {
+        value: true,
+        message: 'Veuillez indiquer le nom du live.',
+      },
+      pattern: {
+        value: /^[a-zA-Z\s0-9]*$/i,
+        message: 'Le nom du live est invalide',
+      },
     },
-    {
-        name: 'live_description',
-        label: 'En quoi ton live sera unique ?',
-        type: 'textarea',
-        editable: true,
-        validation: {
-            required: {
-                value: true,
-                message: 'Veuillez indiquer une description.',
-            },
-        },
+    helper:
+      'Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n',
+    editable: true,
+    defaultValue: '',
+  },
+  {
+    name: 'live_description',
+    label: 'En quoi ton live sera unique ?',
+    type: 'textarea',
+    editable: true,
+    validation: {
+      required: {
+        value: true,
+        message: 'Veuillez indiquer une description.',
+      },
     },
-    {
-        name: 'live_date_time',
-        label: 'date',
-        type: 'datetime',
-        helperMessage:
-            'Un intervalle de 1h30 entre le début et la fin de chaque live est requis.',
-        style: {height: 150},
-        minuteInterval: 30,
-        minimumDelay: DateTime.now()
-            .setZone('Europe/Paris')
-            .startOf('minutes') // Début de l'heure actuelle
-            .plus({minutes: 30 - (DateTime.now().minute % 30)})
-            .toJSDate(),
-    },
+  },
+  {
+    name: 'live_date_time',
+    label: 'date',
+    type: 'datetime',
+    helperMessage: 'Un intervalle de 1h30 entre le début et la fin de chaque live est requis.',
+    style: { height: 150 },
+    minuteInterval: 30,
+    minimumDelay: DateTime.now()
+      .setZone('Europe/Paris')
+      .startOf('minutes') // Début de l'heure actuelle
+      .plus({ minutes: 30 - (DateTime.now().minute % 30) })
+      .toJSDate(),
+  },
 ];
 
-export const SettingNewLive = ({navigation}) => {
-    const {handleSubmit, control} = useForm();
-    const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(false);
+export const SettingNewLive = ({ navigation }) => {
+  const { handleSubmit, control } = useForm();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
-    const handleLiveCreation = data => {
-        setIsLoading(true);
+  const handleLiveCreation = (data) => {
+    setIsLoading(true);
 
-        data.live_date_time = data.live_date_time;
+    data.live_date_time = data.live_date_time;
 
-        seller
-            .createNewLive(data)
-            .then(res => res)
-            .then(data => {
-                Toast.show({
-                    type: 'success',
-                    text1: data.message,
-                });
-                dispatch(setSellerLives(data.lives));
-                setIsLoading(false);
-                navigation.goBack();
-            })
-            .catch(err => {
-                Toast.show({
-                    type: 'toastError',
-                    text1: err.message,
-                });
-                setIsLoading(false);
-            });
-    };
+    seller
+      .createNewLive(data)
+      .then((res) => res)
+      .then((data) => {
+        Toast.show({
+          type: 'success',
+          text1: data.message,
+        });
+        dispatch(setSellerLives(data.lives));
+        setIsLoading(false);
+        navigation.goBack();
+      })
+      .catch((err) => {
+        Toast.show({
+          type: 'toastError',
+          text1: err.message,
+        });
+        setIsLoading(false);
+      });
+  };
 
-    return (
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={styles.container}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{flexGrow: 1}}
-                    contentInset={{bottom: 100}}>
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View style={styles.formContainer}>
-                            <View style={styles.fieldContainer}>
-                                <FieldWrapper
-                                    control={control}
-                                    schema={LiveCreationFormSchema()}
-                                />
-                            </View>
-                            <View style={styles.action}>
-                                <ContainedButton
-                                    title="Créer le live"
-                                    onPress={handleSubmit(handleLiveCreation)}
-                                    loading={isLoading}
-                                />
-                            </View>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
-    );
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+          contentInset={{ bottom: 100 }}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.formContainer}>
+              <View style={styles.fieldContainer}>
+                <FieldWrapper control={control} schema={LiveCreationFormSchema()} />
+              </View>
+              <View style={styles.action}>
+                <ContainedButton
+                  title="Créer le live"
+                  onPress={handleSubmit(handleLiveCreation)}
+                  loading={isLoading}
+                />
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    headlineContainer: {marginBottom: 30},
-    formContainer: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        marginTop: 50,
-    },
-    headlineContainerMessage: {
-        marginBottom: 30,
-        width: 350,
-        textAlign: 'center',
-    },
-    headlineMessage: {
-        color: colors.DARK,
-        fontSize: 18,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-    fieldContainer: {margin: 10, marginBottom: 30},
-    headline: {
-        color: colors.LIGHT,
-        fontFamily: 'Roboto-Regular',
-        fontSize: 30,
-        width: 350,
-        textAlign: 'left',
-    },
-    action: {},
-    resetPassword: {color: 'white'},
+  container: {
+    flex: 1,
+  },
+  headlineContainer: { marginBottom: 30 },
+  formContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  headlineContainerMessage: {
+    marginBottom: 30,
+    width: 350,
+    textAlign: 'center',
+  },
+  headlineMessage: {
+    color: colors.DARK,
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  fieldContainer: { margin: 10, marginBottom: 30 },
+  headline: {
+    color: colors.LIGHT,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 30,
+    width: 350,
+    textAlign: 'left',
+  },
+  action: {},
+  resetPassword: { color: 'white' },
 });
 
 export default SettingNewLive;

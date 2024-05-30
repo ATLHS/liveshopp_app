@@ -1,10 +1,11 @@
-import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
-import {Text, View} from 'react-native';
 import React from 'react';
+import { Text, View } from 'react-native';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+
 import colors from '../../styles/colors';
 
 const toastConfig = {
-  success: props => (
+  success: (props) => (
     <BaseToast
       {...props}
       style={{
@@ -13,7 +14,7 @@ const toastConfig = {
         backgroundColor: '#D2FFB9',
         width: 350,
       }}
-      contentContainerStyle={{paddingHorizontal: 0}}
+      contentContainerStyle={{ paddingHorizontal: 0 }}
       text1Style={{
         fontSize: 15,
         fontWeight: '400',
@@ -21,7 +22,7 @@ const toastConfig = {
       text1NumberOfLines={2}
     />
   ),
-  error: props => (
+  error: (props) => (
     <ErrorToast
       {...props}
       style={{
@@ -30,7 +31,7 @@ const toastConfig = {
         backgroundColor: '#FFB1B1',
         width: 350,
       }}
-      contentContainerStyle={{paddingHorizontal: 0}}
+      contentContainerStyle={{ paddingHorizontal: 0 }}
       text1Style={{
         fontSize: 15,
         fontWeight: '400',
@@ -38,7 +39,7 @@ const toastConfig = {
       text1NumberOfLines={2}
     />
   ),
-  toastError: ({text1, props}) => (
+  toastError: ({ text1, props }) => (
     <View
       style={{
         padding: 10,
@@ -57,7 +58,7 @@ const toastConfig = {
       </Text>
     </View>
   ),
-  auctionToast: ({text1}) => (
+  auctionToast: ({ text1 }) => (
     <View
       style={{
         padding: 10,
