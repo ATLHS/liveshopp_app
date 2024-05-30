@@ -1,11 +1,13 @@
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import React, {useEffect, useRef, useState} from 'react';
-import colors from '../../styles/colors';
-import {useSelector} from 'react-redux';
-import {REACT_APP_GOOGLE_PLACES_API} from '@env';
+import React, { useEffect, useRef, useState } from 'react';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { useSelector } from 'react-redux';
 
-const Places = ({inputField, field, fieldState}) => {
-  const {user} = useSelector(state => state.user);
+import { REACT_APP_GOOGLE_PLACES_API } from '@env';
+
+import colors from '../../styles/colors';
+
+const Places = ({ inputField, field, fieldState }) => {
+  const { user } = useSelector((state) => state.user);
   const ref = useRef();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const Places = ({inputField, field, fieldState}) => {
     <GooglePlacesAutocomplete
       ref={ref}
       placeholder="Adresse de livraison"
-      onPress={data => {
+      onPress={(data) => {
         field.onChange(data.description);
       }}
       textInputProps={{

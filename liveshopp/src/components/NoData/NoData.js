@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 import colors from '../../styles/colors';
 
-const NoData = ({message, title, buttonTitle, onPress}) => {
+const NoData = ({ message, title, buttonTitle, onPress }) => {
   return (
     <View
       style={{

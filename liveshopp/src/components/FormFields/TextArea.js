@@ -1,15 +1,16 @@
 import React from 'react';
-import {StyleSheet, TextInput} from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
+
 import colors from '../../styles/colors';
 
-const TextArea = ({inputField, field, fieldState}) => {
+const TextArea = ({ inputField, field, fieldState }) => {
   return (
     <TextInput
       style={styles.textInput}
       placeholder={inputField.label}
       autoFocus={inputField.autoFocus || false}
-      onChangeText={value => field.onChange(value)}
-      placeholderTextColor='#707070'
+      onChangeText={(value) => field.onChange(value)}
+      placeholderTextColor="#707070"
       defaultValue={inputField.defaultValue}
       secureTextEntry={inputField.type === 'password'}
       selectionColor={colors.DARK}

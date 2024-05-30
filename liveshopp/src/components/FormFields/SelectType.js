@@ -1,42 +1,29 @@
 import React from 'react';
-import {StyleSheet, TextInput} from 'react-native';
-import colors from '../../styles/colors';
+import { StyleSheet, TextInput } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
-const SelectType = ({inputField, field, fieldState}) => {
-  const {error} = fieldState;
-  const isAuthenticate = useSelector(state => state.user.isAuthenticate);
+import colors from '../../styles/colors';
+
+const SelectType = ({ inputField, field, fieldState }) => {
+  const { error } = fieldState;
+  const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   return (
     <SelectDropdown
       data={inputField.options}
-      onSelect={selectedItem => {
+      onSelect={(selectedItem) => {
         field.onChange(selectedItem);
       }}
       defaultButtonText={inputField.label}
-      buttonStyle={
-        isAuthenticate
-          ? outlinedStyles.buttonStyle
-          : containedStyles.buttonStyle
-      }
+      buttonStyle={isAuthenticate ? outlinedStyles.buttonStyle : containedStyles.buttonStyle}
       buttonTextStyle={
-        isAuthenticate
-          ? outlinedStyles.buttonTextStyle
-          : containedStyles.buttonTextStyle
+        isAuthenticate ? outlinedStyles.buttonTextStyle : containedStyles.buttonTextStyle
       }
-      rowStyle={
-        isAuthenticate ? outlinedStyles.rowStyle : containedStyles.rowStyle
-      }
+      rowStyle={isAuthenticate ? outlinedStyles.rowStyle : containedStyles.rowStyle}
       selectedRowStyle={
-        isAuthenticate
-          ? outlinedStyles.selectedRowStyle
-          : containedStyles.selectedRowStyle
+        isAuthenticate ? outlinedStyles.selectedRowStyle : containedStyles.selectedRowStyle
       }
-      rowTextStyle={
-        isAuthenticate
-          ? outlinedStyles.rowTextStyle
-          : containedStyles.rowTextStyle
-      }
+      rowTextStyle={isAuthenticate ? outlinedStyles.rowTextStyle : containedStyles.rowTextStyle}
       dropdownStyle={
         isAuthenticate
           ? {
@@ -72,11 +59,11 @@ const containedStyles = StyleSheet.create({
     justifyContent: 'center',
     color: colors.LIGHT,
   },
-  inputContainerStyle: {height: 50, width: 350},
+  inputContainerStyle: { height: 50, width: 350 },
   inputStyle: {
     color: colors.LIGHT,
   },
-  errorStyle: {margin: 0, marginTop: 5, color: colors.ALERT, width: 350},
+  errorStyle: { margin: 0, marginTop: 5, color: colors.ALERT, width: 350 },
   buttonStyle: {
     position: 'relative',
     color: colors.LIGHT,
@@ -134,13 +121,13 @@ const outlinedStyles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
   },
-  inputContainerStyle: {height: 50, width: 350},
+  inputContainerStyle: { height: 50, width: 350 },
   inputStyle: {
     color: colors.DARK,
     fontSize: 13,
     fontWeight: '600',
   },
-  errorStyle: {margin: 0, marginTop: 5, color: colors.ALERT, width: 350},
+  errorStyle: { margin: 0, marginTop: 5, color: colors.ALERT, width: 350 },
   buttonStyle: {
     position: 'relative',
     color: colors.DARK,
@@ -152,7 +139,7 @@ const outlinedStyles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 15,
     justifyContent: 'flex-end',
-    backgroundColor: '#F8F7F7'
+    backgroundColor: '#F8F7F7',
   },
   buttonTextStyle: {
     position: 'absolute',
