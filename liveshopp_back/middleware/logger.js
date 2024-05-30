@@ -1,10 +1,9 @@
 const morgan = require('morgan');
 const winston = require('winston');
 
-const level = () => {
+const isDevEnv = () => {
   const env = process.env.NODE_ENV || 'development';
-  const isDevelopment = env === 'development';
-  return isDevelopment ? 'debug' : 'http';
+  return env === 'development';
 };
 
 /**
@@ -12,9 +11,9 @@ const level = () => {
  */
 const log = winston.createLogger({
   exitOnError: false,
-  level: level(),
+  level: isDevEnv ? 'debug' : 'http',
   format: winston.format.combine(
-    winston.format.colorize({ all: true }),
+    winston.format.colorize({ all: isDevEnv }),
     winston.format.errors({ stack: true }),
     winston.format.timestamp({
       format: 'YYYY-MM-DD hh:mm:ss.SSS A',
