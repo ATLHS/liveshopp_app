@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleSheet } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { useSelector } from 'react-redux';
 
