@@ -1,11 +1,11 @@
 import axios from 'axios';
+import apiConfig from '../config/apiConfig';
 
-import { REACT_APP_BASE_URL, REACT_APP_LOCAL_URL } from '@env';
 import * as Sentry from '@sentry/react-native';
 
 const axiosInstance = axios.create({
   withCredentials: true,
-  baseURL: REACT_APP_BASE_URL,
+  baseURL: apiConfig.URL,
 });
 
 // Intercepts all requests (like a middleware)
