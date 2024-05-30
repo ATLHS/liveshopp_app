@@ -1,52 +1,54 @@
-import RootStack from './src/navigation/RootStack';
-import {store} from './src/redux/store';
-import {Provider} from 'react-redux';
-import {useEffect, useState} from 'react';
-import authService from './src/services/auth';
+import { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
+
+import { SENTRY_DSN } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setUser, setIsAuthenticate} from './src/redux/slices/userSlice';
-import axiosConfig from './src/services/config/axiosConfig';
-import ToastComponent from './src/components/ToastComponent/ToastComponent';
 import * as Sentry from '@sentry/react-native';
-import {SENTRY_DSN} from '@env';
+
+import ToastComponent from './src/components/ToastComponent/ToastComponent';
+import RootStack from './src/navigation/RootStack';
+import { setIsAuthenticate, setUser } from './src/redux/slices/userSlice';
+import { store } from './src/redux/store';
+import authService from './src/services/auth';
+import axiosConfig from './src/services/config/axiosConfig';
 
 Sentry.init({
-    dsn: SENTRY_DSN,
+  dsn: SENTRY_DSN,
 });
 
 const App = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
-        AsyncStorage.getItem('@token').then(token => {
-            if (token) {
-                axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
-                authService
-                    .isAuthenticate()
-                    .then(res => res)
-                    .then(data => {
-                        store.dispatch(setUser(data.user));
-                        store.dispatch(setIsAuthenticate(data.isAuthenticate));
-                        setIsLoading(false);
-                    })
-                    .catch(err => {
-                        store.dispatch(setUser({profil: null}));
-                        store.dispatch(setIsAuthenticate(false));
-                        setIsLoading(false);
-                    });
-            } else {
-                store.dispatch(setUser({profil: null}));
-                store.dispatch(setIsAuthenticate(false));
-                setIsLoading(false);
-            }
-        });
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    AsyncStorage.getItem('@token').then((token) => {
+      if (token) {
+        axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
+        authService
+          .isAuthenticate()
+          .then((res) => res)
+          .then((data) => {
+            store.dispatch(setUser(data.user));
+            store.dispatch(setIsAuthenticate(data.isAuthenticate));
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            store.dispatch(setUser({ profil: null }));
+            store.dispatch(setIsAuthenticate(false));
+            setIsLoading(false);
+          });
+      } else {
+        store.dispatch(setUser({ profil: null }));
+        store.dispatch(setIsAuthenticate(false));
+        setIsLoading(false);
+      }
     });
+  });
 
-    return (
-        <Provider store={store}>
-            <RootStack isLoading={isLoading} />
-            <ToastComponent />
-        </Provider>
-    );
+  return (
+    <Provider store={store}>
+      <RootStack isLoading={isLoading} />
+      <ToastComponent />
+    </Provider>
+  );
 };
 
 export default App;

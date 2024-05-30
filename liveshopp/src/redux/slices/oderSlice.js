@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const orderSlice = createSlice({
   name: 'order',
@@ -11,5 +11,5 @@ export const orderSlice = createSlice({
     },
   },
 });
-export const {setInitialOrder} = orderSlice.actions;
+export const { setInitialOrder } = orderSlice.actions;
 export default orderSlice.reducer;

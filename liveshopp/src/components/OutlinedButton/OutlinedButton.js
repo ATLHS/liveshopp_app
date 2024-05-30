@@ -1,23 +1,14 @@
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+
 import colors from '../../styles/colors';
 
-const OutlinedButton = ({
-  onPress,
-  title,
-  touchableBackgroundColor,
-  textColor,
-}) => {
+const OutlinedButton = ({ onPress, title, touchableBackgroundColor, textColor }) => {
   return (
     <TouchableOpacity
-      style={[
-        styles.touchableStyle,
-        {borderColor: touchableBackgroundColor || colors.LIGHT},
-      ]}
+      style={[styles.touchableStyle, { borderColor: touchableBackgroundColor || colors.LIGHT }]}
       onPress={onPress}>
-      <Text style={[styles.title, {color: textColor || colors.LIGHT}]}>
-        {title}
-      </Text>
+      <Text style={[styles.title, { color: textColor || colors.LIGHT }]}>{title}</Text>
     </TouchableOpacity>
   );
 };

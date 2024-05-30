@@ -1,26 +1,22 @@
 import React from 'react';
-import {StyleSheet, TextInput, Image, View} from 'react-native';
-import colors from '../../styles/colors';
+import { Image, StyleSheet, TextInput, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
-const PhoneField = ({inputField, field, fieldState}) => {
-  const isAuthenticate = useSelector(state => state.user.isAuthenticate);
+import colors from '../../styles/colors';
+
+const PhoneField = ({ inputField, field, fieldState }) => {
+  const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   return (
-    <View
-      style={
-        isAuthenticate ? outlinedStyles.phoneField : containedStyles.phoneField
-      }>
+    <View style={isAuthenticate ? outlinedStyles.phoneField : containedStyles.phoneField}>
       <CountryFlag isoCode="fr" size={15} />
       <TextInput
-        style={
-          isAuthenticate ? outlinedStyles.textInput : containedStyles.textInput
-        }
+        style={isAuthenticate ? outlinedStyles.textInput : containedStyles.textInput}
         defaultValue={inputField.defaultValue}
         value={inputField.value}
         placeholder={inputField.label}
         autoFocus={inputField.autoFocus || false}
-        onChangeText={value => field.onChange(value)}
+        onChangeText={(value) => field.onChange(value)}
         placeholderTextColor="white"
         secureTextEntry={inputField.type === 'password'}
         selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}
