@@ -11,4 +11,7 @@ module.exports = {
   singleQuote: true,
   tabWidth: 2,
   trailingComma: 'all',
+  importOrder: ['^react', '^react-native', '^[a-zA-Z]', '^@?\\w', '^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
 };
