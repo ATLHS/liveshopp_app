@@ -80,6 +80,7 @@ const TextArea = ({field}) => {
                             ref={ref => {
                                 player = ref;
                             }}
+                            muted={true}
                             onLoad={() => {
                                 if (videoUri) {
                                     field.onChange(videoUri);
