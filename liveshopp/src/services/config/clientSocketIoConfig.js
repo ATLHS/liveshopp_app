@@ -1,5 +1,5 @@
-import { REACT_APP_BASE_URL, REACT_APP_LOCAL_URL } from '@env';
+import apiConfig from '../config/apiConfig';
 
 const { io } = require('socket.io-client');
 
-module.exports = io(REACT_APP_BASE_URL);
+module.exports = io(apiConfig.URL);
