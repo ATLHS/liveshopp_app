@@ -83,10 +83,7 @@ export const LiveScreen = ({navigation, route}) => {
 
     const setupVideoSDKEngine = async () => {
         try {
-            // use the helper function to get permissions
-            if (Platform.OS === 'android') {
-                await getPermission();
-            }
+            await getPermission();
 
             agoraEngineRef.current = createAgoraRtcEngine();
             const agoraEngine = agoraEngineRef.current;
