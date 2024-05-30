@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {REACT_APP_AGORA_APP_ID} from '@env';
 import {
     StyleSheet,
     View,
@@ -9,45 +8,23 @@ import {
     TouchableWithoutFeedback,
     ScrollView,
     Platform,
-    PermissionsAndroid,
     ActivityIndicator,
 } from 'react-native';
 import colors from '../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-    setIsJoin,
-    setRemoteUid,
-    setIsGone,
-    setLives,
-} from '../../redux/slices/livesSlice';
+import {setIsJoin, setIsGone, setLives} from '../../redux/slices/livesSlice';
 import live from '../../services/live';
-import {
-    ChannelProfileType,
-    ClientRoleType,
-    createAgoraRtcEngine,
-    IRtcEngine,
-} from 'react-native-agora';
 import socket from '../../services/config/clientSocketIoConfig';
 import LiveCard from '../../components/liveCard/liveCard';
 import {useFocusEffect} from '@react-navigation/native';
 import NoData from '../../components/NoData/NoData';
 
 export const LivesScreen = ({navigation}) => {
-    const agoraEngineRef = IRtcEngine;
     const {isJoin, isGone} = useSelector(state => state.lives);
     const {user} = useSelector(state => state.user);
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [onGoingLives, setOnGoingLives] = useState([]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            setIsLoading(true);
-            setupVideoSDKEngine()
-                .then(r => setIsLoading(false))
-                .catch(err => err);
-        }, []),
-    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -85,71 +62,16 @@ export const LivesScreen = ({navigation}) => {
         }, [isGone]),
     );
 
-    const getOsPermission = async () => {
-        if (Platform.OS === 'android') {
-            await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-            ]);
-        }
-    };
-
-    const setupVideoSDKEngine = async () => {
-        try {
-            // use the helper function to get permissions
-            if (Platform.OS === 'android') {
-                await getOsPermission();
-            }
-            agoraEngineRef.current = createAgoraRtcEngine();
-            const agoraEngine = agoraEngineRef.current;
-
-            agoraEngine.initialize({
-                appId: REACT_APP_AGORA_APP_ID,
-                channelProfile:
-                    ChannelProfileType.ChannelProfileLiveBroadcasting,
-            });
-
-            agoraEngine.registerEventHandler({
-                onJoinChannelSuccess: _connection => {
-                    console.log(
-                        `User has successfully joined the channel : ${_connection.channelId}`,
-                    );
-                },
-                onUserJoined: (_connection, Uid) => {
-                    dispatch(setRemoteUid(Uid));
-                },
-                onUserOffline: (_connection, Uid) => {
-                    dispatch(setRemoteUid(0));
-                },
-            });
-
-            agoraEngine.enableVideo();
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
     const goLive = async liveData => {
-        const {token, generateUid} = await live.getAgoraToken(
-            liveData.live_name,
-        );
         if (isJoin) {
             return;
         }
-
-        const uid = +generateUid;
         try {
-            agoraEngineRef.current?.setChannelProfile(
-                ChannelProfileType.ChannelProfileLiveBroadcasting,
-            );
-
-            agoraEngineRef.current?.joinChannel(token, liveData.live_name, 0, {
-                clientRoleType: ClientRoleType.ClientRoleAudience,
-            });
-
             socket.emit('joinChannel', {liveData, user});
             dispatch(setIsJoin(true));
-            navigation.navigate('LiveScreen');
+            navigation.navigate('LiveScreen', {
+                channelName: liveData.live_name,
+            });
         } catch (e) {
             console.error(e);
         }
@@ -157,7 +79,6 @@ export const LivesScreen = ({navigation}) => {
 
     const goOut = () => {
         try {
-            agoraEngineRef.current?.leaveChannel();
             dispatch(setIsGone(false));
         } catch (e) {
             console.error(e);

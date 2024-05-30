@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -15,10 +15,13 @@ import {
 import {useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
+    ChannelProfileType,
+    ClientRoleType,
     createAgoraRtcEngine,
     IRtcEngine,
     RtcSurfaceView,
 } from 'react-native-agora';
+import {REACT_APP_AGORA_APP_ID} from '@env';
 import socket from '../../services/config/clientSocketIoConfig';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
@@ -32,7 +35,8 @@ import customer from '../../services/customer';
 import admin from '../../services/admin';
 import {DateTime} from 'luxon';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
-import {RadialGradient, LinearGradient} from 'react-native-gradients';
+import {LinearGradient} from 'react-native-gradients';
+import live from '../../services/live';
 
 const colorList = [
     {offset: '20%', color: 'transparent', opacity: '0'},
@@ -40,15 +44,20 @@ const colorList = [
     {offset: '90%', color: 'transparent', opacity: '0'},
     {offset: '100%', color: 'black', opacity: '0.6'},
 ];
-export const LiveScreen = () => {
-    const agoraEngineRef = IRtcEngine;
-    const {isJoin, isHost, liveData, remoteUid} = useSelector(
-        state => state.lives,
-    );
+
+export const LiveScreen = ({navigation, route}) => {
+    const {channelName} = route.params;
+    const {isHost, liveData} = useSelector(state => state.lives);
     const {user} = useSelector(state => state.user);
     const [modalVisible, setModalVisible] = useState(false);
+
+    /** @type {import("react").MutableRefObject<IRtcEngine | null>} */
+    const agoraEngineRef = useRef(null);
     const list = useRef(null);
     const panelRef = useRef(null);
+
+    const [isJoined, setIsJoined] = useState(false);
+    const [remoteUid, setRemoteUid] = useState(0);
 
     const renderUserLiveForm = () => {
         if (user.profil !== 'admin' && user.profil !== 'seller') {
@@ -63,9 +72,78 @@ export const LiveScreen = () => {
         }
     };
 
+    const getPermission = async () => {
+        if (Platform.OS === 'android') {
+            await PermissionsAndroid.requestMultiple([
+                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+            ]);
+        }
+    };
+
+    const setupVideoSDKEngine = async () => {
+        try {
+            await getPermission();
+
+            agoraEngineRef.current = createAgoraRtcEngine();
+            const agoraEngine = agoraEngineRef.current;
+
+            agoraEngine.registerEventHandler({
+                onJoinChannelSuccess: () => {
+                    console.log(
+                        '[AGORA] Successfully joined the channel ' +
+                            channelName,
+                    );
+                    setIsJoined(true);
+                },
+                onUserJoined: (_connection, Uid) => {
+                    console.log('[AGORA] Remote user joined with uid ' + Uid);
+                    setRemoteUid(Uid);
+                },
+                onUserOffline: (_connection, Uid) => {
+                    console.log(
+                        '[AGORA] Remote user left the channel. uid: ' + Uid,
+                    );
+                    setRemoteUid(0);
+                },
+            });
+
+            agoraEngine.initialize({
+                appId: REACT_APP_AGORA_APP_ID,
+                channelProfile:
+                    ChannelProfileType.ChannelProfileLiveBroadcasting,
+            });
+
+            agoraEngine.enableVideo();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const joinLiveBroadcast = async () => {
+        try {
+            if (isJoined) {
+                return;
+            }
+            const {token} = await live.getAgoraToken(channelName);
+
+            if (isHost) {
+                agoraEngineRef.current?.startPreview();
+                agoraEngineRef.current?.joinChannel(token, channelName, 0, {
+                    clientRoleType: ClientRoleType.ClientRoleBroadcaster,
+                });
+            } else {
+                agoraEngineRef.current?.joinChannel(token, channelName, 0, {
+                    clientRoleType: ClientRoleType.ClientRoleAudience,
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     useFocusEffect(
         React.useCallback(() => {
-            agoraEngineRef.current = createAgoraRtcEngine();
             if (liveData.currentAuction.currentAuctionStatus === 'stopping') {
                 showCurrentLiveNotificationToast();
             }
@@ -77,6 +155,31 @@ export const LiveScreen = () => {
             }
         }, [liveData.currentAuction.currentAuctionStatus, user]),
     );
+
+    // Start the engine
+    useEffect(() => {
+        // Initialize Agora engine when the app starts
+        setupVideoSDKEngine();
+        // Start broadcasting or viewing
+        joinLiveBroadcast();
+    }, []);
+
+    // Stop the engine
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', () => {
+            // Gracefully quit and destroy the Agora engine
+            agoraEngineRef.current?.leaveChannel();
+            agoraEngineRef.current?.stopPreview();
+            agoraEngineRef.current?.removeAllListeners('onJoinChannelSuccess');
+            agoraEngineRef.current?.removeAllListeners('onUserJoined');
+            agoraEngineRef.current?.removeAllListeners('onUserOffline');
+
+            setRemoteUid(0);
+            setIsJoined(false);
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -110,6 +213,7 @@ export const LiveScreen = () => {
         }
         socket.emit('pausedCurrentAuctionStatut', liveData.channelName);
     };
+
     const bidOnCurrentAuction = (channelName, data) => {
         data.username = user.firstname;
         data.userId = user.id;
@@ -144,7 +248,7 @@ export const LiveScreen = () => {
                             destructiveButtonIndex: 1,
                             cancelButtonIndex: 0,
                             userInterfaceStyle: 'light',
-                            title: 'Vous ne verrez plus les messages et les lives de cet de utilisateur',
+                            title: 'Vous ne verrez plus les messages et les lives de cet utilisateur',
                         },
                         buttonIndex => {
                             if (buttonIndex === 0) {
@@ -229,7 +333,7 @@ export const LiveScreen = () => {
         <View
             style={styles.scroll}
             contentContainerStyle={styles.scrollContainer}>
-            {isJoin && liveData.hostIsLive ? (
+            {isJoined && liveData.hostIsLive ? (
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     style={styles.container}>
