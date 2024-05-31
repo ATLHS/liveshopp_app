@@ -176,7 +176,7 @@ export const SellerSignUp = ({ navigation }) => {
             <View style={styles.formContainer}>
               <View style={styles.headlineContainer}>
                 <Text style={styles.headline}>
-                  Générez des revenues et fédérer votre communauté plus simplement avec Liveshopp.
+                  Générez des revenus et fédérez votre communauté plus simplement avec Liveshopp.
                 </Text>
               </View>
               <View style={styles.headlineContainerMessage}>
@@ -187,8 +187,8 @@ export const SellerSignUp = ({ navigation }) => {
               </View>
               {/*<View style={styles.condition}>
                 <Text style={styles.conditionText}>
-                  En créant votre compte vous acceptez les Conditions générales
-                  d’utilisation, les Conditions générales de vente et la
+                  En créant votre compte vous acceptez les Conditions Générales
+                  d’Utilisation, les Conditions Générales de Vente et la
                   politique de confidentialité de Liveshopp et confirmez avoir
                   plus de 16 ans.
                 </Text>
