@@ -476,7 +476,7 @@ export const LiveScreen = ({ navigation, route }) => {
                 justifyContent: 'flex-start',
                 alignItems: 'center',
               }}>
-              {user.profil === 'seller' && (
+              {isHost && (
                 <TouchableOpacity onPress={() => switchCamera()}>
                   <FontAwesomeIcon icon={faArrowsRotate} color={colors.LIGHT} size={25} />
                 </TouchableOpacity>
