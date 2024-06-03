@@ -98,7 +98,7 @@ export const OnGoingLive = ({ navigation }) => {
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(setSellerLives(data.lives));

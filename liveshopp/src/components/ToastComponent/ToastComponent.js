@@ -2,7 +2,11 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
-import { faArrowsRotate, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowsRotate,
+  faCircleCheck,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import colors from '../../styles/colors';
@@ -45,7 +49,7 @@ const toastConfig = {
   toastError: ({ text1, props }) => (
     <View
       style={{
-        padding: 10,
+        padding: 20,
         borderLeftWidth: 0,
         backgroundColor: 'white',
         width: '90%',
@@ -55,21 +59,33 @@ const toastConfig = {
         shadowOffset: { height: 1 },
         shadowOpacity: 0.3,
         shadowRadius: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
       }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <FontAwesomeIcon icon={faTriangleExclamation} color={colors.PRIMARY} size={17} />
-        <Text
-          style={{
-            fontSize: 17,
-            fontWeight: '600',
-            width: '100%',
-            textAlign: 'left',
-            marginLeft: 10,
-          }}>
-          Oops !
-        </Text>
+      <FontAwesomeIcon icon={faTriangleExclamation} color={colors.PRIMARY} size={17} />
+      <View style={{ marginLeft: 10 }}>
+        <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
       </View>
-      <View style={{ marginLeft: 28, marginTop: 5 }}>
+    </View>
+  ),
+  toastSuccess: ({ text1, props }) => (
+    <View
+      style={{
+        padding: 15,
+        borderLeftWidth: 0,
+        backgroundColor: 'white',
+        width: '90%',
+        borderRadius: 5,
+        borderColor: 'grey',
+        shadowColor: '#171717',
+        shadowOffset: { height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+      <FontAwesomeIcon icon={faCircleCheck} color={colors.SUCCESS} size={17} />
+      <View style={{ marginLeft: 10 }}>
         <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
       </View>
     </View>

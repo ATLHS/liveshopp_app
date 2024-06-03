@@ -53,7 +53,7 @@ const TextArea = ({ field }) => {
 
   const handleSelectedVideoExceedDurationLimit = () => {
     Toast.show({
-      type: 'error',
+      type: 'toastError',
       text1: 'La durée maximale pour une vidéo enchères doit être de 40 secondes maximum.',
     });
     console.error('The user exceeded the duration limit of the video');

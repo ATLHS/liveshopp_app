@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
-import LiveCard from '../../components/liveCard/liveCard';
 import LiveStatus from '../../constants/LiveStatus';
 import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
@@ -79,7 +78,14 @@ export const LivesScreen = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.liveContainer}>
               {currentLives.length && !isLoading ? (
-                renderLives(currentLives, user, 'userStack', goLive)
+                renderLives(
+                  currentLives.map((live) => ({
+                    ...live,
+                    imageUrl: live.imageUrl,
+                  })),
+                  user,
+                  goLive,
+                )
               ) : (
                 <></>
               )}

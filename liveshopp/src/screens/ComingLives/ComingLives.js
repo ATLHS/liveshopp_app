@@ -12,14 +12,10 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useFocusEffect } from '@react-navigation/native';
-
 import NoData from '../../components/NoData/NoData';
-import LiveCard from '../../components/liveCard/liveCard';
 import LiveStatus from '../../constants/LiveStatus';
 import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
-import live from '../../services/live';
 import colors from '../../styles/colors';
 import renderLives from '../../utils/renderLives';
 
@@ -61,7 +57,14 @@ export const LivesScreen = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.liveContainer}>
               {upComingLives.length && !isLoading ? (
-                renderLives(upComingLives, user, 'userStack', goLive)
+                renderLives(
+                  upComingLives.map((live) => ({
+                    ...live,
+                    imageUrl: live.imageUrl,
+                  })),
+                  user,
+                  goLive,
+                )
               ) : (
                 <></>
               )}

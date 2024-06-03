@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 
 import LiveCard from '../../src/components/liveCard/liveCard';
 
-const renderLives = (lives, user, stack, onPressAction = () => {}) => {
+const renderLives = (lives, user, onPressAction = () => {}) => {
   return lives.map((live, id) => {
-    const imageUrl = stack === 'userStack' ? live.imageUrl : user.imageUrl;
     return (
       <LiveCard
         key={id}
@@ -15,7 +14,7 @@ const renderLives = (lives, user, stack, onPressAction = () => {}) => {
         category={live.business_activity}
         status={live.live_status}
         onPress={() => onPressAction(live)}
-        imageUrl={imageUrl}
+        imageUrl={live.imageUrl}
         imageKey={user.imageUrl}
       />
     );

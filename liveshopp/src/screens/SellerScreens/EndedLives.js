@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -38,7 +37,13 @@ export const EndedLives = () => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.liveContainer}>
               {endedLives.length && !isLoading ? (
-                renderLives(endedLives, user, 'sellerStack')
+                renderLives(
+                  endedLives.map((live) => ({
+                    ...live,
+                    imageUrl: user.imageUrl,
+                  })),
+                  user,
+                )
               ) : (
                 <></>
               )}

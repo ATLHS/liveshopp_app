@@ -18,7 +18,6 @@ import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
 import NoData from '../../components/NoData/NoData';
-import LiveCard from '../../components/liveCard/liveCard';
 import LiveStatus from '../../constants/LiveStatus';
 import { setSellerLives } from '../../redux/slices/livesSlice';
 import live from '../../services/live';
@@ -45,7 +44,7 @@ export const CommingSoonLives = ({ navigation }) => {
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(setSellerLives(data.lives));
@@ -177,7 +176,14 @@ export const CommingSoonLives = ({ navigation }) => {
               </Modal>
               <View style={styles.liveContainer}>
                 {upComingLives.length && !isLoading ? (
-                  renderLives(upComingLives, user, 'sellerStack', promptLiveDeletion)
+                  renderLives(
+                    upComingLives.map((live) => ({
+                      ...live,
+                      imageUrl: user.imageUrl,
+                    })),
+                    user,
+                    promptLiveDeletion,
+                  )
                 ) : (
                   <></>
                 )}
