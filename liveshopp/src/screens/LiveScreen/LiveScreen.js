@@ -49,8 +49,8 @@ const colorList = [
 ];
 
 export const LiveScreen = ({ navigation, route }) => {
-  const { channelName } = route.params;
-  const { isHost, liveData } = useSelector((state) => state.lives);
+  const { channelName, seller_id } = route.params;
+  const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -59,6 +59,7 @@ export const LiveScreen = ({ navigation, route }) => {
   const list = useRef(null);
   const panelRef = useRef(null);
 
+  const [isHost] = useState(user.id === seller_id);
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
 
@@ -84,6 +85,10 @@ export const LiveScreen = ({ navigation, route }) => {
 
   const setupVideoSDKEngine = async () => {
     try {
+      if (agoraEngineRef.current) {
+        return;
+      }
+
       await getPermission();
 
       agoraEngineRef.current = createAgoraRtcEngine();
@@ -91,15 +96,15 @@ export const LiveScreen = ({ navigation, route }) => {
 
       agoraEngine.registerEventHandler({
         onJoinChannelSuccess: () => {
-          console.log('[AGORA] Successfully joined the channel ' + channelName);
+          console.log(`[AGORA] ${user.email} joined the channel: ${channelName}`);
           setIsJoined(true);
         },
         onUserJoined: (_connection, Uid) => {
-          console.log('[AGORA] Remote user joined with uid ' + Uid);
+          console.log(`[AGORA] ${user.email} Remote user joined with uid: ${Uid}`);
           setRemoteUid(Uid);
         },
         onUserOffline: (_connection, Uid) => {
-          console.log('[AGORA] Remote user left the channel. uid: ' + Uid);
+          console.log(`[AGORA] ${user.email} Remote user left the channel with uid: ${Uid}`);
           setRemoteUid(0);
         },
       });
@@ -115,22 +120,43 @@ export const LiveScreen = ({ navigation, route }) => {
     }
   };
 
+  // Gracefully quit and destroy the Agora engine
+  const releaseSDKEngine = () => {
+    agoraEngineRef.current?.leaveChannel();
+    agoraEngineRef.current?.stopPreview();
+    agoraEngineRef.current?.release();
+
+    setRemoteUid(0);
+    setIsJoined(false);
+  };
+
   const joinLiveBroadcast = async () => {
     try {
       if (isJoined) {
         return;
       }
+
       const { token } = await live.getAgoraToken(channelName);
 
       if (isHost) {
         agoraEngineRef.current?.startPreview();
-        agoraEngineRef.current?.joinChannel(token, channelName, 0, {
+        const status = agoraEngineRef.current?.joinChannel(token, channelName, 0, {
           clientRoleType: ClientRoleType.ClientRoleBroadcaster,
         });
+
+        if (status === -17) {
+          console.warn('Host already joined the Agora channel');
+          setIsJoined(true);
+        }
       } else {
-        agoraEngineRef.current?.joinChannel(token, channelName, 0, {
+        const status = agoraEngineRef.current?.joinChannel(token, channelName, 0, {
           clientRoleType: ClientRoleType.ClientRoleAudience,
         });
+
+        if (status === -17) {
+          console.warn('Viewer already joined the Agora channel');
+          setIsJoined(true);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -159,18 +185,10 @@ export const LiveScreen = ({ navigation, route }) => {
     joinLiveBroadcast();
   }, []);
 
-  // Stop the engine
+  // Stop the engine, gracefully exit
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
-      // Gracefully quit and destroy the Agora engine
-      agoraEngineRef.current?.leaveChannel();
-      agoraEngineRef.current?.stopPreview();
-      agoraEngineRef.current?.removeAllListeners('onJoinChannelSuccess');
-      agoraEngineRef.current?.removeAllListeners('onUserJoined');
-      agoraEngineRef.current?.removeAllListeners('onUserOffline');
-
-      setRemoteUid(0);
-      setIsJoined(false);
+      releaseSDKEngine();
     });
 
     return unsubscribe;
@@ -429,7 +447,7 @@ export const LiveScreen = ({ navigation, route }) => {
                   <LiveAuctionInfo />
                   {renderUserLiveForm()}
                 </>
-              ) : isHost && user.profil === 'seller' ? (
+              ) : isHost ? (
                 <SellerLiveForm
                   onPress={(data) => startCurrentAuction(liveData.channelName, data)}
                   currentAuctionIsRunning={
@@ -442,7 +460,6 @@ export const LiveScreen = ({ navigation, route }) => {
                   <LiveChatTextInput
                     onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
                     live={liveData}
-                    isHost={isHost}
                   />
                 </>
               )}
@@ -542,7 +559,6 @@ export const LiveScreen = ({ navigation, route }) => {
               <LiveChatTextInput
                 onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
                 live={liveData}
-                isHost={isHost}
               />
             </View>
           </View>
