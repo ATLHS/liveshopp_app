@@ -17,7 +17,7 @@ const liveMessage = [
   },
 ];
 
-export const LiveChatTextInput = ({ onPress, live, isHost }) => {
+export const LiveChatTextInput = ({ onPress, live }) => {
   const { handleSubmit, control, reset } = useForm();
   const ref = useRef();
 
@@ -27,57 +27,53 @@ export const LiveChatTextInput = ({ onPress, live, isHost }) => {
 
   return (
     <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-      {!isHost ? (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          {liveMessage.map((textField, idx) => (
-            <Controller
-              key={idx}
-              control={control}
-              name={textField.name}
-              render={({ field }) => (
-                <View style={{ width: 323 }}>
-                  <TextInput
-                    style={{
-                      borderWidth: 0,
-                      borderRadius: 5,
-                      height: 40,
-                      paddingRight: 40,
-                      paddingLeft: 10,
-                      color: colors.LIGHT,
-                      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                      fontWeight: '600',
-                    }}
-                    ref={ref}
-                    clearButtonMode="always"
-                    returnKeyType="send"
-                    onSubmitEditing={handleSubmit((data) => {
-                      onPress(data, live);
-                      clearMessageField();
-                      reset();
-                    })}
-                    placeholder={textField.label}
-                    autoFocus={textField.autoFocus || false}
-                    onChangeText={(value) => field.onChange(value)}
-                    defaultValue={textField.defaultValue}
-                    placeholderTextColor="#CCCCCC"
-                    selectionColor={colors.LIGHT}
-                    editable={textField.editable}
-                    maxLength={500}
-                    keyboardType={'default'}
-                  />
-                </View>
-              )}
-              rules={textField.validation}
-            />
-          ))}
-        </View>
-      ) : (
-        <View />
-      )}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+        }}>
+        {liveMessage.map((textField, idx) => (
+          <Controller
+            key={idx}
+            control={control}
+            name={textField.name}
+            render={({ field }) => (
+              <View style={{ width: 323 }}>
+                <TextInput
+                  style={{
+                    borderWidth: 0,
+                    borderRadius: 5,
+                    height: 40,
+                    paddingRight: 40,
+                    paddingLeft: 10,
+                    color: colors.LIGHT,
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    fontWeight: '600',
+                  }}
+                  ref={ref}
+                  clearButtonMode="always"
+                  returnKeyType="send"
+                  onSubmitEditing={handleSubmit((data) => {
+                    onPress(data, live);
+                    clearMessageField();
+                    reset();
+                  })}
+                  placeholder={textField.label}
+                  autoFocus={textField.autoFocus || false}
+                  onChangeText={(value) => field.onChange(value)}
+                  defaultValue={textField.defaultValue}
+                  placeholderTextColor="#CCCCCC"
+                  selectionColor={colors.LIGHT}
+                  editable={textField.editable}
+                  maxLength={500}
+                  keyboardType={'default'}
+                />
+              </View>
+            )}
+            rules={textField.validation}
+          />
+        ))}
+      </View>
     </View>
   );
 };

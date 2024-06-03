@@ -58,6 +58,7 @@ export const OnGoingLive = ({ navigation }) => {
       dispatch(setIsJoin(true));
       navigation.navigate('LiveScreen', {
         channelName: liveData.live_name,
+        seller_id: liveData.seller_id,
       });
     } catch (e) {
       console.error(e);
