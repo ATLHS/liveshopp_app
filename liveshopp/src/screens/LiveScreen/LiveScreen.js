@@ -64,7 +64,7 @@ export const LiveScreen = ({ navigation, route }) => {
   const [remoteUid, setRemoteUid] = useState(0);
 
   const renderUserLiveForm = () => {
-    if (user.profil !== 'admin' && user.profil !== 'seller') {
+    if (user.profil !== 'admin' && !isHost) {
       return (
         <UserLiveForm
           liveData={liveData}
