@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { setIsHost, setLives } from '../../redux/slices/livesSlice';
 import { setBlockedUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
 import colors from '../../styles/colors';
@@ -19,7 +18,6 @@ const LivesTab = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(setIsHost(false));
       customer
         .getBlockedUser()
         .then((res) => res)

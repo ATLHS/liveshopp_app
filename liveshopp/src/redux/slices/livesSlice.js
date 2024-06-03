@@ -7,7 +7,6 @@ export const livesSlice = createSlice({
     sellerLives: [],
     isJoin: false,
     isGone: false,
-    isHost: true,
     remoteUid: null,
     liveData: {
       channelName: '',
@@ -51,18 +50,8 @@ export const livesSlice = createSlice({
     setCurrentAuction: (state, action) => {
       state.liveData.currentAuction.currentAuctionStatus = 'paused';
     },
-    setIsHost: (state, action) => {
-      state.isHost = action.payload;
-    },
   },
 });
-export const {
-  setLives,
-  setIsGone,
-  setIsJoin,
-  setLiveData,
-  setIsHost,
-  setSellerLives,
-  setRemoteUid,
-} = livesSlice.actions;
+export const { setLives, setIsGone, setIsJoin, setLiveData, setSellerLives, setRemoteUid } =
+  livesSlice.actions;
 export default livesSlice.reducer;

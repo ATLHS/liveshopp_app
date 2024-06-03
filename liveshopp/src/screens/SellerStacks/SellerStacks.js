@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import AutocompleteDropdownSearch from '../../components/AutocompleteDropdownSearch/AutocompleteDropdownSearch';
-import { setIsHost, setSellerLives } from '../../redux/slices/livesSlice';
+import { setSellerLives } from '../../redux/slices/livesSlice';
 import seller from '../../services/seller';
 import colors from '../../styles/colors';
 import LivesTab from '../LivesTab/LivesTab';
@@ -91,7 +91,6 @@ export const SellerStacks = ({ navigation }) => {
           component={SellerLiveTab}
           listeners={{
             tabPress: (e) => {
-              dispatch(setIsHost(true));
               dispatch(setSellerLives([]));
               seller
                 .getSellerLives()

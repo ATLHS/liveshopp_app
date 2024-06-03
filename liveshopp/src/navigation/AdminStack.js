@@ -28,7 +28,6 @@ const Stack = createNativeStackNavigator();
 const SellerStack = () => {
   const user = useSelector((state) => state.user.user);
   const liveData = useSelector((state) => state.lives.liveData);
-  const { isHost } = useSelector((state) => state.lives);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -193,7 +192,7 @@ const SellerStack = () => {
                 }}>
                 {liveData.sellerName}
               </Text>
-              {!isHost && (
+              {!(user.id === liveData.sellerId) && (
                 <TouchableOpacity onPress={() => showObjectionableAdminAction(liveData)}>
                   <FontAwesomeIcon icon={faEllipsisVertical} color={colors.LIGHT} size={17} />
                 </TouchableOpacity>
