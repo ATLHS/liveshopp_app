@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   Image,
   ImageBackground,
   StyleSheet,
@@ -13,7 +14,7 @@ import { DateTime } from 'luxon';
 
 import colors from '../../styles/colors';
 
-export const LiveCard = ({
+const LiveCard = ({
   onPress,
   sellerName,
   description,
@@ -23,204 +24,184 @@ export const LiveCard = ({
   datetime,
   imageKey,
 }) => {
-  useEffect(() => {}, []);
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
+
+  // Parse the date
+  const date = DateTime.fromISO(datetime);
+  const now = DateTime.now();
+
+  // Check if the date is today
+  const isToday = date.hasSame(now, 'day', {});
+
+  // Format the date string
+  const formattedDate = isToday
+    ? "Aujourd'hui"
+    : DateTime.fromISO(datetime).toLocaleString({
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+      });
+
   return (
-    <View
-      style={{
-        width: 160,
-        height: 250,
-        margin: 10,
-        marginBottom: 60,
-        marginTop: 0,
-        borderRadius: 5,
-      }}>
-      <View
-        style={{
-          marginBottom: 10,
-        }}>
-        <View
-          style={{
-            width: 130,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <View style={{ height: 25, width: 25, borderRadius: 4, backgroundColor: 'black' }}>
-            <Image
-              key={imageKey}
-              style={{ height: 25, width: 25, borderRadius: 4, opacity: 0.7 }}
-              source={
-                imageUrl
-                  ? { uri: imageUrl, cache: 'reload' }
-                  : require('../../../assets/images/liveshopp_back_lives.png')
-              }
-            />
-          </View>
-          <Text numberOfLines={1} style={styles.sellerName}>
-            {sellerName}
-          </Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.touchableStyle} onPress={onPress}>
-        {!imageUrl ? (
-          <View
-            style={{
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-            }}>
-            <ActivityIndicator size="large" color={colors.PRIMARY} />
-          </View>
-        ) : (
-          <ImageBackground
+    <View style={[styles.card, { width: dimensions.width * 0.4, height: dimensions.width * 0.65 }]}>
+      <View style={styles.sellerContainer}>
+        <View style={styles.avatarContainer}>
+          <Image
             key={imageKey}
+            style={styles.avatar}
             source={
               imageUrl
                 ? { uri: imageUrl, cache: 'reload' }
                 : require('../../../assets/images/liveshopp_back_lives.png')
             }
-            imageStyle={{
-              opacity: 0.7,
-              width: 160,
-              height: 250,
-              borderRadius: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: 140,
-                height: 230,
-              }}>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  borderColor: 'white',
-                  position: 'absolute',
-                  top: 10,
-                  width: '100%',
-                  alignItems: 'center',
-                  paddingTop: 0,
-                }}>
-                {status === 'live' ? (
-                  <View
-                    style={{
-                      borderColor: colors.PRIMARY,
-                      borderWidth: 1,
-                      textAlign: 'left',
-                      fontWeight: 'bold',
-                      fontSize: 13,
-                      backgroundColor: colors.PRIMARY,
-                      padding: 4,
-                      paddingRight: 10,
-                      paddingLeft: 10,
-                      marginLeft: 10,
-                      borderRadius: 4,
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'left',
-                        fontWeight: 'bold',
-                        color: colors.LIGHT,
-                        fontSize: 12,
-                      }}>
-                      En direct
-                    </Text>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      borderColor: colors.LIGHT,
-                      borderWidth: 1,
-                      textAlign: 'left',
-                      fontWeight: 'bold',
-                      fontSize: 13,
-                      width: '100%',
-                      backgroundColor: colors.LIGHT,
-                      padding: 4,
-                      paddingRight: 10,
-                      paddingLeft: 10,
-                      marginLeft: 10,
-                      borderRadius: 3,
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        color: colors.DARK,
-                        fontSize: 11,
-                        backgroundColor: colors.LIGHT,
-                      }}>
-                      {DateTime.fromISO(datetime).toLocaleString({
-                        month: 'short',
-                        day: 'numeric',
-                        weekday: 'short',
-                      })}
-                      {' à '}
-                      {DateTime.fromISO(datetime).toLocaleString(DateTime.TIME_SIMPLE)}
-                    </Text>
-                  </View>
-                )}
+          />
+        </View>
+        <Text numberOfLines={1} style={styles.sellerName}>
+          {sellerName}
+        </Text>
+      </View>
+
+      <TouchableOpacity style={styles.touchableStyle} onPress={onPress}>
+        <ImageBackground
+          key={imageKey}
+          source={
+            imageUrl
+              ? { uri: imageUrl, cache: 'reload' }
+              : require('../../../assets/images/liveshopp_back_lives.png')
+          }
+          imageStyle={styles.imageBackground}
+          style={styles.imageContainer}>
+          <View style={styles.statusContainer}>
+            {status === 'live' ? (
+              <View style={styles.liveStatut}>
+                <Text style={styles.liveText}>En direct</Text>
               </View>
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 70,
-                  left: 0,
-                  width: '100%',
-                  marginLeft: 10,
-                }}>
-                <Text numberOfLines={8} style={styles.description}>
-                  {description}
+            ) : (
+              <View style={styles.datetimeTextContainer}>
+                <Text style={styles.datetimeText}>
+                  {formattedDate}
+                  {' à '}
+                  {DateTime.fromISO(datetime).toLocaleString(DateTime.TIME_SIMPLE)}
                 </Text>
               </View>
-            </View>
-          </ImageBackground>
-        )}
+            )}
+          </View>
+          <Text numberOfLines={8} style={styles.description}>
+            {description}
+          </Text>
+        </ImageBackground>
       </TouchableOpacity>
-      <View
-        style={{
-          textAlign: 'left',
-          width: '100%',
-          marginTop: 5,
-        }}>
-        <Text style={styles.category}>{category}</Text>
-      </View>
+      <Text style={styles.category}>{category}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  card: {
+    marginBottom: '20%',
+    marginTop: 0,
+    borderRadius: 5,
+  },
+  header: {
+    flexDirection: 'column',
+  },
+  sellerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  categoryContainer: {
+    marginTop: 30,
+  },
+  avatarContainer: {
+    height: 25,
+    width: 25,
+    borderRadius: 4,
+    backgroundColor: 'black',
+  },
+  avatar: {
+    height: 25,
+    width: 25,
+    borderRadius: 4,
+    opacity: 0.7,
+  },
   sellerName: {
     color: colors.DARK,
     textAlign: 'left',
     fontWeight: 'bold',
     fontSize: 12,
-    width: '100%',
     marginLeft: 5,
+    flexShrink: 1,
+  },
+  touchableStyle: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
+    backgroundColor: 'black',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  imageContainer: {
+    width: '100%',
+    height: '100%',
+  },
+  imageBackground: {
+    opacity: 0.7,
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
+  },
+  statusContainer: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 8,
+    width: '100%',
+  },
+  liveText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: colors.LIGHT,
+    fontSize: 12,
+    backgroundColor: colors.PRIMARY,
+    padding: 5,
+    width: '50%',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  liveStatut: { width: '90%', borderWidth: 0 },
+  datetimeTextContainer: {
+    borderColor: colors.LIGHT,
+    borderWidth: 1,
+    width: '90%',
+    backgroundColor: colors.LIGHT,
+    padding: 5,
+    borderRadius: 3,
+  },
+  datetimeText: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    textAlign: 'center',
+    color: colors.DARK,
   },
   description: {
     color: colors.LIGHT,
     fontSize: 12,
     textAlign: 'left',
-  },
-  datetime: {
-    color: colors.LIGHT,
-    textAlign: 'left',
-    fontSize: 13,
+    marginTop: 70,
+    marginLeft: 10,
   },
   category: {
     color: colors.DARK,
     textAlign: 'left',
     fontSize: 12,
     fontWeight: '600',
-  },
-  touchableStyle: {
-    width: 160,
-    height: 250,
-    borderRadius: 5,
-    backgroundColor: 'black',
+    marginTop: 5,
   },
 });
 

@@ -15,7 +15,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import AutocompleteDropdownSearch from '../../components/AutocompleteDropdownSearch/AutocompleteDropdownSearch';
-import { setSellerLives } from '../../redux/slices/livesSlice';
+import { setLives, setSellerLives } from '../../redux/slices/livesSlice';
+import live from '../../services/live';
 import seller from '../../services/seller';
 import colors from '../../styles/colors';
 import LivesTab from '../LivesTab/LivesTab';
@@ -28,6 +29,18 @@ const Tab = createBottomTabNavigator();
 export const SellerStacks = ({ navigation }) => {
   const dispatch = useDispatch();
   const panelRef = useRef(null);
+
+  useEffect(() => {
+    live
+      .getLives()
+      .then((res) => res)
+      .then((data) => {
+        dispatch(setLives(data.lives));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
 
   const createNewLive = () => {
     navigation.navigate('SettingNewLive');
@@ -91,12 +104,11 @@ export const SellerStacks = ({ navigation }) => {
           component={SellerLiveTab}
           listeners={{
             tabPress: (e) => {
-              dispatch(setSellerLives([]));
               seller
                 .getSellerLives()
                 .then((res) => res)
                 .then((data) => {
-                  dispatch(setSellerLives(data.lives));
+                  dispatch(setSellerLives(data.sellerLives));
                 })
                 .catch((err) => {
                   console.error(err, 'get lives error.');

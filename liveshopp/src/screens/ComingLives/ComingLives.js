@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
@@ -16,49 +16,24 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
 import LiveCard from '../../components/liveCard/liveCard';
+import LiveStatus from '../../constants/LiveStatus';
 import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
 import live from '../../services/live';
 import colors from '../../styles/colors';
+import renderLives from '../../utils/renderLives';
 
 export const LivesScreen = ({ navigation }) => {
-  const { isGone } = useSelector((state) => state.lives);
+  const { lives } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [comingLives, setComingLives] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsLoading(true);
-      live
-        .getLives()
-        .then((res) => res)
-        .then((data) => {
-          dispatch(setLives(data.lives));
-          setComingLives(
-            data.lives.filter(
-              (live) =>
-                live.seller_id !== user.id &&
-                live.live_status === 'coming_soon' &&
-                !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id),
-            ),
-          );
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          console.error(err, 'get lives error.');
-        });
-    }, []),
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (isGone) {
-        goOut();
-      }
-    }, [isGone]),
+  const upComingLives = lives.filter(
+    (live) =>
+      live.live_status === LiveStatus.UPCOMING &&
+      live.seller_id !== user.id &&
+      !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id),
   );
 
   const goLive = async (liveData) => {
@@ -74,14 +49,6 @@ export const LivesScreen = ({ navigation }) => {
     }
   };
 
-  const goOut = () => {
-    try {
-      dispatch(setIsGone(false));
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <KeyboardAvoidingView
@@ -92,39 +59,13 @@ export const LivesScreen = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           contentInset={{ bottom: 100 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.onGoingLive}>
-              {isLoading ? (
-                <View
-                  style={{
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}>
-                  <ActivityIndicator size="large" color="black" />
-                </View>
-              ) : comingLives.length ? (
-                <>
-                  {comingLives.map((live, id) => (
-                    <LiveCard
-                      key={id}
-                      sellerName={live.sellerName}
-                      datetime={live.live_date_time}
-                      description={live.live_description}
-                      category={live.business_activity}
-                      status={live.live_status}
-                      onPress={() => goLive(live)}
-                      imageUrl={live.imageUrl || ''}
-                    />
-                  ))}
-                  <View
-                    style={{
-                      width: 150,
-                      height: 230,
-                      margin: 10,
-                      backgroundColor: 'transparent',
-                    }}
-                  />
-                </>
+            <View style={styles.liveContainer}>
+              {upComingLives.length && !isLoading ? (
+                renderLives(upComingLives, user, 'userStack', goLive)
               ) : (
+                <></>
+              )}
+              {!upComingLives.length && !isLoading && (
                 <NoData
                   title={'Aucun live à venir'}
                   message={'Les lives à venir apparaîtront ici.'}
@@ -143,13 +84,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  onGoingLive: {
+  liveContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    margin: 10,
     alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    margin: 26,
+    marginTop: 23,
+    padding: 0,
   },
   headlineContainer: { marginBottom: 30 },
   formContainer: {

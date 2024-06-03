@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 
+import { setIsHost } from '../../redux/slices/livesSlice';
 import colors from '../../styles/colors';
 import ComingSoonLives from './ComingSoonLives';
 import EndedLives from './EndedLives';
@@ -11,6 +14,13 @@ import SellerAuctionVideos from './SellerAuctionVideos';
 const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
+  const dispatch = useDispatch();
+  // Switch isHost to true in the SellerLiveTab only to set the ClientRoleType to ClientRoleBroadcaster when a seller join a live ( Used in LiveScreen.js L 126 )
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(setIsHost(true));
+    }, []),
+  );
   return (
     <Tab.Navigator
       screenOptions={{

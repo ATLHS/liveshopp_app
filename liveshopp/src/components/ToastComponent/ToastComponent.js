@@ -2,6 +2,9 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
+import { faArrowsRotate, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
 import colors from '../../styles/colors';
 
 const toastConfig = {
@@ -44,18 +47,31 @@ const toastConfig = {
       style={{
         padding: 10,
         borderLeftWidth: 0,
-        backgroundColor: '#FFB1B1',
-        width: 350,
+        backgroundColor: 'white',
+        width: '90%',
         borderRadius: 5,
+        borderColor: 'grey',
+        shadowColor: '#171717',
+        shadowOffset: { height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
       }}>
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: '400',
-          width: 350,
-        }}>
-        {text1}
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <FontAwesomeIcon icon={faTriangleExclamation} color={colors.PRIMARY} size={17} />
+        <Text
+          style={{
+            fontSize: 17,
+            fontWeight: '600',
+            width: '100%',
+            textAlign: 'left',
+            marginLeft: 10,
+          }}>
+          Oops !
+        </Text>
+      </View>
+      <View style={{ marginLeft: 28, marginTop: 5 }}>
+        <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
+      </View>
     </View>
   ),
   auctionToast: ({ text1 }) => (
@@ -88,7 +104,7 @@ const toastConfig = {
 };
 
 const ToastCompoenent = () => {
-  return <Toast config={toastConfig} autoHide={true} />;
+  return <Toast config={toastConfig} autoHide={true} visibilityTime={5000} />;
 };
 
 export default ToastCompoenent;

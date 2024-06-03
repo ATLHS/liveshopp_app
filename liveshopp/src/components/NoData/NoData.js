@@ -7,7 +7,7 @@ const NoData = ({ message, title, buttonTitle, onPress }) => {
   return (
     <View
       style={{
-        width: 290,
+        width: '100%',
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
@@ -28,6 +28,7 @@ const NoData = ({ message, title, buttonTitle, onPress }) => {
             color: colors.DARK,
             padding: 10,
             textAlign: 'center',
+            width: '80%',
           }}>
           {message}
         </Text>

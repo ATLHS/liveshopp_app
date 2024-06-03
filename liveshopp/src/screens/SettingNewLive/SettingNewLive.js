@@ -86,7 +86,7 @@ export const SettingNewLive = ({ navigation }) => {
           type: 'success',
           text1: data.message,
         });
-        dispatch(setSellerLives(data.lives));
+        dispatch(setSellerLives(data.sellerLives));
         setIsLoading(false);
         navigation.goBack();
       })
