@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { useFocusEffect } from '@react-navigation/native';
 
-import { setIsHost } from '../../redux/slices/livesSlice';
+import { setSellerLives } from '../../redux/slices/livesSlice';
+import socket from '../../services/config/clientSocketIoConfig';
 import colors from '../../styles/colors';
 import ComingSoonLives from './ComingSoonLives';
 import EndedLives from './EndedLives';
@@ -15,12 +15,13 @@ const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
   const dispatch = useDispatch();
-  // Switch isHost to true in the SellerLiveTab only to set the ClientRoleType to ClientRoleBroadcaster when a seller join a live ( Used in LiveScreen.js L 126 )
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(setIsHost(true));
-    }, []),
-  );
+  const { sellerLives } = useSelector((state) => state.lives);
+
+  useEffect(() => {}, [sellerLives]);
+  socket.on('refreshingSellerLives', (sellerLives) => {
+    dispatch(setSellerLives(sellerLives));
+  });
+
   return (
     <Tab.Navigator
       screenOptions={{

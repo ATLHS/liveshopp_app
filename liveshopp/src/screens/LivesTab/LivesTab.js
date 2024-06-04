@@ -1,11 +1,15 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { setSellerLives } from '../../redux/slices/livesSlice';
+import { setLives } from '../../redux/slices/livesSlice';
 import { setBlockedUser } from '../../redux/slices/userSlice';
+import socket from '../../services/config/clientSocketIoConfig';
 import customer from '../../services/customer';
+import live from '../../services/live';
 import colors from '../../styles/colors';
 import AuctionVideos from '../AuctionVideos/AuctionVideos';
 import ComingLives from '../ComingLives/ComingLives';
@@ -15,6 +19,15 @@ const Tab = createMaterialTopTabNavigator();
 
 const LivesTab = () => {
   const dispatch = useDispatch();
+  const { lives } = useSelector((state) => state.lives);
+
+  useEffect(() => {}, [lives]);
+
+  socket.on('refreshingLives', ({ refreshLives }) => {
+    console.log('new lives!!');
+
+    dispatch(setLives(refreshLives));
+  });
 
   useFocusEffect(
     React.useCallback(() => {

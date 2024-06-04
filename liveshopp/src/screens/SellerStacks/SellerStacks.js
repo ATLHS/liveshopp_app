@@ -27,20 +27,7 @@ import SettingsScreen from '../SettingsScreen/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 export const SellerStacks = ({ navigation }) => {
-  const dispatch = useDispatch();
   const panelRef = useRef(null);
-
-  useEffect(() => {
-    live
-      .getLives()
-      .then((res) => res)
-      .then((data) => {
-        dispatch(setLives(data.lives));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  });
 
   const createNewLive = () => {
     navigation.navigate('SettingNewLive');
@@ -102,19 +89,19 @@ export const SellerStacks = ({ navigation }) => {
           }}
           name="SellerLives"
           component={SellerLiveTab}
-          listeners={{
-            tabPress: (e) => {
-              seller
-                .getSellerLives()
-                .then((res) => res)
-                .then((data) => {
-                  dispatch(setSellerLives(data.sellerLives));
-                })
-                .catch((err) => {
-                  console.error(err, 'get lives error.');
-                });
-            },
-          }}
+          // listeners={{
+          //   tabPress: (e) => {
+          //     seller
+          //       .getSellerLives()
+          //       .then((res) => res)
+          //       .then((data) => {
+          //         dispatch(setSellerLives(data.sellerLives));
+          //       })
+          //       .catch((err) => {
+          //         console.error(err, 'get lives error.');
+          //       });
+          //   },
+          // }}
         />
 
         <Tab.Screen

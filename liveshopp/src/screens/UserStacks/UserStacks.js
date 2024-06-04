@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
-import { useDispatch } from 'react-redux';
 
 import { faBoxOpen, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import AutocompleteDropdownSearch from '../../components/AutocompleteDropdownSearch/AutocompleteDropdownSearch';
-import LiveStatus from '../../constants/LiveStatus';
-import { setLives } from '../../redux/slices/livesSlice';
-import live from '../../services/live';
 import colors from '../../styles/colors';
 import LivesTab from '../LivesTab/LivesTab';
 import OrderTab from '../OrderTab/OrderTab';
@@ -19,20 +15,6 @@ import SettingsScreen from '../SettingsScreen/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 const UserStacks = ({ navigation }) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    live
-      .getLives()
-      .then((res) => res)
-      .then((data) => {
-        dispatch(setLives(data.lives));
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  });
-
   return (
     <AutocompleteDropdownContextProvider>
       <Tab.Navigator
