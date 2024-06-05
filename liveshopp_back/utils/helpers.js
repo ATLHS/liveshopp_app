@@ -14,15 +14,6 @@ const adjustAuctionEndTimeForTenMinutes = (auctionEndDate) => {
   return auctionEndDate;
 };
 
-const isLessThanTenSeconds = (timer) => {
-  // Split the timer into minutes and seconds
-  const [minutes, seconds] = timer.split(':').map(Number);
-  // Convert the total time to seconds
-  const totalTimeInSeconds = minutes * 60 + seconds;
-  // Compare with 5 seconds
-  return totalTimeInSeconds < 10;
-};
-
 const randomFourDigitNumber = () => Math.floor(1000 + Math.random() * 9000);
 
-module.exports = { adjustAuctionEndTimeForTenMinutes, isLessThanTenSeconds, randomFourDigitNumber };
+module.exports = { adjustAuctionEndTimeForTenMinutes, randomFourDigitNumber };

@@ -95,7 +95,7 @@ const RootStack = ({ isLoading }) => {
               username: '',
               productName: false,
               currentProductAmount: '',
-              currentAuctionDelay: '',
+              currentAuctionTimer: '',
               currentAuctionStatus: '',
               salePrice: '',
             },

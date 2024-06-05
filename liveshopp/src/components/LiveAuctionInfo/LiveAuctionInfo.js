@@ -3,24 +3,26 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useSelector } from 'react-redux';
 
+import { Duration } from 'luxon';
+
 import colors from '../../styles/colors';
 
 export const LiveAuctionInfo = () => {
   const { liveData } = useSelector((state) => state.lives);
   const [time, setTime] = useState(Number);
+  const [displayedTime, setDisplayedTime] = useState('00:00');
   const handleViewRef = useRef(null);
 
   useEffect(() => {
-    const [minutes, seconds] = liveData.currentAuction.currentAuctionDelay.time
-      .split(':')
-      .map(Number);
-    const totalSeconds = minutes * 60 + seconds;
-    setTime(totalSeconds);
+    setTime(liveData.currentAuction.currentAuctionTimer);
 
-    if (seconds <= 10) {
+    const duration = Duration.fromObject({ seconds: liveData.currentAuction.currentAuctionTimer });
+    setDisplayedTime(duration.toFormat('mm:ss'));
+
+    if (liveData.currentAuction.currentAuctionTimer <= 10) {
       handleViewRef.current?.pulse();
     }
-  }, [liveData.currentAuction.currentAuctionDelay.time]);
+  }, [liveData.currentAuction.currentAuctionTimer]);
 
   return (
     <View style={styles.container}>
@@ -43,7 +45,7 @@ export const LiveAuctionInfo = () => {
             easing="ease-out"
             iterationCount="infinite"
             style={[styles.timeText, time <= 10 && { color: colors.PRIMARY }]}>
-            {liveData.currentAuction.currentAuctionDelay.time}
+            {displayedTime}
           </Animatable.Text>
           <Text style={styles.remainingTimeLabel}>Temps restant</Text>
         </View>

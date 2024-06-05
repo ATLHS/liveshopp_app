@@ -7,7 +7,6 @@ const { createServer } = require('node:http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const { morganMiddleware, log } = require('./middleware/logger');
-const registerChannelHandlers = require('./utils/socketHandler');
 
 const app = express();
 const httpServer = createServer(app);
@@ -17,10 +16,18 @@ const io = new Server(httpServer, {
   // pingTimeout
 });
 
+const handler = require('./utils/socketHandler')(io);
+
 io.on('connection', (socket) => {
   log.debug(`[socket.io] A user just connected ${socket.id}`);
 
-  registerChannelHandlers(io, socket);
+  socket.on('bid', handler.bid);
+  socket.on('blockCustomer', handler.blockCustomer);
+  socket.on('joinChannel', handler.joinChannel);
+  socket.on('leaveRoom', handler.leaveRoom);
+  socket.on('newLiveMessage', handler.newLiveMessage);
+  socket.on('pausedCurrentAuctionStatut', handler.pausedCurrentAuctionStatut);
+  socket.on('startCurrentAuction', handler.startCurrentAuction);
 
   if (socket.recovered) {
     log.debug('[socket.io] Socket recovered');
@@ -32,15 +39,15 @@ io.on('connection', (socket) => {
     log.debug(`[socket.io] User disconnected: ${reason} ${details}`);
   });
 
-  socket.onAny((eventName, ...args) => {
-    log.debug(`[socket.io] Receiving ${eventName}`);
-    log.debug(args);
-  });
+  // socket.onAny((eventName, ...args) => {
+  //   log.debug(`[socket.io] Receiving ${eventName}`);
+  //   log.debug(args);
+  // });
 
-  socket.onAnyOutgoing((eventName, ...args) => {
-    log.debug(`[socket.io] Sending ${eventName}`);
-    log.debug(args);
-  });
+  // socket.onAnyOutgoing((eventName, ...args) => {
+  //   log.debug(`[socket.io] Sending ${eventName}`);
+  //   log.debug(args);
+  // });
 });
 
 io.engine.on('connection_error', (err) => {
@@ -91,6 +98,9 @@ Sentry.setupExpressErrorHandler(app);
 
 httpServer.listen(process.env.PORT, () => {
   log.info(`Server listening on port ${process.env.PORT}`);
+
+  // Restart auction timers if server went off during a live
+  handler.restartAllChannelsAuctions();
 });
 
 module.exports = { app, httpServer };

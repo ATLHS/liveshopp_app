@@ -1,5 +1,4 @@
 // @ts-check
-const timer = require('time-counter');
 const { redis } = require('./services');
 
 /**
@@ -23,7 +22,7 @@ const { redis } = require('./services');
  * @property {string} productName
  * @property {number} currentProductAmount
  * @property {number} product_reserved_price
- * @property {timer} currentAuctionDelay
+ * @property {number} currentAuctionTimer
  * @property {('paused'|'ended'|'running'|'stopping')} currentAuctionStatus
  * @property {number} salePrice
  * @property {string} currentMessageInfo
@@ -62,7 +61,7 @@ const channel = (live) => ({
     productName: '',
     currentProductAmount: 0,
     product_reserved_price: 0,
-    currentAuctionDelay: new timer(),
+    currentAuctionTimer: 0,
     currentAuctionStatus: 'paused',
     salePrice: 0,
     currentMessageInfo: '',
@@ -113,8 +112,11 @@ const saveChannel = async (channel) => {
   return await redis.json.set(channel.channelName, '$', channel);
 };
 
-const saveAuctionTimer = async (channel) => {
-  return await redis.json.set(channel.channelName, '$.currentAuction.currentAuctionDelay', channel.currentAuction.currentAuctionDelay);
+/**
+ * @param {string} channelName
+ */
+const updateTimer = async (channelName) => {
+  return await redis.json.NUMINCRBY(channelName, '$.currentAuction.currentAuctionTimer', -1);
 };
 
-module.exports = { createChannel, getChannel, getChannels, saveAuctionTimer, saveChannel };
+module.exports = { createChannel, getChannel, getChannels, updateTimer, saveChannel };

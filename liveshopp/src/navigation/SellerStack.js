@@ -56,7 +56,7 @@ const SellerStack = () => {
           username: '',
           productName: false,
           currentProductAmount: '',
-          currentAuctionDelay: '',
+          currentAuctionTimer: '',
           currentAuctionStatus: '',
           salePrice: '',
         },

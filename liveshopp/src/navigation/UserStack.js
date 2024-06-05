@@ -61,7 +61,7 @@ const UserStack = () => {
           username: '',
           productName: false,
           currentProductAmount: '',
-          currentAuctionDelay: '',
+          currentAuctionTimer: '',
           currentAuctionStatus: '',
           salePrice: '',
         },
