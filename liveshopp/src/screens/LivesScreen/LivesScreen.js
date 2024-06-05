@@ -35,6 +35,7 @@ export const LivesScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      console.log(currentLives, 'current lives');
       if (isGone) {
         goOut();
       }
