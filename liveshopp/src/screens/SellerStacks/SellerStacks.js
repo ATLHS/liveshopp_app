@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import { useDispatch, useSelector } from 'react-redux';
 
 import {
   faBoxOpen,
@@ -15,9 +14,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import AutocompleteDropdownSearch from '../../components/AutocompleteDropdownSearch/AutocompleteDropdownSearch';
-import { setLives, setSellerLives } from '../../redux/slices/livesSlice';
-import live from '../../services/live';
-import seller from '../../services/seller';
 import colors from '../../styles/colors';
 import LivesTab from '../LivesTab/LivesTab';
 import OrderTab from '../OrderTab/OrderTab';
@@ -70,7 +66,7 @@ export const SellerStacks = ({ navigation }) => {
         <Tab.Screen
           options={{
             title: 'MES LIVES',
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: () => (
               <FontAwesomeIcon
                 icon={faTowerBroadcast}
                 size={styles.tabBarIconSize.fontSize}
@@ -89,19 +85,6 @@ export const SellerStacks = ({ navigation }) => {
           }}
           name="SellerLives"
           component={SellerLiveTab}
-          // listeners={{
-          //   tabPress: (e) => {
-          //     seller
-          //       .getSellerLives()
-          //       .then((res) => res)
-          //       .then((data) => {
-          //         dispatch(setSellerLives(data.sellerLives));
-          //       })
-          //       .catch((err) => {
-          //         console.error(err, 'get lives error.');
-          //       });
-          //   },
-          // }}
         />
 
         <Tab.Screen

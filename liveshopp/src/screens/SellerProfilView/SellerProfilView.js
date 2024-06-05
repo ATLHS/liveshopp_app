@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Keyboard,
@@ -11,39 +11,28 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { DateTime } from 'luxon';
 
 import { faInstagram, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import { faCalendar, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { useFocusEffect } from '@react-navigation/native';
 
 import Headline from '../../components/Auth/Headine/Headline';
-import live from '../../services/live';
 import colors from '../../styles/colors';
 
 export const SellerProfilView = ({ route }) => {
-  const [comingLives, setComingLives] = useState([]);
+  const [upComingLives, setUpComingSellerLive] = useState([]);
+  const { lives } = useSelector((state) => state.lives);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      live
-        .getLives()
-        .then((res) => res)
-        .then((data) => {
-          setComingLives(
-            data.lives.filter(
-              (live) =>
-                live.seller_id === route.params.sellerId && live.live_status === 'coming_soon',
-            ),
-          );
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }, []),
-  );
+  useEffect(() => {
+    const upComingLives = lives.filter(
+      (live) => live.seller_id === route.params.sellerId && live.live_status === 'coming_soon',
+    );
+    setUpComingSellerLive(upComingLives);
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <KeyboardAvoidingView
@@ -126,8 +115,8 @@ export const SellerProfilView = ({ route }) => {
                 </View>
                 <View>
                   <Headline title={'Prochain live'} />
-                  {comingLives.length > 0 ? (
-                    comingLives.map((comingLive, index) => (
+                  {upComingLives.length > 0 ? (
+                    upComingLives.map((comingLive, index) => (
                       <Text
                         key={index}
                         style={{
@@ -149,7 +138,7 @@ export const SellerProfilView = ({ route }) => {
                       </Text>
                     ))
                   ) : (
-                    <Text></Text>
+                    <Text />
                   )}
                 </View>
               </View>

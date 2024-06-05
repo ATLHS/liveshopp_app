@@ -19,8 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { DateTime } from 'luxon';
 
-import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useFocusEffect } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { setSellerLives } from '../../redux/slices/livesSlice';
-import socket from '../../services/config/clientSocketIoConfig';
+import seller from '../../services/seller';
 import colors from '../../styles/colors';
 import ComingSoonLives from './ComingSoonLives';
 import EndedLives from './EndedLives';
@@ -17,10 +18,19 @@ const SellerLiveTab = () => {
   const dispatch = useDispatch();
   const { sellerLives } = useSelector((state) => state.lives);
 
-  useEffect(() => {}, [sellerLives]);
-  socket.on('refreshingSellerLives', (sellerLives) => {
-    dispatch(setSellerLives(sellerLives));
-  });
+  useFocusEffect(
+    React.useCallback(() => {
+      seller
+        .getSellerLives()
+        .then((res) => res)
+        .then((data) => {
+          dispatch(setSellerLives(data.sellerLives));
+        })
+        .catch((err) => {
+          console.error(err, 'get lives error.');
+        });
+    }, [sellerLives.length]),
+  );
 
   return (
     <Tab.Navigator
