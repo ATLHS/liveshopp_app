@@ -175,8 +175,7 @@ const RootStack = ({ isLoading }) => {
       // if we are in a live, rejoin the chat room
       if (liveData?.auctionId) {
         console.log('Rejoining current channel chat', liveData.channelName);
-        const liveId = { _id: liveData?.auctionId };
-        socket.emit('joinChannel', { liveData: liveId, user });
+        socket.emit('joinChannel', { liveId: liveData.auctionId, user });
       }
     }
 
