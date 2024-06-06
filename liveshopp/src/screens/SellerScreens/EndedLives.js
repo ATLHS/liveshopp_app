@@ -64,7 +64,7 @@ export const EndedLives = () => {
                 !isLoading ? (
                 <NoData
                   title={"Vous n'avez aucun live terminé"}
-                  message={'Tous vos lives terminé \n apparaîtront ici.'}
+                  message={'Tous vos lives terminés \n apparaîtront ici.'}
                 />
               ) : (
                 <View

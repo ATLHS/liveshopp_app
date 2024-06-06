@@ -89,6 +89,11 @@ export const LiveScreen = ({ navigation, route }) => {
         return;
       }
 
+      // FIXME
+      //
+      // We should trigger permissions only for the host
+      // It's useless otherwise and could lead to issues
+      //
       await getPermission();
 
       agoraEngineRef.current = createAgoraRtcEngine();
@@ -145,7 +150,7 @@ export const LiveScreen = ({ navigation, route }) => {
         });
 
         if (status === -17) {
-          console.warn('Host already joined the Agora channel');
+          console.warn('[AGORA] Host already joined the Agora channel');
           setIsJoined(true);
         }
       } else {
@@ -154,7 +159,7 @@ export const LiveScreen = ({ navigation, route }) => {
         });
 
         if (status === -17) {
-          console.warn('Viewer already joined the Agora channel');
+          console.warn('[AGORA] Viewer already joined the Agora channel');
           setIsJoined(true);
         }
       }
@@ -186,6 +191,9 @@ export const LiveScreen = ({ navigation, route }) => {
   }, []);
 
   // Stop the engine, gracefully exit
+  //
+  // FIXME should be done when clicking on the exit button directly instead
+  //
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
       releaseSDKEngine();
@@ -374,8 +382,8 @@ export const LiveScreen = ({ navigation, route }) => {
                           fontFamily: 'Roboto-Regular',
                           marginBottom: 20,
                         }}>
-                        Hey, bienvenue dans le game ! {'\n\n'} Pour commencer à enchérir, n'oublie
-                        pas de renseigner un moyen de paiement et une adresse de livraison. 😉
+                        Bienvenue dans le game ! {'\n\n'} Pour commencer à enchérir, n'oubliez pas
+                        de renseigner un moyen de paiement et une adresse de livraison. 😉
                       </Text>
                     </View>
                     <View
@@ -524,7 +532,7 @@ export const LiveScreen = ({ navigation, route }) => {
                           textAlign: 'center',
                           color: colors.LIGHT,
                         }}>
-                        En attendant, tu peux poser une question au vendeur.
+                        En attendant, vous pouvez poser une question au vendeur.
                       </Text>
                     </View>
                     <View

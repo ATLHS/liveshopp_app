@@ -51,7 +51,7 @@ const OrderTab = () => {
             name="Processing"
             component={OrderToShipped}
           />
-          <Tab.Screen options={{ title: 'Expédié' }} name="Shipped" component={ShippedOrder} />
+          <Tab.Screen options={{ title: 'Expédiés' }} name="Shipped" component={ShippedOrder} />
         </>
       )}
     </Tab.Navigator>

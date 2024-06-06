@@ -776,7 +776,7 @@ export const AuctionVideos = ({ navigation }) => {
           ) : (
             <NoData
               title={'Aucune vidéos enchère en cours.'}
-              message={'Les vidéos enchères en cours apparaîtront ici. Reviens un peu plus tard.'}
+              message={'Les vidéos enchères en cours apparaîtront ici. Revenez un peu plus tard.'}
               buttonTitle={''}
             />
           )}

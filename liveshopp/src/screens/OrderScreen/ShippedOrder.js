@@ -65,9 +65,9 @@ export const ShippedOrder = () => {
                   order.deliveryStatut === 'Expédié',
               ).length && (
                 <NoData
-                  title={"Vous n'avez aucun article expédier."}
+                  title={"Vous n'avez aucun article expédié."}
                   message={
-                    'Les articles vendus lors de vos enchères qui on été expédier apparaîtront ici.'
+                    'Les articles vendus lors de vos enchères qui on été expédiés apparaîtront ici.'
                   }
                 />
               )}
