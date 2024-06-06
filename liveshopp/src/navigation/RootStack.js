@@ -136,7 +136,7 @@ const RootStack = ({ isLoading }) => {
 
   useEffect(() => {
     function onConnect() {
-      console.log('Connected with websocket ID', socket.id);
+      console.log('[SOCKET.IO] Connected with websocket ID', socket.id);
     }
 
     function onDisconnect(reason) {
@@ -144,16 +144,16 @@ const RootStack = ({ isLoading }) => {
 
       if (socket.active) {
         // temporary disconnection, the socket will automatically try to reconnect
-        console.log('Socket is still active, trying to reconnect automatically');
+        console.log('[SOCKET.IO] Socket is still active, trying to reconnect automatically');
       } else {
         // the connection was forcefully closed by the server or the client itself
         // in that case, `socket.connect()` must be manually called in order to reconnect
-        console.warn('Socket is not active');
+        console.warn('[SOCKET.IO] Socket is not active');
       }
     }
 
     function onConnectError(error) {
-      console.warn('Connect error', error);
+      console.warn('[SOCKET.IO] Connect error', error);
 
       if (socket.active) {
         // temporary failure, the socket will automatically try to reconnect
@@ -166,21 +166,21 @@ const RootStack = ({ isLoading }) => {
 
     // Manager
     function onError(error) {
-      console.warn('Socket error', error);
+      console.warn('[SOCKET.IO] Socket error', error);
     }
 
     function onReconnect(attempt) {
-      console.log(`Succesfully reconnected after ${attempt} tries`);
+      console.log(`[SOCKET.IO] Succesfully reconnected after ${attempt} tries`);
 
       // if we are in a live, rejoin the chat room
       if (liveData?.auctionId) {
-        console.log('Rejoining current channel chat', liveData.channelName);
+        console.log('[SOCKET.IO] Rejoining current channel chat', liveData.channelName);
         socket.emit('joinChannel', { liveId: liveData.auctionId, user });
       }
     }
 
     function onReconnectError(error) {
-      console.warn('Reconnect error', error);
+      console.warn('[SOCKET.IO] Reconnect error', error);
     }
 
     socket.on('connect', onConnect);
