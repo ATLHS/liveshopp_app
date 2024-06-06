@@ -13,7 +13,7 @@ router.get('/get-banned-users', verifyJwt, async (req, res) => {
     return res.status(200).json({ bannedUsers });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -42,7 +42,7 @@ router.post('/unban-user', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Oops ! Un probleme est survenu, réessayez plus tard...' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -100,7 +100,7 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -108,12 +108,10 @@ router.get('/get-flagged-user', verifyJwt, async (req, res) => {
   try {
     const flaggedUsers = await Reported.find({ isBlocked: false }).exec();
 
-    return res.status(200).json({
-      flaggedUsers,
-    });
+    return res.status(200).json({ flaggedUsers });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 

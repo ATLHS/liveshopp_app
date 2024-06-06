@@ -16,27 +16,23 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
     const customer = user || seller;
     const stripeCustomer = await stripeUtils.retrieveCustomer(customer.stripeCustomerId);
 
-    if (stripeCustomer) {
-      const ephemeralKey = await stripe.ephemeralKeys.create(
-        { customer: stripeCustomer.id },
-        { apiVersion: '2022-11-15' },
-      );
-      const setupIntent = await stripe.setupIntents.create({
-        customer: stripeCustomer.id,
-      });
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+      { customer: stripeCustomer.id },
+      { apiVersion: '2022-11-15' },
+    );
+    const setupIntent = await stripe.setupIntents.create({
+      customer: stripeCustomer.id,
+    });
 
-      return res.status(200).json({
-        setupIntent: setupIntent.client_secret,
-        customer: stripeCustomer.id,
-        publishableKey: process.env.STRIPE_TEST_PUBLIC_KEY,
-        ephemeralKey: ephemeralKey.secret,
-      });
-    }
-
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(200).json({
+      setupIntent: setupIntent.client_secret,
+      customer: stripeCustomer.id,
+      publishableKey: process.env.STRIPE_TEST_PUBLIC_KEY,
+      ephemeralKey: ephemeralKey.secret,
+    });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 

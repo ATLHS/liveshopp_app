@@ -17,7 +17,7 @@ router.get('/get-user-order', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -41,7 +41,7 @@ router.post('/update-order-status', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 

@@ -71,7 +71,7 @@ router.post('/update-customer-profil', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -113,7 +113,7 @@ router.post('/update-user-shipping-address', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -152,12 +152,10 @@ router.post('/update-user-payment-method-status', verifyJwt, async (req, res) =>
       }
     }
 
-    return res.status(400).json({
-      message: 'Un probleme est survenu, réessayez plus tard.',
-    });
+    return res.status(400).json({ message: 'Un probleme est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -174,7 +172,7 @@ router.post('/get-customer', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -245,7 +243,7 @@ router.post('/set-profil-picture', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -312,7 +310,7 @@ router.delete('/delete-profil-picture', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -357,7 +355,7 @@ router.post('/delete-customer', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -417,7 +415,7 @@ router.post('/signal-customer', verifyJwt, async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -446,7 +444,7 @@ router.get('/get-blocked-user', verifyJwt, async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -484,7 +482,7 @@ router.post('/signal-auction-video', verifyJwt, async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -499,7 +497,7 @@ router.get('/get-sellers', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -552,7 +550,7 @@ router.post('/block', verifyJwt, async (req, res) => {
     return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard' });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -600,7 +598,7 @@ router.post('/unblock-user', verifyJwt, async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 

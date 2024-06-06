@@ -9,6 +9,13 @@ const Live = require('../../models/live');
 const User = require('../../models/user');
 const Product = require('../../models/product');
 
+// FIXME
+//
+// We must change this function.
+// Here we are basically updating the next live
+// Which can be trigger by anyone, modifying the live of who knows who
+// Dangerous and not stable
+//
 const updateLiveStatus = async () => {
   return await Live.findOneAndUpdate(
     {
@@ -52,6 +59,7 @@ router.post('/create-live', verifyJwt, async (req, res) => {
         message: "Un live existe déjà pour ce créneau, veuillez le supprimer avant d'en créer un nouveau.",
       });
     }
+
     const live = new Live({
       seller_id: req.user.id,
       sellerName: seller.company_name,
@@ -62,52 +70,40 @@ router.post('/create-live', verifyJwt, async (req, res) => {
       imageUrl: seller.imageUrl,
     });
 
-    const newLiveSaved = await live.save();
+    await live.save();
     await updateLiveStatus();
     const lives = await Live.find({ seller_id: req.user.id });
 
-    if (newLiveSaved && lives) {
-      return res.status(200).json({
-        lives,
-        message: 'Votre live a bien été créé !',
-      });
-    }
-
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(200).json({
+      lives,
+      message: 'Votre live a bien été créé !',
+    });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
 router.get('/get-seller-live', verifyJwt, async (req, res) => {
   try {
     await updateLiveStatus();
-    let lives = await Live.find({ seller_id: req.user.id });
 
-    if (lives) {
-      return res.status(200).json({ lives });
-    }
+    const lives = await Live.find({ seller_id: req.user.id });
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(200).json({ lives });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
-router.get('/get-lives', verifyJwt, async (req, res, next) => {
+router.get('/get-lives', verifyJwt, async (req, res) => {
   try {
     const lives = await Live.find();
-
-    if (lives) {
-      return res.status(200).json({ lives });
-    }
-
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(200).json({ lives });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -118,17 +114,13 @@ router.post('/delete-live', verifyJwt, async (req, res) => {
     await Live.findOneAndDelete({ _id, seller_id });
     const lives = await Live.find({ seller_id: req.user.id });
 
-    if (lives) {
-      return res.status(200).json({
-        lives,
-        message: 'Le live a bien été supprimé.',
-      });
-    }
-
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(200).json({
+      lives,
+      message: 'Le live a bien été supprimé.',
+    });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -147,17 +139,13 @@ router.post('/close-live', verifyJwt, async (req, res) => {
 
     const lives = await Live.find({ seller_id: req.user.id });
 
-    if (lives) {
-      return res.status(200).json({
-        lives,
-        message: 'Le live a bien été clôturé.',
-      });
-    }
-
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(200).json({
+      lives,
+      message: 'Le live a bien été clôturé.',
+    });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
@@ -179,7 +167,7 @@ router.post('/get-agora-token', verifyJwt, async (req, res) => {
     return res.status(200).json({ token, generateUid });
   } catch (error) {
     Sentry.captureException(error);
-    return res.sendStatus(500);
+    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
   }
 });
 
