@@ -19,6 +19,7 @@ import SellerStack from './SellerStack';
 import UserStack from './UserStack';
 
 const RootStack = ({ isLoading }) => {
+  const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   const dispatch = useDispatch();
@@ -64,15 +65,11 @@ const RootStack = ({ isLoading }) => {
   }, []);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log(socket.id, 'web socket connected');
-    });
     if (isAuthenticate) {
       AsyncStorage.getItem('@token').then((token) => {
         axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
       });
     }
-    socket.removeAllListeners();
   }, [isAuthenticate]);
 
   socket.on('banUser', async (data) => {
@@ -121,6 +118,77 @@ const RootStack = ({ isLoading }) => {
       console.error(e);
     }
   });
+
+  useEffect(() => {
+    function onConnect() {
+      console.log('Connected with websocket ID', socket.id);
+    }
+
+    function onDisconnect(reason) {
+      console.warn('Disconnected for reason:', reason);
+
+      if (socket.active) {
+        // temporary disconnection, the socket will automatically try to reconnect
+        console.log('Socket is still active, trying to reconnect automatically');
+      } else {
+        // the connection was forcefully closed by the server or the client itself
+        // in that case, `socket.connect()` must be manually called in order to reconnect
+        console.warn('Socket is not active');
+      }
+    }
+
+    function onConnectError(error) {
+      console.warn('Connect error', error);
+
+      if (socket.active) {
+        // temporary failure, the socket will automatically try to reconnect
+      } else {
+        // the connection was denied by the server
+        // in that case, `socket.connect()` must be manually called in order to reconnect
+        console.log(error.message);
+      }
+    }
+
+    // Manager
+    function onError(error) {
+      console.warn('Socket error', error);
+    }
+
+    function onReconnect(attempt) {
+      console.log(`Succesfully reconnected after ${attempt} tries`);
+
+      // if we are in a live, rejoin the chat room
+      if (liveData?.auctionId) {
+        console.log('Rejoining current channel chat', liveData.channelName);
+        const liveId = { _id: liveData?.auctionId };
+        socket.emit('joinChannel', { liveData: liveId, user });
+      }
+    }
+
+    function onReconnectError(error) {
+      console.warn('Reconnect error', error);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('connect_error', onConnectError);
+
+    // Manager
+    socket.io.on('error', onError);
+    socket.io.on('reconnect', onReconnect);
+    socket.io.on('reconnect_error', onReconnectError);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('connect_error', onConnectError);
+
+      // Manager
+      socket.io.off('error', onError);
+      socket.io.off('reconnect', onReconnect);
+      socket.io.off('reconnect_error', onReconnectError);
+    };
+  }, [liveData, user]);
 
   return (
     <NavigationContainer>
