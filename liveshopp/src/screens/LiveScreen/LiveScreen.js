@@ -524,14 +524,14 @@ export const LiveScreen = ({ navigation, route }) => {
                     <View
                       style={{
                         marginBottom: 30,
-                        justifyContent: 'center',
                         alignItems: 'center',
-                        width: 200,
+                        width: '100%',
                       }}>
                       <Text
                         style={{
                           textAlign: 'center',
                           color: colors.LIGHT,
+                          margin: 'auto',
                         }}>
                         En attendant, vous pouvez poser une question au vendeur.
                       </Text>

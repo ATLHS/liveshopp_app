@@ -19,9 +19,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import NoData from '../../components/NoData/NoData';
 import LiveStatus from '../../constants/LiveStatus';
+import UserType from '../../constants/UserType';
 import { setSellerLives } from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import renderLives from '../../utils/renderLives';
 
 export const CommingSoonLives = ({ navigation }) => {
@@ -47,7 +49,7 @@ export const CommingSoonLives = ({ navigation }) => {
           type: 'toastSuccess',
           text1: data.message,
         });
-        dispatch(setSellerLives(data.lives));
+        checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
         setIsLoading(false);
       })
       .catch((err) => {

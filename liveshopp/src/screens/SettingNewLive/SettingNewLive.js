@@ -17,9 +17,10 @@ import { DateTime } from 'luxon';
 
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
-import { setSellerLives } from '../../redux/slices/livesSlice';
+import UserType from '../../constants/UserType';
 import seller from '../../services/seller';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 
 const LiveCreationFormSchema = () => [
   {
@@ -87,7 +88,7 @@ export const SettingNewLive = ({ navigation }) => {
           type: 'toastSuccess',
           text1: data.message,
         });
-        dispatch(setSellerLives(data.sellerLives));
+        checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
         setIsLoading(false);
         navigation.goBack();
       })

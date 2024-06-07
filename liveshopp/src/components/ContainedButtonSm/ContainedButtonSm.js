@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   touchableStyle: {
-    width: 300,
+    width: 230,
     height: 50,
     marginTop: 10,
     marginBottom: 10,

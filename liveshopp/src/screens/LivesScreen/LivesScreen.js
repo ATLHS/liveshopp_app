@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -15,9 +17,11 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
 import LiveStatus from '../../constants/LiveStatus';
+import UserType from '../../constants/UserType';
 import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import renderLives from '../../utils/renderLives';
 
 export const LivesScreen = ({ navigation }) => {
@@ -25,6 +29,16 @@ export const LivesScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      checkAndUpdateLiveStatus(lives, dispatch, UserType.USER);
+      setRefreshing(false);
+    }, 1000);
+  };
 
   const currentLives = lives.filter(
     (live) =>
@@ -35,7 +49,6 @@ export const LivesScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log(currentLives, 'current lives');
       if (isGone) {
         goOut();
       }
@@ -74,29 +87,42 @@ export const LivesScreen = ({ navigation }) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
-          contentInset={{ bottom: 100 }}>
+          contentInset={{ bottom: 100 }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.liveContainer}>
-              {currentLives.length && !isLoading ? (
-                renderLives(
-                  currentLives.map((live) => ({
-                    ...live,
-                    imageUrl: live.imageUrl,
-                  })),
-                  user,
-                  goLive,
-                )
-              ) : (
-                <></>
-              )}
-              {!currentLives.length && !isLoading && (
-                <NoData
-                  title={'Aucun live en cours'}
-                  message={'Les lives en cours apparaîtront ici. Revenez un peu plus tard.'}
-                  buttonTitle={''}
-                />
-              )}
-            </View>
+            <>
+              <View style={{ marginTop: 15, alignItems: 'center' }}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    textAlign: 'center',
+                    color: colors.HOUR,
+                  }}>
+                  Rafraîchis pour afficher les lives en cours.
+                </Text>
+              </View>
+              <View style={styles.liveContainer}>
+                {currentLives.length && !isLoading ? (
+                  renderLives(
+                    currentLives.map((live) => ({
+                      ...live,
+                      imageUrl: live.imageUrl,
+                    })),
+                    user,
+                    goLive,
+                  )
+                ) : (
+                  <></>
+                )}
+                {!currentLives.length && !isLoading && (
+                  <NoData
+                    title={'Aucun live en cours'}
+                    message={'Les lives en cours apparaîtront ici. Revenez un peu plus tard.'}
+                    buttonTitle={''}
+                  />
+                )}
+              </View>
+            </>
           </TouchableWithoutFeedback>
         </ScrollView>
       </KeyboardAvoidingView>

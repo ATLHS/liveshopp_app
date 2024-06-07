@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { setSellerLives } from '../../redux/slices/livesSlice';
+import UserType from '../../constants/UserType';
 import seller from '../../services/seller';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import ComingSoonLives from './ComingSoonLives';
 import EndedLives from './EndedLives';
 import OnGoingLive from './OnGoingLive';
@@ -24,7 +25,7 @@ const SellerLiveTab = () => {
         .getSellerLives()
         .then((res) => res)
         .then((data) => {
-          dispatch(setSellerLives(data.sellerLives));
+          checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
         })
         .catch((err) => {
           console.error(err, 'get lives error.');

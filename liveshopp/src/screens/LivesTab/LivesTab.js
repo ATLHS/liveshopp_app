@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { setLives } from '../../redux/slices/livesSlice';
+import UserType from '../../constants/UserType';
 import { setBlockedUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
 import live from '../../services/live';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import AuctionVideos from '../AuctionVideos/AuctionVideos';
 import ComingLives from '../ComingLives/ComingLives';
 import LivesScreen from '../LivesScreen/LivesScreen';
@@ -19,19 +20,17 @@ const LivesTab = () => {
   const dispatch = useDispatch();
   const { lives } = useSelector((state) => state.lives);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      live
-        .getLives()
-        .then((res) => res)
-        .then((data) => {
-          dispatch(setLives(data.lives));
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }, [lives.length]),
-  );
+  useEffect(() => {
+    live
+      .getLives()
+      .then((res) => res)
+      .then((data) => {
+        checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {

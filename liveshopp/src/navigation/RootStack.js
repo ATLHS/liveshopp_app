@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Alert, AppState, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { DateTime } from 'luxon';
 
 import { APP_STORE_BUNDLE_ID, PLAY_STORE_BUNDLE_ID } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,52 +21,8 @@ import UserStack from './UserStack';
 const RootStack = ({ isLoading }) => {
   const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
-  const { sellerLives, lives } = useSelector((state) => state.lives);
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   const dispatch = useDispatch();
-  const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
-  const updateLiveStatus = () => {
-    // const currentDate = DateTime.now();
-    // lives.forEach((live) => {
-    //   if (live.live_status === 'coming_soon') {
-    //     const targetDate = DateTime.fromISO(live.live_date_time);
-    //     const difference = targetDate.diff(currentDate, 'minutes').minutes;
-    //     if (difference >= 0 && difference <= 5) {
-    //       console.log(live, 'live');
-    //       live.live_status === 'live';
-    //       lives.push(live);
-    //     }
-    //   }
-    // });
-    console.log('hello update');
-  };
-  // Vérifie chaque minute
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        const intervalId = setInterval(() => {
-          const currentDate = new Date();
-          const minutes = currentDate.getMinutes();
-
-          console.log(minutes, 'minutes');
-
-          // Vérifie si les minutes sont 25 ou 55
-          if ((minutes >= 25 && minutes <= 30) || minutes >= 55 || minutes <= 15) {
-            updateLiveStatus();
-          }
-        }, 60000);
-        console.log('App has come to the foreground!');
-        return () => clearInterval(intervalId);
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
 
   useEffect(() => {
     // FIXME

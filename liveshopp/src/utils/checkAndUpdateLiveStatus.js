@@ -1,0 +1,22 @@
+import { DateTime } from 'luxon';
+
+import UserType from '../constants/UserType';
+import { setLives, setSellerLives } from '../redux/slices/livesSlice';
+
+export const checkAndUpdateLiveStatus = (lives, dispatch, userType) => {
+  const updatedLives = lives.map((live) => {
+    const specifiedTime = DateTime.fromISO(live.live_date_time);
+    const currentTime = DateTime.now();
+    const differenceInMinutes = specifiedTime.diff(currentTime, 'minutes').minutes;
+
+    if (live.live_status === 'coming_soon' && differenceInMinutes <= 5) {
+      return { ...live, live_status: 'live' };
+    }
+
+    return live;
+  });
+
+  userType === UserType.USER
+    ? dispatch(setLives(updatedLives))
+    : dispatch(setSellerLives(updatedLives));
+};
