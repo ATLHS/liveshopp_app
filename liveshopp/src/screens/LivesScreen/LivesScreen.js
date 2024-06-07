@@ -98,7 +98,7 @@ export const LivesScreen = ({ navigation }) => {
                     textAlign: 'center',
                     color: colors.HOUR,
                   }}>
-                  Rafraîchis pour afficher les lives en cours.
+                  Rafraîchissez pour afficher les lives en cours.
                 </Text>
               </View>
               <View style={styles.liveContainer}>
