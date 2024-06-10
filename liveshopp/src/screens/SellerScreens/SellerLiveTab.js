@@ -17,20 +17,24 @@ const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
   const dispatch = useDispatch();
-  const { sellerLives } = useSelector((state) => state.lives);
 
   useFocusEffect(
     React.useCallback(() => {
+      let liveInterval;
       seller
         .getSellerLives()
         .then((res) => res)
         .then((data) => {
           checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
+          liveInterval = setInterval(() => {
+            checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
+          }, 300000); // 5 minutes
         })
         .catch((err) => {
-          console.error(err, 'get lives error.');
+          console.error(err);
         });
-    }, [sellerLives.length]),
+      return () => clearInterval(liveInterval);
+    }, []),
   );
 
   return (

@@ -40,8 +40,6 @@ export const OnGoingLive = ({ navigation }) => {
   const isFocused = useIsFocused();
   const currentLive = sellerLives.find((live) => live.live_status === LiveStatus.LIVE);
 
-  useEffect(() => {}, [sellerLives]);
-
   useEffect(() => {
     let interval;
     if (isFocused) {
@@ -50,15 +48,6 @@ export const OnGoingLive = ({ navigation }) => {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isFocused]);
-
-  useEffect(() => {
-    let int;
-    int = setInterval(() => {
-      checkAndUpdateLiveStatus(sellerLives, dispatch, UserType.SELLER);
-    }, 10000);
-
-    return () => clearInterval(int);
   }, [isFocused]);
 
   useFocusEffect(

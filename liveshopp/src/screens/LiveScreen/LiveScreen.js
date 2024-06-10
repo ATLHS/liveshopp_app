@@ -205,8 +205,8 @@ export const LiveScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      liveData.messages.length && list.current.scrollToEnd();
-    }, [liveData.messages]),
+      list.current.scrollToEnd();
+    }, [liveData.messages.length]),
   );
 
   const startCurrentAuction = (channelName, data) => {

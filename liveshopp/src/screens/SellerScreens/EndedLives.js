@@ -23,8 +23,6 @@ export const EndedLives = () => {
 
   const endedLives = sellerLives.filter((live) => live.live_status === LiveStatus.ENDED);
 
-  useEffect(() => {}, [sellerLives]);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <KeyboardAvoidingView

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 
+import LiveStatus from '../constants/LiveStatus';
 import UserType from '../constants/UserType';
 import { setLives, setSellerLives } from '../redux/slices/livesSlice';
 
@@ -9,13 +10,15 @@ export const checkAndUpdateLiveStatus = (lives, dispatch, userType) => {
     const currentTime = DateTime.now();
     const differenceInMinutes = specifiedTime.diff(currentTime, 'minutes').minutes;
 
-    if (live.live_status === 'coming_soon' && differenceInMinutes <= 5) {
-      return { ...live, live_status: 'live' };
+    // Display lives defined as started (less 5 minutes)
+    if (live.live_status === LiveStatus.UPCOMING && differenceInMinutes <= 5) {
+      return { ...live, live_status: LiveStatus.LIVE };
     }
 
     return live;
   });
 
+  // Dispatch updated lives based on user type
   userType === UserType.USER
     ? dispatch(setLives(updatedLives))
     : dispatch(setSellerLives(updatedLives));

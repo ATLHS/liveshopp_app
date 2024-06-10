@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -18,7 +18,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import NoData from '../../components/NoData/NoData';
 import LiveStatus from '../../constants/LiveStatus';
 import UserType from '../../constants/UserType';
-import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
+import { setIsGone, setIsJoin } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
 import colors from '../../styles/colors';
 import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
@@ -32,6 +32,7 @@ export const LivesScreen = ({ navigation }) => {
 
   const [refreshing, setRefreshing] = React.useState(false);
 
+  // Check and refresh ongoing lives every second with user action 'pull to refresh'
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {

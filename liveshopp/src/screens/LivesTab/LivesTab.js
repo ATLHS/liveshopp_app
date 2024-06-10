@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,19 +18,25 @@ const Tab = createMaterialTopTabNavigator();
 
 const LivesTab = () => {
   const dispatch = useDispatch();
-  const { lives } = useSelector((state) => state.lives);
 
-  useEffect(() => {
-    live
-      .getLives()
-      .then((res) => res)
-      .then((data) => {
-        checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      let liveInterval;
+      live
+        .getLives()
+        .then((res) => res)
+        .then((data) => {
+          checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
+          liveInterval = setInterval(() => {
+            checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
+          }, 300000); // 5 minutes
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      return () => clearInterval(liveInterval);
+    }, []),
+  );
 
   useFocusEffect(
     React.useCallback(() => {

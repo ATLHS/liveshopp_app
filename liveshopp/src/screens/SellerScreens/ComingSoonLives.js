@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import NoData from '../../components/NoData/NoData';
 import LiveStatus from '../../constants/LiveStatus';
 import UserType from '../../constants/UserType';
-import { setSellerLives } from '../../redux/slices/livesSlice';
 import live from '../../services/live';
 import colors from '../../styles/colors';
 import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
@@ -34,8 +33,6 @@ export const CommingSoonLives = ({ navigation }) => {
   const [liveToDelete, setLiveToDelete] = useState({});
   const dispatch = useDispatch();
   const upComingLives = sellerLives.filter((live) => live.live_status === LiveStatus.UPCOMING);
-
-  useEffect(() => {}, [sellerLives]);
 
   const deleteLive = (liveData) => {
     setIsLoading(true);

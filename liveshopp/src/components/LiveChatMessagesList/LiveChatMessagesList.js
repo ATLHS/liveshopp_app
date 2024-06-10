@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
@@ -13,11 +13,19 @@ const LiveChatMessagesList = ({
   showObjectionableAction,
   showObjectionableAdminAction,
 }) => {
+  const getItemLayout = (data, index) => ({
+    length: 100,
+    offset: 100 * index,
+    index,
+  });
+
   return (
     <FlatList
       ref={list}
       showsVerticalScrollIndicator={false}
-      contentInset={{ top: 0, bottom: 40, left: 0, right: 0 }}
+      initialScrollIndex={liveData.messages.length && liveData.messages.length - 1}
+      getItemLayout={getItemLayout}
+      contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
       style={styles.flatList}
       data={liveData.messages}
       renderItem={({ item }) => {
@@ -65,16 +73,18 @@ const LiveChatMessagesList = ({
 
 const styles = StyleSheet.create({
   flatList: {
-    height: 150,
+    height: 200,
     width: 323,
-    marginBottom: 15,
+    // marginBottom: 15,
     backgroundColor: 'transparent',
   },
   container: {
-    marginBottom: 5,
+    // marginBottom: 5,
+    height: 50,
+    backgroundColor: 'transparent',
   },
   itemContainer: {
-    marginTop: 7,
+    // marginTop: 7,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -93,14 +103,14 @@ const styles = StyleSheet.create({
     color: colors.LIGHT,
     fontSize: 13,
     fontWeight: '700',
-    marginBottom: 3,
+    // marginBottom: 3,
   },
   adminBadge: {
     backgroundColor: colors.LIGHT,
     color: colors.DARK,
     borderRadius: 2,
     alignItems: 'center',
-    marginBottom: 3,
+    // marginBottom: 3,
     padding: 2,
     paddingRight: 4,
     paddingLeft: 4,
