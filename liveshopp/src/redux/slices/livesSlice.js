@@ -22,7 +22,7 @@ export const livesSlice = createSlice({
         username: '',
         productName: false,
         currentProductAmount: '',
-        currentAuctionDelay: '',
+        currentAuctionTimer: '',
         currentAuctionStatus: 'paused',
         salePrice: '',
       },
