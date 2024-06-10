@@ -44,12 +44,12 @@ module.exports = (io, socket) => {
   /**
    *
    * @param {Object} param0
-   * @param {import('../models/live').LiveType} param0.liveData
+   * @param {import('../models/live').LiveType._id} param0.liveId
    * @param {import('../models/user').UserType} param0.user
    */
-  const joinChannel = async ({ liveData, user }) => {
+  const joinChannel = async ({ liveId, user }) => {
     try {
-      const live = await Live.findById(liveData._id);
+      const live = await Live.findById(liveId);
       const channelName = live.live_name;
 
       // 1 add user to a room

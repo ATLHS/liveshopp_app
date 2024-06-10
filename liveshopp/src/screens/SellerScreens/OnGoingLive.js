@@ -54,7 +54,7 @@ export const OnGoingLive = ({ navigation }) => {
     }
 
     try {
-      socket.emit('joinChannel', { liveData, user });
+      socket.emit('joinChannel', { liveId: liveData._id, user });
       dispatch(setIsJoin(true));
       navigation.navigate('LiveScreen', {
         channelName: liveData.live_name,
