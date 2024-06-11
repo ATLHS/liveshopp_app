@@ -51,7 +51,7 @@ export const SettingShippingAddress = ({ navigation }) => {
       .then((res) => res)
       .then((data) => {
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(setUser(data.user));
@@ -60,7 +60,7 @@ export const SettingShippingAddress = ({ navigation }) => {
       })
       .catch((err) => {
         Toast.show({
-          type: 'error',
+          type: 'toastError',
           text1: err.message,
         });
         setIsLoading(false);

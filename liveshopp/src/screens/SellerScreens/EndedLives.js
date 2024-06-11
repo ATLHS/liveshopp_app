@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -13,14 +12,16 @@ import {
 import { useSelector } from 'react-redux';
 
 import NoData from '../../components/NoData/NoData';
-import LiveCard from '../../components/liveCard/liveCard';
+import LiveStatus from '../../constants/LiveStatus';
 import colors from '../../styles/colors';
+import renderLives from '../../utils/renderLives';
 
 export const EndedLives = () => {
   const { sellerLives } = useSelector((state) => state.lives);
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {}, [sellerLives]);
   const { user } = useSelector((state) => state.user);
+
+  const endedLives = sellerLives.filter((live) => live.live_status === LiveStatus.ENDED);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -32,49 +33,23 @@ export const EndedLives = () => {
           contentContainerStyle={{ flexGrow: 1 }}
           contentInset={{ bottom: 100 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.endedLive}>
-              {sellerLives.filter((live) => live.live_status === 'ended').length && !isLoading
-                ? sellerLives
-                    .filter((live) => live.live_status === 'ended')
-                    .map((live, id) => (
-                      <LiveCard
-                        key={id}
-                        sellerName={live.sellerName}
-                        title={live.live_name}
-                        datetime={live.live_date_time}
-                        description={live.live_description}
-                        category={live.business_activity}
-                        status={live.live_status}
-                        onPress={null}
-                        imageUrl={user.imageUrl}
-                        imageKey={user.imageUrl}
-                      />
-                    ))
-                : ''}
-              {sellerLives.filter((live) => live.live_status === 'ended').length && !isLoading ? (
-                <View
-                  style={{
-                    width: 140,
-                    height: 230,
-                    margin: 10,
-                    backgroundColor: 'transparent',
-                  }}
-                />
-              ) : !sellerLives.filter((live) => live.live_status === 'ended').length &&
-                !isLoading ? (
+            <View style={styles.liveContainer}>
+              {endedLives.length && !isLoading ? (
+                renderLives(
+                  endedLives.map((live) => ({
+                    ...live,
+                    imageUrl: user.imageUrl,
+                  })),
+                  user,
+                )
+              ) : (
+                <></>
+              )}
+              {!endedLives.length && !isLoading && (
                 <NoData
                   title={"Vous n'avez aucun live terminé"}
                   message={'Tous vos lives terminés \n apparaîtront ici.'}
                 />
-              ) : (
-                <View
-                  style={{
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <ActivityIndicator size="large" color={colors.DARK} />
-                </View>
               )}
             </View>
           </TouchableWithoutFeedback>
@@ -91,21 +66,15 @@ const styles = StyleSheet.create({
   liveContainerInfos: {
     alignItems: 'center',
   },
-  endedLive: {
+  liveContainer: {
     flex: 1,
     alignItems: 'flex-start',
     flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    margin: 10,
-  },
-  liveContainer: {
-    width: 350,
-    textAlign: 'center',
-    height: '85%',
-    flex: 1,
     justifyContent: 'space-between',
-    borderRadius: 15,
+    flexWrap: 'wrap',
+    margin: 26,
+    marginTop: 23,
+    padding: 0,
   },
   liveContainerUsers: {
     fontFamily: 'Roboto-Regular',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
@@ -18,17 +18,21 @@ import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
 import NoData from '../../components/NoData/NoData';
-import LiveCard from '../../components/liveCard/liveCard';
-import { setSellerLives } from '../../redux/slices/livesSlice';
+import LiveStatus from '../../constants/LiveStatus';
+import UserType from '../../constants/UserType';
 import live from '../../services/live';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
+import renderLives from '../../utils/renderLives';
 
 export const CommingSoonLives = ({ navigation }) => {
+  const { user } = useSelector((state) => state.user);
   const { sellerLives } = useSelector((state) => state.lives);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [liveToDelete, setLiveToDelete] = useState({});
   const dispatch = useDispatch();
+  const upComingLives = sellerLives.filter((live) => live.live_status === LiveStatus.UPCOMING);
 
   const deleteLive = (liveData) => {
     setIsLoading(true);
@@ -39,16 +43,21 @@ export const CommingSoonLives = ({ navigation }) => {
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
-        dispatch(setSellerLives(data.lives));
+        checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
         setIsLoading(false);
       })
       .catch((err) => {
         console.error(err);
         setIsLoading(false);
       });
+  };
+
+  const promptLiveDeletion = (live) => {
+    setModalVisible(!modalVisible);
+    setLiveToDelete(live);
   };
 
   return (
@@ -164,57 +173,24 @@ export const CommingSoonLives = ({ navigation }) => {
                   </View>
                 </Pressable>
               </Modal>
-              <View style={styles.onGoingLive}>
-                {sellerLives.filter((live) => live.live_status === 'coming_soon').length &&
-                !isLoading
-                  ? sellerLives
-                      .filter((live) => live.live_status === 'coming_soon')
-                      .map((live, id) => (
-                        <LiveCard
-                          key={id}
-                          sellerName={live.sellerName}
-                          title={live.live_name}
-                          datetime={live.live_date_time}
-                          description={live.live_description}
-                          category={live.business_activity}
-                          status={live.live_status}
-                          onPress={() => {
-                            setModalVisible(!modalVisible);
-                            if (live.live_status === 'coming_soon') {
-                              setLiveToDelete(live);
-                            }
-                          }}
-                          imageUrl={live.imageUrl}
-                        />
-                      ))
-                  : ''}
-                {sellerLives.filter((live) => live.live_status === 'coming_soon').length &&
-                !isLoading ? (
-                  <View
-                    style={{
-                      width: 140,
-                      height: 230,
-                      margin: 10,
-                      backgroundColor: 'transparent',
-                    }}
-                  />
-                ) : !sellerLives.filter((live) => live.live_status === 'coming_soon').length &&
-                  !isLoading ? (
-                  <NoData
-                    title={"Vous n'avez aucun live à venir"}
-                    message={'Tous vos lives programmés \n apparaîtront ici.'}
-                    buttonTitle={'Créer un live maintenant ?'}
-                    onPress={() => navigation.navigate('SettingNewLive')}
-                  />
+              <View style={styles.liveContainer}>
+                {upComingLives.length && !isLoading ? (
+                  renderLives(
+                    upComingLives.map((live) => ({
+                      ...live,
+                      imageUrl: user.imageUrl,
+                    })),
+                    user,
+                    promptLiveDeletion,
+                  )
                 ) : (
-                  <View
-                    style={{
-                      height: '100%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <ActivityIndicator size="large" color={colors.DARK} />
-                  </View>
+                  <></>
+                )}
+                {!upComingLives.length && !isLoading && (
+                  <NoData
+                    title={"Vous n'avez aucun live terminé"}
+                    message={'Tous vos lives terminé \n apparaîtront ici.'}
+                  />
                 )}
               </View>
             </>
@@ -228,27 +204,19 @@ export const CommingSoonLives = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   liveContainerInfos: {
     alignItems: 'center',
   },
-  onGoingLive: {
+  liveContainer: {
     flex: 1,
     alignItems: 'flex-start',
     flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    margin: 10,
-  },
-  liveContainer: {
-    width: 350,
-    textAlign: 'center',
-    height: '85%',
-    flex: 1,
     justifyContent: 'space-between',
-    borderRadius: 15,
+    flexWrap: 'wrap',
+    margin: 26,
+    marginTop: 23,
+    padding: 0,
   },
   liveContainerUsers: {
     fontFamily: 'Roboto-Regular',

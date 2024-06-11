@@ -4,6 +4,9 @@ import DatePicker from 'react-native-date-picker';
 
 import { DateTime } from 'luxon';
 
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
 import colors from '../../styles/colors';
 
 const convertToParisDateTime = (date) => {
@@ -36,6 +39,9 @@ const DateTimePicker = ({ inputField, field }) => {
       />
       {inputField.helperMessage && (
         <View style={styles.condition}>
+          <View style={{ marginTop: 2 }}>
+            <FontAwesomeIcon icon={faInfoCircle} color={colors.DARK} size={15} />
+          </View>
           <Text style={styles.conditionText}>{inputField.helperMessage}</Text>
         </View>
       )}
@@ -44,8 +50,8 @@ const DateTimePicker = ({ inputField, field }) => {
 };
 
 const styles = StyleSheet.create({
-  conditionText: { color: colors.DARK, fontSize: 14 },
-  condition: { width: 350, marginTop: 10 },
+  conditionText: { color: colors.DARK, fontSize: 14, marginLeft: 5 },
+  condition: { width: 350, marginTop: 10, flexDirection: 'row' },
 });
 
 export default DateTimePicker;

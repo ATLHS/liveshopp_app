@@ -2,6 +2,13 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
+import {
+  faArrowsRotate,
+  faCircleCheck,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
 import colors from '../../styles/colors';
 
 const toastConfig = {
@@ -42,20 +49,45 @@ const toastConfig = {
   toastError: ({ text1, props }) => (
     <View
       style={{
-        padding: 10,
+        padding: 20,
         borderLeftWidth: 0,
-        backgroundColor: '#FFB1B1',
-        width: 350,
+        backgroundColor: 'white',
+        width: '90%',
         borderRadius: 5,
+        borderColor: 'grey',
+        shadowColor: '#171717',
+        shadowOffset: { height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
       }}>
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: '400',
-          width: 350,
-        }}>
-        {text1}
-      </Text>
+      <FontAwesomeIcon icon={faTriangleExclamation} color={colors.PRIMARY} size={17} />
+      <View style={{ marginLeft: 10 }}>
+        <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
+      </View>
+    </View>
+  ),
+  toastSuccess: ({ text1, props }) => (
+    <View
+      style={{
+        padding: 15,
+        borderLeftWidth: 0,
+        backgroundColor: 'white',
+        width: '90%',
+        borderRadius: 5,
+        borderColor: 'grey',
+        shadowColor: '#171717',
+        shadowOffset: { height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+      <FontAwesomeIcon icon={faCircleCheck} color={colors.SUCCESS} size={17} />
+      <View style={{ marginLeft: 10 }}>
+        <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
+      </View>
     </View>
   ),
   auctionToast: ({ text1 }) => (
@@ -88,7 +120,7 @@ const toastConfig = {
 };
 
 const ToastCompoenent = () => {
-  return <Toast config={toastConfig} autoHide={true} />;
+  return <Toast config={toastConfig} autoHide={true} visibilityTime={5000} />;
 };
 
 export default ToastCompoenent;

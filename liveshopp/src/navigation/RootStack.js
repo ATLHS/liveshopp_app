@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Alert, Linking, Platform } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Alert, AppState, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import { APP_STORE_BUNDLE_ID, PLAY_STORE_BUNDLE_ID } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { setIsGone, setIsJoin, setLiveData } from '../redux/slices/livesSlice';
+import { setIsGone, setIsJoin, setLiveData, setLives } from '../redux/slices/livesSlice';
 import { setBlockedUser, setIsAuthenticate, setUser } from '../redux/slices/userSlice';
 import Loading from '../screens/Loading/Loading';
 import axiosConfig from '../services/config/axiosConfig';
@@ -203,6 +203,9 @@ const RootStack = ({ isLoading }) => {
       socket.io.off('reconnect_error', onReconnectError);
     };
   }, [liveData, user]);
+  socket.on('freshLives', async ({ freshLives }) => {
+    dispatch(setLives(freshLives));
+  });
 
   return (
     <NavigationContainer>

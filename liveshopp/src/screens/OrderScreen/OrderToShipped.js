@@ -63,7 +63,7 @@ const OrderToShipped = () => {
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
       })

@@ -4,9 +4,12 @@ import { useDispatch } from 'react-redux';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
+import UserType from '../../constants/UserType';
 import { setBlockedUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
+import live from '../../services/live';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import AuctionVideos from '../AuctionVideos/AuctionVideos';
 import ComingLives from '../ComingLives/ComingLives';
 import LivesScreen from '../LivesScreen/LivesScreen';
@@ -15,6 +18,25 @@ const Tab = createMaterialTopTabNavigator();
 
 const LivesTab = () => {
   const dispatch = useDispatch();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let liveInterval;
+      live
+        .getLives()
+        .then((res) => res)
+        .then((data) => {
+          checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
+          liveInterval = setInterval(() => {
+            checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
+          }, 300000); // 5 minutes
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      return () => clearInterval(liveInterval);
+    }, []),
+  );
 
   useFocusEffect(
     React.useCallback(() => {

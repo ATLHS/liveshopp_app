@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -15,44 +16,36 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
-import LiveCard from '../../components/liveCard/liveCard';
-import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
+import LiveStatus from '../../constants/LiveStatus';
+import UserType from '../../constants/UserType';
+import { setIsGone, setIsJoin } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
-import live from '../../services/live';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
+import renderLives from '../../utils/renderLives';
 
 export const LivesScreen = ({ navigation }) => {
-  const { isJoin, isGone } = useSelector((state) => state.lives);
+  const { isJoin, isGone, lives } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [onGoingLives, setOnGoingLives] = useState([]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsLoading(true);
-      dispatch(setLives([]));
+  const [refreshing, setRefreshing] = React.useState(false);
 
-      live
-        .getLives()
-        .then((res) => res)
-        .then((data) => {
-          dispatch(setLives(data.lives));
-          setOnGoingLives(
-            data.lives.filter(
-              (live) =>
-                live.seller_id !== user.id &&
-                live.live_status === 'live' &&
-                !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id),
-            ),
-          );
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          console.error(err, 'get lives error.');
-          setIsLoading(false);
-        });
-    }, []),
+  // Check and refresh ongoing lives every second with user action 'pull to refresh'
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      checkAndUpdateLiveStatus(lives, dispatch, UserType.USER);
+      setRefreshing(false);
+    }, 1000);
+  };
+
+  const currentLives = lives.filter(
+    (live) =>
+      live.live_status === LiveStatus.LIVE &&
+      live.seller_id !== user.id &&
+      !user.blockedUser.concat(user.blockedSeller).includes(live.seller_id),
   );
 
   useFocusEffect(
@@ -95,48 +88,42 @@ export const LivesScreen = ({ navigation }) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
-          contentInset={{ bottom: 100 }}>
+          contentInset={{ bottom: 100 }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.onGoingLive}>
-              {isLoading ? (
-                <View
+            <>
+              <View style={{ marginTop: 15, alignItems: 'center' }}>
+                <Text
                   style={{
-                    height: '100%',
-                    justifyContent: 'center',
+                    fontSize: 12,
+                    textAlign: 'center',
+                    color: colors.HOUR,
                   }}>
-                  <ActivityIndicator size="large" color="black" />
-                </View>
-              ) : onGoingLives.length ? (
-                <>
-                  {onGoingLives.map((live, id) => (
-                    <LiveCard
-                      key={id}
-                      sellerName={live.sellerName}
-                      datetime={live.live_date_time}
-                      description={live.live_description}
-                      category={live.business_activity}
-                      status={live.live_status}
-                      onPress={() => goLive(live)}
-                      imageUrl={live.imageUrl || ''}
-                    />
-                  ))}
-                  <View
-                    style={{
-                      width: 150,
-                      height: 230,
-                      margin: 10,
-                      backgroundColor: 'transparent',
-                    }}
+                  Rafraîchissez pour afficher les lives en cours.
+                </Text>
+              </View>
+              <View style={styles.liveContainer}>
+                {currentLives.length && !isLoading ? (
+                  renderLives(
+                    currentLives.map((live) => ({
+                      ...live,
+                      imageUrl: live.imageUrl,
+                    })),
+                    user,
+                    goLive,
+                  )
+                ) : (
+                  <></>
+                )}
+                {!currentLives.length && !isLoading && (
+                  <NoData
+                    title={'Aucun live en cours'}
+                    message={'Les lives en cours apparaîtront ici. Revenez un peu plus tard.'}
+                    buttonTitle={''}
                   />
-                </>
-              ) : (
-                <NoData
-                  title={'Aucun live en cours'}
-                  message={'Les lives en cours apparaîtront ici. Revenez un peu plus tard.'}
-                  buttonTitle={''}
-                />
-              )}
-            </View>
+                )}
+              </View>
+            </>
           </TouchableWithoutFeedback>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -148,12 +135,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  onGoingLive: {
+  liveContainer: {
     flex: 1,
+    alignItems: 'flex-start',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     flexWrap: 'wrap',
-    margin: 10,
+    margin: 26,
+    marginTop: 23,
+    padding: 0,
   },
   headlineContainer: { marginBottom: 30 },
   formContainer: {

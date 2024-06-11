@@ -245,7 +245,7 @@ export const SettingProfilScreen = ({ navigation }) => {
         setImageUri(data.user.imageUrl);
         // setRefreshCounter(prevCounter => prevCounter + 1);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(setUser(data.user));
@@ -254,7 +254,7 @@ export const SettingProfilScreen = ({ navigation }) => {
       })
       .catch((err) => {
         Toast.show({
-          type: 'error',
+          type: 'toastError',
           text1: err.message,
         });
         setIsLoading(false);
@@ -270,7 +270,7 @@ export const SettingProfilScreen = ({ navigation }) => {
         setImageUri(null);
         // setRefreshCounter(prevCounter => prevCounter + 1);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(setUser(data.user));
@@ -279,7 +279,7 @@ export const SettingProfilScreen = ({ navigation }) => {
       })
       .catch((err) => {
         Toast.show({
-          type: 'error',
+          type: 'toastError',
           text1: err.message,
         });
         setIsLoading(false);
@@ -293,7 +293,7 @@ export const SettingProfilScreen = ({ navigation }) => {
       .then((res) => res)
       .then((data) => {
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(setUser(data.user));
@@ -302,7 +302,7 @@ export const SettingProfilScreen = ({ navigation }) => {
       })
       .catch((err) => {
         Toast.show({
-          type: 'error',
+          type: 'toastError',
           text1: err.message,
         });
         setIsLoading(false);

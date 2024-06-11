@@ -23,7 +23,7 @@ const currentUserLiveForm = [
   },
 ];
 
-export const UserLiveForm = ({ navigation, onPress, liveData }) => {
+export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
   const { user } = useSelector((state) => state.user);
   const { handleSubmit, control, setValue } = useForm();
   const [bidAmountSelection, setBidAmountSelection] = useState(10);
@@ -178,4 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserLiveForm;
+export default LiveAuctionForm;

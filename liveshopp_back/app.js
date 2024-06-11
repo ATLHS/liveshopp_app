@@ -15,6 +15,7 @@ const io = new Server(httpServer, {
   // maxHttpBufferSize
   // pingTimeout
 });
+global.io = io;
 
 const handler = require('./utils/socketHandler')(io);
 

@@ -115,7 +115,7 @@ function SettingsScreen({ navigation }) {
         .then((data) => {
           dispatch(setUser(data.user));
           Toast.show({
-            type: 'success',
+            type: 'toastSuccess',
             text1: data.message,
           });
         })
@@ -130,7 +130,7 @@ function SettingsScreen({ navigation }) {
       .then((res) => res)
       .then((data) => {
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         handleSignOut();

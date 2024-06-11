@@ -17,9 +17,10 @@ import { DateTime } from 'luxon';
 
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
-import { setSellerLives } from '../../redux/slices/livesSlice';
+import UserType from '../../constants/UserType';
 import seller from '../../services/seller';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 
 const LiveCreationFormSchema = () => [
   {
@@ -57,7 +58,8 @@ const LiveCreationFormSchema = () => [
     name: 'live_date_time',
     label: 'date',
     type: 'datetime',
-    helperMessage: 'Un intervalle de 1h30 entre le début et la fin de chaque live est requis.',
+    helperMessage:
+      "Chaque live doit être espacé d'au moins une heure. \nEx : Si un live commence à 14h, le suivant doit débuter à 15h ou plus tard.",
     style: { height: 150 },
     minuteInterval: 30,
     minimumDelay: DateTime.now()
@@ -83,10 +85,10 @@ export const SettingNewLive = ({ navigation }) => {
       .then((res) => res)
       .then((data) => {
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
-        dispatch(setSellerLives(data.lives));
+        checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
         setIsLoading(false);
         navigation.goBack();
       })

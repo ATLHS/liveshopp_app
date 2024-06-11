@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 
+import UserType from '../../constants/UserType';
+import seller from '../../services/seller';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import ComingSoonLives from './ComingSoonLives';
 import EndedLives from './EndedLives';
 import OnGoingLive from './OnGoingLive';
@@ -11,6 +16,27 @@ import SellerAuctionVideos from './SellerAuctionVideos';
 const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let liveInterval;
+      seller
+        .getSellerLives()
+        .then((res) => res)
+        .then((data) => {
+          checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
+          liveInterval = setInterval(() => {
+            checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
+          }, 300000); // 5 minutes
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      return () => clearInterval(liveInterval);
+    }, []),
+  );
+
   return (
     <Tab.Navigator
       screenOptions={{

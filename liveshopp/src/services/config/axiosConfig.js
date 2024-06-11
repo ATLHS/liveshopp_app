@@ -1,7 +1,8 @@
 import axios from 'axios';
-import apiConfig from '../config/apiConfig';
 
 import * as Sentry from '@sentry/react-native';
+
+import apiConfig from '../config/apiConfig';
 
 const axiosInstance = axios.create({
   withCredentials: true,
@@ -19,7 +20,7 @@ axiosInstance.interceptors.response.use(
       Sentry.captureException(error, error.response);
 
       if (error.response.data) {
-        return Promise.reject(error.response.data);
+        return Promise.reject(error);
       }
     } else if (error.request) {
       // The request was made but no response was received

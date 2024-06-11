@@ -130,7 +130,7 @@ export const SetNewAuctionVideo = ({ navigation }) => {
       .then((res) => res)
       .then((data) => {
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
         dispatch(

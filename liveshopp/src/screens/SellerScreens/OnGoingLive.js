@@ -1,43 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
   ImageBackground,
-  Keyboard,
-  KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { DateTime } from 'luxon';
 
-import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import ContainedButtonSm from '../../components/ContainedButtonSm/ContainedButtonSm';
 import NoData from '../../components/NoData/NoData';
-import { setIsJoin, setSellerLives } from '../../redux/slices/livesSlice';
+import LiveStatus from '../../constants/LiveStatus';
+import UserType from '../../constants/UserType';
+import { setIsJoin } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
 import live from '../../services/live';
 import colors from '../../styles/colors';
+import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 
 export const OnGoingLive = ({ navigation }) => {
-  const { sellerLives, isJoin, isGone, liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
+  const { sellerLives, isGone, isJoin } = useSelector((state) => state.lives);
+  const handleViewRef = useRef(null);
 
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [liveToClose, setLiveToClose] = useState({});
+  const isFocused = useIsFocused();
+  const currentLive = sellerLives.find((live) => live.live_status === LiveStatus.LIVE);
+
+  useEffect(() => {
+    let interval;
+    if (isFocused) {
+      interval = setInterval(() => {
+        handleViewRef.current?.pulse();
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isFocused]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -73,7 +84,7 @@ export const OnGoingLive = ({ navigation }) => {
     }
   };
 
-  const closeLive = () => {
+  const closeLive = (liveToClose) => {
     setIsLoading(true);
     live
       .closeLive(liveToClose)
@@ -82,10 +93,10 @@ export const OnGoingLive = ({ navigation }) => {
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
-          type: 'success',
+          type: 'toastSuccess',
           text1: data.message,
         });
-        dispatch(setSellerLives(data.lives));
+        checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -96,216 +107,170 @@ export const OnGoingLive = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <>
-            <Modal animationType="fade" transparent={true} visible={modalVisible}>
-              <Pressable
-                onPress={() => setModalVisible(false)}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          padding: 30,
+          backgroundColor: 'white',
+          alignItems: 'center',
+        }}>
+        <>
+          <Modal animationType="fade" transparent={true} visible={modalVisible}>
+            <Pressable
+              onPress={() => setModalVisible(false)}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0,0,0,0.60)',
+              }}>
+              <View
                 style={{
-                  flex: 1,
-                  alignItems: 'center',
+                  height: 130,
+                  width: 220,
+                  borderRadius: 10,
+                  backgroundColor: colors.LIGHT,
                   justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,0.60)',
+                  alignItems: 'center',
+                  padding: 10,
                 }}>
                 <View
                   style={{
-                    height: 130,
-                    width: 220,
-                    borderRadius: 10,
-                    backgroundColor: colors.LIGHT,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: 10,
+                    width: '100%',
                   }}>
-                  <View
+                  <Text
                     style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%',
+                      fontSize: 15,
+                      textAlign: 'center',
+                      fontFamily: 'FugazOne-Regular',
                     }}>
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        textAlign: 'center',
-                        fontFamily: 'FugazOne-Regular',
-                      }}>
-                      CLÔTURER LE LIVE :{' '}
-                    </Text>
-                    <Text style={{ fontSize: 15, margin: 5 }}>{liveToClose.live_name}</Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      width: '100%',
-                    }}>
-                    <View style={{ margin: 10, height: 30 }}>
-                      <TouchableOpacity
-                        style={{
-                          height: 40,
-                          width: 70,
-                          backgroundColor: 'black',
-                          borderRadius: 10,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                        onPress={closeLive}>
-                        <Text
-                          style={{
-                            color: colors.LIGHT,
-                            textAlign: 'center',
-                            fontSize: 20,
-                          }}>
-                          oui
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View
-                      style={{
-                        margin: 10,
-                        borderRadius: 10,
-                        height: 30,
-                      }}>
-                      <TouchableOpacity
-                        style={{
-                          height: 40,
-                          width: 70,
-                          backgroundColor: 'black',
-                          borderRadius: 10,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                        onPress={() => setModalVisible(!modalVisible)}>
-                        <Text
-                          style={{
-                            color: colors.LIGHT,
-                            textAlign: 'center',
-                            fontSize: 20,
-                          }}>
-                          non
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                    CLÔTURER LE LIVE :{' '}
+                  </Text>
+                  <Text style={{ fontSize: 15, margin: 5 }}>
+                    {currentLive ? currentLive.live_name : ''}
+                  </Text>
                 </View>
-              </Pressable>
-            </Modal>
-            <View style={styles.onGoingLive}>
-              {sellerLives.filter((live) => live.live_status === 'live').length && !isLoading ? (
-                sellerLives
-                  .filter((live) => live.live_status === 'live')
-                  .map((live, id) => (
-                    <View
-                      key={id}
-                      style={{
-                        backgroundColor: 'black',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '85%',
-                        width: 350,
-                        borderRadius: 10,
-                      }}>
-                      <Pressable
-                        style={styles.onGoingLiveContainer}
-                        onPress={() => {
-                          setModalVisible(!modalVisible);
-                          setLiveToClose(live);
-                        }}>
-                        <ImageBackground
-                          key={id}
-                          source={
-                            user.imageUrl
-                              ? {
-                                  uri: user.imageUrl,
-                                  cache: 'reload',
-                                }
-                              : require('../../../assets/images/liveshopp_back_lives.png')
-                          }
-                          borderRadius={10}
-                          imageStyle={{
-                            opacity: 0.7,
-                            borderRadius: 10,
-                          }}>
-                          <View style={styles.liveContainer}>
-                            <View style={styles.liveContainerInfos}>
-                              <View style={styles.liveContainerInfosIcons}>
-                                <View
-                                  style={{
-                                    borderColor: colors.PRIMARY,
-                                    borderWidth: 1,
-                                    textAlign: 'left',
-                                    fontWeight: 'bold',
-                                    fontSize: 13,
-                                    backgroundColor: colors.PRIMARY,
-                                    padding: 4,
-                                    paddingRight: 10,
-                                    paddingLeft: 10,
-                                    borderRadius: 4,
-                                  }}>
-                                  <Text
-                                    style={{
-                                      textAlign: 'left',
-                                      fontWeight: 'bold',
-                                      color: colors.LIGHT,
-                                      fontSize: 12,
-                                    }}>
-                                    En direct
-                                  </Text>
-                                </View>
-                                <Text style={styles.liveContainerUsers}>
-                                  <FontAwesomeIcon icon={faUsers} color={colors.LIGHT} size={20} />{' '}
-                                  {liveData.userCount}
-                                </Text>
-                              </View>
-                              <View style={styles.liveContainerLiveInfos}>
-                                <Text style={styles.title}>{live.live_name}</Text>
-                                <Text numberOfLines={5} style={styles.description}>
-                                  {live.live_description}
-                                </Text>
-                                <Text style={styles.hour}>
-                                  {DateTime.fromISO(live.live_date_time).toLocaleString(
-                                    DateTime.DATE_MED_WITH_WEEKDAY,
-                                  )}
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                          <View style={styles.action}>
-                            <ContainedButtonSm
-                              title="Rejoindre le live"
-                              loading={isLoading}
-                              onPress={() => goLive(live)}
-                            />
-                          </View>
-                        </ImageBackground>
-                      </Pressable>
-                    </View>
-                  ))
-              ) : !sellerLives.filter((live) => live.live_status === 'live').length &&
-                !isLoading ? (
-                <NoData
-                  title={"Vous n'avez aucun live en cours"}
-                  message={'Un live programmé apparaîtra ici 30 min avant que le show commence.'}
-                  buttonTitle={'Créer un live maintenant ?'}
-                  onPress={() => navigation.navigate('SettingNewLive')}
-                />
-              ) : (
                 <View
                   style={{
-                    height: '100%',
+                    flexDirection: 'row',
                     justifyContent: 'center',
-                    alignItems: 'center',
+                    width: '100%',
                   }}>
-                  <ActivityIndicator size="large" color={colors.DARK} />
+                  <View style={{ margin: 10, height: 30 }}>
+                    <TouchableOpacity
+                      style={{
+                        height: 40,
+                        width: 70,
+                        backgroundColor: 'black',
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => (currentLive ? closeLive(currentLive) : {})}>
+                      <Text
+                        style={{
+                          color: colors.LIGHT,
+                          textAlign: 'center',
+                          fontSize: 20,
+                        }}>
+                        oui
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      margin: 10,
+                      borderRadius: 10,
+                      height: 30,
+                    }}>
+                    <TouchableOpacity
+                      style={{
+                        height: 40,
+                        width: 70,
+                        backgroundColor: 'black',
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Text
+                        style={{
+                          color: colors.LIGHT,
+                          textAlign: 'center',
+                          fontSize: 20,
+                        }}>
+                        non
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              )}
-            </View>
-          </>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+              </View>
+            </Pressable>
+          </Modal>
+          {currentLive && !isLoading ? (
+            <Pressable
+              style={styles.onGoingLiveContainer}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}>
+              <ImageBackground
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0.6,
+                  borderRadius: 5,
+                }}
+                imageStyle={{ borderRadius: 5 }}
+                source={
+                  user.imageUrl
+                    ? {
+                        uri: user.imageUrl,
+                        cache: 'reload',
+                      }
+                    : require('../../../assets/images/liveshopp_back_lives.png')
+                }>
+                <View style={styles.liveContainer}>
+                  <View style={styles.liveContainerInfos}>
+                    <View style={styles.liveContainerLiveInfos}>
+                      <Text style={styles.title}>{currentLive.live_name}</Text>
+                      <Text numberOfLines={5} style={styles.description}>
+                        {currentLive.live_description}
+                      </Text>
+                      <Text style={styles.hour}>
+                        {DateTime.fromISO(currentLive.live_date_time).toLocaleString(
+                          DateTime.DATE_MED_WITH_WEEKDAY,
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </ImageBackground>
+
+              <Animatable.View
+                ref={(ref) => (handleViewRef.current = ref)}
+                easing="ease-out"
+                iterationCount="infinite"
+                style={styles.action}>
+                <ContainedButtonSm
+                  title="Rejoindre le live"
+                  loading={isLoading}
+                  onPress={() => goLive(currentLive)}
+                />
+              </Animatable.View>
+            </Pressable>
+          ) : (
+            <NoData
+              title={"Vous n'avez aucun live en cours"}
+              message={'Un live programmé apparaîtra ici 5 minutes avant le début du show.'}
+              buttonTitle={'Créer un live maintenant ?'}
+              onPress={() => navigation.navigate('SettingNewLive')}
+            />
+          )}
+        </>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -320,22 +285,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   onGoingLiveContainer: {
-    backgroundColor: 'transparent',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
   },
   onGoingLive: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 10,
+    backgroundColor: 'black',
   },
-  liveContainer: {
-    width: 350,
-    textAlign: 'center',
-    height: '85%',
-    flex: 1,
-    justifyContent: 'space-between',
-    borderRadius: 15,
-  },
+  liveContainer: {},
   liveContainerUsers: {
     fontFamily: 'Roboto-Regular',
     fontSize: 20,
@@ -371,16 +332,16 @@ const styles = StyleSheet.create({
     marginTop: 70,
   },
   action: {
-    alignItems: 'center',
+    position: 'absolute',
+    bottom: 30,
     justifyContent: 'center',
-    marginBottom: 30,
+    alignItems: 'center',
   },
   liveContainerInfosIcons: {
+    position: 'absolute',
+    zIndex: 3,
     marginTop: 25,
-    width: '85%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 });
 

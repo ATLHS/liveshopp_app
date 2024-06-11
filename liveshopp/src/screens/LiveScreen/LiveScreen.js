@@ -5,6 +5,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Modal,
+  PermissionsAndroid,
   Platform,
   Pressable,
   StyleSheet,
@@ -30,11 +31,11 @@ import { faArrowDown, faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useFocusEffect } from '@react-navigation/native';
 
+import LiveAuctionForm from '../../components/LiveAuctionForm/LiveAuctionForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
 import { LiveChatTextInput } from '../../components/LiveChatTextInput/LiveChatTextInput';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
-import UserLiveForm from '../../components/UserLiveForm/UserLiveForm';
 import admin from '../../services/admin';
 import socket from '../../services/config/clientSocketIoConfig';
 import customer from '../../services/customer';
@@ -66,7 +67,7 @@ export const LiveScreen = ({ navigation, route }) => {
   const renderUserLiveForm = () => {
     if (user.profil !== 'admin' && !isHost) {
       return (
-        <UserLiveForm
+        <LiveAuctionForm
           liveData={liveData}
           onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
         />
@@ -204,8 +205,8 @@ export const LiveScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      liveData.messages.length && list.current.scrollToEnd();
-    }, [liveData.messages]),
+      list.current.scrollToEnd();
+    }, [liveData.messages.length]),
   );
 
   const startCurrentAuction = (channelName, data) => {
@@ -523,14 +524,14 @@ export const LiveScreen = ({ navigation, route }) => {
                     <View
                       style={{
                         marginBottom: 30,
-                        justifyContent: 'center',
                         alignItems: 'center',
-                        width: 200,
+                        width: '100%',
                       }}>
                       <Text
                         style={{
                           textAlign: 'center',
                           color: colors.LIGHT,
+                          margin: 'auto',
                         }}>
                         En attendant, vous pouvez poser une question au vendeur.
                       </Text>
