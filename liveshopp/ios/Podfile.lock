@@ -1041,7 +1041,7 @@ PODS:
     - Yoga
   - react-native-safe-area-context (4.10.1):
     - React-Core
-  - react-native-video (6.0.0):
+  - react-native-video (6.1.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1055,7 +1055,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-video/Video (= 6.0.0)
+    - react-native-video/Video (= 6.1.2)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1063,7 +1063,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Video (6.0.0):
+  - react-native-video/Video (6.1.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1318,7 +1318,7 @@ PODS:
   - RNCCheckbox (0.5.17):
     - BEMCheckBox (~> 1.4)
     - React-Core
-  - RNDeviceInfo (10.13.2):
+  - RNDeviceInfo (11.1.0):
     - React-Core
   - RNGestureHandler (2.16.2):
     - DoubleConversion
@@ -1422,7 +1422,7 @@ PODS:
     - StripePayments (= 23.27.2)
     - StripePaymentsUI (= 23.27.2)
     - StripeUICore (= 23.27.2)
-  - stripe-react-native (0.37.3):
+  - stripe-react-native (0.38.0):
     - React-Core
     - Stripe (~> 23.27.0)
     - StripeApplePay (~> 23.27.0)
@@ -1725,11 +1725,11 @@ SPEC CHECKSUMS:
   React-logger: 7e7403a2b14c97f847d90763af76b84b152b6fce
   React-Mapbuffer: 11029dcd47c5c9e057a4092ab9c2a8d10a496a33
   react-native-agora: 7bf4f0b31e8c466ffeda2ae3486f91887fe0ad6e
-  react-native-date-picker: 312c387d2ff873c66c5e4cf78ff6827fa91644e2
+  react-native-date-picker: 6891317e850deae5b53d51355226e07a495aba61
   react-native-image-picker: c3afe5472ef870d98a4b28415fc0b928161ee5f7
   react-native-pager-view: e2b7c31147cdc1750cb3867d37a145e487653c34
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
-  react-native-video: 57b4da5ba20b05b9f7c8009e379042c9294c2072
+  react-native-video: 9f29aee2feb9e42da24cb40b70d005d38a1a132f
   React-nativeconfig: b0073a590774e8b35192fead188a36d1dca23dec
   React-NativeModulesApple: df46ff3e3de5b842b30b4ca8a6caae6d7c8ab09f
   React-perflogger: 3d31e0d1e8ad891e43a09ac70b7b17a79773003a
@@ -1755,7 +1755,7 @@ SPEC CHECKSUMS:
   ReactCommon: f42444e384d82ab89184aed5d6f3142748b54768
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCCheckbox: a3ca9978cb0846b981d28da4e9914bd437403d77
-  RNDeviceInfo: 42aadf1282ffa0a88dc38a504a7be145eb010dfa
+  RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
   RNGestureHandler: 2282cfbcf86c360d29f44ace393203afd5c6cff7
   RNReactNativeHapticFeedback: ec56a5f81c3941206fd85625fa669ffc7b4545f9
   RNReanimated: 7ad0f08a845cb60955ee5d461d2156d7b9707118
@@ -1766,7 +1766,7 @@ SPEC CHECKSUMS:
   Sentry: 74a073c71c998117edb08f56f443c83570a31bed
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: ec902be2e477aa8c6cfb758f4ed9a4603c4b5d63
-  stripe-react-native: 184a46a36ed449ff9f0ac5938ce65b20fc7bf0a2
+  stripe-react-native: c89f0b9abbac8a4093695a85ac34cc09f8935d0c
   StripeApplePay: 55e0fe7095d18bc6d8390cab176692c801d865c6
   StripeCore: 55c1fb4ec4edd61243c59839cef592b0ac4c469a
   StripeFinancialConnections: e646628ca798faa26bf794d8dc76c17ddb8405e4
@@ -1774,7 +1774,7 @@ SPEC CHECKSUMS:
   StripePaymentSheet: bf96500ca25dadf72079e4f256d827955dd7d1ef
   StripePaymentsUI: a51fd3468d9944b602f79ddae26d83e6dd2d9048
   StripeUICore: 436db87a21e3bb45b7a6a90c114a6d21c35b4be0
-  Yoga: b9a182ab00cf25926e7f79657d08c5d23c2d03b0
+  Yoga: 348f8b538c3ed4423eb58a8e5730feec50bce372
 
 PODFILE CHECKSUM: 4d1af4ef16418d601ee24ff7404419ae68075135
 
