@@ -8,6 +8,7 @@ const UserSeller = require('../../models/seller');
 const Live = require('../../models/live');
 const User = require('../../models/user');
 const Product = require('../../models/product');
+const { emitFreshLives } = require('../../utils/emitFreshLives');
 
 router.post('/create-live', verifyJwt, async (req, res) => {
   try {
@@ -33,7 +34,6 @@ router.post('/create-live', verifyJwt, async (req, res) => {
       });
     }
 
-    // Create and save the new live and check if the live starts within the next 5 minutes. Update live_status if yes.
     const newLive = new Live({
       seller_id: req.user.id,
       sellerName: seller.company_name,
@@ -44,10 +44,8 @@ router.post('/create-live', verifyJwt, async (req, res) => {
       imageUrl: seller.imageUrl,
     });
 
-    const savedLive = await newLive.save();
+    await newLive.save();
 
-    // Add the new created live to the list of existing lives and return the response
-    // existingLives.push(savedLive);
     const lives = await Live.find().exec();
     emitFreshLives(lives);
 

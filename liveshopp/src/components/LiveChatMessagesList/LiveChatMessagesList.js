@@ -75,16 +75,13 @@ const styles = StyleSheet.create({
   flatList: {
     height: 200,
     width: 323,
-    // marginBottom: 15,
     backgroundColor: 'transparent',
   },
   container: {
-    // marginBottom: 5,
     height: 50,
     backgroundColor: 'transparent',
   },
   itemContainer: {
-    // marginTop: 7,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -103,14 +100,12 @@ const styles = StyleSheet.create({
     color: colors.LIGHT,
     fontSize: 13,
     fontWeight: '700',
-    // marginBottom: 3,
   },
   adminBadge: {
     backgroundColor: colors.LIGHT,
     color: colors.DARK,
     borderRadius: 2,
     alignItems: 'center',
-    // marginBottom: 3,
     padding: 2,
     paddingRight: 4,
     paddingLeft: 4,
