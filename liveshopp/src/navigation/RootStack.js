@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Alert, AppState, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
+import DeviceInfo from 'react-native-device-info';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,14 +26,8 @@ const RootStack = ({ isLoading }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // FIXME
-    //
-    // Previously, we used the deprecated `react-native-version-app`
-    // Now it's temporarily hardcoded to remove the package.
-    // We should find a better solution.
-    //
-    const currentVersion = '1.2.0';
-    const fetchData = async () => {
+    let currentVersion = DeviceInfo.getVersion();
+    const checkForUpdates = async () => {
       const version = await checkVersion({
         platform: Platform.OS,
         country: 'fr',
@@ -61,7 +56,7 @@ const RootStack = ({ isLoading }) => {
         );
       }
     };
-    fetchData();
+    checkForUpdates();
   }, []);
 
   useEffect(() => {
