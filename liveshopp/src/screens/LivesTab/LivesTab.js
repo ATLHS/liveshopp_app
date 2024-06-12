@@ -19,7 +19,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const LivesTab = () => {
   const dispatch = useDispatch();
-  const oneMinuteInMilliseconds = 60000;
+  const fiveMinuteInMilliseconds = 300000;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -31,7 +31,7 @@ const LivesTab = () => {
           checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
           liveInterval = setInterval(() => {
             checkAndUpdateLiveStatus(data.lives, dispatch, UserType.USER);
-          }, oneMinuteInMilliseconds); // 5 minutes
+          }, fiveMinuteInMilliseconds); // 5 minutes
         })
         .catch((err) => {
           console.error(err);
