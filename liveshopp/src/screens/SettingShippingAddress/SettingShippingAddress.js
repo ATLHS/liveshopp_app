@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   headlineContainer: { marginBottom: 30 },
   formContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    position: 'relative',
     alignItems: 'center',
   },
   places: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     position: 'absolute',
-    zIndex: 3,
+    zIndex: 1,
   },
   headlineContainerMessage: {
     marginBottom: 30,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   action: {
     position: 'absolute',
-    top: 100,
+    top: 90,
   },
   resetPassword: { color: 'white' },
 });

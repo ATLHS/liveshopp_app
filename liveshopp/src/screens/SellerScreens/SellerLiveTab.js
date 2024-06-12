@@ -58,11 +58,12 @@ const SellerLiveTab = () => {
         component={ComingSoonLives}
       />
       <Tab.Screen options={{ title: 'LIVES TERMINÉS' }} name="EndedLives" component={EndedLives} />
-      <Tab.Screen
-        options={{ title: 'VIDÉOS ENCHÈRE' }}
-        name="AuctionVideos"
-        component={SellerAuctionVideos}
-      />
+      {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
+      {/*<Tab.Screen*/}
+      {/*  options={{ title: 'VIDÉOS ENCHÈRE' }}*/}
+      {/*  name="AuctionVideos"*/}
+      {/*  component={SellerAuctionVideos}*/}
+      {/*/>*/}
     </Tab.Navigator>
   );
 };

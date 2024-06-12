@@ -10,7 +10,8 @@ import customer from '../../services/customer';
 import live from '../../services/live';
 import colors from '../../styles/colors';
 import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
-import AuctionVideos from '../AuctionVideos/AuctionVideos';
+// DO NOT REMOVE : Hiding auction videos feature for now.
+// import AuctionVideos from '../AuctionVideos/AuctionVideos';
 import ComingLives from '../ComingLives/ComingLives';
 import LivesScreen from '../LivesScreen/LivesScreen';
 
@@ -75,14 +76,15 @@ const LivesTab = () => {
         name="LivesScreen"
         component={LivesScreen}
       />
-      <Tab.Screen
-        options={{
-          title: 'VIDÉOS ENCHÈRE',
-          swipeEnabled: false,
-        }}
-        name="AuctionVideos"
-        component={AuctionVideos}
-      />
+      {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
+      {/*<Tab.Screen*/}
+      {/*  options={{*/}
+      {/*    title: 'VIDÉOS ENCHÈRE',*/}
+      {/*    swipeEnabled: false,*/}
+      {/*  }}*/}
+      {/*  name="AuctionVideos"*/}
+      {/*  component={AuctionVideos}*/}
+      {/*/>*/}
       <Tab.Screen
         options={{ title: 'PROCHAINEMENT' }}
         name="UpcomingLives"

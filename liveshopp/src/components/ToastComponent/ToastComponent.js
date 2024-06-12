@@ -63,7 +63,7 @@ const toastConfig = {
         alignItems: 'center',
       }}>
       <FontAwesomeIcon icon={faTriangleExclamation} color={colors.PRIMARY} size={17} />
-      <View style={{ marginLeft: 10 }}>
+      <View style={{ marginLeft: 10, marginRight: 10 }}>
         <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
       </View>
     </View>
@@ -85,7 +85,7 @@ const toastConfig = {
         alignItems: 'center',
       }}>
       <FontAwesomeIcon icon={faCircleCheck} color={colors.SUCCESS} size={17} />
-      <View style={{ marginLeft: 10 }}>
+      <View style={{ marginLeft: 10, marginRight: 10 }}>
         <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
       </View>
     </View>
@@ -120,7 +120,7 @@ const toastConfig = {
 };
 
 const ToastCompoenent = () => {
-  return <Toast config={toastConfig} autoHide={true} visibilityTime={5000} />;
+  return <Toast config={toastConfig} autoHide={false} visibilityTime={5000} />;
 };
 
 export default ToastCompoenent;
