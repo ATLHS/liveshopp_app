@@ -222,14 +222,14 @@ export const LiveScreen = ({ navigation, route }) => {
     if (liveData.currentAuction.userId) {
       Toast.show({
         type: 'auctionToast',
-        text1: `ADJUGÉ, VENDU À ${liveData.currentAuction.username.toUpperCase()} 🎉`,
+        text1: `Adjugé, vendu à ${liveData.currentAuction.username}  🎉`,
         topOffset: 100,
       });
     }
     if (!liveData.currentAuction.userId) {
       Toast.show({
         type: 'auctionToast',
-        text1: 'ENCHÈRES TERMINÉES',
+        text1: 'Enchères terminées !',
         topOffset: 100,
       });
     }
@@ -237,7 +237,7 @@ export const LiveScreen = ({ navigation, route }) => {
   };
 
   const bidOnCurrentAuction = (channelName, data) => {
-    data.username = user.firstname;
+    data.username = `${user.firstname} ${user.lastname.charAt(0)}`;
     data.userId = user.id;
     data.shipping_address = user.shipping_address;
     // send current bid info
@@ -341,6 +341,41 @@ export const LiveScreen = ({ navigation, route }) => {
         }
       },
     );
+  };
+
+  const renderLiveUserActions = () => {
+    // Auction is running
+    if (liveData.currentAuction.currentAuctionStatus === 'running') {
+      return (
+        <>
+          <LiveAuctionInfo />
+          {renderUserLiveForm()}
+          {!isHost ? (
+            <LiveChatTextInput
+              onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
+              live={liveData}
+            />
+          ) : (
+            <></>
+          )}
+        </>
+      );
+    }
+    // Auction is not running
+    if (liveData.currentAuction.currentAuctionStatus !== 'running') {
+      return isHost ? (
+        <SellerLiveForm
+          onPress={(data) => startCurrentAuction(liveData.channelName, data)}
+          currentAuctionIsRunning={liveData.currentAuction.currentAuctionStatus === 'running'}
+          panelRef={panelRef}
+        />
+      ) : (
+        <LiveChatTextInput
+          onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
+          live={liveData}
+        />
+      );
+    }
   };
 
   return (
@@ -450,28 +485,7 @@ export const LiveScreen = ({ navigation, route }) => {
                 showObjectionableAction={showObjectionableAction}
                 showObjectionableAdminAction={showObjectionableAdminAction}
               />
-
-              {liveData.currentAuction.currentAuctionStatus === 'running' ? (
-                <>
-                  <LiveAuctionInfo />
-                  {renderUserLiveForm()}
-                </>
-              ) : isHost ? (
-                <SellerLiveForm
-                  onPress={(data) => startCurrentAuction(liveData.channelName, data)}
-                  currentAuctionIsRunning={
-                    liveData.currentAuction.currentAuctionStatus === 'running'
-                  }
-                  panelRef={panelRef}
-                />
-              ) : (
-                <>
-                  <LiveChatTextInput
-                    onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
-                    live={liveData}
-                  />
-                </>
-              )}
+              {renderLiveUserActions()}
             </View>
             <View
               style={{

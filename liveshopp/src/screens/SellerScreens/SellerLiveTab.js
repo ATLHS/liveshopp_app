@@ -17,6 +17,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
   const dispatch = useDispatch();
+  const oneMinuteInMilliseconds = 60000;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,7 +29,7 @@ const SellerLiveTab = () => {
           checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
           liveInterval = setInterval(() => {
             checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
-          }, 300000); // 5 minutes
+          }, oneMinuteInMilliseconds); // 5 minutes
         })
         .catch((err) => {
           console.error(err);
