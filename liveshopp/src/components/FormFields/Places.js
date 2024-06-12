@@ -31,16 +31,23 @@ const Places = ({ inputField, field, fieldState }) => {
       }}
       styles={{
         container: {
-          marginTop: 30,
+          position: 'absolute',
+          top: 25,
           width: 370,
           alignItems: 'center',
+          left: '50%',
+          transform: [{ translateX: -185 }],
+          backgroundColor: 'white',
         },
         predefinedPlacesDescription: {
-          fontSize: 20,
+          alignItems: 'center',
+          fontSize: 15,
+          backgroundColor: 'white',
         },
         textInputContainer: {
           width: 350,
           fontSize: 15,
+          backgroundColor: 'white',
         },
         textInput: {
           height: 60,
@@ -48,18 +55,24 @@ const Places = ({ inputField, field, fieldState }) => {
           backgroundColor: '#F4F4F4',
           opacity: 0.7,
           borderRadius: 10,
-          fontSize: 20,
+          fontSize: 15,
         },
         listView: {
           width: 350,
+          backgroundColor: 'white',
         },
         description: {
-          fontSize: 16,
+          fontSize: 14,
+          fontWeight: 500,
+          backgroundColor: 'white',
         },
         row: {
           marginBottom: 5,
-          height: 50,
+          height: 60,
           width: 350,
+          alignItems: 'center',
+          borderRadius: 5,
+          backgroundColor: 'white',
         },
       }}
     />

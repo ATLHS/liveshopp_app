@@ -17,6 +17,7 @@ const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
   const dispatch = useDispatch();
+  const fiveMinuteInMilliseconds = 300000;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,7 +29,7 @@ const SellerLiveTab = () => {
           checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
           liveInterval = setInterval(() => {
             checkAndUpdateLiveStatus(data.sellerLives, dispatch, UserType.SELLER);
-          }, 300000); // 5 minutes
+          }, fiveMinuteInMilliseconds); // 5 minutes
         })
         .catch((err) => {
           console.error(err);
@@ -58,11 +59,12 @@ const SellerLiveTab = () => {
         component={ComingSoonLives}
       />
       <Tab.Screen options={{ title: 'LIVES TERMINÉS' }} name="EndedLives" component={EndedLives} />
-      <Tab.Screen
-        options={{ title: 'VIDÉOS ENCHÈRE' }}
-        name="AuctionVideos"
-        component={SellerAuctionVideos}
-      />
+      {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
+      {/*<Tab.Screen*/}
+      {/*  options={{ title: 'VIDÉOS ENCHÈRE' }}*/}
+      {/*  name="AuctionVideos"*/}
+      {/*  component={SellerAuctionVideos}*/}
+      {/*/>*/}
     </Tab.Navigator>
   );
 };

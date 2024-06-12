@@ -2,11 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
-import {
-  faArrowsRotate,
-  faCircleCheck,
-  faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import colors from '../../styles/colors';
@@ -63,7 +59,7 @@ const toastConfig = {
         alignItems: 'center',
       }}>
       <FontAwesomeIcon icon={faTriangleExclamation} color={colors.PRIMARY} size={17} />
-      <View style={{ marginLeft: 10 }}>
+      <View style={{ marginLeft: 10, marginRight: 10 }}>
         <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
       </View>
     </View>
@@ -85,7 +81,7 @@ const toastConfig = {
         alignItems: 'center',
       }}>
       <FontAwesomeIcon icon={faCircleCheck} color={colors.SUCCESS} size={17} />
-      <View style={{ marginLeft: 10 }}>
+      <View style={{ marginLeft: 10, marginRight: 10 }}>
         <Text style={{ fontSize: 14, color: '#707070', fontWeight: 500 }}>{text1}</Text>
       </View>
     </View>
@@ -93,28 +89,38 @@ const toastConfig = {
   auctionToast: ({ text1 }) => (
     <View
       style={{
-        padding: 10,
-        borderColor: 'transparent',
-        borderWidth: 1,
-        borderLeftColor: 'transparent',
-        borderLeftWidth: 1,
-        backgroundColor: 'black',
-        width: 350,
-        height: 80,
+        padding: 20,
+        borderLeftWidth: 0,
+        backgroundColor: 'rgba(9,9,9,0.47)',
+        width: '90%',
         borderRadius: 5,
-        justifyContent: 'center',
+        borderColor: 'grey',
+        shadowColor: '#171717',
+        shadowOffset: { height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        flexDirection: 'row',
         alignItems: 'center',
       }}>
-      <Text
+      <View
         style={{
-          fontSize: 20,
-          width: 350,
-          color: colors.LIGHT,
-          textAlign: 'center',
-          fontFamily: 'FugazOne-Regular',
+          marginLeft: 10,
+          marginRight: 10,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-        {text1} !
-      </Text>
+        <Text
+          style={{
+            fontSize: 15,
+            color: colors.LIGHT,
+            fontWeight: 600,
+            textAlign: 'center',
+            width: '100%',
+          }}>
+          {text1}
+        </Text>
+      </View>
     </View>
   ),
 };

@@ -83,7 +83,7 @@ module.exports = (io) => {
     try {
       const socket = this;
       const channel = await getChannel(liveData.channelName);
-      const pseudo = `${user.firstname} ${user.lastname.charAt(0)}.`;
+      const pseudo = `${user.firstname} ${user.lastname.charAt(0)}`;
 
       const id = generateUniqueId({
         length: 20,
