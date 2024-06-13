@@ -128,12 +128,18 @@ export const LiveScreen = ({ navigation, route }) => {
 
   // Gracefully quit and destroy the Agora engine
   const releaseSDKEngine = () => {
-    agoraEngineRef.current?.leaveChannel();
-    agoraEngineRef.current?.stopPreview();
-    agoraEngineRef.current?.release();
+    try {
+      setRemoteUid(0);
+      setIsJoined(false);
 
-    setRemoteUid(0);
-    setIsJoined(false);
+      agoraEngineRef.current?.leaveChannel();
+      agoraEngineRef.current?.stopPreview();
+
+      // FIXME Android seems to crash on release()
+      agoraEngineRef.current?.release();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const joinLiveBroadcast = async () => {
@@ -189,19 +195,11 @@ export const LiveScreen = ({ navigation, route }) => {
     setupVideoSDKEngine();
     // Start broadcasting or viewing
     joinLiveBroadcast();
-  }, []);
 
-  // Stop the engine, gracefully exit
-  //
-  // FIXME should be done when clicking on the exit button directly instead
-  //
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', () => {
+    return () => {
       releaseSDKEngine();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+    };
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
