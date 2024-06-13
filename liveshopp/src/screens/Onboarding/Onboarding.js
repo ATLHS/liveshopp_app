@@ -1,11 +1,21 @@
 import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import CountryFlag from 'react-native-country-flag';
+import SelectDropdown from 'react-native-select-dropdown';
 
+import lngs from '../../../assets/locales/lngs';
+import i18n from '../../../i18n';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import OutlinedButton from '../../components/OutlinedButton/OutlinedButton';
 import colors from '../../styles/colors';
 
 const Onboarding = ({ navigation }) => {
+  const { t } = useTranslation();
+  const emojisWithIcons = [
+    { title: 'Français', isoCode: 'fr' },
+    { title: 'Anglais', isoCode: 'gb' },
+  ];
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black', alignItems: 'center' }}>
       <View style={styles.container}>
@@ -20,7 +30,7 @@ const Onboarding = ({ navigation }) => {
             <Text style={styles.brandName}>LIVESHOPP</Text>
           </View>
           <View style={styles.headlineContainer}>
-            <Text style={styles.headline}>Vendez et achetez en live.</Text>
+            <Text style={styles.headline}>{t('slogan')}</Text>
           </View>
         </View>
         <View style={styles.actions}>
@@ -32,6 +42,41 @@ const Onboarding = ({ navigation }) => {
           {}
           <OutlinedButton title="Connexion" onPress={() => navigation.navigate('SignIn')} />
         </View>
+        <SelectDropdown
+          data={emojisWithIcons}
+          onSelect={(selectedItem, index) => {
+            console.log(selectedItem, index);
+          }}
+          defaultValue={'Français'}
+          renderButton={(selectedItem, isOpen) => {
+            return (
+              <View style={styles.dropdownButtonStyle}>
+                {selectedItem && <CountryFlag isoCode={selectedItem.isoCode} size={15} />}
+                <Text style={styles.dropdownButtonTxtStyle}>
+                  {(selectedItem && selectedItem.title) || 'Langue'}
+                </Text>
+              </View>
+            );
+          }}
+          renderItem={(item, index, isSelected) => {
+            return (
+              <View
+                style={{
+                  ...styles.dropdownItemStyle,
+                  ...(isSelected && { backgroundColor: '#D2D9DF' }),
+                }}>
+                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+              </View>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          dropdownStyle={styles.dropdownMenuStyle}
+        />
+        {/*{Object.keys(lngs).map((lng) => (*/}
+        {/*  <Pressable onPress={() => i18n.changeLanguage(lng)}>*/}
+        {/*    <Text style={{ color: colors.LIGHT }}>{lngs[lng].nativeName}</Text>*/}
+        {/*  </Pressable>*/}
+        {/*))}*/}
       </View>
     </SafeAreaView>
   );
@@ -77,6 +122,53 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  dropdownButtonStyle: {
+    width: 120,
+    height: 40,
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 15,
+    marginLeft: 5,
+    fontWeight: '500',
+    color: '#151E26',
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
+  },
+  dropdownButtonIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#151E26',
+  },
+  dropdownItemIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
   },
 });
 
