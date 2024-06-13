@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,6 +14,8 @@ import {
   View,
 } from 'react-native';
 
+import { t } from 'i18next';
+
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons/faAnglesRight';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
@@ -21,95 +24,95 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
-const UserSignupFormSchema = [
-  {
-    name: 'lastname',
-    label: 'Nom',
-    type: 'text',
-    autoFocus: true,
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre nom.',
-      },
-    },
-  },
-  {
-    name: 'firstname',
-    label: 'Prénom',
-    type: 'text',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre prénom.',
-      },
-    },
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    type: 'text',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre adresse e-mail.',
-      },
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: 'Veuillez indiquer une adresse email valide.',
-      },
-    },
-  },
-  {
-    name: 'phone',
-    label: 'Numéro de téléphone mobile',
-    type: 'tel',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer un numéro de téléphone.',
-      },
-      pattern: {
-        value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-        message: 'Veuillez indiquer un numéro valide.',
-      },
-    },
-  },
-  {
-    name: 'password',
-    label: 'Mot de passe',
-    type: 'password',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer un mot de passe.',
-      },
-      pattern: {
-        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-        message: 'Veuillez indiquer un mot de passe valide.',
-      },
-    },
-    helper: 'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
-  },
-  {
-    name: 'eula',
-    label: '',
-    type: 'checkbox',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez accepter les conditions générales d’utilisation.',
-      },
-    },
-    helper: {
-      helperLink: 'rgpdScreen',
-      helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les ',
-      helperMessage2: 'de Liveshopp et confirme avoir plus de 16 ans.',
-    },
-  },
-];
-
 export const UserSignUp = ({ navigation }) => {
+  const UserSignupFormSchema = [
+    {
+      name: 'lastname',
+      label: t('lastname'),
+      type: 'text',
+      autoFocus: true,
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterLastName'),
+        },
+      },
+    },
+    {
+      name: 'firstname',
+      label: t('firstname'),
+      type: 'text',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterFirstName'),
+        },
+      },
+    },
+    {
+      name: 'email',
+      label: t('email'),
+      type: 'text',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterEmail'),
+        },
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: t('pleaseEnterValidEmail'),
+        },
+      },
+    },
+    {
+      name: 'phone',
+      label: t('mobilePhoneNumber'),
+      type: 'tel',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterPhoneNumber'),
+        },
+        pattern: {
+          value: /^[0-9]+$/ && /^0[67]\d{8}$/,
+          message: t('pleaseEnterValidNumber'),
+        },
+      },
+    },
+    {
+      name: 'password',
+      label: t('password'),
+      type: 'password',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterPassword'),
+        },
+        pattern: {
+          value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+          message: t('pleaseEnterValidPassword'),
+        },
+      },
+      helper: t('passwordRequirements'),
+    },
+    {
+      name: 'eula',
+      label: '',
+      type: 'checkbox',
+      validation: {
+        required: {
+          value: true,
+          message: t('acceptTerms'),
+        },
+      },
+      helper: {
+        helperLink: 'rgpdScreen',
+        helperMessage1: t('confirmConditions1'),
+        helperMessage2: t('confirmConditions2'),
+      },
+    },
+  ];
+
   const { handleSubmit, control } = useForm();
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -142,9 +145,7 @@ export const UserSignUp = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.formContainer}>
               <View style={styles.headlineContainer}>
-                <Text style={styles.headline}>
-                  Faire une bonne affaire n’a jamais été aussi simple.
-                </Text>
+                <Text style={styles.headline}>{t('gettingAGoodDealHasNeverBeenEasier')}</Text>
               </View>
               <View style={styles.headlineContainerMessage}>
                 <Text style={styles.headlineMessage}>{message}</Text>
@@ -173,7 +174,7 @@ export const UserSignUp = ({ navigation }) => {
                       fontSize: 17,
                       marginRight: 5,
                     }}>
-                    Vendre
+                    {t('BecomeASeller')}
                   </Text>
                   <FontAwesomeIcon icon={faAnglesRight} color={colors.LIGHT} size={20} />
                 </TouchableOpacity>
