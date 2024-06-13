@@ -39,7 +39,6 @@
     "react-native-countdown-fixed": "^2.7.1",
     "react-native-country-flag": "^2.0.2",
     "react-native-date-picker": "^5.0.4",
-    "react-native-device-info": "^11.1.0",
     "react-native-dotenv": "^3.4.11",
     "react-native-email": "^2.1.0",
     "react-native-google-places-autocomplete": "^2.5.6",
