@@ -36,10 +36,12 @@ export const EndedLives = () => {
             <View style={styles.liveContainer}>
               {endedLives.length && !isLoading ? (
                 renderLives(
-                  endedLives.map((live) => ({
-                    ...live,
-                    imageUrl: user.imageUrl,
-                  })),
+                  endedLives
+                    .map((live) => ({
+                      ...live,
+                      imageUrl: user.imageUrl,
+                    }))
+                    .reverse(),
                   user,
                 )
               ) : (
