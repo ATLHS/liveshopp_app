@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Alert, AppState, Linking, Platform } from 'react-native';
+import { useEffect } from 'react';
+import { Alert, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,43 +25,40 @@ const RootStack = ({ isLoading }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // FIXME
-    //
-    // Previously, we used the deprecated `react-native-version-app`
-    // Now it's temporarily hardcoded to remove the package.
-    // We should find a better solution.
-    //
-    const currentVersion = '1.2.0';
-    const fetchData = async () => {
-      const version = await checkVersion({
-        platform: Platform.OS,
-        country: 'fr',
-        bundleId: Platform.OS === 'ios' ? APP_STORE_BUNDLE_ID : PLAY_STORE_BUNDLE_ID,
-        currentVersion,
-      });
+    const checkForUpdates = async () => {
+      try {
+        const version = await checkVersion({
+          platform: Platform.OS,
+          country: 'fr',
+          bundleId: Platform.OS === 'ios' ? APP_STORE_BUNDLE_ID : PLAY_STORE_BUNDLE_ID,
+        });
 
-      if (__DEV__) {
-        console.log('App is running in dev mode =', __DEV__);
-        return;
-      }
+        if (__DEV__) {
+          console.log('App is running in dev mode =', __DEV__);
+          return;
+        }
 
-      if (version.needsUpdate) {
-        Alert.alert(
-          'Mise à jour requise',
-          "Une nouvelle version de l'application est disponible. Veuillez mettre à jour pour continuer à utiliser l'application.",
-          [
-            {
-              text: 'Mettre à jour',
-              onPress: () => {
-                Linking.openURL(version.url);
+        if (version.needsUpdate) {
+          Alert.alert(
+            'Mise à jour requise',
+            "Une nouvelle version de l'application est disponible. Veuillez mettre à jour pour continuer à utiliser l'application.",
+            [
+              {
+                text: 'Mettre à jour',
+                onPress: () => {
+                  Linking.openURL(version.url);
+                },
               },
-            },
-          ],
-          { cancelable: false },
-        );
+            ],
+            { cancelable: false },
+          );
+        }
+      } catch (error) {
+        console.error('Failed to check for updates: ', error);
       }
     };
-    fetchData();
+
+    checkForUpdates();
   }, []);
 
   useEffect(() => {
