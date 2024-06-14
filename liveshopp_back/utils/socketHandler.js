@@ -10,7 +10,6 @@ const { log } = require('../middleware/logger');
 const { registerAuction } = require('./auctions');
 const Sentry = require('@sentry/node');
 const Live = require('../models/live');
-const { DateTime } = require('luxon');
 
 /**
  * @param {import('socket.io').Server} io
@@ -81,7 +80,6 @@ module.exports = (io) => {
 
   const newLiveMessage = async function ({ user, message, liveData }) {
     try {
-      const socket = this;
       const channel = await getChannel(liveData.channelName);
       const pseudo = `${user.firstname} ${user.lastname.charAt(0)}`;
 
@@ -145,10 +143,20 @@ module.exports = (io) => {
 
   const bid = async function ({ channelName, data }) {
     try {
+      const bidAmount = Number(data.bid);
       const channel = await getChannel(channelName);
       const { currentAuction } = channel;
 
-      currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + Number(data.bid);
+      // FIXME
+      //
+      // This is a quick fix.
+      // It should be correctly handled in params validation.
+      //
+      if (isNaN(bidAmount) || bidAmount <= 0) {
+        throw new Error('Dangerous bid amount detected');
+      }
+
+      currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + bidAmount;
       currentAuction.userId = data.userId;
       currentAuction.username = data.username;
       currentAuction.shipping_address = data.shipping_address;
@@ -176,7 +184,6 @@ module.exports = (io) => {
 
   const startCurrentAuction = async function ({ channelName, data }) {
     try {
-      const socket = this;
       const channel = await getChannel(channelName);
       const timer = data.product_auction_time * 60; // in seconds
 
@@ -237,7 +244,6 @@ module.exports = (io) => {
 
   const onAuctionFinished = async function (channelName) {
     try {
-      const socket = this;
       const channel = await getChannel(channelName);
       let messageInfo = '';
 
