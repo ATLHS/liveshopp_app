@@ -1,9 +1,25 @@
 const morgan = require('morgan');
 const winston = require('winston');
 
-const isDevEnv = () => {
-  const env = process.env.NODE_ENV || 'development';
-  return env === 'development';
+const formats = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return winston.format.combine(
+      winston.format.errors({ stack: true }),
+      winston.format.timestamp({
+        format: 'YYYY-MM-DD hh:mm:ss.SSS A',
+      }),
+      winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+    );
+  } else {
+    return winston.format.combine(
+      winston.format.colorize({ all: true }),
+      winston.format.errors({ stack: true }),
+      winston.format.timestamp({
+        format: 'YYYY-MM-DD hh:mm:ss.SSS A',
+      }),
+      winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+    );
+  }
 };
 
 /**
@@ -11,15 +27,8 @@ const isDevEnv = () => {
  */
 const log = winston.createLogger({
   exitOnError: false,
-  level: isDevEnv ? 'debug' : 'http',
-  format: winston.format.combine(
-    winston.format.colorize({ all: isDevEnv }),
-    winston.format.errors({ stack: true }),
-    winston.format.timestamp({
-      format: 'YYYY-MM-DD hh:mm:ss.SSS A',
-    }),
-    winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
-  ),
+  level: process.env.NODE_ENV === 'production' ? 'http' : 'debug',
+  format: formats(),
   transports: [new winston.transports.Console()],
 });
 
