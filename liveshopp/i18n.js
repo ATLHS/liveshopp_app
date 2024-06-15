@@ -10,13 +10,13 @@ i18next
   .init({
     compatibilityJSON: 'v3',
     fallbackLng: 'fr',
-    supportedLngs: ['fr', 'en'],
+    supportedLngs: ['fr', 'gb'],
     resources: {
       fr: {
         translation: require('./assets/locales/fr/translation.json'),
       },
-      en: {
-        translation: require('./assets/locales/en/translation.json'),
+      gb: {
+        translation: require('./assets/locales/gb/translation.json'),
       },
     },
   });

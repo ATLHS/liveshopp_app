@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Platform, View } from 'react-native';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 
@@ -13,6 +14,7 @@ const AutocompleteDropdownSearch = ({ navigation }) => {
   const [dataList, setDataList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef(null);
+  const { t } = useTranslation();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -88,7 +90,7 @@ const AutocompleteDropdownSearch = ({ navigation }) => {
         suggestionsListContainerStyle={{}}
         suggestionsListMaxHeight={800}
         textInputProps={{
-          placeholder: 'Rechercher un vendeur',
+          placeholder: t('search_for_seller'),
           autoCorrect: false,
           autoCapitalize: 'none',
 

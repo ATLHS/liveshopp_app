@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import * as Sentry from '@sentry/react-native';
 
+import i18n from '../../../i18n';
 import apiConfig from '../config/apiConfig';
 
 const axiosInstance = axios.create({
@@ -9,8 +10,7 @@ const axiosInstance = axios.create({
   baseURL: apiConfig.URL,
 });
 
-// Intercepts all requests (like a middleware)
-//
+// Intercepts all responses (like a middleware)
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -34,5 +34,12 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// Intercepts all requests (like a middleware)
+axiosInstance.interceptors.request.use((config) => {
+  const language = i18n.language || 'fr'; // Langue par défaut
+  config.headers['Accept-Language'] = language;
+  return config;
+});
 
 export default axiosInstance;

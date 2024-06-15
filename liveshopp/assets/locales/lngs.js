@@ -1,2 +1,2 @@
-const lngs = { fr: { nativeName: 'Français' }, en: { nativeName: 'Anglais' } };
+const lngs = { fr: { nativeName: 'Français' }, gb: { nativeName: 'Anglais' } };
 export default lngs;

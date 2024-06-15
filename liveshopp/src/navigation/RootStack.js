@@ -43,11 +43,11 @@ const RootStack = ({ isLoading }) => {
 
         if (version.needsUpdate) {
           Alert.alert(
-            'Mise à jour requise',
-            "Une nouvelle version de l'application est disponible. Veuillez mettre à jour pour continuer à utiliser l'application.",
+            t('update_required'),
+            t('new_app_version_available'),
             [
               {
-                text: 'Mettre à jour',
+                text: t('update'),
                 onPress: () => {
                   Linking.openURL(version.url);
                 },

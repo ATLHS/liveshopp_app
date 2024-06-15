@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -16,6 +17,7 @@ import OrderCard from '../../components/OrderCard/OrderCard';
 import colors from '../../styles/colors';
 
 export const MyOrder = () => {
+  const { t } = useTranslation();
   const { initialOrder } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,10 +92,7 @@ export const MyOrder = () => {
             ''
           )}
           {!initialOrder.filter((order) => order.userId === user.id).length && (
-            <NoData
-              title={"Vous n'avez aucune pépite."}
-              message={'Vos articles remportés lors des enchères apparaîtront ici.'}
-            />
+            <NoData title={t('no_gems')} message={t('won_auction_items')} />
           )}
           {isLoading && (
             <View

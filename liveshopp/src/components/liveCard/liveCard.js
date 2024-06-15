@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Dimensions,
@@ -24,6 +25,7 @@ const LiveCard = ({
   datetime,
   imageKey,
 }) => {
+  const { t } = useTranslation();
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
   // Parse the date
@@ -35,7 +37,7 @@ const LiveCard = ({
 
   // Format the date string
   const formattedDate = isToday
-    ? "Aujourd'hui"
+    ? t('today')
     : DateTime.fromISO(datetime).toLocaleString({
         month: 'short',
         day: 'numeric',
@@ -74,13 +76,13 @@ const LiveCard = ({
           <View style={styles.statusContainer}>
             {status === 'live' ? (
               <View style={styles.liveStatut}>
-                <Text style={styles.liveText}>En direct</Text>
+                <Text style={styles.liveText}>{t('live')}</Text>
               </View>
             ) : (
               <View style={styles.datetimeTextContainer}>
                 <Text style={styles.datetimeText}>
                   {formattedDate}
-                  {' à '}
+                  {t('at')}
                   {DateTime.fromISO(datetime).toLocaleString(DateTime.TIME_SIMPLE)}
                 </Text>
               </View>

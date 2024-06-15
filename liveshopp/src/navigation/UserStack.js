@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
@@ -34,6 +35,7 @@ import colors from '../styles/colors';
 const Stack = createNativeStackNavigator();
 
 const UserStack = () => {
+  const { t } = useTranslation();
   const user = useSelector((state) => state.user.user);
   const liveData = useSelector((state) => state.lives.liveData);
   const dispatch = useDispatch();
@@ -73,7 +75,7 @@ const UserStack = () => {
   const showObjectionableAction = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Bloquer cet utilisateur', 'Signaler cet utilisateur'],
+        options: [t('cancel'), t('block_user'), t('report_user')],
         destructiveButtonIndex: 2,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -84,11 +86,11 @@ const UserStack = () => {
         } else if (buttonIndex === 1) {
           ActionSheetIOS.showActionSheetWithOptions(
             {
-              options: ['Annuler', 'Bloquer cet utilisateur'],
+              options: [t('cancel'), t('block_user')],
               destructiveButtonIndex: 1,
               cancelButtonIndex: 0,
               userInterfaceStyle: 'light',
-              title: 'Vous ne verrez plus les messages et les lives de cet utilisateur',
+              title: t('stop_seeing_messages'),
             },
             (buttonIndex) => {
               if (buttonIndex === 0) {
@@ -108,11 +110,11 @@ const UserStack = () => {
           // signal user
           ActionSheetIOS.showActionSheetWithOptions(
             {
-              options: ['Annuler', 'Signaler cet utilisateur'],
+              options: [t('cancel'), t('report_user')],
               destructiveButtonIndex: 1,
               cancelButtonIndex: 0,
               userInterfaceStyle: 'light',
-              title: 'Tout comportement ne respectant pas les conditions générales sera sanctionné',
+              title: t('behavior_not_allowed'),
             },
             (buttonIndex) => {
               if (buttonIndex === 0) {
@@ -167,7 +169,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Modifier mon profil',
+          title: t('edit_profile'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -204,7 +206,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Adresse de livraison',
+          title: t('delivery_address'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -221,7 +223,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Utilisateur bloqués',
+          title: t('blocked_users'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -283,7 +285,7 @@ const UserStack = () => {
                       fontWeight: 'bold',
                       textAlign: 'center',
                     }}>
-                    EN DIRECT
+                    {t('live').toUpperCase()}
                   </Text>
                 </View>
               )}
@@ -334,7 +336,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Conditions générales',
+          title: t('terms_and_conditions'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -11,58 +12,59 @@ import {
 
 import colors from '../../styles/colors';
 
-const currentSellerLiveForm = [
-  {
-    name: 'product_name',
-    label: 'Article',
-    type: 'textProduct',
-    validation: {
-      required: {
-        value: true,
-      },
-    },
-  },
-  {
-    name: 'product_price',
-    type: 'textPrice',
-    validation: {
-      required: {
-        value: true,
-        message: "message d'erreur2",
-      },
-    },
-    label: 'Prix de départ',
-  },
-  {
-    name: 'product_reserved_price',
-    type: 'textPrice',
-    validation: {
-      required: {
-        value: false,
-        message: "message d'erreur 3",
-      },
-      validate: (_, b) => {
-        if (b.product_reserved_price) {
-          return Number(b.product_price) < Number(b.product_reserved_price);
-        }
-        return true;
-      },
-    },
-    label: ' Prix de réserve',
-  },
-  {
-    name: 'product_auction_time',
-    type: 'textTime',
-    validation: {
-      required: {
-        value: true,
-      },
-    },
-    label: 'Min',
-  },
-];
-
 export const SellerLiveForm = ({ onPress }) => {
+  const { t } = useTranslation();
+  const currentSellerLiveForm = [
+    {
+      name: 'product_name',
+      label: t('Product'),
+      type: 'textProduct',
+      validation: {
+        required: {
+          value: true,
+        },
+      },
+    },
+    {
+      name: 'product_price',
+      type: 'textPrice',
+      validation: {
+        required: {
+          value: true,
+          message: "message d'erreur2",
+        },
+      },
+      label: t('starting_price'),
+    },
+    {
+      name: 'product_reserved_price',
+      type: 'textPrice',
+      validation: {
+        required: {
+          value: false,
+          message: "message d'erreur 3",
+        },
+        validate: (_, b) => {
+          if (b.product_reserved_price) {
+            return Number(b.product_price) < Number(b.product_reserved_price);
+          }
+          return true;
+        },
+      },
+      label: t('reserve_price'),
+    },
+    {
+      name: 'product_auction_time',
+      type: 'textTime',
+      validation: {
+        required: {
+          value: true,
+        },
+      },
+      label: 'Min',
+    },
+  ];
+
   const { handleSubmit, control } = useForm();
   const [disabled, setDisabled] = useState(false);
 
@@ -92,7 +94,7 @@ export const SellerLiveForm = ({ onPress }) => {
                       color: colors.LIGHT,
                       fontStyle: 'italic',
                     }}>
-                    Optionnel
+                    {t('optional')}
                   </Text>
                 )}
                 <TextInput
@@ -160,7 +162,7 @@ export const SellerLiveForm = ({ onPress }) => {
         style={styles.startAuction}
         disabled={disabled}>
         {!disabled ? (
-          <Text style={styles.title}>Démarrer l'enchère !</Text>
+          <Text style={styles.title}>{t('start_auction')}</Text>
         ) : (
           <ActivityIndicator size="small" color={colors.LIGHT} />
         )}

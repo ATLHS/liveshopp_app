@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
@@ -10,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from '../../styles/colors';
 
 const TextArea = ({ field }) => {
+  const { t } = useTranslation();
   let player = useRef(null);
   const [videoUri, setVideoUri] = useState(null);
 
@@ -54,7 +56,7 @@ const TextArea = ({ field }) => {
   const handleSelectedVideoExceedDurationLimit = () => {
     Toast.show({
       type: 'toastError',
-      text1: 'La durée maximale pour une vidéo enchères doit être de 40 secondes maximum.',
+      text1: t('max_auction_video_duration'),
     });
     console.error('The user exceeded the duration limit of the video');
   };
@@ -94,14 +96,11 @@ const TextArea = ({ field }) => {
                 size={40}
                 style={styles.icon}
               />
-              <Text style={styles.text}>Sélectionner un fichier vidéo</Text>
+              <Text style={styles.text}>{t('select_video_file')}</Text>
               <TouchableOpacity style={styles.button} onPress={setAuctionVideoItem}>
-                <Text style={styles.buttonText}>Sélectionner</Text>
+                <Text style={styles.buttonText}>{t('select')})</Text>
               </TouchableOpacity>
-              <Text style={styles.tip}>
-                👋 Astuces : Optimisez vos chances de réussite en respectant le format des
-                reels/stories. Des vidéos claires et attrayantes attirent plus d'enchérisseurs.
-              </Text>
+              <Text style={styles.tip}>👋 {t('auction_tips')}</Text>
             </View>
           )}
         </>

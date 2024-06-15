@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import SelectDropdown from 'react-native-select-dropdown';
 
-import lngs from '../../../assets/locales/lngs';
 import i18n from '../../../i18n';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import OutlinedButton from '../../components/OutlinedButton/OutlinedButton';
@@ -16,6 +15,10 @@ const Onboarding = ({ navigation }) => {
     { title: 'Français', isoCode: 'fr' },
     { title: 'Anglais', isoCode: 'gb' },
   ];
+  // to remove
+  useEffect(() => {
+    console.log(i18n.language, 'langage');
+  }, [i18n.language]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black', alignItems: 'center' }}>
       <View style={styles.container}>
@@ -35,23 +38,23 @@ const Onboarding = ({ navigation }) => {
         </View>
         <View style={styles.actions}>
           <ContainedButton
-            title="Inscription"
+            title={t('signup')}
             onPress={() => navigation.navigate('UserSignup')}
             loading={undefined}
           />
           {}
-          <OutlinedButton title="Connexion" onPress={() => navigation.navigate('SignIn')} />
+          <OutlinedButton title={t('login')} onPress={() => navigation.navigate('SignIn')} />
         </View>
         <SelectDropdown
           data={emojisWithIcons}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
+          onSelect={async (selectedItem, index) => {
+            await i18n.changeLanguage(selectedItem.isoCode);
           }}
           defaultValue={'Français'}
           renderButton={(selectedItem, isOpen) => {
             return (
               <View style={styles.dropdownButtonStyle}>
-                {selectedItem && <CountryFlag isoCode={selectedItem.isoCode} size={15} />}
+                {selectedItem && <CountryFlag isoCode={selectedItem.isoCode} size={10} />}
                 <Text style={styles.dropdownButtonTxtStyle}>
                   {(selectedItem && selectedItem.title) || 'Langue'}
                 </Text>
@@ -72,11 +75,6 @@ const Onboarding = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           dropdownStyle={styles.dropdownMenuStyle}
         />
-        {/*{Object.keys(lngs).map((lng) => (*/}
-        {/*  <Pressable onPress={() => i18n.changeLanguage(lng)}>*/}
-        {/*    <Text style={{ color: colors.LIGHT }}>{lngs[lng].nativeName}</Text>*/}
-        {/*  </Pressable>*/}
-        {/*))}*/}
       </View>
     </SafeAreaView>
   );
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
   },
 
   dropdownButtonStyle: {
-    width: 120,
+    width: 110,
     height: 40,
     backgroundColor: '#E9ECEF',
     borderRadius: 8,
@@ -136,17 +134,16 @@ const styles = StyleSheet.create({
   },
   dropdownButtonTxtStyle: {
     flex: 1,
-    fontSize: 15,
-    marginLeft: 5,
+    fontSize: 13,
+    marginLeft: 10,
     fontWeight: '500',
     color: '#151E26',
   },
   dropdownButtonArrowStyle: {
-    fontSize: 28,
+    fontSize: 13,
   },
   dropdownButtonIconStyle: {
-    fontSize: 28,
-    marginRight: 8,
+    fontSize: 13,
   },
   dropdownMenuStyle: {
     backgroundColor: '#E9ECEF',
@@ -162,7 +159,7 @@ const styles = StyleSheet.create({
   },
   dropdownItemTxtStyle: {
     flex: 1,
-    fontSize: 18,
+    fontSize: 13,
     fontWeight: '500',
     color: '#151E26',
   },
