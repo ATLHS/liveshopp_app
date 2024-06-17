@@ -43,8 +43,8 @@ const RootStack = ({ isLoading }) => {
 
         if (version.needsUpdate) {
           Alert.alert(
-            t('update_required'),
-            t('new_app_version_available'),
+            t('updateRequired'),
+            t('newAppVersionAvailable'),
             [
               {
                 text: t('update'),

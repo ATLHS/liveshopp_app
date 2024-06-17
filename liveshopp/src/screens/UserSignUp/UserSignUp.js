@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,8 +14,6 @@ import {
   View,
 } from 'react-native';
 
-import { t } from 'i18next';
-
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons/faAnglesRight';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
@@ -24,6 +23,7 @@ import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
 export const UserSignUp = ({ navigation }) => {
+  const { t } = useTranslation();
   const UserSignupFormSchema = [
     {
       name: 'lastname',
@@ -154,7 +154,7 @@ export const UserSignUp = ({ navigation }) => {
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Let’s go !"
+                  title={t('letsGo')}
                   onPress={handleSubmit(handleUserSignup)}
                   loading={isLoading}
                 />

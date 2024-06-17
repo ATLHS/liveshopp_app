@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -12,8 +13,6 @@ import {
   View,
 } from 'react-native';
 
-import { t } from 'i18next';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
@@ -22,6 +21,7 @@ import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
 export const EmailVerificationCode = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const EmailVerificationCodeSchema = [
     {
       name: 'code',

@@ -11,14 +11,11 @@ import colors from '../../styles/colors';
 
 const Onboarding = ({ navigation }) => {
   const { t } = useTranslation();
-  const emojisWithIcons = [
+  const country = [
     { title: 'Français', isoCode: 'fr' },
-    { title: 'Anglais', isoCode: 'gb' },
+    { title: 'English', isoCode: 'gb' },
   ];
-  // to remove
-  useEffect(() => {
-    console.log(i18n.language, 'langage');
-  }, [i18n.language]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black', alignItems: 'center' }}>
       <View style={styles.container}>
@@ -46,11 +43,11 @@ const Onboarding = ({ navigation }) => {
           <OutlinedButton title={t('login')} onPress={() => navigation.navigate('SignIn')} />
         </View>
         <SelectDropdown
-          data={emojisWithIcons}
+          data={country}
           onSelect={async (selectedItem, index) => {
             await i18n.changeLanguage(selectedItem.isoCode);
           }}
-          defaultValue={'Français'}
+          defaultValue={country[0]}
           renderButton={(selectedItem, isOpen) => {
             return (
               <View style={styles.dropdownButtonStyle}>

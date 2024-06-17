@@ -56,7 +56,7 @@ const TextArea = ({ field }) => {
   const handleSelectedVideoExceedDurationLimit = () => {
     Toast.show({
       type: 'toastError',
-      text1: t('max_auction_video_duration'),
+      text1: t('maxAuctionVideoDuration'),
     });
     console.error('The user exceeded the duration limit of the video');
   };
@@ -96,11 +96,11 @@ const TextArea = ({ field }) => {
                 size={40}
                 style={styles.icon}
               />
-              <Text style={styles.text}>{t('select_video_file')}</Text>
+              <Text style={styles.text}>{t('selectVideoFile')}</Text>
               <TouchableOpacity style={styles.button} onPress={setAuctionVideoItem}>
                 <Text style={styles.buttonText}>{t('select')})</Text>
               </TouchableOpacity>
-              <Text style={styles.tip}>👋 {t('auction_tips')}</Text>
+              <Text style={styles.tip}>👋 {t('auctionTips')}</Text>
             </View>
           )}
         </>

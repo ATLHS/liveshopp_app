@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -25,6 +26,7 @@ import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import renderLives from '../../utils/renderLives';
 
 export const LivesScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const { isJoin, isGone, lives } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -99,7 +101,7 @@ export const LivesScreen = ({ navigation }) => {
                     textAlign: 'center',
                     color: colors.HOUR,
                   }}>
-                  Rafraîchissez pour afficher les lives en cours.
+                  {t('refreshToViewCurrentLives')}
                 </Text>
               </View>
               <View style={styles.liveContainer}>
@@ -117,8 +119,8 @@ export const LivesScreen = ({ navigation }) => {
                 )}
                 {!currentLives.length && !isLoading && (
                   <NoData
-                    title={'Aucun live en cours'}
-                    message={'Les lives en cours apparaîtront ici. Revenez un peu plus tard.'}
+                    title={t('noLiveCurrently')}
+                    message={t('currentLivesWillAppearHere')}
                     buttonTitle={''}
                   />
                 )}

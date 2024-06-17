@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Keyboard,
@@ -23,6 +24,7 @@ import Headline from '../../components/Auth/Headine/Headline';
 import colors from '../../styles/colors';
 
 export const SellerProfilView = ({ route }) => {
+  const { t } = useTranslation();
   const [upComingLives, setUpComingSellerLive] = useState([]);
   const { lives } = useSelector((state) => state.lives);
 
@@ -65,11 +67,11 @@ export const SellerProfilView = ({ route }) => {
               </View>
               <View style={styles.fieldContainer}>
                 <View>
-                  <Headline title={'Bio'} />
+                  <Headline title={t('bio')} />
                   <Text style={{ fontSize: 17 }}>{route.params.bio}</Text>
                 </View>
                 <View>
-                  <Headline title={'Liens'} />
+                  <Headline title={t('links')} />
                   <View
                     style={{
                       flexDirection: 'row',
@@ -114,7 +116,7 @@ export const SellerProfilView = ({ route }) => {
                   </View>
                 </View>
                 <View>
-                  <Headline title={'Prochain live'} />
+                  <Headline title={t('upcomingLive')} />
                   {upComingLives.length > 0 ? (
                     upComingLives.map((comingLive, index) => (
                       <Text
@@ -131,7 +133,7 @@ export const SellerProfilView = ({ route }) => {
                           day: 'numeric',
                           weekday: 'short',
                         })}
-                        {' à '}
+                        {t('at')}{' '}
                         {DateTime.fromISO(comingLive.live_date_time).toLocaleString(
                           DateTime.TIME_SIMPLE,
                         )}

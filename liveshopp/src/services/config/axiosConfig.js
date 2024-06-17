@@ -5,10 +5,14 @@ import * as Sentry from '@sentry/react-native';
 import i18n from '../../../i18n';
 import apiConfig from '../config/apiConfig';
 
+let language = i18n.language || 'fr';
+
 const axiosInstance = axios.create({
   withCredentials: true,
   baseURL: apiConfig.URL,
 });
+
+axiosInstance.defaults.headers['Accept-Language'] = language;
 
 // Intercepts all responses (like a middleware)
 axiosInstance.interceptors.response.use(
@@ -34,12 +38,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-// Intercepts all requests (like a middleware)
-axiosInstance.interceptors.request.use((config) => {
-  const language = i18n.language || 'fr'; // Langue par défaut
-  config.headers['Accept-Language'] = language;
-  return config;
-});
 
 export default axiosInstance;

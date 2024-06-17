@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -22,55 +23,53 @@ import seller from '../../services/seller';
 import colors from '../../styles/colors';
 import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 
-const LiveCreationFormSchema = () => [
-  {
-    name: 'live_name',
-    label: 'Nom du live',
-    type: 'text',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer le nom du live.',
-      },
-      pattern: {
-        value: /^[a-zA-Z\s0-9]*$/i,
-        message: 'Le nom du live est invalide',
-      },
-    },
-    helper:
-      'Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n',
-    editable: true,
-    defaultValue: '',
-  },
-  {
-    name: 'live_description',
-    label: 'En quoi ton live sera unique ?',
-    type: 'textarea',
-    editable: true,
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer une description.',
-      },
-    },
-  },
-  {
-    name: 'live_date_time',
-    label: 'date',
-    type: 'datetime',
-    helperMessage:
-      "Chaque live doit être espacé d'au moins une heure. \nEx : Si un live commence à 14h, le suivant doit débuter à 15h ou plus tard.",
-    style: { height: 150 },
-    minuteInterval: 30,
-    minimumDelay: DateTime.now()
-      .setZone('Europe/Paris')
-      .startOf('minutes') // Début de l'heure actuelle
-      .plus({ minutes: 30 - (DateTime.now().minute % 30) })
-      .toJSDate(),
-  },
-];
-
 export const SettingNewLive = ({ navigation }) => {
+  const { t } = useTranslation();
+  const LiveCreationFormSchema = () => [
+    {
+      name: 'live_name',
+      label: t('liveName'),
+      type: 'text',
+      validation: {
+        required: {
+          value: true,
+          message: t('liveNamePlaceholder'),
+        },
+        pattern: {
+          value: /^[a-zA-Z\s0-9]*$/i,
+          message: t('invalidLiveName'),
+        },
+      },
+      helper: t('allowedCharacters'),
+      editable: true,
+      defaultValue: '',
+    },
+    {
+      name: 'live_description',
+      label: t('uniqueSellingPoint'),
+      type: 'textarea',
+      editable: true,
+      validation: {
+        required: {
+          value: true,
+          message: t('descriptionPlaceholder'),
+        },
+      },
+    },
+    {
+      name: 'live_date_time',
+      label: t('date'),
+      type: 'datetime',
+      helperMessage: t('minimumHourSpacing'),
+      style: { height: 150 },
+      minuteInterval: 30,
+      minimumDelay: DateTime.now()
+        .setZone('Europe/Paris')
+        .startOf('minutes') // Début de l'heure actuelle
+        .plus({ minutes: 30 - (DateTime.now().minute % 30) })
+        .toJSDate(),
+    },
+  ];
   const { handleSubmit, control } = useForm();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +116,7 @@ export const SettingNewLive = ({ navigation }) => {
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Créer le live"
+                  title={t('createTheLive')}
                   onPress={handleSubmit(handleLiveCreation)}
                   loading={isLoading}
                 />

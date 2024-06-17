@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Keyboard,
@@ -20,6 +21,7 @@ import colors from '../../styles/colors';
 import renderLives from '../../utils/renderLives';
 
 export const LivesScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const { lives } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -70,8 +72,8 @@ export const LivesScreen = ({ navigation }) => {
               )}
               {!upComingLives.length && !isLoading && (
                 <NoData
-                  title={'Aucun live à venir'}
-                  message={'Les lives à venir apparaîtront ici.'}
+                  title={t('noUpcomingLives')}
+                  message={t('upcomingLivesWillAppearHere')}
                   buttonTitle={''}
                 />
               )}

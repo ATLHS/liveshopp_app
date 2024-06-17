@@ -34,7 +34,7 @@ export const SellerLiveForm = ({ onPress }) => {
           message: "message d'erreur2",
         },
       },
-      label: t('starting_price'),
+      label: t('startingPrice'),
     },
     {
       name: 'product_reserved_price',
@@ -51,7 +51,7 @@ export const SellerLiveForm = ({ onPress }) => {
           return true;
         },
       },
-      label: t('reserve_price'),
+      label: t('reservePrice'),
     },
     {
       name: 'product_auction_time',
@@ -162,7 +162,7 @@ export const SellerLiveForm = ({ onPress }) => {
         style={styles.startAuction}
         disabled={disabled}>
         {!disabled ? (
-          <Text style={styles.title}>{t('start_auction')}</Text>
+          <Text style={styles.title}>{t('startAuction')}</Text>
         ) : (
           <ActivityIndicator size="small" color={colors.LIGHT} />
         )}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -14,6 +15,7 @@ import ShippedOrder from '../OrderScreen/ShippedOrder';
 const Tab = createMaterialTopTabNavigator();
 
 const OrderTab = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -41,17 +43,29 @@ const OrderTab = () => {
       }}>
       {user.profil === 'user' ? (
         <>
-          <Tab.Screen options={{ title: 'MES COMMANDES' }} name="MyOrder" component={MyOrder} />
+          <Tab.Screen
+            options={{ title: t('myOrders').toUpperCase() }}
+            name="MyOrder"
+            component={MyOrder}
+          />
         </>
       ) : (
         <>
-          <Tab.Screen options={{ title: 'Mes pépites' }} name="MyOrder" component={MyOrder} />
           <Tab.Screen
-            options={{ title: 'À expédier' }}
+            options={{ title: t('myGems').toUpperCase() }}
+            name="MyOrder"
+            component={MyOrder}
+          />
+          <Tab.Screen
+            options={{ title: t('toShip').toUpperCase() }}
             name="Processing"
             component={OrderToShipped}
           />
-          <Tab.Screen options={{ title: 'Expédiés' }} name="Shipped" component={ShippedOrder} />
+          <Tab.Screen
+            options={{ title: t('shipped').toUpperCase() }}
+            name="Shipped"
+            component={ShippedOrder}
+          />
         </>
       )}
     </Tab.Navigator>

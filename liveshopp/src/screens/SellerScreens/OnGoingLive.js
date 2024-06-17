@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ImageBackground,
   Modal,
@@ -30,6 +31,7 @@ import colors from '../../styles/colors';
 import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 
 export const OnGoingLive = ({ navigation }) => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
   const { sellerLives, isGone, isJoin } = useSelector((state) => state.lives);
@@ -147,7 +149,7 @@ export const OnGoingLive = ({ navigation }) => {
                       textAlign: 'center',
                       fontFamily: 'FugazOne-Regular',
                     }}>
-                    CLÔTURER LE LIVE :{' '}
+                    {t('closeLivePrompt').toUpperCase()}{' '}
                   </Text>
                   <Text style={{ fontSize: 15, margin: 5 }}>
                     {currentLive ? currentLive.live_name : ''}
@@ -255,7 +257,7 @@ export const OnGoingLive = ({ navigation }) => {
                 iterationCount="infinite"
                 style={styles.action}>
                 <ContainedButtonSm
-                  title="Rejoindre le live"
+                  title={t('joinLive')}
                   loading={isLoading}
                   onPress={() => goLive(currentLive)}
                 />
@@ -263,9 +265,9 @@ export const OnGoingLive = ({ navigation }) => {
             </Pressable>
           ) : (
             <NoData
-              title={"Vous n'avez aucun live en cours"}
-              message={'Un live programmé apparaîtra ici 5 minutes avant le début du show.'}
-              buttonTitle={'Créer un live maintenant ?'}
+              title={t('noLiveOngoing')}
+              message={t('scheduledLiveSoon')}
+              buttonTitle={t('createLiveNow')}
               onPress={() => navigation.navigate('SettingNewLive')}
             />
           )}

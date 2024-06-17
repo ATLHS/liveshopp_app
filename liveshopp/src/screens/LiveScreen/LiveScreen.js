@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
@@ -50,6 +51,7 @@ const colorList = [
 ];
 
 export const LiveScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { channelName, seller_id } = route.params;
   const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
@@ -220,14 +222,14 @@ export const LiveScreen = ({ navigation, route }) => {
     if (liveData.currentAuction.userId) {
       Toast.show({
         type: 'auctionToast',
-        text1: `Adjugé, vendu à ${liveData.currentAuction.username}  🎉`,
+        text1: `${t('soldTo')} ${liveData.currentAuction.username}  🎉`,
         topOffset: 100,
       });
     }
     if (!liveData.currentAuction.userId) {
       Toast.show({
         type: 'auctionToast',
-        text1: 'Enchères terminées !',
+        text1: t('auctionsEnded'),
         topOffset: 100,
       });
     }
@@ -249,7 +251,7 @@ export const LiveScreen = ({ navigation, route }) => {
   const showObjectionableAction = (item) => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Bloquer cet utilisateur', 'Signaler cet utilisateur'],
+        options: [t('cancel'), t('blockUser'), t('reportUserr')],
         destructiveButtonIndex: 2,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -260,11 +262,11 @@ export const LiveScreen = ({ navigation, route }) => {
         } else if (buttonIndex === 1) {
           ActionSheetIOS.showActionSheetWithOptions(
             {
-              options: ['Annuler', 'Bloquer cet utilisateur'],
+              options: [t('cancel'), t('blockUser')],
               destructiveButtonIndex: 1,
               cancelButtonIndex: 0,
               userInterfaceStyle: 'light',
-              title: 'Vous ne verrez plus les messages et les lives de cet utilisateur',
+              title: t('stop_seeing_messages'),
             },
             (buttonIndex) => {
               if (buttonIndex === 0) {
@@ -283,11 +285,11 @@ export const LiveScreen = ({ navigation, route }) => {
           // signal user
           ActionSheetIOS.showActionSheetWithOptions(
             {
-              options: ['Annuler', 'Signaler cet utilisateur'],
+              options: [t('cancel'), t('reportUser')],
               destructiveButtonIndex: 1,
               cancelButtonIndex: 0,
               userInterfaceStyle: 'light',
-              title: 'Tout comportement ne respectant pas les conditions générales sera sanctionné',
+              title: t('behaviorNotAllowed'),
             },
             (buttonIndex) => {
               if (buttonIndex === 0) {
@@ -318,7 +320,7 @@ export const LiveScreen = ({ navigation, route }) => {
   const showObjectionableAdminAction = (data) => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Bannir cet utilisateur'],
+        options: [t('cancel'), t('banUser')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -416,8 +418,7 @@ export const LiveScreen = ({ navigation, route }) => {
                           fontFamily: 'Roboto-Regular',
                           marginBottom: 20,
                         }}>
-                        Bienvenue dans le game ! {'\n\n'} Pour commencer à enchérir, n'oubliez pas
-                        de renseigner un moyen de paiement et une adresse de livraison. 😉
+                        {t('welcomeToTheGame')}
                       </Text>
                     </View>
                     <View
@@ -447,7 +448,7 @@ export const LiveScreen = ({ navigation, route }) => {
                               textAlign: 'center',
                               fontSize: 15,
                             }}>
-                            J'ai compris
+                            {t('iUnderstand')}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -527,7 +528,7 @@ export const LiveScreen = ({ navigation, route }) => {
                           day: 'numeric',
                           weekday: 'short',
                         })}
-                        {' à '}
+                        {t('at')}
                         {DateTime.fromISO(liveData.liveSchedule).toLocaleString(
                           DateTime.TIME_SIMPLE,
                         )}
@@ -545,7 +546,7 @@ export const LiveScreen = ({ navigation, route }) => {
                           color: colors.LIGHT,
                           margin: 'auto',
                         }}>
-                        En attendant, vous pouvez poser une question au vendeur.
+                        {t('askSeller')}
                       </Text>
                     </View>
                     <View
@@ -557,7 +558,7 @@ export const LiveScreen = ({ navigation, route }) => {
                     </View>
                   </>
                 ) : (
-                  <Text style={{ color: colors.LIGHT }}>Le live devrait commencer d'ici peu !</Text>
+                  <Text style={{ color: colors.LIGHT }}>{t('liveStartingSoon')}</Text>
                 )}
               </View>
             </View>

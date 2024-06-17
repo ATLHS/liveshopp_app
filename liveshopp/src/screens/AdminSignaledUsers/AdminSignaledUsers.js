@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
@@ -22,6 +23,7 @@ import admin from '../../services/admin';
 import colors from '../../styles/colors';
 
 export const AdminSignaledUsers = () => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [flaggedUsers, setFlaggedUser] = useState([]);
 
@@ -51,7 +53,7 @@ export const AdminSignaledUsers = () => {
   const showObjectionableAdminAction = (data) => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Bannir cet utilisateur'],
+        options: [t('cancel'), t('banUser')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -125,7 +127,7 @@ export const AdminSignaledUsers = () => {
                                 fontWeight: '500',
                                 fontSize: 15,
                               }}>
-                              Pseudo :{' '}
+                              {t('username')} :{' '}
                             </Text>
                             {flagged.flag_user_username}
                           </Text>
@@ -144,7 +146,7 @@ export const AdminSignaledUsers = () => {
                                 fontWeight: '500',
                                 fontSize: 15,
                               }}>
-                              Type de signale :{' '}
+                              {t('reportType')} :{' '}
                             </Text>
                             {flagged.flag_type}
                           </Text>
@@ -163,7 +165,7 @@ export const AdminSignaledUsers = () => {
                                 fontWeight: '500',
                                 fontSize: 15,
                               }}>
-                              {flagged.flag_livename ? 'Live signalé' : 'Message signalé'} :{' '}
+                              {flagged.flag_livename ? t('reportedLive') : t('reportedMessage')} :{' '}
                             </Text>
                             {flagged.flag_livename ? flagged.flag_livename : flagged.flag_message}
                           </Text>
@@ -177,7 +179,7 @@ export const AdminSignaledUsers = () => {
                     </TouchableOpacity>
                   ))
               ) : (
-                <View></View>
+                <View />
               )}
             </View>
           </TouchableWithoutFeedback>

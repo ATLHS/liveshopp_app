@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -31,6 +32,7 @@ import stripe from '../../services/stripe';
 import colors from '../../styles/colors';
 
 function SettingsScreen({ navigation }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector((state) => state.user);
@@ -66,7 +68,7 @@ function SettingsScreen({ navigation }) {
   const handleEmail = () => {
     const to = [REACT_APP_LIVESHOPP_CONTACT];
     email(to, {
-      subject: `Message de ${user.company_name || user.firstname}`,
+      subject: `${t('messageFrom')}${user.company_name || user.firstname}`,
       checkCanOpen: false,
     }).catch(console.error);
   };
@@ -195,7 +197,7 @@ function SettingsScreen({ navigation }) {
                             textAlign: 'center',
                             fontFamily: 'FugazOne-Regular',
                           }}>
-                          SUPPRIMER MON PROFIL ?{' '}
+                          {t('deleteProfileQuestion')}{' '}
                         </Text>
                         <Text
                           style={{
@@ -212,8 +214,8 @@ function SettingsScreen({ navigation }) {
                                 order.deliveryStatut === "En attente d'expédition") ||
                               order.deliveryStatut === 'Expédié',
                           ).length
-                            ? "Attention ! des articles sont en attente d'expédition ou en cours d'expédition. Cette action supprime l'intégralité de vos données sans exception, et est définitive."
-                            : "Attention ! Cette action supprime l'intégralité de vos données sans exception, et est définitive."}
+                            ? t('deleteProfileWarning')
+                            : t('deleteProfileAttention')}
                         </Text>
                       </View>
                       <View
@@ -243,7 +245,7 @@ function SettingsScreen({ navigation }) {
                                 textAlign: 'center',
                                 fontSize: 20,
                               }}>
-                              oui
+                              {t('yes')}
                             </Text>
                           </TouchableOpacity>
                         </View>
@@ -269,7 +271,7 @@ function SettingsScreen({ navigation }) {
                                 textAlign: 'center',
                                 fontSize: 20,
                               }}>
-                              non
+                              {t('no')}
                             </Text>
                           </TouchableOpacity>
                         </View>
@@ -277,7 +279,7 @@ function SettingsScreen({ navigation }) {
                     </View>
                   </Pressable>
                 </Modal>
-                <Headline title={'Mon profil'} />
+                <Headline title={t('myProfile')} />
                 {user.profil === 'admin' && (
                   <>
                     <View style={{ marginBottom: 10 }}>
@@ -287,31 +289,31 @@ function SettingsScreen({ navigation }) {
                     </View>
 
                     <Touchable
-                      title={'Utilisateurs bloqués sur Liveshopp'}
+                      title={t('blockedUsersOnLiveshopp')}
                       onPress={goToAdminBlockedUsers}
                     />
                     <Touchable
-                      title={'Utilisateurs signalé sur Liveshopp'}
+                      title={t('reportedUsersOnLiveshopp')}
                       onPress={goToAdminFlaggedUsers}
                     />
                   </>
                 )}
                 {user.profil !== 'admin' && (
                   <>
-                    <Touchable title={'Modifier mon profil'} onPress={goToProfilSetting} />
-                    <Touchable title={'Moyen de paiement'} onPress={openPaymentSheet} />
-                    <Touchable title={'Adresse de livraison'} onPress={goSettingShippingAddress} />
-                    <Touchable title={'Utilisateurs bloqués'} onPress={goToBlockedUsers} />
-                    <Headline title={'CGV'} />
-                    <Touchable title={'Conditions Générales'} onPress={goToRGPD} />
-                    <Headline title={'Contact'} />
-                    <Touchable title={'Nous contacter'} onPress={handleEmail} />
+                    <Touchable title={t('editProfile')} onPress={goToProfilSetting} />
+                    <Touchable title={t('paymentMethod')} onPress={openPaymentSheet} />
+                    <Touchable title={t('deliveryAddress')} onPress={goSettingShippingAddress} />
+                    <Touchable title={t('blockedUsers')} onPress={goToBlockedUsers} />
+                    <Headline title={t('termsAndConditionsAbbreviation')} />
+                    <Touchable title={t('termsAndConditionsUsage')} onPress={goToRGPD} />
+                    <Headline title={t('contact')} />
+                    <Touchable title={t('contactUs')} onPress={handleEmail} />
                   </>
                 )}
                 <ContainedButton title="Déconnexion" onPress={handleSignOut} loading={isLoading} />
                 <View style={{ marginTop: 20 }}>
                   <Touchable
-                    title={'Supprimer mon profil'}
+                    title={t('confirmDeleteProfile')}
                     onPress={() => setModalVisible(!modalVisible)}
                   />
                 </View>

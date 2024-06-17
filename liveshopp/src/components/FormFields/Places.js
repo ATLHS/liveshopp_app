@@ -19,7 +19,7 @@ const Places = ({ inputField, field, fieldState }) => {
   return (
     <GooglePlacesAutocomplete
       ref={ref}
-      placeholder={t('delivery_address')}
+      placeholder={t('deliveryAddress')}
       onPress={(data) => {
         field.onChange(data.description);
       }}

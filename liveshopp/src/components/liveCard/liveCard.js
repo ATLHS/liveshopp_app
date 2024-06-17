@@ -81,8 +81,7 @@ const LiveCard = ({
             ) : (
               <View style={styles.datetimeTextContainer}>
                 <Text style={styles.datetimeText}>
-                  {formattedDate}
-                  {t('at')}
+                  {formattedDate} {t('at')}{' '}
                   {DateTime.fromISO(datetime).toLocaleString(DateTime.TIME_SIMPLE)}
                 </Text>
               </View>

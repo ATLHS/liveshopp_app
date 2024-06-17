@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Keyboard,
@@ -18,6 +19,7 @@ import OrderCard from '../../components/OrderCard/OrderCard';
 import colors from '../../styles/colors';
 
 export const ShippedOrder = () => {
+  const { t } = useTranslation();
   const { initialOrder } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,14 +65,7 @@ export const ShippedOrder = () => {
                 (order) =>
                   (order.seller_id || order.seller._id) === user.id &&
                   order.deliveryStatut === 'Expédié',
-              ).length && (
-                <NoData
-                  title={"Vous n'avez aucun article expédié."}
-                  message={
-                    'Les articles vendus lors de vos enchères qui on été expédiés apparaîtront ici.'
-                  }
-                />
-              )}
+              ).length && <NoData title={t('noItemsShipped')} message={t('shippedItemsInfo')} />}
               {isLoading && (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color={colors.DARK} />

@@ -39,7 +39,7 @@ export const LiveAuctionInfo = () => {
           <Text style={styles.auctionAmountText}>
             {liveData.currentAuction.currentProductAmount} €
           </Text>
-          <Text style={styles.auctionLabel}>{t('current_product_amount')}</Text>
+          <Text style={styles.auctionLabel}>{t('currentProductAmount')}</Text>
         </View>
         <View style={styles.timeContainer}>
           <Animatable.Text
@@ -49,11 +49,11 @@ export const LiveAuctionInfo = () => {
             style={[styles.timeText, time <= 10 && { color: colors.PRIMARY }]}>
             {displayedTime}
           </Animatable.Text>
-          <Text style={styles.remainingTimeLabel}>{t('remaining_time')}</Text>
+          <Text style={styles.remainingTimeLabel}>{t('remainingTime')}</Text>
         </View>
         <View style={styles.winnerContainer}>
           <Text style={styles.winnerText}>{liveData.currentAuction.username.toUpperCase()}</Text>
-          <Text style={styles.winnerLabel}>{t('auction_winner')}</Text>
+          <Text style={styles.winnerLabel}>{t('auctionWinner')}</Text>
         </View>
       </View>
     </View>

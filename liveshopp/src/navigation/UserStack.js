@@ -75,7 +75,7 @@ const UserStack = () => {
   const showObjectionableAction = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: [t('cancel'), t('block_user'), t('report_user')],
+        options: [t('cancel'), t('blockUser'), t('reportUser')],
         destructiveButtonIndex: 2,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -86,7 +86,7 @@ const UserStack = () => {
         } else if (buttonIndex === 1) {
           ActionSheetIOS.showActionSheetWithOptions(
             {
-              options: [t('cancel'), t('block_user')],
+              options: [t('cancel'), t('blockUser')],
               destructiveButtonIndex: 1,
               cancelButtonIndex: 0,
               userInterfaceStyle: 'light',
@@ -110,11 +110,11 @@ const UserStack = () => {
           // signal user
           ActionSheetIOS.showActionSheetWithOptions(
             {
-              options: [t('cancel'), t('report_user')],
+              options: [t('cancel'), t('reportUser')],
               destructiveButtonIndex: 1,
               cancelButtonIndex: 0,
               userInterfaceStyle: 'light',
-              title: t('behavior_not_allowed'),
+              title: t('behaviorNotAllowed'),
             },
             (buttonIndex) => {
               if (buttonIndex === 0) {
@@ -169,7 +169,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('edit_profile'),
+          title: t('editProfile'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -206,7 +206,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('delivery_address'),
+          title: t('deliveryAddress'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -223,7 +223,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('blocked_users'),
+          title: t('blockedUsers'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -336,7 +336,7 @@ const UserStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('terms_and_conditions'),
+          title: t('termsAndConditionsUsage'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },

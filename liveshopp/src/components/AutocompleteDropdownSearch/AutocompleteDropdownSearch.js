@@ -90,7 +90,7 @@ const AutocompleteDropdownSearch = ({ navigation }) => {
         suggestionsListContainerStyle={{}}
         suggestionsListMaxHeight={800}
         textInputProps={{
-          placeholder: t('search_for_seller'),
+          placeholder: t('searchForSeller'),
           autoCorrect: false,
           autoCapitalize: 'none',
 

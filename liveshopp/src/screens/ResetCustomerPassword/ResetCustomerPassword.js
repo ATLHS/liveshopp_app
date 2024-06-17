@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,45 +18,45 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
-const ResetCustomerPasswordSchema = [
-  {
-    name: 'password_1',
-    label: 'Nouveau mot de passe',
-    type: 'password',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer un mot de passe.',
-      },
-      pattern: {
-        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-        message: 'Veuillez indiquer un mot de passe valide.',
-      },
-    },
-    helper: 'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
-  },
-  {
-    name: 'password_2',
-    label: 'Confirmation du nouveau mot de passe',
-    type: 'password',
-    validation: {
-      required: {
-        value: false,
-        message: 'Veuillez confirmer le mot de passe.',
-      },
-      pattern: {
-        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-        message: 'Veuillez indiquer un mot de passe valide.',
-      },
-      validate: (_, b) =>
-        b.password_1 === b.password_2 || 'Les mots de passe doivent être identiques.',
-    },
-    helper: '',
-  },
-];
-
 export const ResetCustomerPassword = ({ navigation, route }) => {
-  const { handleSubmit, control, watch } = useForm();
+  const { t } = useTranslation();
+  const ResetCustomerPasswordSchema = [
+    {
+      name: 'password_1',
+      label: t('newPassword'),
+      type: 'password',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterPassword'),
+        },
+        pattern: {
+          value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+          message: t('pleaseEnterValidPassword'),
+        },
+      },
+      helper: t('passwordRequirements'),
+    },
+    {
+      name: 'password_2',
+      label: t('confirmNewPassword'),
+      type: 'password',
+      validation: {
+        required: {
+          value: false,
+          message: t('pleaseConfirmPassword'),
+        },
+        pattern: {
+          value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+          message: t('pleaseEnterValidPassword'),
+        },
+        validate: (_, b) => b.password_1 === b.password_2 || t('passwordsMustMatch'),
+      },
+      helper: '',
+    },
+  ];
+
+  const { handleSubmit, control } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { user_id } = route.params;
@@ -88,7 +89,7 @@ export const ResetCustomerPassword = ({ navigation, route }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.formContainer}>
               <View style={styles.headlineContainer}>
-                <Text style={styles.headline}>Saisissez un nouveau mot de passe.</Text>
+                <Text style={styles.headline}>{t('enterNewPassword')}</Text>
               </View>
               <View style={styles.errorHelper}>
                 <Text style={styles.errorHelperText}>{errorMessage}</Text>
@@ -98,7 +99,7 @@ export const ResetCustomerPassword = ({ navigation, route }) => {
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Valider"
+                  title={t('submit')}
                   onPress={handleSubmit(handleResetCustomerPassword)}
                   loading={isLoading}
                 />

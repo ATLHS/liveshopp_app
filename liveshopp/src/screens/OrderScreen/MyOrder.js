@@ -92,7 +92,7 @@ export const MyOrder = () => {
             ''
           )}
           {!initialOrder.filter((order) => order.userId === user.id).length && (
-            <NoData title={t('no_gems')} message={t('won_auction_items')} />
+            <NoData title={t('noGems')} message={t('wonAuctionItems')} />
           )}
           {isLoading && (
             <View

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,26 +18,27 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
-const ResetPasswordSchema = [
-  {
-    name: 'email',
-    label: 'Email',
-    type: 'text',
-    autoFocus: true,
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre adresse e-mail.',
-      },
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: 'Veuillez indiquer une adresse e-mail valide.',
+export const ResetPassword = ({ navigation }) => {
+  const { t } = useTranslation();
+  const ResetPasswordSchema = [
+    {
+      name: 'email',
+      label: t('email'),
+      type: 'text',
+      autoFocus: true,
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterEmail'),
+        },
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: t('pleaseEnterValidEmail'),
+        },
       },
     },
-  },
-];
+  ];
 
-export const ResetPassword = ({ navigation }) => {
   const { handleSubmit, control } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -69,13 +71,10 @@ export const ResetPassword = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.formContainer}>
               <View style={styles.headlineContainer}>
-                <Text style={styles.headline}>Réinitialiser le mot de passe.</Text>
+                <Text style={styles.headline}>{t('resetPassword')}</Text>
               </View>
               <View style={styles.helper}>
-                <Text style={styles.helperText}>
-                  Entrez l'adresse e-mail liée à votre compte. Nous vous enverrons un code par
-                  e-mail pour réinitialiser votre mot de passe.
-                </Text>
+                <Text style={styles.helperText}>{t('enterEmailLinkedToAccount')}</Text>
               </View>
               <View style={styles.errorHelper}>
                 <Text style={styles.errorHelperText}>{errorMessage}</Text>
@@ -85,7 +84,7 @@ export const ResetPassword = ({ navigation }) => {
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Valider"
+                  title={t('submit')}
                   onPress={handleSubmit(handleEmailVerificationCode)}
                   loading={isLoading}
                 />

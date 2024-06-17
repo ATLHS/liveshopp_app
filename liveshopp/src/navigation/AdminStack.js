@@ -40,7 +40,7 @@ const SellerStack = () => {
   const showObjectionableAdminAction = (data) => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: [t('cancel'), t('ban_user')],
+        options: [t('cancel'), t('banUser')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -108,7 +108,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('edit_profile'),
+          title: t('editProfile'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -125,7 +125,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('blocked_users_on_liveshopp'),
+          title: t('blockedUsersOnLiveshopp'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -142,7 +142,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('reported_users_on_liveshopp'),
+          title: t('reportedUsersOnLiveshopp'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -220,7 +220,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('terms_and_conditions'),
+          title: t('termsAndConditionsUsage'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
