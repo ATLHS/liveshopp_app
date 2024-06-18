@@ -1,6 +1,13 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActionSheetIOS, Alert, Pressable, StatusBar, TouchableOpacity } from 'react-native';
+import {
+  ActionSheetIOS,
+  Alert,
+  Platform,
+  Pressable,
+  StatusBar,
+  TouchableOpacity,
+} from 'react-native';
 import { Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -265,7 +272,7 @@ const SellerStack = () => {
                 }}>
                 {liveData.sellerName}
               </Text>
-              {!(user.id === liveData.sellerId) && (
+              {!(user.id === liveData.sellerId) && Platform.OS === 'ios' && (
                 <TouchableOpacity onPress={() => showObjectionableAction(liveData.sellerId)}>
                   <FontAwesomeIcon icon={faEllipsisVertical} color={colors.LIGHT} size={17} />
                 </TouchableOpacity>

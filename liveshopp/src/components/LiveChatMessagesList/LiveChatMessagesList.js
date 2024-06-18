@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -48,7 +47,7 @@ const LiveChatMessagesList = ({
                     </View>
                   )}
                 </View>
-                {!isCurrentUser && !isAdmin && (
+                {!isCurrentUser && !isAdmin && Platform.OS === 'ios' && (
                   <TouchableOpacity
                     onPress={() =>
                       user.profil === 'admin'
