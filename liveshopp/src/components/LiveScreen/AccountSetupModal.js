@@ -1,18 +1,18 @@
+import { useTranslation } from 'react-i18next';
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import colors from '../../styles/colors';
 
 const AccountSetupModal = ({ visible, onPress }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <Pressable onPress={() => onPress()} style={styles.screen}>
         <View style={styles.modal}>
-          <Text style={styles.message}>
-            Bienvenue dans le game ! {'\n\n'} Pour commencer à enchérir, n'oubliez pas de renseigner
-            un moyen de paiement et une adresse de livraison. 😉
-          </Text>
+          <Text style={styles.message}>{t('welcomeToTheGame')}</Text>
           <TouchableOpacity style={styles.button} onPress={() => onPress()}>
-            <Text style={styles.accept}>J'ai compris</Text>
+            <Text style={styles.accept}>{t('iUnderstand')}</Text>
           </TouchableOpacity>
         </View>
       </Pressable>
