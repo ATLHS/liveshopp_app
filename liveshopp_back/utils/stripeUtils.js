@@ -26,7 +26,7 @@ const retrieveCustomer = async (id) => {
 
 const chargeCustomer = async (amountToCharge, customerId, paymentIntentMetadata) => {
   try {
-    if (process.env.DISABLE_STRIPE_CHARGE) {
+    if (process.env.DISABLE_STRIPE_CHARGE === true) {
       log.info('DISABLE_STRIPE_CHARGE enabled: skipping Stripe charge');
       return { status: 'succeeded' };
     }
