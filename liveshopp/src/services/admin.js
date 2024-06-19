@@ -25,6 +25,12 @@ const admin = {
       .then(({ data }) => data)
       .catch(({ response }) => Promise.reject(response.data));
   },
+  updateExtraUserCount(channelName, count) {
+    return axiosConfig
+      .post('/api/admin/update-extra-user-count', { channelName, count })
+      .then(({ data }) => data)
+      .catch(({ response }) => Promise.reject(response.data));
+  },
 };
 
 export default admin;

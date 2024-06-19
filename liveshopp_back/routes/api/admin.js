@@ -6,6 +6,7 @@ const Reported = require('../../models/reported');
 const UserSeller = require('../../models/seller');
 const User = require('../../models/user');
 const { updateCustomer } = require('../../utils/updateCustomer');
+const { getChannel, updateExtraUserCount } = require('../../utils/channels');
 
 router.get('/get-banned-users', verifyJwt, async (req, res) => {
   try {
@@ -116,6 +117,29 @@ router.get('/get-flagged-user', verifyJwt, async (req, res) => {
 
     return res.status(200).json({ flaggedUsers });
   } catch (error) {
+    Sentry.captureException(error);
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
+  }
+});
+
+router.post('/update-extra-user-count', verifyJwt, async (req, res) => {
+  try {
+    const { channelName, count } = req.body;
+
+    const channel = await getChannel(channelName);
+    channel.extraUserCount += count;
+
+    // Keep at least 1 user in the channel
+    if (channel.userCount + channel.extraUserCount <= 0) {
+      return res.sendStatus(400);
+    }
+
+    await updateExtraUserCount(channelName, count);
+    await io.to(channelName).emit('channelData', channel);
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
     Sentry.captureException(error);
     return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }

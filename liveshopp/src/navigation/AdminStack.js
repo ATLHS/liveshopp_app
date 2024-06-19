@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons/faAngleLeft';
+import { faUserMinus } from '@fortawesome/free-solid-svg-icons/faUserMinus';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { faXmark } from '@fortawesome/free-solid-svg-icons/faXmark';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -90,6 +92,10 @@ const SellerStack = () => {
     navigation.navigate('LivesScreen');
   };
 
+  const updateExtraUserCount = (count) => {
+    admin.updateExtraUserCount(liveData.channelName, count);
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -160,18 +166,28 @@ const SellerStack = () => {
             gesturesEnabled: false,
           },
           headerLeft: () => (
-            <View style={{ alignItems: 'center' }}>
-              <FontAwesomeIcon icon={faUsers} color={colors.LIGHT} size={18} />
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginTop: 5,
-                  color: colors.LIGHT,
-                  fontFamily: 'Roboto-Regular',
-                  fontWeight: 'bold',
-                }}>
-                {liveData && liveData.userCount}
-              </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ alignItems: 'center' }}>
+                <FontAwesomeIcon icon={faUsers} color={colors.LIGHT} size={18} />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 5,
+                    color: colors.LIGHT,
+                    fontFamily: 'Roboto-Regular',
+                    fontWeight: 'bold',
+                  }}>
+                  {liveData && liveData.userCount} (+{(liveData && liveData.extraUserCount) || 0})
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => updateExtraUserCount(-1)}
+                style={{ paddingLeft: 15 }}>
+                <FontAwesomeIcon icon={faUserMinus} color={colors.LIGHT} size={25} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => updateExtraUserCount(1)} style={{ paddingLeft: 15 }}>
+                <FontAwesomeIcon icon={faUserPlus} color={colors.LIGHT} size={25} />
+              </TouchableOpacity>
             </View>
           ),
           headerRight: () => (

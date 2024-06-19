@@ -10,6 +10,7 @@ const { redis } = require('./services');
  * @property {('live'|'ended'|'coming_soon')} auctionsStatus
  * @property {string} liveSchedule
  * @property {Number} userCount
+ * @property {Number} extraUserCount
  * @property {Array} messages
  * @property {boolean} hostIsLive
  * @property {CurrentAuction} currentAuction
@@ -53,6 +54,7 @@ const channel = (live) => ({
   auctionsStatus: live.live_status,
   liveSchedule: live.live_date_time,
   userCount: 0,
+  extraUserCount: 0,
   messages: [],
   hostIsLive: false,
   currentAuction: {
@@ -119,4 +121,11 @@ const updateTimer = async (channelName) => {
   return await redis.json.NUMINCRBY(channelName, '$.currentAuction.currentAuctionTimer', -1);
 };
 
-module.exports = { createChannel, getChannel, getChannels, updateTimer, saveChannel };
+/**
+ * @param {string} channelName
+ */
+const updateExtraUserCount = async (channelName, count) => {
+  return await redis.json.NUMINCRBY(channelName, '$.extraUserCount', count);
+};
+
+module.exports = { createChannel, getChannel, getChannels, updateExtraUserCount, updateTimer, saveChannel };
