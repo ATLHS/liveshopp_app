@@ -3,6 +3,7 @@ const { mongoose } = require('mongoose');
 const nodemailer = require('nodemailer');
 const { createClient } = require('redis');
 const { S3Client } = require('@aws-sdk/client-s3');
+const { Stripe } = require('stripe');
 
 // Register service helper
 // Stores instances in `global` to prevent memory leaks in development
@@ -16,6 +17,9 @@ const registerService = (name, initFn) => {
   return initFn();
 };
 
+/**
+ * @type {import('mongoose')}
+ */
 registerService('mongoose', () => {
   mongoose
     .connect(process.env.ATLAS_URL)
@@ -30,7 +34,7 @@ const redis = registerService('redis', () => {
   const client = createClient({
     url: process.env.REDIS_URL,
     connectTimeout: 10000, // in milliseconds
-    password: process.env.NODE_ENV === 'production' ? process.env.REDIS_AUTH_TOKEN : null,
+    // password: process.env.NODE_ENV === 'production' ? process.env.REDIS_AUTH_TOKEN : null,
   })
     .on('error', (err) => log.error('Redis Client Error', err))
     .on('connect', () => log.info('Redis connected successfully'));
@@ -40,6 +44,9 @@ const redis = registerService('redis', () => {
   return client;
 });
 
+/**
+ * @type {import('nodemailer').Transporter}
+ */
 const mailer = registerService('mailer', () => {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -70,4 +77,11 @@ const s3 = registerService('s3', () => {
   });
 });
 
-module.exports = { mailer, redis, s3 };
+/**
+ * @type {import('stripe').Stripe}
+ */
+const stripe = registerService('stripe', () => {
+  return new Stripe(process.env.STRIPE_SECRET_KEY);
+});
+
+module.exports = { mailer, redis, s3, stripe };

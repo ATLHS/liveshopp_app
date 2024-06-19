@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const Sentry = require('@sentry/node');
-const stripe = require('stripe')(process.env.STRIPE_TEST_SECRET_KEY);
+const { stripe } = require('../../utils/services');
 const stripeUtils = require('../../utils/stripeUtils');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const User = require('../../models/user');
@@ -27,7 +27,7 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
     return res.status(200).json({
       setupIntent: setupIntent.client_secret,
       customer: stripeCustomer.id,
-      publishableKey: process.env.STRIPE_TEST_PUBLIC_KEY,
+      publishableKey: process.env.STRIPE_PUBLIC_KEY,
       ephemeralKey: ephemeralKey.secret,
     });
   } catch (error) {
