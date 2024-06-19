@@ -40,15 +40,13 @@ const OrderToShipped = () => {
       if (
         initialOrder.filter(
           (order) =>
-            (order.seller_id || order.seller._id) === user.id &&
-            order.deliveryStatut === "En attente d'expédition",
+            order.seller_id._id === user.id && order.deliveryStatut === "En attente d'expédition",
         ).length
       ) {
         setOrder(
           initialOrder.filter(
             (order) =>
-              (order.seller_id || order.seller._id) === user.id &&
-              order.deliveryStatut === "En attente d'expédition",
+              order.seller_id._id === user.id && order.deliveryStatut === "En attente d'expédition",
           ),
         );
       }

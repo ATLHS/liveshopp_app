@@ -6,7 +6,7 @@ const Product = require('../../models/product');
 router.get('/get-user-order', verifyJwt, async (req, res) => {
   try {
     const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
-      'seller',
+      'seller_id',
       '-password -checkedPayment -isConfirmed -registeredConfirmedCode',
     );
 

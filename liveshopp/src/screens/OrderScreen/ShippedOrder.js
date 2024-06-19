@@ -29,15 +29,12 @@ export const ShippedOrder = () => {
     React.useCallback(() => {
       if (
         initialOrder.filter(
-          (order) =>
-            (order.seller_id || order.seller._id) === user.id && order.deliveryStatut === 'Expédié',
+          (order) => order.seller_id._id === user.id && order.deliveryStatut === 'Expédié',
         ).length
       ) {
         setOrder(
           initialOrder.filter(
-            (order) =>
-              (order.seller_id || order.seller._id) === user.id &&
-              order.deliveryStatut === 'Expédié',
+            (order) => order.seller_id._id === user.id && order.deliveryStatut === 'Expédié',
           ),
         );
       }
