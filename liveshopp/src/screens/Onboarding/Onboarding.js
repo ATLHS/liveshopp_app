@@ -47,7 +47,7 @@ const Onboarding = ({ navigation }) => {
             <CountryFlag isoCode={'fr'} size={10} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => changeLng('gb')}>
-            <CountryFlag isoCode={'us'} size={10} />
+            <CountryFlag isoCode={'gb'} size={10} />
           </TouchableOpacity>
         </View>
       </View>

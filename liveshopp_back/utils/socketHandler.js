@@ -165,7 +165,7 @@ module.exports = (io) => {
         currentAuction.product_reserved_price &&
         currentAuction.currentProductAmount >= currentAuction.product_reserved_price
       ) {
-        channel.currentAuction.currentMessageInfo = 'Prix de réserve atteint 🎉!';
+        channel.currentAuction.currentMessageInfo = 'reservePriceReached';
       }
 
       // If there has been a bid and the time is less than 10 seconds, update the timer to 15 seconds."
@@ -195,8 +195,9 @@ module.exports = (io) => {
       channel.currentAuction.username = '';
       channel.currentAuction.userId = '';
       channel.currentAuction.salePrice = '';
-      channel.currentAuction.currentMessageInfo = data.product_reserved_price ? 'Prix de réserve non atteint...' : '';
-
+      channel.currentAuction.currentMessageInfo = data.product_reserved_price
+        ? 'reservePriceNotReached'
+        : 'noReservePriceMessage';
       await saveChannel(channel);
 
       io.to(channelName).emit('currentAuctionData', channel);
@@ -242,19 +243,18 @@ module.exports = (io) => {
     }, 1000);
   };
 
+  // No bid = no charge
+  // Bid with reserve price not reached ( = or > ) = no charge
+  // Bid with reached reserve price = charge
+  // Bid without reserve price = charge
   const onAuctionFinished = async function (channelName) {
     try {
       const channel = await getChannel(channelName);
-      let messageInfo = '';
-
-      // A user bidded
       if (channel.currentAuction.userId) {
         if (
-          channel.currentAuction.product_reserved_price &&
-          channel.currentAuction.currentProductAmount < channel.currentAuction.product_reserved_price
+          !channel.currentAuction.product_reserved_price ||
+          channel.currentAuction.currentProductAmount >= channel.currentAuction.product_reserved_price
         ) {
-          messageInfo = "Le prix de réserve n'a pas été atteint.";
-        } else {
           // Charge customer and create a Product in DB
           registerAuction({
             auction: channel.currentAuction,
@@ -268,7 +268,6 @@ module.exports = (io) => {
         }
       }
 
-      channel.currentAuction.currentMessageInfo = messageInfo;
       channel.currentAuction.currentAuctionStatus = 'stopping';
 
       // send notification to the room
