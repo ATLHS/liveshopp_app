@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const product = new mongoose.Schema(
   {
-    seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller' },
+    seller_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller' },
     live_name: { type: String },
     auctionType: {
       type: String,

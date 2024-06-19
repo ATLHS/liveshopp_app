@@ -120,7 +120,7 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req)
     auctionItem.winningBidderUsername = auction.userId.firstname;
 
     const product = new Product({
-      seller: auctionItem.seller_id._id,
+      seller_id: auctionItem.seller_id._id,
       live_name: 'Vidéo enchères',
       auctionId: auctionItem._id,
       auctionsStatus: 'ended',

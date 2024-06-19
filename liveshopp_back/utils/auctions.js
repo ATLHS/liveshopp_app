@@ -41,7 +41,7 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
 
     // register current sale product info in db
     const product = new Product({
-      seller: sellerId,
+      seller_id: sellerId,
       live_name: 'Live enchères',
       auctionId: auctionId,
       auctionsStatus: auctionsStatus,
