@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
@@ -14,7 +14,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -27,7 +26,7 @@ export const SettingShippingAddress = ({ navigation }) => {
   const [blockedUser, setBlockedUser] = useState([]);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setIsLoading(true);
       customer
         .getBlockedUser()
@@ -45,32 +44,35 @@ export const SettingShippingAddress = ({ navigation }) => {
 
   const unblockUser = (data) => {
     setIsLoading(true);
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: [t('cancel'), t('unblockUser')],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 0,
-        userInterfaceStyle: 'light',
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          return;
-        } else if (buttonIndex === 1) {
-          customer
-            .unblockUser(data)
-            .then((res) => res)
-            .then((data) => {
-              setIsLoading(false);
-              Alert.alert('', data.message, [{ text: 'Ok' }]);
-              setBlockedUser(blockedUser.filter((blockedId) => blockedId._id !== data.id));
-            })
-            .catch((err) => {
-              setIsLoading(false);
-              Alert.alert('', err.message, [{ text: 'Ok' }]);
-            });
-        }
-      },
-    );
+
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: [t('cancel'), t('unblockUser')],
+          destructiveButtonIndex: 1,
+          cancelButtonIndex: 0,
+          userInterfaceStyle: 'light',
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 0) {
+            return;
+          } else if (buttonIndex === 1) {
+            customer
+              .unblockUser(data)
+              .then((res) => res)
+              .then((data) => {
+                setIsLoading(false);
+                Alert.alert('', data.message, [{ text: 'Ok' }]);
+                setBlockedUser(blockedUser.filter((blockedId) => blockedId._id !== data.id));
+              })
+              .catch((err) => {
+                setIsLoading(false);
+                Alert.alert('', err.message, [{ text: 'Ok' }]);
+              });
+          }
+        },
+      );
+    }
   };
 
   return (

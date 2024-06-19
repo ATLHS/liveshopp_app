@@ -1,17 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
   Dimensions,
   KeyboardAvoidingView,
-  Modal,
   PermissionsAndroid,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -28,7 +25,7 @@ import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 
 import { REACT_APP_AGORA_APP_ID } from '@env';
-import { faArrowDown, faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -36,19 +33,14 @@ import LiveAuctionForm from '../../components/LiveAuctionForm/LiveAuctionForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
 import { LiveChatTextInput } from '../../components/LiveChatTextInput/LiveChatTextInput';
+import AccountSetupModal from '../../components/LiveScreen/AccountSetupModal';
+import CameraSwitch from '../../components/LiveScreen/CameraSwitch';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
 import admin from '../../services/admin';
 import socket from '../../services/config/clientSocketIoConfig';
 import customer from '../../services/customer';
 import live from '../../services/live';
 import colors from '../../styles/colors';
-
-const colorList = [
-  { offset: '20%', color: 'transparent', opacity: '0' },
-  { offset: '0%', color: 'black', opacity: '0.6' },
-  { offset: '90%', color: 'transparent', opacity: '0' },
-  { offset: '100%', color: 'black', opacity: '0.6' },
-];
 
 export const LiveScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
@@ -65,17 +57,6 @@ export const LiveScreen = ({ navigation, route }) => {
   const [isHost] = useState(user.id === seller_id);
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
-
-  const renderUserLiveForm = () => {
-    if (user.profil !== 'admin' && !isHost) {
-      return (
-        <LiveAuctionForm
-          liveData={liveData}
-          onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
-        />
-      );
-    }
-  };
 
   const getPermission = async () => {
     if (Platform.OS === 'android') {
@@ -178,7 +159,7 @@ export const LiveScreen = ({ navigation, route }) => {
   };
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (liveData.currentAuction.currentAuctionStatus === 'stopping') {
         showCurrentLiveNotificationToast();
       }
@@ -204,13 +185,17 @@ export const LiveScreen = ({ navigation, route }) => {
   }, []);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       list.current.scrollToEnd();
     }, [liveData.messages.length]),
   );
 
   const startCurrentAuction = (channelName, data) => {
     socket.emit('startCurrentAuction', { channelName, data });
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   const switchCamera = () => {
@@ -344,25 +329,25 @@ export const LiveScreen = ({ navigation, route }) => {
   };
 
   const renderLiveUserActions = () => {
-    // Auction is running
     if (liveData.currentAuction.currentAuctionStatus === 'running') {
       return (
         <>
           <LiveAuctionInfo />
-          {renderUserLiveForm()}
-          {!isHost ? (
+          {user.profil !== 'admin' && !isHost && (
+            <LiveAuctionForm
+              liveData={liveData}
+              onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
+            />
+          )}
+          {!isHost && (
             <LiveChatTextInput
               onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
               live={liveData}
             />
-          ) : (
-            <></>
           )}
         </>
       );
-    }
-    // Auction is not running
-    if (liveData.currentAuction.currentAuctionStatus !== 'running') {
+    } else {
       return isHost ? (
         <SellerLiveForm
           onPress={(data) => startCurrentAuction(liveData.channelName, data)}
@@ -380,148 +365,17 @@ export const LiveScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
-      {isJoined && liveData.hostIsLive ? (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}>
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            {user.profil !== 'admin' && (
-              <Modal animationType="fade" transparent={true} visible={modalVisible}>
-                <Pressable
-                  onPress={() => setModalVisible(false)}
-                  style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(0,0,0,0.60)',
-                  }}>
-                  <View
-                    style={{
-                      height: 230,
-                      width: 290,
-                      borderRadius: 5,
-                      backgroundColor: colors.LIGHT,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      padding: 30,
-                    }}>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '100%',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          textAlign: 'center',
-                          fontFamily: 'Roboto-Regular',
-                          marginBottom: 20,
-                        }}>
-                        {t('welcomeToTheGame')}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                      }}>
-                      <View
-                        style={{
-                          borderRadius: 10,
-                          height: 50,
-                        }}>
-                        <TouchableOpacity
-                          style={{
-                            height: 40,
-                            width: 150,
-                            backgroundColor: 'black',
-                            borderRadius: 5,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                          onPress={() => setModalVisible(!modalVisible)}>
-                          <Text
-                            style={{
-                              color: colors.LIGHT,
-                              textAlign: 'center',
-                              fontSize: 15,
-                            }}>
-                            {t('iUnderstand')}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </View>
-                </Pressable>
-              </Modal>
-            )}
-            <View
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                height: Dimensions.get('window').height,
-                width: Dimensions.get('window').width,
-              }}>
-              <LinearGradient colorList={colorList} angle={90} />
-            </View>
-            <RtcSurfaceView canvas={{ uid: isHost ? 0 : remoteUid }} style={styles.videoView} />
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 25,
-                width: '90%',
-                backgroundColor: 'transparent',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 2,
-              }}>
-              <LiveChatMessagesList
-                list={list}
-                liveData={liveData}
-                user={user}
-                showObjectionableAction={showObjectionableAction}
-                showObjectionableAdminAction={showObjectionableAdminAction}
-              />
-              {renderLiveUserActions()}
-            </View>
-            <View
-              style={{
-                position: 'absolute',
-                zIndex: 2,
-                width: 50,
-                backgroundColor: 'transparent',
-                height: 50,
-                top: 100,
-                right: 5,
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-              }}>
-              {isHost && (
-                <TouchableOpacity onPress={() => switchCamera()}>
-                  <FontAwesomeIcon icon={faArrowsRotate} color={colors.LIGHT} size={25} />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      ) : (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.containerr}>
-          <View style={{ flex: 1, alignItems: 'center' }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={liveData.hostIsLive ? styles.ready : styles.waiting}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          {!liveData.hostIsLive && (
             <View style={styles.waitingLiveMessage}>
               <Text style={styles.channelName}>{liveData.channelName}</Text>
               <View style={styles.liveStatus}>
                 {liveData.auctionsStatus === 'coming_soon' ? (
                   <>
-                    <View
-                      style={{
-                        marginBottom: 30,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
+                    <View style={styles.liveScheduleContainer}>
                       <Text style={styles.liveSchedule}>
                         {DateTime.fromISO(liveData.liveSchedule).toLocaleString({
                           month: 'short',
@@ -534,26 +388,10 @@ export const LiveScreen = ({ navigation, route }) => {
                         )}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        marginBottom: 30,
-                        alignItems: 'center',
-                        width: '100%',
-                      }}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: colors.LIGHT,
-                          margin: 'auto',
-                        }}>
-                        {t('askSeller')}
-                      </Text>
+                    <View style={styles.liveScheduleContainer}>
+                      <Text style={styles.waitingDescription}>{t('askSeller')}</Text>
                     </View>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
+                    <View style={styles.liveScheduleContainer}>
                       <FontAwesomeIcon icon={faArrowDown} size={25} color={colors.LIGHT} />
                     </View>
                   </>
@@ -562,40 +400,68 @@ export const LiveScreen = ({ navigation, route }) => {
                 )}
               </View>
             </View>
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 25,
-                width: '90%',
-                backgroundColor: 'transparent',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <LiveChatMessagesList
-                list={list}
-                liveData={liveData}
-                user={user}
-                showObjectionableAction={showObjectionableAction}
-                showObjectionableAdminAction={showObjectionableAdminAction}
-              />
-              <LiveChatTextInput
-                onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
-                live={liveData}
-              />
-            </View>
+          )}
+
+          {isJoined && !isHost && liveData.hostIsLive ? (
+            <Fragment key={remoteUid}>
+              <RtcSurfaceView canvas={{ uid: remoteUid }} style={styles.videoView} />
+            </Fragment>
+          ) : (
+            isHost &&
+            isJoined && (
+              <Fragment key={0}>
+                <RtcSurfaceView canvas={{ uid: 0 }} style={styles.videoView} />
+              </Fragment>
+            )
+          )}
+
+          <View style={styles.chatContainer}>
+            <LiveChatMessagesList
+              list={list}
+              liveData={liveData}
+              user={user}
+              showObjectionableAction={showObjectionableAction}
+              showObjectionableAdminAction={showObjectionableAdminAction}
+            />
+            {renderLiveUserActions()}
           </View>
-        </KeyboardAvoidingView>
-      )}
+
+          <View style={styles.shadowGradient}>
+            <LinearGradient colorList={colorList} angle={90} />
+          </View>
+
+          {user.profile !== 'admin' && (
+            <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
+          )}
+          {isHost && <CameraSwitch onPress={switchCamera} />}
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
 
+const colorList = [
+  { offset: '20%', color: 'transparent', opacity: '0' },
+  { offset: '0%', color: 'black', opacity: '0.6' },
+  { offset: '90%', color: 'transparent', opacity: '0' },
+  { offset: '100%', color: 'black', opacity: '0.6' },
+];
+
 const styles = StyleSheet.create({
-  container: {
+  chatContainer: {
+    position: 'absolute',
+    bottom: 25,
+    width: '90%',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
+  ready: {
     flex: 1,
     backgroundColor: 'black',
   },
-  containerr: {
+  waiting: {
     flex: 1,
     backgroundColor: '#262626',
   },
@@ -604,6 +470,8 @@ const styles = StyleSheet.create({
   videoView: {
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
+    position: 'absolute',
+    zIndex: 1,
   },
   waitingLiveMessage: {
     flex: 1,
@@ -625,10 +493,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 20,
   },
+  liveScheduleContainer: {
+    marginBottom: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   liveSchedule: {
     fontSize: 25,
     fontWeight: '600',
     color: colors.LIGHT,
+  },
+  shadowGradient: {
+    position: 'absolute',
+    zIndex: 1,
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
+  },
+  waitingDescription: {
+    textAlign: 'center',
+    color: colors.LIGHT,
+    margin: 'auto',
   },
 });
 

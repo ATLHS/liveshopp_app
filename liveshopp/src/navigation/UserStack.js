@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
+  Platform,
   Pressable,
   StatusBar,
   Text,
@@ -259,9 +260,11 @@ const UserStack = () => {
                 }}>
                 {liveData.sellerName}
               </Text>
-              <TouchableOpacity onPress={() => showObjectionableAction(liveData.sellerId)}>
-                <FontAwesomeIcon icon={faEllipsisVertical} color={colors.LIGHT} size={17} />
-              </TouchableOpacity>
+              {Platform.OS === 'ios' && (
+                <TouchableOpacity onPress={() => showObjectionableAction(liveData.sellerId)}>
+                  <FontAwesomeIcon icon={faEllipsisVertical} color={colors.LIGHT} size={17} />
+                </TouchableOpacity>
+              )}
             </View>
           ),
           headerRight: () => (
