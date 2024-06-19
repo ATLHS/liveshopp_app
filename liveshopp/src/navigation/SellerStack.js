@@ -324,7 +324,7 @@ const SellerStack = () => {
                     fontWeight: 'bold',
                     marginLeft: 6,
                   }}>
-                  {liveData && liveData.userCount}
+                  {liveData && liveData.userCount + (liveData.extraUserCount || 0)}
                 </Text>
               </View>
               <Pressable onPress={() => leaveRoom()}>
