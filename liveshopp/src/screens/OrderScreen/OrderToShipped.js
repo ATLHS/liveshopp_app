@@ -115,7 +115,7 @@ const OrderToShipped = () => {
               )}
               {!initialOrder.filter(
                 (order) =>
-                  (order.seller_id || order.seller._id) === user.id &&
+                  order.seller_id._id === user.id &&
                   order.deliveryStatut === "En attente d'expédition",
               ).length && <NoData title={t('noItemsToShip')} message={t('itemsSoldAndToShip')} />}
               {isLoading && (

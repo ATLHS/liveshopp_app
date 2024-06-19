@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -128,7 +128,7 @@ const OrderCard = ({
                       fontWeight: '500',
                       marginLeft: 5,
                     }}>
-                    {item.seller.company_name}
+                    {item.seller_id.company_name}
                   </Text>
                 </View>
               </View>

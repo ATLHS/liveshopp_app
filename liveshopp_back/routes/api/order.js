@@ -27,7 +27,7 @@ router.post('/update-order-status', verifyJwt, async (req, res) => {
     await Product.findOneAndUpdate({ _id: orderId }, { deliveryStatut: 'Expédié' }, { new: true });
 
     const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
-      'seller',
+      'seller_id',
       '-password -checkedPayment -isConfirmed -registeredConfirmedCode',
     );
 
