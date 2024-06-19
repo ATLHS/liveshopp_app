@@ -129,7 +129,7 @@ router.post('/user-signup', async (req, res) => {
     }
 
     // send email confirmed code to the user
-    await sendCodeToConfirmEmailRegistration(user.email, registeredConfirmedCode);
+    await sendCodeToConfirmEmailRegistration(user.email, registeredConfirmedCode, req);
 
     return res.status(200).json({
       user: {
@@ -188,7 +188,7 @@ router.post('/seller-signup', async (req, res) => {
     }
 
     // send email confirmed code to the user
-    await sendCodeToConfirmEmailRegistration(seller.email, registeredConfirmedCode);
+    await sendCodeToConfirmEmailRegistration(seller.email, registeredConfirmedCode, req);
 
     return res.status(200).json({
       user: {
@@ -217,7 +217,7 @@ router.post('/reset-password', async (req, res) => {
     const registeredConfirmedCode = randomFourDigitNumber();
     const updatedCustomer = await updateCustomer(customer, { resetPasswordCode: registeredConfirmedCode }, false);
 
-    await sendCodeToResetPassword(updatedCustomer.email, registeredConfirmedCode);
+    await sendCodeToResetPassword(updatedCustomer.email, registeredConfirmedCode, req);
 
     return res.status(200).json({
       user: {
@@ -296,7 +296,7 @@ router.post('/confirm-user-email', async (req, res) => {
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-      sendWelcomeEmail(customer);
+      await sendWelcomeEmail(customer, req);
 
       return res.status(200).json({
         user: {

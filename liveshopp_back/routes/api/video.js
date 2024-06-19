@@ -91,7 +91,7 @@ router.post('/handle-ending-auction-video', verifyJwt, async (req, res) => {
   try {
     const { endingAuctionId } = req.body.data;
 
-    await handleAuctionVideos(endingAuctionId);
+    await handleAuctionVideos(endingAuctionId, req);
 
     const sellersAuctionVideo = await VideosItem.find({ auctionStatus: 'onGoing' });
 
@@ -137,7 +137,7 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
         // Send email notifications to the new second highest bidder who have lost the auction
         const user = await (User.findById(highestBidderId) || UserSeller.findById(highestBidderId));
 
-        await sendEmailToInformOutbid(user, auctionItem);
+        await sendEmailToInformOutbid(user, auctionItem, req);
       }
     }
 
@@ -169,7 +169,7 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
     await auctionItem.save();
 
     // Send email notification to the user after bidding
-    await sendEmailAfterBid(customer, auctionItem);
+    await sendEmailAfterBid(customer, auctionItem, req);
 
     // Retrieve the seller's auction videos after performing the update
     const sellersAuctionVideos = await VideosItem.find({ auctionStatus: 'onGoing' });

@@ -1,115 +1,114 @@
 const Sentry = require('@sentry/node');
 const { log } = require('../middleware/logger');
 const { mailer } = require('./services');
-const i18next = require('i18next');
 
-const sendCodeToConfirmEmailRegistration = async (userEmail, code) => {
-  const template = i18next.t('confirmationEmailBody', { code });
+const sendCodeToConfirmEmailRegistration = async (userEmail, code, req) => {
+  const template = req.t('confirmationEmailBody', { code });
 
-  await sendEmail(userEmail, i18next.t('confirmationCode'), template);
+  await sendEmail(userEmail, req.t('confirmationCode'), template);
 };
 
-const sendCodeToResetPassword = async (userEmail, code) => {
-  const template = i18next.t('verificationEmail', { code });
+const sendCodeToResetPassword = async (userEmail, code, req) => {
+  const template = req.t('verificationEmail', { code });
 
-  await sendEmail(userEmail, i18next.t('verificationCode'), template);
+  await sendEmail(userEmail, req.t('verificationCode'), template);
 };
 
-const sendWelcomeEmail = async (customer) => {
-  const template = i18next.t('welcomeEmail', { firstname: customer.firstname });
+const sendWelcomeEmail = async (customer, req) => {
+  const template = req.t('welcomeEmail', { firstname: customer.firstname });
 
-  await sendEmail(customer.email, i18next.t('welcomeMessage'), template);
+  await sendEmail(customer.email, req.t('welcomeMessage'), template);
 };
 
-const sendNoBidNotificationEmail = async (auctionItem) => {
-  const template = i18next.t('auctionNotification', {
+const sendNoBidNotificationEmail = async (auctionItem, req) => {
+  const template = req.t('auctionNotification', {
     company_name: auctionItem.seller_id.company_name,
     product_name: auctionItem.productName,
   });
 
-  await sendEmail(auctionItem.seller_id.email, i18next.t('noBidsThisTime'), template);
+  await sendEmail(auctionItem.seller_id.email, req.t('noBidsThisTime'), template);
 };
 
-const sendNoReservePriceReachedNotificationEmail = async (customer, product) => {
-  const template = i18next.t('auctionEndNotification', {
+const sendNoReservePriceReachedNotificationEmail = async (customer, product, req) => {
+  const template = req.t('auctionEndNotification', {
     company_name: customer.company_name,
     product_name: product.productName,
   });
 
-  await sendEmail(customer.email, i18next.t('noReservePriceBids'), template);
+  await sendEmail(customer.email, req.t('noReservePriceBids'), template);
 };
 
-const sendEmailAfterBid = async (customer, product) => {
-  const template = i18next.t('bidConfirmation', {
+const sendEmailAfterBid = async (customer, product, req) => {
+  const template = req.t('bidConfirmation', {
     firstname: customer.firstname,
     current_price: product.currentPricee,
     product_name: product.productName,
   });
 
-  await sendEmail(customer.email, i18next.t('bidAcknowledged'), template);
+  await sendEmail(customer.email, req.t('bidAcknowledged'), template);
 };
 
-const sendEmailToInformOutbid = async (customer, product) => {
-  const template = i18next.t('outbidNotification', {
+const sendEmailToInformOutbid = async (customer, product, req) => {
+  const template = req.t('outbidNotification', {
     firstname: customer.firstname,
     product_name: product.productName,
   });
 
-  await sendEmail(customer.email, i18next.t('outbidMessage'), template);
+  await sendEmail(customer.email, req.t('outbidMessage'), template);
 };
 
-const sendBidRejectedDueToLowReservePrice = async (auction) => {
-  const template = i18next.t('bidNotAccepted', {
+const sendBidRejectedDueToLowReservePrice = async (auction, req) => {
+  const template = req.t('bidNotAccepted', {
     firstname: auction.userId.firstname,
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auction.userId.email, i18next.t('bidDidNotMakeIt'), template);
+  await sendEmail(auction.userId.email, req.t('bidDidNotMakeIt'), template);
 };
 
-const sendPaymentIssueEmail = async (auction) => {
-  const template = i18next.t('paymentIssue', {
+const sendPaymentIssueEmail = async (auction, req) => {
+  const template = req.t('paymentIssue', {
     firstname: auction.userId.firstname,
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auction.userId.email, i18next.t('bidAlertMessage'), template);
+  await sendEmail(auction.userId.email, req.t('bidAlertMessage'), template);
 };
 
-const sendWinningBidConfirmationEmail = async (auction) => {
-  const template = i18next.t('congratulations', {
+const sendWinningBidConfirmationEmail = async (auction, req) => {
+  const template = req.t('congratulations', {
     firstname: auction.userId.firstname,
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auction.userId.email, i18next.t('wonAuctionMessage'), template);
+  await sendEmail(auction.userId.email, req.t('wonAuctionMessage'), template);
 };
 
-const sendAuctionSaleNotificationEmail = async (auctionItem, auction) => {
-  const template = i18next.t('auctionSoldNotification', {
+const sendAuctionSaleNotificationEmail = async (auctionItem, auction, req) => {
+  const template = req.t('auctionSoldNotification', {
     seller_name: auction.auctionItemId.sellerName,
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auctionItem.seller_id.email, i18next.t('itemSoldMessage'), template);
+  await sendEmail(auctionItem.seller_id.email, req.t('itemSoldMessage'), template);
 };
 
-const sendNoShippingAddressEmail = async (auction) => {
-  const template = i18next.t('auctionBidCancelled', {
+const sendNoShippingAddressEmail = async (auction, req) => {
+  const template = req.t('auctionBidCancelled', {
     firstname: auction.userId.firstname,
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auction.userId.email, i18next.t('auctionCancelledMessage'), template);
+  await sendEmail(auction.userId.email, req.t('auctionCancelledMessage'), template);
 };
 
-const sendBidOutbidEmailNotification = async (email, auction) => {
-  const template = i18next.t('auctionEndedNotification', {
+const sendBidOutbidEmailNotification = async (email, auction, req) => {
+  const template = req.t('auctionEndedNotification', {
     firstname: auction.userId.firstname,
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auction.userId.email, i18next.t('auctionEndedMessage'), template);
+  await sendEmail(auction.userId.email, req.t('auctionEndedMessage'), template);
 };
 
 const sendEmail = async (email, subject, html) => {

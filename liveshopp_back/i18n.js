@@ -15,6 +15,7 @@ i18next
       order: ['header'],
       caches: false,
     },
+    debug: true,
   });
 
 module.exports = middleware.handle(i18next);

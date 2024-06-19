@@ -13,7 +13,7 @@ const {
 const stripeUtils = require('../utils/stripeUtils');
 const Product = require('../models/product');
 
-const handleAuctionVideos = async (endingAuctionId) => {
+const handleAuctionVideos = async (endingAuctionId, req) => {
   try {
     const expiredAuctions = await VideosItem.find({
       _id: endingAuctionId,
@@ -37,7 +37,7 @@ const handleAuctionVideos = async (endingAuctionId) => {
         ]);
 
       if (auctionsItems.length === 0) {
-        await handleNoBidsPlaced(auctionItem);
+        await handleNoBidsPlaced(auctionItem, req);
         continue;
       }
 
@@ -50,16 +50,16 @@ const handleAuctionVideos = async (endingAuctionId) => {
         const customer = auction.userId;
 
         if (!customer.shipping_address) {
-          await handleNoShippingAddress(auctionItem, auction, currentItemIndex, totalItems);
+          await handleNoShippingAddress(auctionItem, auction, currentItemIndex, totalItems, req);
           continue;
         }
 
         if (auction.amount >= auctionItem.reservePrice) {
           try {
-            await handleSuccessfulPayment(auctionItem, auction, auctionsItems);
+            await handleSuccessfulPayment(auctionItem, auction, auctionsItems, req);
             break;
           } catch (error) {
-            await handlePaymentError(auctionItem, auction, currentItemIndex, totalItems, error);
+            await handlePaymentError(auctionItem, auction, currentItemIndex, totalItems, error, req);
           }
         } else {
           await handleBidRejected(auctionItem, auction, currentItemIndex, totalItems);
@@ -74,30 +74,30 @@ const handleAuctionVideos = async (endingAuctionId) => {
 
 let treatedUserEmailsWithError = [];
 
-const handleNoBidsPlaced = async (auctionItem) => {
+const handleNoBidsPlaced = async (auctionItem, req) => {
   auctionItem.auctionStatus = 'closed';
   await auctionItem.save();
-  await sendNoBidNotificationEmail(auctionItem);
+  await sendNoBidNotificationEmail(auctionItem, req);
   treatedUserEmailsWithError = [];
   log.info(`No bids placed on item ${auctionItem._id}`);
 };
 
-const isTheLastBidWithError = async (auctionItem, auction, currentItemIndex, totalItems) => {
+const isTheLastBidWithError = async (auctionItem, auction, currentItemIndex, totalItems, req) => {
   if (currentItemIndex === totalItems) {
     // For now, keep it simple: Send a generic email to the seller notifying them that no bids were placed on their item, without detailing the user's error.
-    await handleNoBidsPlaced(auctionItem);
+    await handleNoBidsPlaced(auctionItem, req);
   } else {
     treatedUserEmailsWithError.push(auction.userId.email);
   }
 };
 
-const handleNoShippingAddress = async (auctionItem, auction, currentItemIndex, totalItems) => {
-  await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems);
-  await sendNoShippingAddressEmail(auction);
+const handleNoShippingAddress = async (auctionItem, auction, currentItemIndex, totalItems, req) => {
+  await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems, req);
+  await sendNoShippingAddressEmail(auction, req);
   log.info(`User id : ${auction.userId._id} has no shipping address specified.`);
 };
 
-const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
+const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req) => {
   const paymentIntentMetadata = {
     seller_id: auctionItem.seller_id._id,
     seller_name: auctionItem.sellerName,
@@ -133,8 +133,8 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
     await product.save();
 
     await auctionItem.save();
-    await sendWinningBidConfirmationEmail(auction);
-    await sendAuctionSaleNotificationEmail(auctionItem, auction);
+    await sendWinningBidConfirmationEmail(auction, req);
+    await sendAuctionSaleNotificationEmail(auctionItem, auction, req);
 
     // Send an email to inform all other users that they have lost the auction.
     const userEmails = auctionsItems
@@ -145,7 +145,7 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
 
     if (userEmails) {
       for (const email of userEmails) {
-        await sendBidOutbidEmailNotification(email, auction);
+        await sendBidOutbidEmailNotification(email, auction, req);
       }
     }
 
@@ -153,16 +153,16 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems) => {
   }
 };
 
-const handlePaymentError = async (auctionItem, auction, currentItemIndex, totalItems, error) => {
-  await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems);
-  await sendPaymentIssueEmail(auction);
+const handlePaymentError = async (auctionItem, auction, currentItemIndex, totalItems, error, req) => {
+  await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems, req);
+  await sendPaymentIssueEmail(auction, req);
   log.error(`Payment error for user id : ${auction.userId._id} ${error}`);
 };
 
-const handleBidRejected = async (auctionItem, auction, currentItemIndex, totalItems) => {
-  await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems);
+const handleBidRejected = async (auctionItem, auction, currentItemIndex, totalItems, req) => {
+  await isTheLastBidWithError(auctionItem, auction, currentItemIndex, totalItems, req);
   // Send to every bidder
-  await sendBidRejectedDueToLowReservePrice(auction);
+  await sendBidRejectedDueToLowReservePrice(auction, req);
   log.error(`User's bid : ${auction._id} for user id : ${auction.userId._id} is lower than reserve price`);
 };
 
