@@ -24,7 +24,7 @@ const LiveChatMessagesList = ({
       showsVerticalScrollIndicator={false}
       initialScrollIndex={liveData.messages.length && liveData.messages.length - 1}
       getItemLayout={getItemLayout}
-      contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+      contentInset={{ top: 0, bottom: 50, left: 0, right: 0 }}
       style={styles.flatList}
       data={liveData.messages}
       renderItem={({ item }) => {

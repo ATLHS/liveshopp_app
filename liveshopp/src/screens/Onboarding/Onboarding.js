@@ -44,10 +44,10 @@ const Onboarding = ({ navigation }) => {
         </View>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
-            <CountryFlag isoCode={'fr'} size={10} />
+            <CountryFlag isoCode={'fr'} size={11} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => changeLng('gb')}>
-            <CountryFlag isoCode={'gb'} size={10} />
+            <CountryFlag isoCode={'gb'} size={11} />
           </TouchableOpacity>
         </View>
       </View>
