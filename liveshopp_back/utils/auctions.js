@@ -31,6 +31,12 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
       Sentry.captureMessage('Register auction Stripe error:', 'error');
       log.error('Register auction Stripe error:');
       log.error(paymentIntent);
+
+      // FIXME
+      //
+      // We don't want to create a Product in DB if the payment didn't go through for now.
+      //
+      return;
     }
 
     // register current sale product info in db
