@@ -29,6 +29,14 @@ const App = () => {
             store.dispatch(setUser(data.user));
             store.dispatch(setIsAuthenticate(data.isAuthenticate));
             setIsLoading(false);
+
+            Sentry.setUser({
+              id: data.user.id,
+              email: data.user.email,
+              profil: data.user.profil,
+              username: `${data.user.firstname} ${data.user.lastname}`,
+              ip_address: '{{auto}}',
+            });
           })
           .catch((err) => {
             store.dispatch(setUser({ profil: null }));
