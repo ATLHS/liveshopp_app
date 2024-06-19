@@ -430,7 +430,7 @@ export const LiveScreen = ({ navigation, route }) => {
             <LinearGradient colorList={colorList} angle={90} />
           </View>
 
-          {user.profile !== 'admin' && (
+          {user.profil !== 'admin' && (
             <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
           )}
           {isHost && <CameraSwitch onPress={switchCamera} />}
