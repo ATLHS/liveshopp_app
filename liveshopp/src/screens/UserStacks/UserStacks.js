@@ -28,7 +28,7 @@ const UserStacks = ({ navigation }) => {
         }}>
         <Tab.Screen
           options={{
-            title: t('lives'),
+            title: t('lives').toUpperCase(),
             tabBarIcon: ({ size }) => (
               <FontAwesomeIcon
                 icon={faHome}
@@ -47,7 +47,7 @@ const UserStacks = ({ navigation }) => {
         />
         <Tab.Screen
           options={{
-            title: t('myOrders'),
+            title: t('myOrders').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faBoxOpen}
@@ -61,7 +61,7 @@ const UserStacks = ({ navigation }) => {
         />
         <Tab.Screen
           options={{
-            title: t('myProfile'),
+            title: t('myProfile').toUpperCase(),
             tabBarIcon: ({ size }) => (
               <FontAwesomeIcon
                 icon={faUser}

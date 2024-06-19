@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
-import SelectDropdown from 'react-native-select-dropdown';
 
 import i18n from '../../../i18n';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
@@ -10,11 +9,12 @@ import OutlinedButton from '../../components/OutlinedButton/OutlinedButton';
 import colors from '../../styles/colors';
 
 const Onboarding = ({ navigation }) => {
+  useEffect(() => {}, [i18n]);
   const { t } = useTranslation();
-  const country = [
-    { title: 'Français', isoCode: 'fr' },
-    { title: 'English', isoCode: 'gb' },
-  ];
+
+  const changeLng = async (lng) => {
+    await i18n.changeLanguage(lng);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black', alignItems: 'center' }}>
@@ -42,36 +42,14 @@ const Onboarding = ({ navigation }) => {
           {}
           <OutlinedButton title={t('login')} onPress={() => navigation.navigate('SignIn')} />
         </View>
-        <SelectDropdown
-          data={country}
-          onSelect={async (selectedItem, index) => {
-            await i18n.changeLanguage(selectedItem.isoCode);
-          }}
-          defaultValue={country[0]}
-          renderButton={(selectedItem, isOpen) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                {selectedItem && <CountryFlag isoCode={selectedItem.isoCode} size={10} />}
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Langue'}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && { backgroundColor: '#D2D9DF' }),
-                }}>
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-        />
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
+            <CountryFlag isoCode={'fr'} size={10} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => changeLng('gb')}>
+            <CountryFlag isoCode={'us'} size={10} />
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -120,24 +98,27 @@ const styles = StyleSheet.create({
   },
 
   dropdownButtonStyle: {
-    width: 110,
-    height: 40,
-    backgroundColor: '#E9ECEF',
+    width: 130,
+    height: 35,
+    backgroundColor: 'white',
     borderRadius: 8,
     flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 12,
   },
   dropdownButtonTxtStyle: {
-    flex: 1,
-    fontSize: 13,
+    fontSize: 11,
     marginLeft: 10,
     fontWeight: '500',
+    textAlign: 'center',
     color: '#151E26',
   },
   dropdownButtonArrowStyle: {
     fontSize: 13,
+    color: 'red',
   },
   dropdownButtonIconStyle: {
     fontSize: 13,
@@ -156,9 +137,10 @@ const styles = StyleSheet.create({
   },
   dropdownItemTxtStyle: {
     flex: 1,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '500',
     color: '#151E26',
+    marginLeft: 10,
   },
   dropdownItemIconStyle: {
     fontSize: 28,

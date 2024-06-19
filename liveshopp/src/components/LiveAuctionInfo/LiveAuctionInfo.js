@@ -31,7 +31,7 @@ export const LiveAuctionInfo = () => {
       <Text style={styles.productName}>{liveData.currentAuction.productName}</Text>
       {liveData.currentAuction.currentMessageInfo && (
         <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>{liveData.currentAuction.currentMessageInfo}</Text>
+          <Text style={styles.messageText}>{t(liveData.currentAuction.currentMessageInfo)}</Text>
         </View>
       )}
       <View style={styles.auctionInfoContainer}>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -15,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import NoData from '../../components/NoData/NoData';
 import LiveStatus from '../../constants/LiveStatus';
-import { setIsGone, setIsJoin, setLives } from '../../redux/slices/livesSlice';
+import { setIsJoin } from '../../redux/slices/livesSlice';
 import socket from '../../services/config/clientSocketIoConfig';
 import colors from '../../styles/colors';
 import renderLives from '../../utils/renderLives';

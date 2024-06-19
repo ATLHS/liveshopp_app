@@ -220,7 +220,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: t('termsAndConditionsUsage'),
+          title: t('termsAndConditions'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },

@@ -22,7 +22,6 @@
   "confirmConditions1": "En cliquant sur \"Let's go\" j'accepte les ",
   "confirmConditions2": "de Liveshopp et confirme avoir plus de 16 ans.",
   "BecomeASeller": "Devenir vendeur",
-  "termsAndConditionsUsage": "conditions générales d’utilisation",
   "emailVerificationCode": "Indiquez le code de vérification reçu par e-mail.",
   "completeRegistration": "Terminez l’inscription",
   "enterCode": "Entrez le code de {{codeType}}.",
@@ -41,7 +40,7 @@
   "auctionWinner": "Remporte l'enchère",
   "today": "Aujourd'hui",
   "live": "En direct",
-  "at": "à",
+  "at": " à ",
   "ref": "Réf",
   "Product": "Article",
   "startingPrice": "Prix de départ",
@@ -166,5 +165,9 @@
   "confirmDeleteProfile": "Supprimer mon profil",
   "accountBlocked": "Votre compte a été bloqué par Liveshopp, veuillez contacter notre équipe pour plus d'information, merci.",
   "forgotPassword": "Mot de passe oublié ?",
-  "letsGo": "Let’s go !"
+  "letsGo": "Let’s go !",
+  "reservePriceReached": "Prix de réserve atteint 🎉!",
+  "reservePriceNotReached": "Prix de réserve non atteint...",
+  "noReservePriceMessage": "",
+  "logOut": "Déconnexion"
 }

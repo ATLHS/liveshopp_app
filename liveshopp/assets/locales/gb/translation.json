@@ -22,7 +22,6 @@
   "confirmConditions1": "By clicking \"Let's go\" I accept the ",
   "confirmConditions2": "of Liveshopp and confirm that I am over 16 years old.",
   "BecomeASeller": "Become a seller",
-  "termsAndConditionsUsage": "terms and conditions usage",
   "emailVerificationCode": "Enter the verification code received by email.",
   "completeRegistration": "Complete the registration",
   "enterCode": "Enter the {{codeType}} code.",
@@ -61,7 +60,7 @@
   "reportUser": "Report this user",
   "stopSeeingMessagesLive": "You will no longer see messages and lives from this user",
   "behaviorNotAllowed": "Any behavior not complying with the terms and conditions will be penalized",
-  "blockedUserss": "Blocked users",
+  "blockedUsers": "Blocked users",
   "createNewLive": "Create a new live",
   "unblockUser": "Unblock this user",
   "username": "Username",
@@ -88,7 +87,7 @@
   "noLiveCurrently": "No live streams available right now",
   "currentLivesWillAppearHere": "Current lives will appear here. Check back later.",
   "liveAuction": "Live auction",
-  "coming_soon": "Coming soon",
+  "comingSoon": "Coming soon",
   "confirmShipmentOfItem": "CONFIRM SHIPPING OF ITEM : ",
   "actionPermanentWarning": "Note, this action cannot be undone.",
   "confirmed": "Confirmed",
@@ -166,5 +165,9 @@
   "confirmDeleteProfile": "Delete my profile",
   "accountBlocked": "Your account has been blocked by Liveshopp, please contact our team for more information, thank you.",
   "forgotPassword": "Forgot password?",
-  "letsGo": "Let’s go !"
+  "letsGo": "Let’s go !",
+  "reservePriceReached": "Reserve price reached 🎉!",
+  "reservePriceNotReached": "Reserve price not reached...",
+  "noReservePriceMessage": "",
+  "logOut": "Log Out"
 }

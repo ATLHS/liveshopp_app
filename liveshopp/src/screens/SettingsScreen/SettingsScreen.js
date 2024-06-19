@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import CountryFlag from 'react-native-country-flag';
 import email from 'react-native-email';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { StripeProvider, useStripe } from '@stripe/stripe-react-native';
 
+import i18n from '../../../i18n';
 import Headline from '../../components/Auth/Headine/Headline';
 import Touchable from '../../components/Auth/Touchable/Touchable';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
@@ -144,6 +146,10 @@ function SettingsScreen({ navigation }) {
           text1: err.message,
         });
       });
+  };
+
+  const changeLng = async (lng) => {
+    await i18n.changeLanguage(lng);
   };
 
   useFocusEffect(
@@ -305,17 +311,29 @@ function SettingsScreen({ navigation }) {
                     <Touchable title={t('deliveryAddress')} onPress={goSettingShippingAddress} />
                     <Touchable title={t('blockedUsers')} onPress={goToBlockedUsers} />
                     <Headline title={t('termsAndConditionsAbbreviation')} />
-                    <Touchable title={t('termsAndConditionsUsage')} onPress={goToRGPD} />
+                    <Touchable title={t('termsAndConditions')} onPress={goToRGPD} />
                     <Headline title={t('contact')} />
                     <Touchable title={t('contactUs')} onPress={handleEmail} />
                   </>
                 )}
-                <ContainedButton title="Déconnexion" onPress={handleSignOut} loading={isLoading} />
+                <ContainedButton title={t('logOut')} onPress={handleSignOut} loading={isLoading} />
                 <View style={{ marginTop: 20 }}>
                   <Touchable
                     title={t('confirmDeleteProfile')}
                     onPress={() => setModalVisible(!modalVisible)}
                   />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 20,
+                  }}>
+                  <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
+                    <CountryFlag isoCode={'fr'} size={10} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => changeLng('gb')}>
+                    <CountryFlag isoCode={'us'} size={10} />
+                  </TouchableOpacity>
                 </View>
               </View>
             </TouchableWithoutFeedback>

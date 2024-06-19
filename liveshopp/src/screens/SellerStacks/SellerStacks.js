@@ -49,7 +49,7 @@ export const SellerStacks = ({ navigation }) => {
         }}>
         <Tab.Screen
           options={{
-            title: t('lives'),
+            title: t('lives').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faHome}
@@ -68,7 +68,7 @@ export const SellerStacks = ({ navigation }) => {
         />
         <Tab.Screen
           options={{
-            title: t('myLives'),
+            title: t('myLives').toUpperCase(),
             tabBarIcon: () => (
               <FontAwesomeIcon
                 icon={faTowerBroadcast}
@@ -94,7 +94,7 @@ export const SellerStacks = ({ navigation }) => {
 
         <Tab.Screen
           options={{
-            title: t('myOrders'),
+            title: t('myOrders').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faBoxOpen}
@@ -109,7 +109,7 @@ export const SellerStacks = ({ navigation }) => {
 
         <Tab.Screen
           options={{
-            title: t('myProfile'),
+            title: t('myProfile').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faUser}
