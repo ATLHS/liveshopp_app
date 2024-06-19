@@ -128,7 +128,7 @@ const OrderCard = ({
                       fontWeight: '500',
                       marginLeft: 5,
                     }}>
-                    {item.seller_id.company_name}
+                    {item.seller_id && item.seller_id.company_name}
                   </Text>
                 </View>
               </View>
