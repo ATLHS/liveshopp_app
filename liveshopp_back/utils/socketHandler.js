@@ -63,12 +63,15 @@ module.exports = (io) => {
       const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
 
       channel.userCount = connectedUsersCount;
-      channel.auctionsStatus = live.live_status;
 
       if (!channel.hostIsLive && user.profil === 'seller' && user.id === live.seller_id) {
         channel.hostIsLive = true;
-      }
 
+        live.live_status = 'live';
+        await live.save();
+      }
+      log.info(`${live.live_status} : live status`);
+      channel.auctionsStatus = live.live_status;
       await saveChannel(channel);
 
       io.to(channelName).emit('channelData', channel);
