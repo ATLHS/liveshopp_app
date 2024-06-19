@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -18,6 +19,7 @@ import LivesScreen from '../LivesScreen/LivesScreen';
 const Tab = createMaterialTopTabNavigator();
 
 const LivesTab = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const fiveMinuteInMilliseconds = 300000;
 
@@ -72,7 +74,7 @@ const LivesTab = () => {
       }}>
       <Tab.Screen
         options={{
-          title: 'LIVE ENCHÈRE',
+          title: t('liveAuction').toUpperCase(),
         }}
         name="LivesScreen"
         component={LivesScreen}
@@ -87,7 +89,7 @@ const LivesTab = () => {
       {/*  component={AuctionVideos}*/}
       {/*/>*/}
       <Tab.Screen
-        options={{ title: 'PROCHAINEMENT' }}
+        options={{ title: t('comingSoon').toUpperCase() }}
         name="UpcomingLives"
         component={ComingLives}
       />

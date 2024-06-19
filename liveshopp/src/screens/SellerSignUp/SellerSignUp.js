@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,131 +18,131 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
-const SellerSignupFormSchema = [
-  {
-    name: 'lastname',
-    label: 'Nom',
-    type: 'text',
-    autoFocus: true,
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre nom.',
-      },
-    },
-  },
-  {
-    name: 'firstname',
-    label: 'Prénom',
-    type: 'text',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre prénom.',
-      },
-    },
-  },
-  {
-    name: 'company_name',
-    label: "Nom de l'entreprise",
-    type: 'text',
-    validation: {
-      required: {
-        value: true,
-        message: "Veuillez indiquer le nom de l'entreprise.",
-      },
-    },
-  },
-  {
-    name: 'business_activity',
-    label: 'Secteur d’activité de l’entreprise',
-    type: 'select',
-    validation: {
-      required: {
-        value: true,
-        message: "Veuillez sélectionner un secteur d'activité.",
-      },
-    },
-    options: ['Sport', 'Mode', 'High-Tech', 'Antiquaire'],
-  },
-  {
-    name: 'role',
-    label: "Rôle dans l'entreprise",
-    type: 'select',
-    validation: {
-      required: {
-        value: true,
-        message: "Veuillez sélectionner votre rôle dans l'entreprise.",
-      },
-    },
-    options: ['Direction', 'Marketing', 'Commercial', 'R&D'],
-  },
-  {
-    name: 'phone',
-    label: 'Numéro de téléphone mobile',
-    type: 'tel',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer un numéro de téléphone.',
-      },
-      pattern: {
-        value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-        message: 'Veuillez indiquer un numéro valide.',
-      },
-    },
-    options: ['Direction', 'Marketing', 'Commercial', 'R&D'],
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    type: 'text',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre adresse e-mail.',
-      },
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: 'Veuillez indiquer une adresse e-mail valide.',
-      },
-    },
-  },
-  {
-    name: 'password',
-    label: 'Mot de passe',
-    type: 'password',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer un mot de passe.',
-      },
-      pattern: {
-        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-        message: 'Veuillez indiquer un mot de passe valide.',
-      },
-    },
-    helper: 'Au moins 8 caractères, dont 1 majuscule, 1 minuscule et 1 chiffre et c’est tout..',
-  },
-  {
-    name: 'eula',
-    label: '',
-    type: 'checkbox',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez accepter les conditions générales d’utilisation.',
-      },
-    },
-    helper: {
-      helperLink: 'rgpdScreen',
-      helperMessage1: 'En cliquant sur "Let\'s go" j\'accepte les : ',
-      helperMessage2: 'de Liveshopp et confirmez avoir plus de 16 ans.',
-    },
-  },
-];
-
 export const SellerSignUp = ({ navigation }) => {
+  const { t } = useTranslation();
+  const SellerSignupFormSchema = [
+    {
+      name: 'lastname',
+      label: t('lastname'),
+      type: 'text',
+      autoFocus: true,
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterLastName'),
+        },
+      },
+    },
+    {
+      name: 'firstname',
+      label: t('firstname'),
+      type: 'text',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterFirstName'),
+        },
+      },
+    },
+    {
+      name: 'company_name',
+      label: t('companyName'),
+      type: 'text',
+      validation: {
+        required: {
+          value: true,
+          message: t('companyNamePlaceholder'),
+        },
+      },
+    },
+    {
+      name: 'business_activity',
+      label: t('businessSector'),
+      type: 'select',
+      validation: {
+        required: {
+          value: true,
+          message: t('businessSectorPlaceholder'),
+        },
+      },
+      options: [t('sport'), t('fashion'), t('technology'), t('antique')],
+    },
+    {
+      name: 'role',
+      label: t('rolesInCompany'),
+      type: 'select',
+      validation: {
+        required: {
+          value: true,
+          message: t('rolesInCompanyPlaceholder'),
+        },
+      },
+      options: [t('management'), t('marketing'), t('sales'), t('research')],
+    },
+    {
+      name: 'phone',
+      label: t('mobilePhoneNumber'),
+      type: 'tel',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterPhoneNumber'),
+        },
+        pattern: {
+          value: /^[0-9]+$/ && /^0[67]\d{8}$/,
+          message: t('pleaseEnterValidNumber'),
+        },
+      },
+    },
+    {
+      name: 'email',
+      label: t('email'),
+      type: 'text',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterEmail'),
+        },
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: t('pleaseEnterValidEmail'),
+        },
+      },
+    },
+    {
+      name: 'password',
+      label: t('password'),
+      type: 'password',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterPassword'),
+        },
+        pattern: {
+          value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+          message: t('pleaseEnterValidPassword'),
+        },
+      },
+      helper: t('passwordRequirements'),
+    },
+    {
+      name: 'eula',
+      label: '',
+      type: 'checkbox',
+      validation: {
+        required: {
+          value: true,
+          message: t('acceptTerms'),
+        },
+      },
+      helper: {
+        helperLink: 'rgpdScreen',
+        helperMessage1: t('confirmConditions1'),
+        helperMessage2: t('confirmConditions2'),
+      },
+    },
+  ];
+
   const { handleSubmit, control } = useForm();
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -175,9 +176,7 @@ export const SellerSignUp = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.formContainer}>
               <View style={styles.headlineContainer}>
-                <Text style={styles.headline}>
-                  Générez des revenus et fédérez votre communauté plus simplement avec Liveshopp.
-                </Text>
+                <Text style={styles.headline}>{t('generateRevenue')}</Text>
               </View>
               <View style={styles.headlineContainerMessage}>
                 <Text style={styles.headlineMessage}>{message}</Text>
@@ -195,7 +194,7 @@ export const SellerSignUp = ({ navigation }) => {
               </View>*/}
               <View style={styles.action}>
                 <ContainedButton
-                  title="Let’s go !"
+                  title={t('letsGo')}
                   onPress={handleSubmit(handleSellerSignup)}
                   loading={isLoading}
                 />

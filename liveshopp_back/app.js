@@ -7,6 +7,7 @@ const { createServer } = require('node:http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const { morganMiddleware, log } = require('./middleware/logger');
+const i18n = require('./i18n');
 
 const app = express();
 const httpServer = createServer(app);
@@ -68,6 +69,7 @@ app.use(
     parameterLimit: 50000,
   }),
 );
+app.use(i18n);
 app.use(express.json({ limit: '35mb' }));
 app.use(express.static('public'));
 

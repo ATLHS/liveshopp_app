@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 
 import { faHome, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +12,7 @@ import SettingsScreen from '../SettingsScreen/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 export const AdminStacks = () => {
+  const { t } = useTranslation();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -34,7 +36,7 @@ export const AdminStacks = () => {
       />
       <Tab.Screen
         options={{
-          title: 'MON PROFIL',
+          title: t('myProfile').toUpperCase(),
           tabBarIcon: ({ color, size }) => (
             <FontAwesomeIcon icon={faUser} size={20} color={'white'} />
           ),

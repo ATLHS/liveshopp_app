@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActionSheetIOS, Alert, Pressable, StatusBar, TouchableOpacity } from 'react-native';
 import { Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -26,6 +27,7 @@ import colors from '../styles/colors';
 const Stack = createNativeStackNavigator();
 
 const SellerStack = () => {
+  const { t } = useTranslation();
   const user = useSelector((state) => state.user.user);
   const liveData = useSelector((state) => state.lives.liveData);
   const dispatch = useDispatch();
@@ -38,7 +40,7 @@ const SellerStack = () => {
   const showObjectionableAdminAction = (data) => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Bannir cet utilisateur'],
+        options: [t('cancel'), t('banUser')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -106,7 +108,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Modifier mon profil',
+          title: t('editProfile'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -123,7 +125,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Utilisateurs bloqués sur Liveshopp',
+          title: t('blockedUsersOnLiveshopp'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -140,7 +142,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Utilisateurs signalé sur Liveshopp',
+          title: t('reportedUsersOnLiveshopp'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },
@@ -218,7 +220,7 @@ const SellerStack = () => {
               <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
             </Pressable>
           ),
-          title: 'Conditions générales',
+          title: t('termsAndConditions'),
           headerStyle: {
             backgroundColor: colors.LIGHT,
           },

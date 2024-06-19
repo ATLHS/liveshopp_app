@@ -30,7 +30,7 @@ router.post('/create-live', verifyJwt, async (req, res) => {
 
     if (hasOverlappingLive) {
       return res.status(400).json({
-        message: 'Un live existe déjà pour ce créneau.',
+        message: req.t('liveSlotAlreadyTaken'),
       });
     }
 
@@ -51,11 +51,11 @@ router.post('/create-live', verifyJwt, async (req, res) => {
 
     return res.status(200).json({
       sellerLives: existingLives,
-      message: 'Votre live a bien été créé !',
+      message: req.t('liveCreatedSuccessfully'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -65,7 +65,7 @@ router.get('/get-seller-live', verifyJwt, async (req, res) => {
     return res.status(200).json({ sellerLives });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -75,7 +75,7 @@ router.get('/get-lives', verifyJwt, async (req, res) => {
     return res.status(200).json({ lives });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -90,11 +90,11 @@ router.post('/delete-live', verifyJwt, async (req, res) => {
     emitFreshLives(lives);
     return res.status(200).json({
       sellerLives,
-      message: 'Le live a bien été supprimé.',
+      message: req.t('liveDeletedSuccessfully'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -119,11 +119,11 @@ router.post('/close-live', verifyJwt, async (req, res) => {
 
     return res.status(200).json({
       sellerLives,
-      message: 'Le live a bien été clôturé.',
+      message: req.t('liveClosedSuccessfully'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -146,7 +146,7 @@ router.post('/get-agora-token', verifyJwt, async (req, res) => {
     return res.status(200).json({ token, generateUid });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

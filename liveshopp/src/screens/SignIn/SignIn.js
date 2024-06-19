@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -22,44 +23,46 @@ import auth from '../../services/auth';
 import axiosConfig from '../../services/config/axiosConfig';
 import colors from '../../styles/colors';
 
-const signInFormSchema = [
-  {
-    name: 'email',
-    label: 'Email',
-    type: 'text',
-    autoFocus: true,
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre adresse e-mail.',
-      },
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: 'Veuillez indiquer une adresse e-mail valide.',
-      },
-    },
-  },
-  {
-    name: 'password',
-    label: 'Mot de passe',
-    type: 'password',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre mot de passe.',
-      },
-    },
-  },
-];
-
 export const SignIn = ({ navigation, route }) => {
+  const { t } = useTranslation();
+  const signInFormSchema = [
+    {
+      name: 'email',
+      label: t('email'),
+      type: 'text',
+      autoFocus: true,
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterEmail'),
+        },
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: t('pleaseEnterValidEmail'),
+        },
+      },
+    },
+    {
+      name: 'password',
+      label: t('password'),
+      type: 'password',
+      validation: {
+        required: {
+          value: true,
+          message: t('pleaseEnterYourPassword'),
+        },
+      },
+    },
+  ];
   const { handleSubmit, control } = useForm();
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (route.params && route.params.message) setMessage(route.params.message);
+    if (route.params && route.params.message) {
+      setMessage(route.params.message);
+    }
   }, [route]);
 
   const handleSignin = (data) => {
@@ -69,9 +72,7 @@ export const SignIn = ({ navigation, route }) => {
       .then((data) => {
         setIsLoading(false);
         if (data.user.isBanned) {
-          return setMessage(
-            "Votre compte a été bloqué par Liveshopp, veuillez contacter notre équipe pour plus d'information, merci.",
-          );
+          return setMessage(t('accountBlocked'));
         }
         AsyncStorage.setItem('@token', data.token).then((r) => {
           axiosConfig.defaults.headers.Authorization = `Bearer ${data.token}`;
@@ -110,12 +111,12 @@ export const SignIn = ({ navigation, route }) => {
 
               <View style={styles.helper}>
                 <TouchableWithoutFeedback onPress={() => goToResetPassword()}>
-                  <Text style={styles.helperText}>Mot de passe oublié ?</Text>
+                  <Text style={styles.helperText}>{t('forgotPassword')}</Text>
                 </TouchableWithoutFeedback>
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Connexion"
+                  title={t('login')}
                   onPress={handleSubmit(handleSignin)}
                   loading={isLoading}
                 />

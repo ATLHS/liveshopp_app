@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useSelector } from 'react-redux';
@@ -8,6 +9,7 @@ import { Duration } from 'luxon';
 import colors from '../../styles/colors';
 
 export const LiveAuctionInfo = () => {
+  const { t } = useTranslation();
   const { liveData } = useSelector((state) => state.lives);
   const [time, setTime] = useState(Number);
   const [displayedTime, setDisplayedTime] = useState('00:00');
@@ -29,7 +31,7 @@ export const LiveAuctionInfo = () => {
       <Text style={styles.productName}>{liveData.currentAuction.productName}</Text>
       {liveData.currentAuction.currentMessageInfo && (
         <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>{liveData.currentAuction.currentMessageInfo}</Text>
+          <Text style={styles.messageText}>{t(liveData.currentAuction.currentMessageInfo)}</Text>
         </View>
       )}
       <View style={styles.auctionInfoContainer}>
@@ -37,7 +39,7 @@ export const LiveAuctionInfo = () => {
           <Text style={styles.auctionAmountText}>
             {liveData.currentAuction.currentProductAmount} €
           </Text>
-          <Text style={styles.auctionLabel}>Enchère en cours</Text>
+          <Text style={styles.auctionLabel}>{t('currentProductAmount')}</Text>
         </View>
         <View style={styles.timeContainer}>
           <Animatable.Text
@@ -47,11 +49,11 @@ export const LiveAuctionInfo = () => {
             style={[styles.timeText, time <= 10 && { color: colors.PRIMARY }]}>
             {displayedTime}
           </Animatable.Text>
-          <Text style={styles.remainingTimeLabel}>Temps restant</Text>
+          <Text style={styles.remainingTimeLabel}>{t('remainingTime')}</Text>
         </View>
         <View style={styles.winnerContainer}>
           <Text style={styles.winnerText}>{liveData.currentAuction.username.toUpperCase()}</Text>
-          <Text style={styles.winnerLabel}>Remporte l'enchère</Text>
+          <Text style={styles.winnerLabel}>{t('auctionWinner')}</Text>
         </View>
       </View>
     </View>

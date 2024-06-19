@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -16,6 +17,7 @@ import SellerAuctionVideos from './SellerAuctionVideos';
 const Tab = createMaterialTopTabNavigator();
 
 const SellerLiveTab = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const fiveMinuteInMilliseconds = 300000;
 
@@ -49,16 +51,20 @@ const SellerLiveTab = () => {
       }}
       initialRouteName={'OnGoingLives'}>
       <Tab.Screen
-        options={{ title: 'LIVE EN COURS' }}
+        options={{ title: t('ongoingLive') }}
         name="OnGoingLives"
         component={OnGoingLive}
       />
       <Tab.Screen
-        options={{ title: 'PROCHAINS LIVES' }}
+        options={{ title: t('upcomingLives') }}
         name="SellerUpcomingLives"
         component={ComingSoonLives}
       />
-      <Tab.Screen options={{ title: 'LIVES TERMINÉS' }} name="EndedLives" component={EndedLives} />
+      <Tab.Screen
+        options={{ title: t('finishedLives') }}
+        name="EndedLives"
+        component={EndedLives}
+      />
       {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
       {/*<Tab.Screen*/}
       {/*  options={{ title: 'VIDÉOS ENCHÈRE' }}*/}

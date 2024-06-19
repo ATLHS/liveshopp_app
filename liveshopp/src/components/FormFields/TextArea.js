@@ -3,7 +3,7 @@ import { StyleSheet, TextInput } from 'react-native';
 
 import colors from '../../styles/colors';
 
-const TextArea = ({ inputField, field, fieldState }) => {
+const TextArea = ({ inputField, field }) => {
   return (
     <TextInput
       style={styles.textInput}

@@ -32,7 +32,7 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

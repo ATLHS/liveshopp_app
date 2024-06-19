@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
 import Toast from 'react-native-toast-message';
@@ -24,6 +25,8 @@ const RootStack = ({ isLoading }) => {
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   const dispatch = useDispatch();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     const checkForUpdates = async () => {
       try {
@@ -40,11 +43,11 @@ const RootStack = ({ isLoading }) => {
 
         if (version.needsUpdate) {
           Alert.alert(
-            'Mise à jour requise',
-            "Une nouvelle version de l'application est disponible. Veuillez mettre à jour pour continuer à utiliser l'application.",
+            t('updateRequired'),
+            t('newAppVersionAvailable'),
             [
               {
-                text: 'Mettre à jour',
+                text: t('update'),
                 onPress: () => {
                   Linking.openURL(version.url);
                 },

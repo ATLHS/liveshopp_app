@@ -1,11 +1,21 @@
-import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import CountryFlag from 'react-native-country-flag';
 
+import i18n from '../../../i18n';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import OutlinedButton from '../../components/OutlinedButton/OutlinedButton';
 import colors from '../../styles/colors';
 
 const Onboarding = ({ navigation }) => {
+  useEffect(() => {}, [i18n]);
+  const { t } = useTranslation();
+
+  const changeLng = async (lng) => {
+    await i18n.changeLanguage(lng);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black', alignItems: 'center' }}>
       <View style={styles.container}>
@@ -20,17 +30,25 @@ const Onboarding = ({ navigation }) => {
             <Text style={styles.brandName}>LIVESHOPP</Text>
           </View>
           <View style={styles.headlineContainer}>
-            <Text style={styles.headline}>Vendez et achetez en live.</Text>
+            <Text style={styles.headline}>{t('slogan')}</Text>
           </View>
         </View>
         <View style={styles.actions}>
           <ContainedButton
-            title="Inscription"
+            title={t('signup')}
             onPress={() => navigation.navigate('UserSignup')}
             loading={undefined}
           />
           {}
-          <OutlinedButton title="Connexion" onPress={() => navigation.navigate('SignIn')} />
+          <OutlinedButton title={t('login')} onPress={() => navigation.navigate('SignIn')} />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
+            <CountryFlag isoCode={'fr'} size={10} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => changeLng('gb')}>
+            <CountryFlag isoCode={'gb'} size={10} />
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -77,6 +95,56 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  dropdownButtonStyle: {
+    width: 130,
+    height: 35,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  dropdownButtonTxtStyle: {
+    fontSize: 11,
+    marginLeft: 10,
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#151E26',
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 13,
+    color: 'red',
+  },
+  dropdownButtonIconStyle: {
+    fontSize: 13,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#151E26',
+    marginLeft: 10,
+  },
+  dropdownItemIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
   },
 });
 

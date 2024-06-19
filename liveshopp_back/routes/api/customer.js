@@ -63,15 +63,15 @@ router.post('/update-customer-profil', verifyJwt, async (req, res) => {
             instagram: customer.instagram || null,
             websiteUrl: customer.websiteUrl || null,
           },
-          message: 'Votre profil a été modifié avec succès.',
+          message: req.t('profileUpdatedSuccessfully'),
         });
       }
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -105,15 +105,15 @@ router.post('/update-user-shipping-address', verifyJwt, async (req, res) => {
             instagram: customer.instagram || null,
             websiteUrl: customer.websiteUrl || null,
           },
-          message: 'Votre adresse de livraison a été modifiée avec succès.',
+          message: req.t('deliveryAddressUpdatedSuccessfully'),
         });
       }
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -147,15 +147,15 @@ router.post('/update-user-payment-method-status', verifyJwt, async (req, res) =>
             instagram: customer.instagram || null,
             websiteUrl: customer.websiteUrl || null,
           },
-          message: 'Votre moyen de paiement a été configuré avec succès.',
+          message: req.t('paymentMethodConfiguredSuccessfully'),
         });
       }
     }
 
-    return res.status(400).json({ message: 'Un probleme est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -169,10 +169,10 @@ router.post('/get-customer', verifyJwt, async (req, res) => {
       return res.status(200).json({ customer });
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -233,17 +233,17 @@ router.post('/set-profil-picture', verifyJwt, async (req, res) => {
             instagram: updatedCustomer.instagram || null,
             websiteUrl: updatedCustomer.websiteUrl || null,
           },
-          message: 'Votre photo de profil a été modifiée avec succès.',
+          message: req.t('profilePhotoUpdatedSuccessfully'),
         });
       } else {
-        return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+        return res.status(500).json({ message: req.t('errorUploadingImage') });
       }
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -300,17 +300,17 @@ router.delete('/delete-profil-picture', verifyJwt, async (req, res) => {
             instagram: customer.instagram || null,
             websiteUrl: customer.websiteUrl || null,
           },
-          message: 'Votre photo de profil a été supprimée avec succès.',
+          message: req.t('profilePhotoDeletedSuccessfully'),
         });
       } else {
-        return res.status(500).json({ message: "Une erreur s'est produite lors de l'envoi de l'image." });
+        return res.status(500).json({ message: req.t('errorUploadingImage') });
       }
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -326,12 +326,12 @@ router.post('/delete-customer', verifyJwt, async (req, res) => {
       const product = await Product.findOne({ seller_id: customer._id, deliveryStatut: "En attente d'expédition" });
       if (product) {
         return res.status(400).json({
-          message: "Votre compte ne peut pas être supprimé, des commandes sont toujours en attente d'expédition.",
+          message: req.t('accountCannotBeDeletedPendingOrders'),
         });
       }
       const deleteAllSellerLive = await Live.deleteMany({ seller_id: customer._id });
       if (!deleteAllSellerLive.acknowledged) {
-        return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+        return res.status(400).json({ message: req.t('errorTryAgainLater') });
       }
     }
 
@@ -348,14 +348,14 @@ router.post('/delete-customer', verifyJwt, async (req, res) => {
           : await User.findByIdAndDelete(customer._id);
 
       if (deleteAllCustomerProduct.acknowledged && deletedCustomer) {
-        return res.status(200).json({ message: 'Votre profil a bien été supprimé, à bientôt sur Liveshopp 👋.' });
+        return res.status(200).json({ message: req.t('profileDeletedSuccessfully') });
       }
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -378,14 +378,14 @@ router.post('/signal-customer', verifyJwt, async (req, res) => {
     if (isAlreadyFlagThisByCustomer) {
       return res.status(400).json({
         isReported: false,
-        message: 'Vous avez déjà signalé cet utilisateur',
+        message: req.t('userAlreadyReported'),
       });
     }
 
     if (isAlreadyBanned) {
       return res.status(400).json({
         isReported: false,
-        message: 'Un signalement est déja en cours pour cet utilisateur',
+        message: req.t('reportAlreadyInProgressForUser'),
       });
     }
 
@@ -405,17 +405,17 @@ router.post('/signal-customer', verifyJwt, async (req, res) => {
     if (newReported) {
       return res.status(200).json({
         isReported: true,
-        message: "L'utilisateur a bien été signalé",
+        message: req.t('userReportedSuccessfully'),
       });
     }
 
     return res.status(400).json({
       isReported: false,
-      message: 'Un problème est survenu, réessayez plus tard',
+      message: req.t('errorTryAgainLater'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -440,11 +440,11 @@ router.get('/get-blocked-user', verifyJwt, async (req, res) => {
 
     return res.status(400).json({
       isReported: false,
-      message: 'Un problème est survenu, réessayez plus tard',
+      message: req.t('errorTryAgainLater'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -459,7 +459,7 @@ router.post('/signal-auction-video', verifyJwt, async (req, res) => {
 
     if (isAlreadyReported) {
       return res.status(400).json({
-        message: 'Un signalement est déjà en cours pour cette enchère vidéo.',
+        message: req.t('reportAlreadyInProgressForVideoAuction'),
       });
     }
 
@@ -472,17 +472,17 @@ router.post('/signal-auction-video', verifyJwt, async (req, res) => {
     if (reportedAuctionVideo) {
       return res.status(200).json({
         isReported: true,
-        message: "L'enchère vidéo a bien été signalée.",
+        message: req.t('videoAuctionReportedSuccessfully'),
       });
     }
 
     return res.status(400).json({
       isReported: false,
-      message: 'Un problème est survenu, réessayez plus tard',
+      message: req.t('errorTryAgainLater'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -494,10 +494,10 @@ router.get('/get-sellers', verifyJwt, async (req, res) => {
       return res.status(200).json(sellers);
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -543,14 +543,14 @@ router.post('/block', verifyJwt, async (req, res) => {
           instagram: updatedCustomer.instagram || null,
           websiteUrl: updatedCustomer.websiteUrl || null,
         },
-        message: `L\'utilisateur ${body.item.sellerName} a bien été bloqué`,
+        message: req.t('userBlockedSuccessfully', { username: body.item.sellerName }),
       });
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -571,7 +571,7 @@ router.post('/unblock-user', verifyJwt, async (req, res) => {
           return res.status(200).json({
             id: _id,
             profil: 'seller',
-            message: "L'utilisateur a bien été débloqué",
+            message: req.t('userUnblockedSuccessfully'),
             updatedCustomer,
           });
         }
@@ -585,7 +585,7 @@ router.post('/unblock-user', verifyJwt, async (req, res) => {
           return res.status(200).json({
             id: _id,
             profil: 'user',
-            message: "L'utilisateur a bien été débloqué",
+            message: req.t('userUnblockedSuccessfully'),
             updatedCustomer,
           });
         }
@@ -594,11 +594,11 @@ router.post('/unblock-user', verifyJwt, async (req, res) => {
 
     return res.status(400).json({
       isReported: false,
-      message: 'Un problème est survenu, réessayez plus tard',
+      message: req.t('errorTryAgainLater'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

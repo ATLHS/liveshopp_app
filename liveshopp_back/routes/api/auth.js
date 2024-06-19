@@ -31,17 +31,17 @@ router.post('/user-signin', async (req, res) => {
     const customer = user || seller;
 
     if (!customer) {
-      return res.status(400).json({ message: 'Aucun utilisateur existe avec cette adresse e-mail.' });
+      return res.status(400).json({ message: req.t('noUserWithEmail') });
     }
 
     if (!customer.isConfirmed) {
-      return res.status(400).json({ message: 'Votre adresse e-mail doit être confirmée avant de vous connecter.' });
+      return res.status(400).json({ message: req.t('emailMustBeConfirmed') });
     }
 
     const success = await bcrypt.compare(password, customer.password);
 
     if (!success) {
-      return res.status(401).json({ message: 'Adresse e-mail ou mot de passe incorrect.' });
+      return res.status(401).json({ message: req.t('incorrectEmailOrPassword') });
     }
 
     const payload = {
@@ -77,7 +77,7 @@ router.post('/user-signin', async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -100,7 +100,7 @@ router.post('/user-signup', async (req, res) => {
 
     // check if email exist in seller db
     if ((seller && seller.email === email) || (user && user.isConfirmed)) {
-      return res.status(409).json({ message: `Un utilisateur avec l'adresse e-mail : ${email} existe déjà.` });
+      return res.status(409).json({ message: req.t('userWithEmailExists', { email }) });
     }
 
     // User already exists but hasn't confirmed their code yet
@@ -136,11 +136,11 @@ router.post('/user-signup', async (req, res) => {
         id: user.id,
         isConfirmed: user.isConfirmed,
       },
-      message: `Entrez le code reçu à l'adresse e-mail : ${user.email}`,
+      message: `${req.t('enterCodeEmail')} : ${user.email}`,
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -157,7 +157,7 @@ router.post('/seller-signup', async (req, res) => {
 
     // check if user already exist with passing email
     if ((user && user.email === email) || (seller && seller.isConfirmed)) {
-      return res.status(409).json({ message: `Un utilisateur avec l'adresse e-mail : ${email} existe déjà.` });
+      return res.status(409).json({ message: req.t('userWithEmailExists', { email }) });
     }
 
     // Seller already exists but hasn't confirmed their code yet
@@ -195,11 +195,11 @@ router.post('/seller-signup', async (req, res) => {
         id: seller.id,
         isConfirmed: seller.isConfirmed,
       },
-      message: `Entrez le code reçu à l'adresse e-mail : ${seller.email}`,
+      message: req.t('enterCodeReceivedAtEmail', { email: seller.email }),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -211,7 +211,7 @@ router.post('/reset-password', async (req, res) => {
     const customer = user || seller;
 
     if (!(customer && customer.isConfirmed)) {
-      return res.status(400).json({ message: 'Aucun utilisateur existe avec cette adresse e-mail.' });
+      return res.status(400).json({ message: req.t('noUserWithEmail') });
     }
 
     const registeredConfirmedCode = randomFourDigitNumber();
@@ -223,11 +223,11 @@ router.post('/reset-password', async (req, res) => {
       user: {
         id: updatedCustomer._id,
       },
-      message: `Entrez le code de vérification reçu à l'adresse e-mail : ${updatedCustomer.email}`,
+      message: req.t('enterVerificationCodeReceivedAtEmail', { email: updatedCustomer.email }),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -240,13 +240,13 @@ router.post('/check-reset-password-code', async (req, res) => {
     const isValidCode = customer.resetPasswordCode === Number(code);
 
     if (!isValidCode) {
-      return res.status(400).json({ message: 'Code incorrect veuillez réessayer.' });
+      return res.status(400).json({ message: req.t('incorrectCodeTryAgain') });
     }
 
     return res.status(200).json({ user: { id: customer._id } });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -262,11 +262,11 @@ router.post('/reset-customer-password', async (req, res) => {
       await updateCustomer(customer, { password: hashedPassword }, false);
 
       /*await sendResetPasswordConfirmation(updatedCustomer.email, registeredConfirmedCode);*/
-      return res.status(200).json({ message: 'Votre mot de passe a été réinitialisé avec succès 🎉' });
+      return res.status(200).json({ message: req.t('passwordResetSuccessfully') });
     }
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -283,7 +283,7 @@ router.post('/confirm-user-email', async (req, res) => {
       if (!isValidCode) {
         return res.status(400).json({
           user: { id: customer._id, isConfirmed: customer.isConfirmed },
-          message: 'Code incorrect veuillez réessayer.',
+          message: req.t('incorrectCodeTryAgain'),
         });
       }
 
@@ -324,7 +324,7 @@ router.post('/confirm-user-email', async (req, res) => {
     }
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -374,7 +374,7 @@ router.get('/is-authenticate', verifyJwt, async (req, res) => {
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

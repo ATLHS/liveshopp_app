@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Keyboard,
@@ -26,6 +27,7 @@ import customer from '../../services/customer';
 import colors from '../../styles/colors';
 
 export const SettingProfilScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const [imageUri, setImageUri] = useState(user.imageUrl || null);
   const dispatch = useDispatch();
@@ -36,12 +38,12 @@ export const SettingProfilScreen = ({ navigation }) => {
   const SettingProfilScreenFormUser = [
     {
       name: 'lastname',
-      label: 'Nom',
+      label: t('lastname'),
       type: 'text',
       validation: {
         required: {
           value: true,
-          message: 'Veuillez indiquer votre nom.',
+          message: t('pleaseEnterLastName'),
         },
       },
       editable: true,
@@ -50,12 +52,12 @@ export const SettingProfilScreen = ({ navigation }) => {
     },
     {
       name: 'firstname',
-      label: 'Prénom',
+      label: t('firstname'),
       type: 'text',
       validation: {
         required: {
           value: true,
-          message: 'Veuillez indiquer votre prénom.',
+          message: t('pleaseEnterFirstName'),
         },
       },
       editable: true,
@@ -64,34 +66,33 @@ export const SettingProfilScreen = ({ navigation }) => {
     },
     {
       name: 'phone',
-      label: user.phone ? 'Numéro de téléphone mobile' : '',
+      label: user.phone ? t('mobilePhoneNumber') : '',
       type: 'tel',
       validation: {
         required: {
           value: user.phone ? true : false,
-          message: 'Veuillez indiquer un numéro de téléphone.',
+          message: t('pleaseEnterPhoneNumber'),
         },
         pattern: {
           value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-          message: 'Veuillez indiquer un numéro valide.',
+          message: t('pleaseEnterValidNumber'),
         },
       },
-      options: ['Direction', 'Marketing', 'Commercial', 'R&D'],
       editable: true,
       defaultValue: user.phone || '',
     },
     {
       name: 'email',
-      label: 'Email',
+      label: t('email'),
       type: 'text',
       validation: {
         required: {
           value: true,
-          message: 'Veuillez indiquer votre adresse e-mail.',
+          message: t('pleaseEnterEmail'),
         },
         pattern: {
           value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-          message: 'Veuillez indiquer une adresse e-mail valide.',
+          message: t('pleaseEnterValidEmail'),
         },
       },
       editable: false,
@@ -102,12 +103,12 @@ export const SettingProfilScreen = ({ navigation }) => {
   const SettingProfilScreenFormSeller = [
     {
       name: 'lastname',
-      label: 'Nom',
+      label: t('lastname'),
       type: 'text',
       validation: {
         required: {
           value: true,
-          message: 'Veuillez indiquer votre nom.',
+          message: t('pleaseEnterLastName'),
         },
       },
       editable: true,
@@ -116,12 +117,12 @@ export const SettingProfilScreen = ({ navigation }) => {
     },
     {
       name: 'firstname',
-      label: 'Prénom',
+      label: t('firstname'),
       type: 'text',
       validation: {
         required: {
           value: true,
-          message: 'Veuillez indiquer votre prénom.',
+          message: t('pleaseEnterFirstName'),
         },
       },
       editable: true,
@@ -137,7 +138,7 @@ export const SettingProfilScreen = ({ navigation }) => {
     },
     {
       name: 'websiteUrl',
-      label: 'Site internet',
+      label: t('website'),
       type: 'text',
       editable: true,
       defaultValue: user.websiteUrl || '',
@@ -158,7 +159,7 @@ export const SettingProfilScreen = ({ navigation }) => {
     },
     {
       name: 'bio',
-      label: 'Bio',
+      label: t('bio'),
       type: 'textarea',
       editable: true,
       defaultValue: user.bio || '',
@@ -174,31 +175,30 @@ export const SettingProfilScreen = ({ navigation }) => {
       name: 'role',
       label: user.role,
       type: 'select',
-      options: ['Direction', 'Marketing', 'Commercial', 'R&D'],
+      options: [t('management'), t('marketing'), t('sales'), t('research')],
       editable: true,
       defaultValue: user.role,
     },
     {
       name: 'phone',
-      label: 'Numéro de téléphone mobile',
+      label: t('mobilePhoneNumber'),
       type: 'tel',
       validation: {
         required: {
           value: true,
-          message: 'Veuillez indiquer un numéro de téléphone.',
+          message: t('pleaseEnterPhoneNumber'),
         },
         pattern: {
           value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-          message: 'Veuillez indiquer un numéro valide.',
+          message: t('pleaseEnterValidNumber'),
         },
       },
-      options: ['Direction', 'Marketing', 'Commercial', 'R&D'],
       editable: true,
       defaultValue: user.phone,
     },
     {
       name: 'email',
-      label: user.email,
+      label: t('email'),
       type: 'text',
       editable: false,
       defaultValue: user.email,
@@ -223,8 +223,6 @@ export const SettingProfilScreen = ({ navigation }) => {
       websiteUrl: user.websiteUrl || null,
     },
   });
-
-  const [refreshCounter, setRefreshCounter] = useState(0);
 
   const setProfilPicture = async () => {
     const result = await launchImageLibrary({
@@ -268,7 +266,6 @@ export const SettingProfilScreen = ({ navigation }) => {
       .then((res) => res)
       .then((data) => {
         setImageUri(null);
-        // setRefreshCounter(prevCounter => prevCounter + 1);
         Toast.show({
           type: 'toastSuccess',
           text1: data.message,
@@ -358,7 +355,7 @@ export const SettingProfilScreen = ({ navigation }) => {
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Valider"
+                  title={t('submit')}
                   onPress={handleSubmit(handleProfilSetting)}
                   loading={isLoading}
                 />

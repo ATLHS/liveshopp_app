@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Image,
   Keyboard,
@@ -16,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import colors from '../../styles/colors';
 
 export const BidConfirmationScreen = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [selectedOffer, setSelectedOffer] = useState({});
 
@@ -42,7 +44,7 @@ export const BidConfirmationScreen = ({ navigation, route }) => {
                   fontSize: 30,
                   fontWeight: 900,
                 }}>
-                Félicitations!
+                {t('congratulations')}
               </Text>
               <View style={{ marginTop: 20 }}>
                 <Image
@@ -69,7 +71,7 @@ export const BidConfirmationScreen = ({ navigation, route }) => {
                   color: 'grey',
                   marginBottom: 15,
                 }}>
-                Vous êtes maintenant dans la course pour
+                {t('youAreNowInTheRunningFor')}
               </Text>
               <Text
                 style={{
@@ -91,8 +93,7 @@ export const BidConfirmationScreen = ({ navigation, route }) => {
                   marginBottom: 15,
                 }}>
                 {' '}
-                À la fin de l'enchère, nous vous révélerons si vous avez atteint le prix de réserve
-                fixé par le vendeur.
+                {t('atTheEndOfTheAuction')}
               </Text>
               <Text
                 style={{
@@ -102,7 +103,7 @@ export const BidConfirmationScreen = ({ navigation, route }) => {
                   color: 'grey',
                   marginBottom: 15,
                 }}>
-                Bonne chance !
+                {t('goodLuck')}
               </Text>
             </View>
           </View>

@@ -14,10 +14,10 @@ router.get('/get-user-order', verifyJwt, async (req, res) => {
       return res.status(200).json({ order });
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -34,14 +34,14 @@ router.post('/update-order-status', verifyJwt, async (req, res) => {
     if (order) {
       return res.status(200).json({
         order,
-        message: `L'article ${req.body.data.productName} a bien été mis à jour avec le statut : Expédié.`,
+        message: req.t('articleUpdatedStatusShipped', { productName: req.body.data.productName }),
       });
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

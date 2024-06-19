@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import BottomSheet from 'react-native-simple-bottom-sheet';
@@ -23,6 +24,7 @@ import SettingsScreen from '../SettingsScreen/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 export const SellerStacks = ({ navigation }) => {
+  const { t } = useTranslation();
   const panelRef = useRef(null);
 
   const createNewLive = () => {
@@ -47,7 +49,7 @@ export const SellerStacks = ({ navigation }) => {
         }}>
         <Tab.Screen
           options={{
-            title: 'LIVES',
+            title: t('lives').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faHome}
@@ -66,7 +68,7 @@ export const SellerStacks = ({ navigation }) => {
         />
         <Tab.Screen
           options={{
-            title: 'MES LIVES',
+            title: t('myLives').toUpperCase(),
             tabBarIcon: () => (
               <FontAwesomeIcon
                 icon={faTowerBroadcast}
@@ -92,7 +94,7 @@ export const SellerStacks = ({ navigation }) => {
 
         <Tab.Screen
           options={{
-            title: 'MES COMMANDES',
+            title: t('myOrders').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faBoxOpen}
@@ -107,7 +109,7 @@ export const SellerStacks = ({ navigation }) => {
 
         <Tab.Screen
           options={{
-            title: 'MON PROFIL',
+            title: t('myProfile').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faUser}
@@ -147,7 +149,7 @@ export const SellerStacks = ({ navigation }) => {
                 panelRef.current?.togglePanel();
                 createNewLive();
               }}>
-              <Text style={styles.title}>Créer un live</Text>
+              <Text style={styles.title}>{t('createALive')}</Text>
             </TouchableOpacity>
             {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
             {/*<TouchableOpacity*/}

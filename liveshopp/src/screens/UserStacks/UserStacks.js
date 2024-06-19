@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
@@ -15,6 +16,7 @@ import SettingsScreen from '../SettingsScreen/SettingsScreen';
 const Tab = createBottomTabNavigator();
 
 const UserStacks = ({ navigation }) => {
+  const { t } = useTranslation();
   return (
     <AutocompleteDropdownContextProvider>
       <Tab.Navigator
@@ -26,7 +28,7 @@ const UserStacks = ({ navigation }) => {
         }}>
         <Tab.Screen
           options={{
-            title: 'LIVES',
+            title: t('lives').toUpperCase(),
             tabBarIcon: ({ size }) => (
               <FontAwesomeIcon
                 icon={faHome}
@@ -45,7 +47,7 @@ const UserStacks = ({ navigation }) => {
         />
         <Tab.Screen
           options={{
-            title: 'MES COMMANDES',
+            title: t('myOrders').toUpperCase(),
             tabBarIcon: ({ color, size }) => (
               <FontAwesomeIcon
                 icon={faBoxOpen}
@@ -59,7 +61,7 @@ const UserStacks = ({ navigation }) => {
         />
         <Tab.Screen
           options={{
-            title: 'MON PROFIL',
+            title: t('myProfile').toUpperCase(),
             tabBarIcon: ({ size }) => (
               <FontAwesomeIcon
                 icon={faUser}

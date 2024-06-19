@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -19,23 +20,23 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
 
-const EmailVerificationCodeSchema = [
-  {
-    name: 'code',
-    label: '',
-    type: 'code',
-    autoFocus: true,
-    validation: {
-      required: 'Indiquez le code reçu par e-mail.',
-      minLength: {
-        value: 4,
-        message: 'Indiquez le code reçu par e-mail.',
+export const EmailVerificationCode = ({ navigation, route }) => {
+  const { t } = useTranslation();
+  const EmailVerificationCodeSchema = [
+    {
+      name: 'code',
+      label: '',
+      type: 'code',
+      autoFocus: true,
+      validation: {
+        required: t('emailVerificationCode'),
+        minLength: {
+          value: 4,
+          message: t('emailVerificationCode'),
+        },
       },
     },
-  },
-];
-
-export const EmailVerificationCode = ({ navigation, route }) => {
+  ];
   const { handleSubmit, control } = useForm();
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -93,7 +94,9 @@ export const EmailVerificationCode = ({ navigation, route }) => {
             <View style={styles.formContainer}>
               <View style={styles.headlineContainer}>
                 <Text style={styles.headline}>
-                  {`Entrez le code de ${resetPassword ? 'vérification' : 'confirmation'}.`}
+                  {t('enterCode', {
+                    codeType: t(`${resetPassword ? 'verification' : 'confirmation'}`),
+                  })}
                 </Text>
               </View>
               <View style={styles.helper}>
@@ -107,7 +110,7 @@ export const EmailVerificationCode = ({ navigation, route }) => {
               </View>
               <View style={styles.action}>
                 <ContainedButton
-                  title="Terminez l’inscription"
+                  title={t('completeRegistration')}
                   onPress={handleSubmit(
                     resetPassword ? handleResetPassword : handleEmailVerificationCode,
                   )}

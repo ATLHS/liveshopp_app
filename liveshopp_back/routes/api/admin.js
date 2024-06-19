@@ -13,7 +13,7 @@ router.get('/get-banned-users', verifyJwt, async (req, res) => {
     return res.status(200).json({ bannedUsers });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -32,17 +32,19 @@ router.post('/unban-user', verifyJwt, async (req, res) => {
 
         if (bannedUser) {
           return res.status(200).json({
-            message: `L'utilisateur ${customer.company_name || customer.firstname} n'est plus banni`,
+            message: req.t('userUnbanned', {
+              username: customer.company_name || customer.firstname,
+            }),
             bannedUsers,
           });
         }
       }
     }
 
-    return res.status(400).json({ message: 'Oops ! Un probleme est survenu, réessayez plus tard...' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -71,7 +73,9 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
     if (customer) {
       if (customer.isBanned) {
         return res.status(400).json({
-          message: `L'utilisateur ${customer.company_name || customer.firstname} est déjà banni`,
+          message: req.t('userAlreadyBanned', {
+            username: customer.company_name || customer.firstname,
+          }),
         });
       }
 
@@ -91,16 +95,18 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
         if (updatedCustomer) {
           io.emit('banUser', { updatedCustomer, liveData });
           return res.status(200).json({
-            message: `L'utilisateur ${customer.company_name || customer.firstname} a bien été banni`,
+            message: req.t('userSuccessfullyBannedd', {
+              username: customer.company_name || customer.firstname,
+            }),
           });
         }
       }
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -111,7 +117,7 @@ router.get('/get-flagged-user', verifyJwt, async (req, res) => {
     return res.status(200).json({ flaggedUsers });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

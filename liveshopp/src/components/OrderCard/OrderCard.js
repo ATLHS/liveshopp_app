@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { faLocationDot, faStore, faTruck, faTruckFast } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +14,7 @@ const OrderCard = ({
   modalVisible,
   enableActionOnOrder,
 }) => {
+  const { t } = useTranslation();
   const deliveryStatutIcon = (deliveryStatus) => {
     return deliveryStatus === "En attente d'expédition" ? faTruck : faTruckFast;
   };
@@ -98,7 +100,7 @@ const OrderCard = ({
                       fontSize: 14,
                       fontWeight: '800',
                     }}>
-                    Réf :{' '}
+                    {t('ref')} :{' '}
                   </Text>
                   <Text
                     style={{

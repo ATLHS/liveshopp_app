@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Keyboard,
@@ -26,6 +27,7 @@ import { checkAndUpdateLiveStatus } from '../../utils/checkAndUpdateLiveStatus';
 import renderLives from '../../utils/renderLives';
 
 export const CommingSoonLives = ({ navigation }) => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { sellerLives } = useSelector((state) => state.lives);
   const [modalVisible, setModalVisible] = useState(false);
@@ -102,7 +104,7 @@ export const CommingSoonLives = ({ navigation }) => {
                           textAlign: 'center',
                           fontFamily: 'FugazOne-Regular',
                         }}>
-                        SUPRIMER LE LIVE :{' '}
+                        {t('deleteLivePrompt').toUpperCase()}{' '}
                       </Text>
                       <Text
                         style={{
@@ -187,10 +189,7 @@ export const CommingSoonLives = ({ navigation }) => {
                   <></>
                 )}
                 {!upComingLives.length && !isLoading && (
-                  <NoData
-                    title={"Vous n'avez aucun live terminé"}
-                    message={'Tous vos lives terminé \n apparaîtront ici.'}
-                  />
+                  <NoData title={t('noLiveUpcoming')} message={t('allLivesUpcoming')} />
                 )}
               </View>
             </>

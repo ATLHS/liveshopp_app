@@ -25,7 +25,7 @@ router.post('/create', verifyJwt, upload.single('video'), async (req, res) => {
     const videoFile = req.file;
 
     if (!seller || !videoFile) {
-      return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+      return res.status(400).json({ message: req.t('errorTryAgainLater') });
     }
 
     const generateUid = generateUniqueId({
@@ -64,11 +64,11 @@ router.post('/create', verifyJwt, upload.single('video'), async (req, res) => {
 
     return res.status(200).json({
       auctionVideos: videos,
-      message: 'Votre vidéo enchère a bien été créée !',
+      message: req.t('auctionVideoCreatedSuccessfully'),
     });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -80,10 +80,10 @@ router.get('/get-seller-auction-video', verifyJwt, async (req, res) => {
       return res.status(200).json({ auctionVideos: sellerAuctionVideo });
     }
 
-    return res.status(400).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(400).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -98,7 +98,7 @@ router.post('/handle-ending-auction-video', verifyJwt, async (req, res) => {
     return res.status(200).json({ auctionVideos: sellersAuctionVideo });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -110,7 +110,7 @@ router.get('/get-all-seller-auction-video', verifyJwt, async (req, res) => {
     return res.status(200).json({ auctionVideos: sellersAuctionVideo });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 
@@ -177,7 +177,7 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
     return res.status(200).json({ auctionVideos: sellersAuctionVideos });
   } catch (error) {
     Sentry.captureException(error);
-    return res.status(500).json({ message: 'Un problème est survenu, réessayez plus tard.' });
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
 });
 

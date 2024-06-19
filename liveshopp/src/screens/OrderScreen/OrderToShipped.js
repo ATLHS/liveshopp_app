@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Keyboard,
@@ -25,6 +26,7 @@ import orderService from '../../services/order';
 import colors from '../../styles/colors';
 
 const OrderToShipped = () => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { initialOrder } = useSelector((state) => state.order);
   const [modalVisible, setModalVisible] = useState(false);
@@ -84,20 +86,20 @@ const OrderToShipped = () => {
               <Pressable onPress={() => setModalVisible(false)} style={styles.modalBackground}>
                 <View style={styles.modalContent}>
                   <View style={styles.modalTextContainer}>
-                    <Text style={styles.modalText}>CONFIRMER L'ENVOI DE L'ARTICLE : </Text>
+                    <Text style={styles.modalText}>{t('confirmShipmentOfItem')}</Text>
                     <Text style={styles.modalProduct}>{selectedOrder.productName}</Text>
-                    <Text style={styles.modalAlert}>Attention cette action est définitive</Text>
+                    <Text style={styles.modalAlert}>{t('actionPermanentWarning')}</Text>
                   </View>
                   <View style={styles.modalButtons}>
                     <TouchableOpacity
                       style={styles.modalButton}
                       onPress={() => setModalVisible(!modalVisible)}>
-                      <Text style={styles.modalButtonText}>Annulé</Text>
+                      <Text style={styles.modalButtonText}>{t('cancel')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.modalButton}
                       onPress={() => updateOrderStatusHasShipped(selectedOrder)}>
-                      <Text style={styles.modalButtonText}>Confirmé</Text>
+                      <Text style={styles.modalButtonText}>{t('confirmed')}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -117,14 +119,7 @@ const OrderToShipped = () => {
                 (order) =>
                   (order.seller_id || order.seller._id) === user.id &&
                   order.deliveryStatut === "En attente d'expédition",
-              ).length && (
-                <NoData
-                  title={"Vous n'avez aucun article à expédier."}
-                  message={
-                    'Les articles vendus lors de vos enchères et à expédier apparaîtront ici.'
-                  }
-                />
-              )}
+              ).length && <NoData title={t('noItemsToShip')} message={t('itemsSoldAndToShip')} />}
               {isLoading && (
                 <View style={styles.loadingContainer}>
                   <ActivityIndicator size="large" color={colors.DARK} />

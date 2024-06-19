@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -19,22 +20,23 @@ import { store } from '../../redux/store';
 import customer from '../../services/customer';
 import colors from '../../styles/colors';
 
-const ShippingAddressFormSchema = () => [
-  {
-    name: 'shipping_address',
-    label: 'Adresse de livraison',
-    type: 'places',
-    validation: {
-      required: {
-        value: true,
-        message: 'Veuillez indiquer votre adresse de livraison.',
-      },
-    },
-    editable: true,
-  },
-];
-
 export const SettingShippingAddress = ({ navigation }) => {
+  const { t } = useTranslation();
+  const ShippingAddressFormSchema = () => [
+    {
+      name: 'shipping_address',
+      label: t('deliveryAddress'),
+      type: 'places',
+      validation: {
+        required: {
+          value: true,
+          message: t('provideDeliveryAddress'),
+        },
+      },
+      editable: true,
+    },
+  ];
+
   const { handleSubmit, control } = useForm({
     defaultValues: {
       shipping_address: store.getState().user.user.shipping_address,
@@ -79,7 +81,7 @@ export const SettingShippingAddress = ({ navigation }) => {
             </View>
             <View style={styles.action}>
               <ContainedButton
-                title="Valider"
+                title={t('submit')}
                 onPress={handleSubmit(handleShippingAddress)}
                 loading={isLoading}
               />

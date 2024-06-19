@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
@@ -21,8 +22,7 @@ import customer from '../../services/customer';
 import colors from '../../styles/colors';
 
 export const SettingShippingAddress = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [blockedUser, setBlockedUser] = useState([]);
 
@@ -33,7 +33,6 @@ export const SettingShippingAddress = ({ navigation }) => {
         .getBlockedUser()
         .then((res) => res)
         .then((data) => {
-          console.log(data);
           setBlockedUser(data.blockedUser.concat(data.blockedSeller));
           setIsLoading(false);
         })
@@ -48,7 +47,7 @@ export const SettingShippingAddress = ({ navigation }) => {
     setIsLoading(true);
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Débloquer cet utilisateur'],
+        options: [t('cancel'), t('unblockUser')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -132,7 +131,7 @@ export const SettingShippingAddress = ({ navigation }) => {
                         }}>
                         Profil :{' '}
                       </Text>
-                      {blocked.profil === 'seller' ? 'Vendeur' : 'Utilisateur'}
+                      {blocked.profil === 'seller' ? t('seller') : t('user')}
                     </Text>
                   </View>
                 </TouchableOpacity>

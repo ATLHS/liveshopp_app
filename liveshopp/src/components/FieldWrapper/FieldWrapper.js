@@ -1,25 +1,19 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { Link } from '@react-navigation/native';
 
 import colors from '../../styles/colors';
-// FIXME
-//
-// Previously, we used `@hookform/error-message`
-// Which required react = 16 incompatible with `react-native` 0.74
-// Now it's temporarily disabled to remove the package.
-// We should find a better solution.
-//
-// import {ErrorMessage} from '@hookform/error-message';
-//
 import FormConstructor from '../FormConstructor/FormConstructor';
 import MessageHelper from '../MessageHelper/MessageHelper';
 
 const FieldWrapper = ({ control, schema }) => {
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
+  const { t } = useTranslation();
+
   return schema.map((field, idx) => (
     <View key={idx}>
       <Controller
@@ -40,9 +34,7 @@ const FieldWrapper = ({ control, schema }) => {
                     <View>
                       <Text style={{ color: colors.LIGHT }}>{field.helper.helperMessage1}</Text>
                       <Text style={{ color: 'grey' }}>
-                        <Link to={{ screen: 'rgpdScreen' }}>
-                          conditions générales d’utilisation
-                        </Link>
+                        <Link to={{ screen: 'rgpdScreen' }}>{t('termsAndConditions')}</Link>
                       </Text>
                       <Text style={{ color: colors.LIGHT }}>{field.helper.helperMessage2}</Text>
                     </View>

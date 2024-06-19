@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import colors from '../../styles/colors';
 
 const SelectType = ({ inputField, field, fieldState }) => {
-  const { error } = fieldState;
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   return (
     <SelectDropdown

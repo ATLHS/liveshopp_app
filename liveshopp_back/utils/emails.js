@@ -1,148 +1,115 @@
 const Sentry = require('@sentry/node');
 const { log } = require('../middleware/logger');
 const { mailer } = require('./services');
+const i18next = require('i18next');
 
 const sendCodeToConfirmEmailRegistration = async (userEmail, code) => {
-  const template = `<div>Bonjour,</div><br/>
-                    <div>Votre code de confirmation Liveshopp est : </div><br/>
-                    <b style="font-size: 25px">${code}</b><br/><br/>
-                    <div>L'équipe Liveshopp 👋</div>`;
+  const template = i18next.t('confirmationEmailBody', { code });
 
-  await sendEmail(userEmail, 'Code de confirmation', template);
+  await sendEmail(userEmail, i18next.t('confirmationCode'), template);
 };
 
 const sendCodeToResetPassword = async (userEmail, code) => {
-  const template = `<div>Bonjour,</div><br/>
-                    <div>Votre code de vérification Liveshopp est : </div><br/>
-                    <b style="font-size: 25px">${code}</b><br/><br/>
-                    <div>L'équipe Liveshopp 👋</div>`;
+  const template = i18next.t('verificationEmail', { code });
 
-  await sendEmail(userEmail, 'Code de vérification', template);
+  await sendEmail(userEmail, i18next.t('verificationCode'), template);
 };
 
 const sendWelcomeEmail = async (customer) => {
-  const template = `<div>Bonjour ${customer.firstname},</div><br/>
-                    <div>Nous sommes très heureux d’accueillir de nouveaux utilisateurs et pour ce faire, nous sommes disponibles pour toute question ou information dont vous auriez besoin à propos de l’application. <br/><br/> 
-                    Liveshopp est l’app qui réunit la communauté de la mode en live et qui vous permet d’échanger en direct avec votre vendeur préféré, et de pouvoir faire de bonnes affaires en achetant l’article sur lequel vous avez eu un coup de coeur en un clic 😍<br/><br/> 
-                    Pour bien débuter sur Liveshopp et pouvoir commencer à enchérir sur des articles pendant les lives, n’oubliez pas de renseigner : <br/><br/>
-                    👍 : Votre adresse de livraison, qui sera utile au vendeur pour vous envoyer les articles <br/><br/>
-                    ✌️ : Un moyen de paiement, qui vous permettra d’acheter en direct. <br/><br/>
-                    Voilà ! Bons lives ${customer.firstname} 🔥 !<br/><br/>
-                    Sofiane, fondateur chez Liveshopp</div>`;
+  const template = i18next.t('welcomeEmail', { firstname: customer.firstname });
 
-  await sendEmail(customer.email, 'Bienvenue sur Liveshopp 👋!', template);
+  await sendEmail(customer.email, i18next.t('welcomeMessage'), template);
 };
 
 const sendNoBidNotificationEmail = async (auctionItem) => {
-  const template = `<div>Bonjour ${auctionItem.seller_id.company_name},</div><br/>
-                    <div>Nous souhaitions vous informer qu'à ce jour, aucune enchère n'a été placée sur votre article <strong>${auctionItem.productName}</strong>. Cependant, nous sommes heureux de constater que votre article a suscité un certain intérêt.<br/><br/> 
-                    Nous vous encourageons à re-proposer l'article aux enchères, éventuellement avec un prix de départ légèrement inférieur. Nous serions ravis de vous accompagner tout au long de ce processus.<br/><br/> 
-                    Si vous avez des questions ou besoin d'assistance supplémentaire, n'hésitez pas à nous contacter. Nous sommes là pour vous aider à chaque étape de la vente.<br/><br/>
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('auctionNotification', {
+    company_name: auctionItem.seller_id.company_name,
+    product_name: auctionItem.productName,
+  });
 
-  await sendEmail(auctionItem.seller_id.email, 'Aucune offre cette fois-ci.', template);
+  await sendEmail(auctionItem.seller_id.email, i18next.t('noBidsThisTime'), template);
 };
 
 const sendNoReservePriceReachedNotificationEmail = async (customer, product) => {
-  const template = `<div>Bonjour ${customer.company_name},</div><br/>
-                    <div>Nous tenions à vous informer que les enchères pour votre article <strong>${product.productName}</strong> se sont terminées récemment, malheureusement, aucun enchérisseur n'a atteint le prix de réserve que vous avez fixé.</div><br/><br/> 
-                    <div>Malgré cela, nous constatons que votre article a suscité un grand intérêt.<br/><br/> Si vous le souhaitez, nous vous encourageons à re-proposer l'article aux enchères avec un prix de réserve ajusté. Nous serions ravis de vous accompagner tout au long de ce processus.
-                    L'équipe Liveshopp<br/> application@liveshopp.fr</div>`;
+  const template = i18next.t('auctionEndNotification', {
+    company_name: customer.company_name,
+    product_name: product.productName,
+  });
 
-  await sendEmail(customer.email, 'Aucune offre au prix de réserve.', template);
+  await sendEmail(customer.email, i18next.t('noReservePriceBids'), template);
 };
 
 const sendEmailAfterBid = async (customer, product) => {
-  const template = `<div>Bonjour ${customer.firstname},</div><br/>
-                    <div>Votre offre actuelle d'un montant de <strong>${product.currentPrice} €</strong> pour l'article <strong>${product.productName}</strong> a bien été enregistrée et sera prise en compte à la clôture de l'enchère, sous réserve des conditions suivantes :<br/><br/> 
-                    <strong>1.</strong> Elle égale ou dépasse le prix de réserve fixé par le vendeur.<br/> 
-                    <strong>2.</strong> Aucune offre supérieure à la votre n'est soumise pendant la durée de l'enchère.<br/> 
-                    <strong>3.</strong> Votre moyen de paiement est valide.<br/><br/> 
-                    Si votre offre répond à ces critères, vous n'aurez rien à faire ! Le montant de votre offre sera automatiquement débité et vous recevrez un email de confirmation.<br/><br/>
-                    Nous vous remercions pour votre confiance. Pour toute question supplémentaire, n'hésitez pas à nous contacter.<br/><br/>
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('bidConfirmation', {
+    firstname: customer.firstname,
+    current_price: product.currentPricee,
+    product_name: product.productName,
+  });
 
-  await sendEmail(customer.email, 'Offre prise en compte.', template);
+  await sendEmail(customer.email, i18next.t('bidAcknowledged'), template);
 };
 
 const sendEmailToInformOutbid = async (customer, product) => {
-  const template = `<div>Bonjour ${customer.firstname},</div><br/>
-                    <div>Nous tenions à vous informer qu'un autre utilisateur a dépassé votre offre dans l'enchère pour l'article <strong>${product.productName}</strong>. Ne vous laissez pas faire !<br/><br/> 
-                    À vous de jouer !<br/> <br/> 
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('outbidNotification', {
+    firstname: customer.firstname,
+    product_name: product.productName,
+  });
 
-  await sendEmail(customer.email, 'Vous avez été dépassé !', template);
+  await sendEmail(customer.email, i18next.t('outbidMessage'), template);
 };
 
 const sendBidRejectedDueToLowReservePrice = async (auction) => {
-  const template = `<div>Bonjour ${auction.userId.firstname},</div><br/>
-                    <div>Malheureusement, votre offre sur l'article <strong>${auction.auctionItemId.productName}</strong> n'a pas été acceptée cette fois-ci car elle n'a pas réussi à atteindre le prix de réserve fixé par le vendeur.<br/><br/> 
-                    Ne vous découragez pas ! Continuez de participer à nos enchères et qui sait, vous pourriez décrocher une pépite la prochaine fois !<br/><br/> 
-                          
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('bidNotAccepted', {
+    firstname: auction.userId.firstname,
+    product_name: auction.auctionItemId.productName,
+  });
 
-  await sendEmail(auction.userId.email, "Oops! Votre offre n'a pas passé le cap.", template);
+  await sendEmail(auction.userId.email, i18next.t('bidDidNotMakeIt'), template);
 };
 
 const sendPaymentIssueEmail = async (auction) => {
-  const template = `<div>Bonjour ${auction.userId.firstname},</div><br/>
-                    <div>Nous tenions simplement à vous faire part d'un petit hic concernant votre enchère pour l'article <strong>${auction.auctionItemId.productName}</strong>.<br/>Il semble qu'il y ait eu un petit souci avec le traitement de votre paiement.<br/>
-                    En raison de ce contretemps, votre enchère n'a malheureusement pas pu être validée.<br/><br/>
-                    Prenez juste quelques instants pour vérifier les détails de votre mode de paiement et assurez-vous qu'elle est prête à être utiliser lors de vos prochaines enchères.<br/><br/>
-                          
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('paymentIssue', {
+    firstname: auction.userId.firstname,
+    product_name: auction.auctionItemId.productName,
+  });
 
-  await sendEmail(auction.userId.email, 'Petite alerte au sujet de votre enchère.', template);
+  await sendEmail(auction.userId.email, i18next.t('bidAlertMessage'), template);
 };
 
 const sendWinningBidConfirmationEmail = async (auction) => {
-  const template = `<div>Bonjour ${auction.userId.firstname},</div><br/>
-                    <div>Félicitations ! Nous sommes ravis de vous informer que vous avez remporté l'enchère pour l'article <strong>${auction.auctionItemId.productName}</strong> sur Liveshopp !<br/><br/>
-                    Vous pouvez désormais suivre l'avancement de la livraison de votre article directement depuis l'application, dans la section <strong>Mes Commandes</strong> de l'application. Nous vous tiendrons informé(e) de chaque étape du processus de livraison.<br/><br/>
-                    Encore une fois, félicitations pour votre acquisition !<br/><br/>
-                          
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('congratulations', {
+    firstname: auction.userId.firstname,
+    product_name: auction.auctionItemId.productName,
+  });
 
-  await sendEmail(auction.userId.email, "Vous avez remporté l'enchère 🎉", template);
+  await sendEmail(auction.userId.email, i18next.t('wonAuctionMessage'), template);
 };
 
 const sendAuctionSaleNotificationEmail = async (auctionItem, auction) => {
-  const template = `<div>Bonjour ${auction.auctionItemId.sellerName},</div><br/>
-                    <div>Félicitations ! Nous sommes heureux de vous informer que votre article <strong>${auction.auctionItemId.productName}</strong> a été vendu aux enchères avec succès sur Liveshopp 🎉<br/><br/>
-                    Toutes les informations concernant la vente sont disponibles dans la section <strong>Mes Commandes</strong> de l'application. N'oubliez pas de valider l'envoi de l'article une fois expédié.<br/><br/>
-                          
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('auctionSoldNotification', {
+    seller_name: auction.auctionItemId.sellerName,
+    product_name: auction.auctionItemId.productName,
+  });
 
-  await sendEmail(auctionItem.seller_id.email, 'Votre article a été vendu 🎉', template);
+  await sendEmail(auctionItem.seller_id.email, i18next.t('itemSoldMessage'), template);
 };
 
 const sendNoShippingAddressEmail = async (auction) => {
-  const template = `<div>Bonjour ${auction.userId.firstname},</div><br/>
-                    <div>Nous tenons à vous informer que votre enchère pour l'article <strong>${auction.auctionItemId.productName}</strong> n'a pas pu être acceptée car vous n'avez pas spécifié d'adresse de livraison.<br/>
-                    En conséquence, votre enchère a été annulée. Si vous souhaitez participer à d'autres enchères à l'avenir, veuillez vous assurer de fournir une adresse de livraison valide.<br/><br/>
-                          
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('auctionBidCancelled', {
+    firstname: auction.userId.firstname,
+    product_name: auction.auctionItemId.productName,
+  });
 
-  await sendEmail(auction.userId.email, 'Enchère annulée.', template);
+  await sendEmail(auction.userId.email, i18next.t('auctionCancelledMessage'), template);
 };
 
 const sendBidOutbidEmailNotification = async (email, auction) => {
-  const template = `<div>Bonjour ${auction.userId.firstname},</div><br/>
-                    <div>L'enchère sur l'article <strong>${auction.auctionItemId.productName}</strong> est maintenant terminée !<br/>
-                    Bien que vous n'ayez pas décroché la victoire cette fois-ci, ne baissez pas les bras ! Continuez à explorer les enchères pour dénicher des pépites sur LiveShopp.<br/><br/>
-                          
-                    L'équipe Liveshopp<br/>
-                    application@liveshopp.fr</div>`;
+  const template = i18next.t('auctionEndedNotification', {
+    firstname: auction.userId.firstname,
+    product_name: auction.auctionItemId.productName,
+  });
 
-  await sendEmail(auction.userId.email, 'Enchère Terminée.', template);
+  await sendEmail(auction.userId.email, i18next.t('auctionEndedMessage'), template);
 };
 
 const sendEmail = async (email, subject, html) => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActionSheetIOS,
   Alert,
@@ -22,6 +23,7 @@ import admin from '../../services/admin';
 import colors from '../../styles/colors';
 
 export const AdminBlockedUsers = () => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [blockedUser, setBlockedUser] = useState([]);
 
@@ -48,7 +50,7 @@ export const AdminBlockedUsers = () => {
     setIsLoading(true);
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: ['Annuler', 'Débloquer cet utilisateur'],
+        options: [t('cancel'), t('unblockUser')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
@@ -56,7 +58,7 @@ export const AdminBlockedUsers = () => {
       (buttonIndex) => {
         if (buttonIndex === 0) {
           return;
-        } else if (buttonIndex === 1)
+        } else if (buttonIndex === 1) {
           admin
             .unbanUser(data)
             .then((res) => res)
@@ -69,6 +71,7 @@ export const AdminBlockedUsers = () => {
               setIsLoading(false);
               Alert.alert('', err.message, [{ text: 'Ok' }]);
             });
+        }
       },
     );
   };
@@ -113,7 +116,7 @@ export const AdminBlockedUsers = () => {
                             fontWeight: '500',
                             fontSize: 15,
                           }}>
-                          Pseudo :{' '}
+                          {t('username')} :{' '}
                         </Text>
                         {blocked.company_name || blocked.firstname}
                       </Text>
@@ -131,9 +134,9 @@ export const AdminBlockedUsers = () => {
                             fontWeight: '500',
                             fontSize: 15,
                           }}>
-                          Profil :{' '}
+                          {t('profile')} :{' '}
                         </Text>
-                        {blocked.profil === 'seller' ? 'Vendeur' : 'Utilisateur'}
+                        {blocked.profil === 'seller' ? t('seller') : t('user')}
                       </Text>
                     </View>
                     <FontAwesomeIcon icon={faLock} size={20} color={colors.DARK} />

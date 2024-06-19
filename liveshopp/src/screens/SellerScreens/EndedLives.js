@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,6 +18,7 @@ import colors from '../../styles/colors';
 import renderLives from '../../utils/renderLives';
 
 export const EndedLives = () => {
+  const { t } = useTranslation();
   const { sellerLives } = useSelector((state) => state.lives);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector((state) => state.user);
@@ -48,10 +50,7 @@ export const EndedLives = () => {
                 <></>
               )}
               {!endedLives.length && !isLoading && (
-                <NoData
-                  title={"Vous n'avez aucun live terminé"}
-                  message={'Tous vos lives terminés \n apparaîtront ici.'}
-                />
+                <NoData title={t('noLiveFinished')} message={t('allLivesFinished')} />
               )}
             </View>
           </TouchableWithoutFeedback>
