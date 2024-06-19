@@ -66,11 +66,11 @@ module.exports = (io) => {
 
       if (!channel.hostIsLive && user.profil === 'seller' && user.id === live.seller_id) {
         channel.hostIsLive = true;
-
         live.live_status = 'live';
+
         await live.save();
       }
-      log.info(`${live.live_status} : live status`);
+
       channel.auctionsStatus = live.live_status;
       await saveChannel(channel);
 
