@@ -236,7 +236,7 @@ export const LiveScreen = ({ navigation, route }) => {
   const showObjectionableAction = (item) => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
-        options: [t('cancel'), t('blockUser'), t('reportUserr')],
+        options: [t('cancel'), t('blockUser'), t('reportUser')],
         destructiveButtonIndex: 2,
         cancelButtonIndex: 0,
         userInterfaceStyle: 'light',
