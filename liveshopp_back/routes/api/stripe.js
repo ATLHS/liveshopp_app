@@ -14,6 +14,7 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
     const seller = await Seller.findById(id);
 
     const customer = user || seller;
+
     const stripeCustomer = await stripeUtils.retrieveCustomer(customer.stripeCustomerId);
 
     const ephemeralKey = await stripe.ephemeralKeys.create(

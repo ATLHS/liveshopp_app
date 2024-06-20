@@ -17,7 +17,9 @@ const createCustomer = async (customerData) => {
 
 const retrieveCustomer = async (id) => {
   try {
-    return await stripe.customers.retrieve(id);
+    return await stripe.customers.retrieve(id, {
+      apiKey: process.env.STRIPE_SECRET_KEY,
+    });
   } catch (error) {
     Sentry.captureException(error);
     return false;

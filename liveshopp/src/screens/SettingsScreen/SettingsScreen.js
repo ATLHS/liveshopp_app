@@ -96,6 +96,7 @@ function SettingsScreen({ navigation }) {
 
   const initializePaymentSheet = async () => {
     const { setupIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
+
     const { error } = await initPaymentSheet({
       merchantDisplayName: 'Liveshopp',
       customerId: customer,
