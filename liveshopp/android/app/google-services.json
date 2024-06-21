@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "361854214525",
+    "project_id": "liveshopp-firebase",
+    "storage_bucket": "liveshopp-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361854214525:android:c3d6446f174a8af5966c14",
+        "android_client_info": {
+          "package_name": "com.liveshopp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmie1xaQKXTGGyyd3gpj-czzRxCxO8eIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
