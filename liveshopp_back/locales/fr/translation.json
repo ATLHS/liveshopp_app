@@ -1,5 +1,5 @@
 {
-  "enterCodeEmail": "Entrez le code reçu à l'adresse e-mail",
+  "enterCodeEmail": "Entrez le code reçu à l'adresse e-mail : {{email}}",
   "errorTryAgainLater": "Un problème est survenu, réessayez plus tard.",
   "userUnbanned": "L'utilisateur {{username}} n'est plus banni.",
   "userAlreadyBanned": "L'utilisateur {{username}} est déjà banni.",
@@ -8,8 +8,8 @@
   "emailMustBeConfirmed": "Votre adresse e-mail doit être confirmée avant de vous connecter.",
   "incorrectEmailOrPassword": "Adresse e-mail ou mot de passe incorrect.",
   "userWithEmailExists": "Un utilisateur avec l'adresse e-mail : {{email}} existe déjà.",
-  "enterCodeReceivedAtEmail": "Entrez le code reçu à l'adresse e-mail : ${seller.email}.",
-  "enterVerificationCodeReceivedAtEmail": "Entrez le code de vérification reçu à l'adresse e-mail : ${updatedCustomer.email}.",
+  "enterCodeReceivedAtEmail": "Entrez le code reçu à l'adresse e-mail : {{email}}.",
+  "enterVerificationCodeReceivedAtEmail": "Entrez le code de vérification reçu à l'adresse e-mail : {{email}}.",
   "incorrectCodeTryAgain": "Code incorrect, veuillez réessayer.",
   "passwordResetSuccessfully": "Votre mot de passe a été réinitialisé avec succès 🎉",
   "profileUpdatedSuccessfully": "Votre profil a été modifié avec succès.",

@@ -1,5 +1,5 @@
 {
-  "enterCodeEmail": "Enter the code received at the email address",
+  "enterCodeEmail": "Enter the code received at the email address : {{email}",
   "errorTryAgainLater": "An error occurred, please try again later.",
   "userUnbanned": "The user {{username}} is no longer banned.",
   "userAlreadyBanned": "The user {{username}} is already banned.",

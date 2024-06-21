@@ -136,7 +136,7 @@ router.post('/user-signup', async (req, res) => {
         id: user.id,
         isConfirmed: user.isConfirmed,
       },
-      message: `${req.t('enterCodeEmail')} : ${user.email}`,
+      message: req.t('enterCodeEmail', { email }),
     });
   } catch (error) {
     Sentry.captureException(error);

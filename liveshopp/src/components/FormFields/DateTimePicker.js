@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
+import i18n from '../../../i18n';
 import colors from '../../styles/colors';
 
 const convertToParisDateTime = (date) => {
@@ -31,7 +32,7 @@ const DateTimePicker = ({ inputField, field }) => {
       <DatePicker
         style={inputField.style}
         minimumDate={initialDate}
-        locale={'fr'}
+        locale={i18n.language}
         date={initialDate}
         onDateChange={handleDateChange}
         theme={'auto'}
