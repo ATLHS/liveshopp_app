@@ -60,6 +60,8 @@ io.engine.on('connection_error', (err) => {
   log.debug(err.context); // some additional error context
 });
 
+app.set('trust proxy', 1);
+app.disable('x-powered-by');
 app.use(morganMiddleware);
 app.use(cors());
 app.use(
