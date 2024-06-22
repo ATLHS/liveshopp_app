@@ -20,7 +20,6 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		81ABF519AC6D2F8A59809EE0 /* Pods_liveshopp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96700DC6DFC0C0FA4539F9B /* Pods_liveshopp.framework */; };
 		A28E0057D0A14F7E82FEE142 /* FugazOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7C5D707359F4DF8B4730A58 /* FugazOne-Regular.ttf */; };
-		D83AC49A2BB3A279006D6B06 /* libreact-native-video.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D83AC4992BB3A279006D6B06 /* libreact-native-video.a */; };
 		DDED3A0B6C055BB3FD78E5B4 /* Pods_liveshopp_liveshoppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EEA5294E1C10A1D28BCEE83 /* Pods_liveshopp_liveshoppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -58,7 +57,6 @@
 		B7C5D707359F4DF8B4730A58 /* FugazOne-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FugazOne-Regular.ttf"; path = "../assets/fonts/FugazOne-Regular.ttf"; sourceTree = "<group>"; };
 		BEE1E61F02434B0CB0611FCA /* contact.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = contact.png; path = ../assets/fonts/contact.png; sourceTree = "<group>"; };
 		D5DA8BC568E849E796E5554D /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
-		D83AC4992BB3A279006D6B06 /* libreact-native-video.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-video.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E96700DC6DFC0C0FA4539F9B /* Pods_liveshopp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_liveshopp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -76,7 +74,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D83AC49A2BB3A279006D6B06 /* libreact-native-video.a in Frameworks */,
 				81ABF519AC6D2F8A59809EE0 /* Pods_liveshopp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,7 +116,6 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D83AC4992BB3A279006D6B06 /* libreact-native-video.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				E96700DC6DFC0C0FA4539F9B /* Pods_liveshopp.framework */,
 				4EEA5294E1C10A1D28BCEE83 /* Pods_liveshopp_liveshoppTests.framework */,
@@ -692,7 +688,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -775,7 +774,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
