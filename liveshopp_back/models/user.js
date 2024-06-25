@@ -18,6 +18,8 @@ const userSchema = new mongoose.Schema(
     blockedSeller: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Seller' }],
     isBanned: { type: Boolean, default: false },
     imageUrl: { type: String, default: '' },
+    notificationToken: { type: String },
+    notificationTokenUpdatedAt: { type: Date },
   },
   { timestamps: true },
 );

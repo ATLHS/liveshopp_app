@@ -160,6 +160,24 @@ router.post('/update-user-payment-method-status', verifyJwt, async (req, res) =>
   }
 });
 
+router.post('/update-customer-notification-token', verifyJwt, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).exec();
+    const seller = await UserSeller.findById(req.user.id).exec();
+    const customer = user || seller;
+
+    customer.notificationToken = req.body.token;
+    customer.notificationTokenUpdatedAt = Date.now();
+
+    await customer.save();
+
+    return res.sendStatus(200);
+  } catch (error) {
+    Sentry.captureException(error);
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
+  }
+});
+
 router.post('/get-customer', verifyJwt, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);

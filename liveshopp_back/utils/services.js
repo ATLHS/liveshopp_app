@@ -2,6 +2,8 @@ const { log } = require('../middleware/logger');
 const { mongoose } = require('mongoose');
 const nodemailer = require('nodemailer');
 const { createClient } = require('redis');
+const firebaseAdmin = require('firebase-admin/app');
+const { getMessaging } = require('firebase-admin/messaging');
 const { S3Client } = require('@aws-sdk/client-s3');
 const { Stripe } = require('stripe');
 
@@ -84,4 +86,12 @@ const stripe = registerService('stripe', () => {
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 });
 
-module.exports = { mailer, redis, s3, stripe };
+/**
+ * @type {import('firebase-admin/messaging').Messaging}
+ */
+const firebase = registerService('firebase', () => {
+  firebaseAdmin.initializeApp({ credential: firebaseAdmin.applicationDefault() });
+  return getMessaging();
+});
+
+module.exports = { firebase, mailer, redis, s3, stripe };

@@ -18,6 +18,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "firebase-admin": "^12.2.0",
     "flush-promises": "^1.0.2",
     "generate-unique-id": "^2.0.3",
     "i18next": "^23.11.5",
