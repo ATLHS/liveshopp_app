@@ -19,6 +19,11 @@ const customer = {
       .then(({ data }) => data)
       .catch(({ response }) => Promise.reject(response.data));
   },
+  updateCustomerNotificationToken(token) {
+    return axiosConfig
+      .post('/api/customer/update-customer-notification-token', { token })
+      .catch(({ response }) => Promise.reject(response.data));
+  },
   deleteCustomer(data) {
     return axiosConfig
       .post('/api/customer/delete-customer', { data })
