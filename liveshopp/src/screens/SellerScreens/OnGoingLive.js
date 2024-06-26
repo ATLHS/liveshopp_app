@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import {
   ImageBackground,
   Modal,
+  PermissionsAndroid,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -61,12 +63,25 @@ export const OnGoingLive = ({ navigation }) => {
     }, [isGone]),
   );
 
+  const getAndroidPermission = async () => {
+    if (Platform.OS === 'android') {
+      return await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      ]);
+    }
+  };
+
   const goLive = async (liveData) => {
     if (isJoin) {
       return;
     }
 
     try {
+      // Requesting access to Camera and Audio for Android sellers here
+      // Because it's buggy when requesting in LiveScreen just before Agora setup
+      await getAndroidPermission();
+
       socket.emit('joinChannel', { liveId: liveData._id, user });
       dispatch(setIsJoin(true));
       navigation.navigate('LiveScreen', {
