@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Keyboard,
   KeyboardAvoidingView,
+  PermissionsAndroid,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -99,6 +100,21 @@ export const SettingNewLive = ({ navigation }) => {
         setIsLoading(false);
       });
   };
+
+  const getAndroidPermission = async () => {
+    if (Platform.OS === 'android') {
+      return await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    // Requesting access to Camera and Audio for Android sellers here
+    // Because it's buggy when requesting in LiveScreen just before Agora setup
+    getAndroidPermission();
+  });
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
