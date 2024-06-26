@@ -189,8 +189,6 @@ const outlinedStyles = StyleSheet.create({
   containerPhoneField: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRightWidth: 1,
-    borderRightColor: colors.DARK,
     height: '100%',
     padding: 10,
   },
