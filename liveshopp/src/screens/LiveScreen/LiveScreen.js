@@ -229,8 +229,8 @@ export const LiveScreen = ({ navigation, route }) => {
     socket.emit('bid', { channelName, data });
   };
 
-  const emitNewLiveMessage = (message, liveData) => {
-    socket.emit('newLiveMessage', { user, message, liveData });
+  const emitNewLiveMessage = (message) => {
+    socket.emit('newLiveMessage', { user, message, channelName });
   };
 
   const showObjectionableAction = (item) => {
@@ -339,12 +339,7 @@ export const LiveScreen = ({ navigation, route }) => {
               onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
             />
           )}
-          {!isHost && (
-            <LiveChatTextInput
-              onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
-              live={liveData}
-            />
-          )}
+          {!isHost && <LiveChatTextInput onPress={(message) => emitNewLiveMessage(message)} />}
         </>
       );
     } else {

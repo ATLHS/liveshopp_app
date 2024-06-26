@@ -81,9 +81,9 @@ module.exports = (io) => {
     }
   };
 
-  const newLiveMessage = async function ({ user, message, liveData }) {
+  const newLiveMessage = async function ({ user, message, channelName }) {
     try {
-      const channel = await getChannel(liveData.channelName);
+      const channel = await getChannel(channelName);
       const pseudo = `${user.firstname} ${user.lastname.charAt(0)}`;
 
       const id = generateUniqueId({
@@ -100,7 +100,7 @@ module.exports = (io) => {
 
       await saveChannel(channel);
 
-      io.to(liveData.channelName).emit('channelData', channel);
+      io.to(channelName).emit('channelData', channel);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
