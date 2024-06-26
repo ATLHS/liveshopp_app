@@ -146,14 +146,16 @@ export const LiveScreen = ({ navigation, route }) => {
       if (liveData.currentAuction.currentAuctionStatus === 'stopping') {
         showCurrentLiveNotificationToast();
       }
-
-      if (!isHost) {
-        if (!user.hasValidPaymentMethod || !user.shipping_address) {
-          setModalVisible(true);
-        }
-      }
-    }, [liveData.currentAuction.currentAuctionStatus, user]),
+    }, [liveData.currentAuction.currentAuctionStatus]),
   );
+
+  useEffect(() => {
+    if (!isHost && user.profil !== 'admin') {
+      if (!user.hasValidPaymentMethod || !user.shipping_address) {
+        setModalVisible(true);
+      }
+    }
+  }, [user.hasValidPaymentMethod, user.shipping_addres]);
 
   // Start the engine
   useEffect(() => {
@@ -405,9 +407,9 @@ export const LiveScreen = ({ navigation, route }) => {
             <LinearGradient colorList={colorList} angle={90} />
           </View>
 
-          {user.profil !== 'admin' && (
-            <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
-          )}
+          {/*{user.profil !== 'admin' && (*/}
+          <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
+          {/*)}*/}
           {isHost && <CameraSwitch onPress={switchCamera} />}
         </View>
       </KeyboardAvoidingView>
