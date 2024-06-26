@@ -406,10 +406,7 @@ export const LiveScreen = ({ navigation, route }) => {
           <View style={styles.shadowGradient}>
             <LinearGradient colorList={colorList} angle={90} />
           </View>
-
-          {/*{user.profil !== 'admin' && (*/}
           <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
-          {/*)}*/}
           {isHost && <CameraSwitch onPress={switchCamera} />}
         </View>
       </KeyboardAvoidingView>
