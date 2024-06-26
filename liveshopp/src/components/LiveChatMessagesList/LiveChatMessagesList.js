@@ -1,4 +1,12 @@
-import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -72,8 +80,9 @@ const LiveChatMessagesList = ({
 
 const styles = StyleSheet.create({
   flatList: {
-    height: 200,
-    width: 323,
+    height: 230,
+    width: Dimensions.get('window').width,
+    paddingLeft: 30,
     backgroundColor: 'transparent',
   },
   container: {
