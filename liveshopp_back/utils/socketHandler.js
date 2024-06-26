@@ -5,7 +5,7 @@ const User = require('../models/user');
 const UserSeller = require('../models/seller');
 
 const { updateCustomer } = require('./updateCustomer');
-const { createChannel, getChannel, saveChannel, getChannels, updateTimer } = require('./channels');
+const { createChannel, getChannel, saveChannel, getChannels, updateTimer, addChatMessage } = require('./channels');
 const { log } = require('../middleware/logger');
 const { registerAuction } = require('./auctions');
 const Sentry = require('@sentry/node');
@@ -83,24 +83,22 @@ module.exports = (io) => {
 
   const newLiveMessage = async function ({ user, message, channelName }) {
     try {
-      const channel = await getChannel(channelName);
       const pseudo = `${user.firstname} ${user.lastname.charAt(0)}`;
-
       const id = generateUniqueId({
         length: 20,
         useLetters: false,
       });
-      channel.messages.push({
+      const payload = {
         userId: user.id,
         profil: user.profil,
         username: pseudo,
         message: message.live_message,
         id,
-      });
+      };
 
-      await saveChannel(channel);
+      await addChatMessage(channelName, payload);
 
-      io.to(channelName).emit('channelData', channel);
+      io.to(channelName).emit('newChatMessage', payload);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);

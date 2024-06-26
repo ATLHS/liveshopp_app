@@ -9,7 +9,13 @@ import { APP_STORE_BUNDLE_ID, PLAY_STORE_BUNDLE_ID } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { setIsGone, setIsJoin, setLiveData, setLives } from '../redux/slices/livesSlice';
+import {
+  setIsGone,
+  setIsJoin,
+  setLiveData,
+  setLives,
+  setNewChatMessage,
+} from '../redux/slices/livesSlice';
 import { setBlockedUser, setIsAuthenticate, setUser } from '../redux/slices/userSlice';
 import Loading from '../screens/Loading/Loading';
 import axiosConfig from '../services/config/axiosConfig';
@@ -72,7 +78,7 @@ const RootStack = ({ isLoading }) => {
     }
   }, [isAuthenticate]);
 
-  socket.on('banUser', async (data) => {
+  const logOutUser = async (data) => {
     try {
       if (data.updatedCustomer._id === user.id) {
         socket.emit('leaveRoom', {
@@ -108,31 +114,7 @@ const RootStack = ({ isLoading }) => {
     } catch (error) {
       console.error(e);
     }
-  });
-
-  socket.on('hasBeenBlocked', (blockedInfo) => {
-    try {
-      dispatch(setBlockedUser(blockedInfo));
-    } catch (error) {
-      console.error(e);
-    }
-  });
-
-  socket.on('channelData', (channelData) => {
-    try {
-      dispatch(setLiveData(channelData));
-    } catch (error) {
-      console.error(e);
-    }
-  });
-
-  socket.on('currentAuctionData', async (channelData) => {
-    try {
-      dispatch(setLiveData(channelData));
-    } catch (e) {
-      console.error(e);
-    }
-  });
+  };
 
   useEffect(() => {
     function onConnect() {
@@ -203,9 +185,48 @@ const RootStack = ({ isLoading }) => {
       socket.io.off('reconnect_error', onReconnectError);
     };
   }, [liveData, user]);
-  socket.on('freshLives', async ({ freshLives }) => {
-    dispatch(setLives(freshLives));
-  });
+
+  useEffect(() => {
+    const onBanUser = (data) => {
+      logOutUser(data);
+    };
+
+    const onChannelData = (channelData) => {
+      dispatch(setLiveData(channelData));
+    };
+
+    const onCurrentAuctionData = (channelData) => {
+      dispatch(setLiveData(channelData));
+    };
+
+    const onFreshLives = ({ freshLives }) => {
+      dispatch(setLives(freshLives));
+    };
+
+    const onHasBeenBlocked = (blockedInfo) => {
+      dispatch(setBlockedUser(blockedInfo));
+    };
+
+    const onNewChatMessage = (message) => {
+      dispatch(setNewChatMessage(message));
+    };
+
+    socket.on('banUser', onBanUser);
+    socket.on('channelData', onChannelData);
+    socket.on('currentAuctionData', onCurrentAuctionData);
+    socket.on('freshLives', onFreshLives);
+    socket.on('hasBeenBlocked', onHasBeenBlocked);
+    socket.on('newChatMessage', onNewChatMessage);
+
+    return () => {
+      socket.off('banUser');
+      socket.off('channelData');
+      socket.off('currentAuctionData');
+      socket.off('freshLives');
+      socket.off('hasBeenBlocked');
+      socket.off('newChatMessage');
+    };
+  }, [dispatch]);
 
   return (
     <NavigationContainer>

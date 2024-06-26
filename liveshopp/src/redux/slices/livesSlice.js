@@ -50,8 +50,19 @@ export const livesSlice = createSlice({
     setCurrentAuction: (state, action) => {
       state.liveData.currentAuction.currentAuctionStatus = 'paused';
     },
+    setNewChatMessage: (state, action) => {
+      state.liveData.messages.push(action.payload);
+    },
   },
 });
-export const { setLives, setIsGone, setIsJoin, setLiveData, setSellerLives, setRemoteUid } =
-  livesSlice.actions;
+export const {
+  setCurrentAuction,
+  setLives,
+  setIsGone,
+  setIsJoin,
+  setLiveData,
+  setNewChatMessage,
+  setSellerLives,
+  setRemoteUid,
+} = livesSlice.actions;
 export default livesSlice.reducer;
