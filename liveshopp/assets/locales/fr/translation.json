@@ -169,5 +169,6 @@
   "reservePriceReached": "Prix de réserve atteint 🎉!",
   "reservePriceNotReached": "Prix de réserve non atteint...",
   "noReservePriceMessage": "",
-  "logOut": "Déconnexion"
+  "logOut": "Déconnexion",
+  "countryRegion": "Pays/Région"
 }

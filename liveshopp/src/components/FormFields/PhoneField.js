@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import { useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ import colors from '../../styles/colors';
 
 const PhoneField = ({ inputField, field, fieldState }) => {
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
+  const { t } = useTranslation();
 
   const [showModalCountryPhoneSelector, setShowModalCountryPhoneSelector] = useState(false);
   const [isoCode, setIsoCode] = useState('fr');
@@ -29,24 +31,12 @@ const PhoneField = ({ inputField, field, fieldState }) => {
         transparent={false}
         visible={showModalCountryPhoneSelector}
         presentationStyle={'formSheet'}>
-        <View
-          style={{
-            padding: 25,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: '#ccc',
-          }}>
+        <View style={styles.modalHeader}>
           <TouchableOpacity
             onPress={() => setShowModalCountryPhoneSelector(!showModalCountryPhoneSelector)}>
-            <FontAwesomeIcon
-              icon={faXmark}
-              size={20}
-              color={colors.DARK}
-              style={{ marginRight: 'auto' }}
-            />
+            <FontAwesomeIcon icon={faXmark} size={20} color={colors.DARK} style={styles.xMark} />
           </TouchableOpacity>
-          <Text style={[styles.headerText, { textAlign: 'center', flex: 1 }]}>Pays/région</Text>
+          <Text style={styles.headerText}>{t('countryRegion')}</Text>
         </View>
         <View style={styles.container}>
           <FlatList
@@ -80,18 +70,13 @@ const PhoneField = ({ inputField, field, fieldState }) => {
             ({countryCode.dial_code})
           </Text>
           <TouchableOpacity
-            style={{
-              height: '100%',
-              width: 20,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            style={styles.selectContainerIcon}
             onPress={() => setShowModalCountryPhoneSelector(!showModalCountryPhoneSelector)}>
             <FontAwesomeIcon
               icon={faChevronDown}
               size={13}
               color={isAuthenticate ? colors.DARK : colors.LIGHT}
-              style={{ marginLeft: 5 }}
+              style={styles.chevronRight}
             />
           </TouchableOpacity>
         </View>
@@ -101,11 +86,11 @@ const PhoneField = ({ inputField, field, fieldState }) => {
           value={inputField.value}
           placeholder={inputField.label}
           autoFocus={inputField.autoFocus || false}
-          onChangeText={(value) => field.onChange(value)}
+          onChangeText={(value) => field.onChange(`${countryCode.dial_code} ${value}`)}
           placeholderTextColor="white"
           secureTextEntry={inputField.type === 'password'}
           selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}
-          maxLength={20}
+          maxLength={countryCode.code === 'FR' ? 10 : 20}
           keyboardType="number-pad"
         />
       </View>
@@ -124,6 +109,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
+  selectContainerIcon: {
+    height: '100%',
+    width: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalHeader: {
+    padding: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
   flag: {
     fontSize: 20,
     marginRight: 10,
@@ -136,7 +134,13 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: 'bold',
     fontSize: 16,
+    textAlign: 'center',
+    flex: 1,
   },
+  chevronRight: {
+    marginLeft: 5,
+  },
+  xMark: { marginRight: 'auto' },
 });
 
 const containedStyles = StyleSheet.create({

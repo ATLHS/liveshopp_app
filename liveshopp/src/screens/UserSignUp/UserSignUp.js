@@ -21,6 +21,7 @@ import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
+import validateFrPhoneNumber from '../../utils/validateFrPhoneNumber';
 
 export const UserSignUp = ({ navigation }) => {
   const { t } = useTranslation();
@@ -72,10 +73,7 @@ export const UserSignUp = ({ navigation }) => {
           value: true,
           message: t('pleaseEnterPhoneNumber'),
         },
-        pattern: {
-          value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-          message: t('pleaseEnterValidNumber'),
-        },
+        validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
     },
     {
@@ -118,6 +116,7 @@ export const UserSignUp = ({ navigation }) => {
 
   const handleUserSignup = (data) => {
     setIsLoading(true);
+
     auth
       .handleUserSignup(data)
       .then((res) => res)
