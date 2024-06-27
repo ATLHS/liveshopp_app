@@ -350,10 +350,7 @@ export const LiveScreen = ({ navigation, route }) => {
           panelRef={panelRef}
         />
       ) : (
-        <LiveChatTextInput
-          onPress={(message, liveData) => emitNewLiveMessage(message, liveData)}
-          live={liveData}
-        />
+        <LiveChatTextInput onPress={(message) => emitNewLiveMessage(message)} />
       );
     }
   };
