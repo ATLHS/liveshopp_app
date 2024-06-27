@@ -25,6 +25,7 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import { setUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
 import colors from '../../styles/colors';
+import validateFrPhoneNumber from '../../utils/validateFrPhoneNumber';
 
 export const SettingProfilScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -73,10 +74,7 @@ export const SettingProfilScreen = ({ navigation }) => {
           value: user.phone ? true : false,
           message: t('pleaseEnterPhoneNumber'),
         },
-        pattern: {
-          value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-          message: t('pleaseEnterValidNumber'),
-        },
+        validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
       defaultValue: user.phone || '',
@@ -188,10 +186,7 @@ export const SettingProfilScreen = ({ navigation }) => {
           value: true,
           message: t('pleaseEnterPhoneNumber'),
         },
-        pattern: {
-          value: /^[0-9]+$/ && /^0[67]\d{8}$/,
-          message: t('pleaseEnterValidNumber'),
-        },
+        validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
       defaultValue: user.phone,
