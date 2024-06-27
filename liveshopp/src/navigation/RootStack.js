@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Linking, Platform } from 'react-native';
+import { Alert, Appearance, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
 import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +32,10 @@ const RootStack = ({ isLoading }) => {
   const dispatch = useDispatch();
 
   const { t } = useTranslation();
+
+  // Force light them since dark mode is not well implemented yet
+  // and can lead to invisible text (reported by users on Android with dark mode enabled)
+  Appearance.setColorScheme('light');
 
   useEffect(() => {
     const checkForUpdates = async () => {
