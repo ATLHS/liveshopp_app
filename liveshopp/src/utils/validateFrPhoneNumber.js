@@ -1,7 +1,6 @@
 const validateFrPhoneNumber = (b) => {
   const [code, number] = b.phone.split(' ');
   const frCode = '+33';
-  console.log(code, 'code');
   if (code === frCode) {
     const isValidFormat =
       /^[0-9]+$/.test(number) &&
