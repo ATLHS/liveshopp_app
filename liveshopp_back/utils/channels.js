@@ -116,6 +116,14 @@ const saveChannel = async (channel) => {
 
 /**
  * @param {string} channelName
+ * @param {Object} message
+ */
+const addChatMessage = async (channelName, message) => {
+  return await redis.json.arrAppend(channelName, '$.messages', message);
+};
+
+/**
+ * @param {string} channelName
  */
 const updateTimer = async (channelName) => {
   return await redis.json.NUMINCRBY(channelName, '$.currentAuction.currentAuctionTimer', -1);
@@ -128,4 +136,12 @@ const updateExtraUserCount = async (channelName, count) => {
   return await redis.json.NUMINCRBY(channelName, '$.extraUserCount', count);
 };
 
-module.exports = { createChannel, getChannel, getChannels, updateExtraUserCount, updateTimer, saveChannel };
+module.exports = {
+  addChatMessage,
+  createChannel,
+  getChannel,
+  getChannels,
+  updateExtraUserCount,
+  updateTimer,
+  saveChannel,
+};
