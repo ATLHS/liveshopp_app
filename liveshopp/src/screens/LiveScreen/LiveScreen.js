@@ -5,7 +5,6 @@ import {
   Alert,
   Dimensions,
   KeyboardAvoidingView,
-  PermissionsAndroid,
   Platform,
   StyleSheet,
   Text,
@@ -58,27 +57,11 @@ export const LiveScreen = ({ navigation, route }) => {
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
 
-  const getPermission = async () => {
-    if (Platform.OS === 'android') {
-      await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-      ]);
-    }
-  };
-
   const setupVideoSDKEngine = async () => {
     try {
       if (agoraEngineRef.current) {
         return;
       }
-
-      // FIXME
-      //
-      // We should trigger permissions only for the host
-      // It's useless otherwise and could lead to issues
-      //
-      await getPermission();
 
       agoraEngineRef.current = createAgoraRtcEngine();
       const agoraEngine = agoraEngineRef.current;
