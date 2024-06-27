@@ -39,7 +39,7 @@ const FieldWrapper = ({ control, schema }) => {
                       <Text style={{ color: colors.LIGHT }}>{field.helper.helperMessage2}</Text>
                     </View>
                   ) : (
-                    <View style={{ marginBottom: 20 }}>
+                    <View style={{ marginBottom: 20, width: '100%' }}>
                       <Text style={{ color: colors.LIGHT }}>{field.helper}</Text>
                     </View>
                   )}

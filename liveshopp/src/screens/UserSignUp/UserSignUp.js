@@ -107,6 +107,7 @@ export const UserSignUp = ({ navigation }) => {
         helperMessage1: t('confirmConditions1'),
         helperMessage2: t('confirmConditions2'),
       },
+      defaultValue: false,
     },
   ];
 

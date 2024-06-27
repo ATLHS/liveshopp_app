@@ -1,22 +1,18 @@
-import React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
-
-import CheckBox from '@react-native-community/checkbox';
-
-import colors from '../../styles/colors';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import CheckBox from 'react-native-check-box';
 
 const CheckboxField = ({ inputField, field, fieldState }) => {
+  const [isChecked, setIsChecked] = useState(inputField.defaultValue);
   return (
     <View style={styles.checkboxContainer}>
       <CheckBox
-        disabled={false}
-        lineWidth={1}
-        onValueChange={(value) => field.onChange(value)}
-        onCheckColor={colors.LIGHT}
-        onTintColor={colors.LIGHT}
-        tintColor={colors.LIGHT}
-        boxType={'square'}
-        tintColors={{ true: colors.LIGHT, false: colors.LIGHT }}
+        checkBoxColor={'white'}
+        isChecked={isChecked}
+        onClick={() => {
+          setIsChecked(!isChecked);
+          field.onChange(!isChecked);
+        }}
       />
     </View>
   );
