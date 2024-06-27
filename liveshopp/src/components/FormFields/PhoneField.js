@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
@@ -23,6 +23,10 @@ const PhoneField = ({ inputField, field, fieldState }) => {
     code: 'FR',
     dial_code: '+33',
   });
+
+  useEffect(() => {
+    field.onChange(`${countryCode.dial_code} ${inputField.value}`);
+  }, [countryCode]);
 
   return (
     <>

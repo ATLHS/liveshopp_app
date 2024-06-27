@@ -1,8 +1,12 @@
 const validateFrPhoneNumber = (b) => {
-  const isFrDialCcode = b.phone.split(' ')[0] === '+33';
-  if (isFrDialCcode) {
+  const [code, number] = b.phone.split(' ');
+  const frCode = '+33';
+  console.log(code, 'code');
+  if (code === frCode) {
     const isValidFormat =
-      /^[0-9]+$/.test(b.phone.split(' ')[1]) && /^0[67]\d{8}$/.test(b.phone.split(' ')[1]);
+      /^[0-9]+$/.test(number) &&
+      ((number.startsWith('0') && number.length === 10) ||
+        ((number.startsWith('6') || number.startsWith('7')) && number.length === 9));
     return isValidFormat;
   }
   return true;
