@@ -16,6 +16,7 @@
 		47CB28AC56734946A1B55D3E /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67BDB04D89094F92948ED153 /* Roboto-Bold.ttf */; };
 		5644356AE036064A9D774DA9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7E5E140D0355EDB3DCEE6606 /* PrivacyInfo.xcprivacy */; };
 		5658CC475727499A921EC250 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5DA8BC568E849E796E5554D /* Roboto-Regular.ttf */; };
+		645AEC7C2C2C056B006CE299 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 645AEC7B2C2C056B006CE299 /* InfoPlist.xcstrings */; };
 		7699B88040F8A987B510C191 /* libPods-liveshopp-liveshoppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-liveshopp-liveshoppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A28E0057D0A14F7E82FEE142 /* FugazOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7C5D707359F4DF8B4730A58 /* FugazOne-Regular.ttf */; };
@@ -47,6 +48,7 @@
 		5709B34CF0A7D63546082F79 /* Pods-liveshopp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-liveshopp.release.xcconfig"; path = "Target Support Files/Pods-liveshopp/Pods-liveshopp.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-liveshopp-liveshoppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-liveshopp-liveshoppTests.debug.xcconfig"; path = "Target Support Files/Pods-liveshopp-liveshoppTests/Pods-liveshopp-liveshoppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-liveshopp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-liveshopp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		645AEC7B2C2C056B006CE299 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		67BDB04D89094F92948ED153 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		7E5E140D0355EDB3DCEE6606 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = liveshopp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = liveshopp/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				645AEC7B2C2C056B006CE299 /* InfoPlist.xcstrings */,
 				13B07FAE1A68108700A75B9A /* liveshopp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* liveshoppTests */,
@@ -275,6 +278,7 @@
 				47CB28AC56734946A1B55D3E /* Roboto-Bold.ttf in Resources */,
 				5658CC475727499A921EC250 /* Roboto-Regular.ttf in Resources */,
 				17FBED1133C44677AE1A1FD6 /* contact.png in Resources */,
+				645AEC7C2C2C056B006CE299 /* InfoPlist.xcstrings in Resources */,
 				5644356AE036064A9D774DA9 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -655,7 +659,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -727,7 +734,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

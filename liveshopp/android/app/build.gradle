@@ -81,7 +81,7 @@ android {
         applicationId "com.liveshopp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10
+        versionCode 11
         versionName "2.0.2"
     }
 
