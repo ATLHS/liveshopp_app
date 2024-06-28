@@ -33,7 +33,7 @@ export const SettingNewLive = () => {
                     marginBottom: 20,
                     paddingRight: 30,
                   }}>
-                  Conditions Générales d'utilisation et Conditions Générales de Vente.
+                  Conditions Générales d'Utilisation et Conditions Générales de Vente
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
@@ -45,14 +45,14 @@ export const SettingNewLive = () => {
                     fontWeight: '800',
                     marginBottom: 20,
                   }}>
-                  Préambule.
+                  Préambule
                 </Text>
                 <Text style={styles.headlineMessage}>
-                  Liveshopp dont le siège social est situé 1 place jehan rictus, 93270, Sevran,
-                  enregistrée sous le status d'entreprise individuelle sous le numéro : 825 032 154
-                  00023 (ci-après « Liveshopp » ou « Nous ») propose une Plateforme qui permet
+                  Liveshopp, dont le siège social est situé 1 place Jehan Rictus, 93270, Sevran,
+                  enregistrée sous le statut d'entreprise individuelle sous le numéro : 825 032 154
+                  00023 (ci-après « Liveshopp » ou « Nous »), propose une Plateforme qui permet
                   notamment à des Acheteurs, après création d’un compte, d'acheter des Articles
-                  proposées par des Vendeurs Professionnels ou des Vendeurs Particuliers, inscrits
+                  proposés par des Vendeurs Professionnels ou des Vendeurs Particuliers, inscrits
                   sur la Plateforme, au cours de Ventes en Direct. Les présentes CGU ont pour objet
                   de définir les modalités et conditions d’utilisation de la Plateforme ainsi que
                   les droits et obligations des Utilisateurs dans ce cadre. Pour utiliser la
@@ -67,23 +67,23 @@ export const SettingNewLive = () => {
                     color: colors.DARK,
                     fontSize: 30,
                     textAlign: 'left',
-                    fontWeight: 800,
+                    fontWeight: '800',
                     marginBottom: 20,
                     marginTop: 50,
                   }}>
-                  Définitions.
+                  Définitions
                 </Text>
                 <Text style={styles.headlineMessage}>
                   Les termes indiqués ci-après ont la signification suivante :{'\n'}
                   {'\n'}- Acheteur : désigne toute personne physique ayant la capacité d’accomplir
-                  des actes juridiques ainsi que toute personne morale de droit privé, qui
-                  n’agissent pas à des fins professionnelles, titulaires d’un compte client.{'\n'}
+                  des actes juridiques ainsi que toute personne morale de droit privé, qui n’agit
+                  pas à des fins professionnelles, titulaire d’un compte client.{'\n'}
                   {'\n'}- Articles : désignent les produits ajoutés par le Vendeur sur le Catalogue
                   de la Plateforme aux fins de les vendre ou de les échanger.{'\n'}
                   {'\n'}- Catalogue : désigne le catalogue électronique dans lequel les Articles du
                   même type sont répertoriés.{'\n'}
                   {'\n'}- CGU : désigne les présentes conditions générales d’utilisation, qui
-                  régissent les relations entre Liveshopp et les Utilisateurs, qu’ils soient, les
+                  régissent les relations entre Liveshopp et les Utilisateurs, qu’ils soient
                   Acheteurs ou Vendeurs.
                   {'\n'}
                   {'\n'}- CGV : désigne les conditions générales de vente qui régissent les
@@ -94,13 +94,13 @@ export const SettingNewLive = () => {
                   {'\n'}- Compte Vendeur : désigne l’inscription de l’Utilisateur en tant que
                   Vendeur sur la Plateforme.{'\n'}
                   {'\n'}- Fiche Produit : désigne la description d’un Article, laquelle contient au
-                  moins le prix TTC exprimé en Euros, une description des caractéristiques
+                  moins le prix TTC exprimé en euros, une description des caractéristiques
                   essentielles de l’Article.
                   {'\n'}
                   {'\n'}- Plateforme : désigne le site Internet www.liveshopp.fr ainsi que les
                   applications mobiles de la plateforme Liveshopp téléchargées sur smartphones ou
                   tablettes.{'\n'}
-                  {'\n'}- Services : Mise à disposition d’outils permettant aux Vendeurs de se
+                  {'\n'}- Services : mise à disposition d’outils permettant aux Vendeurs de se
                   mettre en relation avec des Acheteurs, via des Ventes en Direct, afin de leur
                   proposer des Articles à la vente, de référencer et de décrire ces Articles,
                   d’accepter les commandes passées par les Acheteurs, de percevoir le prix des
@@ -108,7 +108,7 @@ export const SettingNewLive = () => {
                   {'\n'}
                   {'\n'}- Service de Paiement Intégré : désigne le service de paiement en ligne
                   accessible à l’Acheteur sur la Plateforme, tel que celui fourni par STRIPE FRANCE,
-                  SARL au capital de 1 000€, dont le siège social est situé au 10 Boulevard
+                  SARL au capital de 1 000 €, dont le siège social est situé au 10 Boulevard
                   Haussmann 75009 PARIS 9 et immatriculée au RCS de Paris sous le numéro 807 572
                   011.{'\n'}
                   {'\n'}- Transaction : désigne toute transaction qui transfère la propriété et/ou
@@ -117,9 +117,9 @@ export const SettingNewLive = () => {
                   {'\n'}- Utilisateur : désigne tout utilisateur de la Plateforme, qu’il soit
                   Acheteur, Vendeur Professionnel ou Vendeur Particulier.{'\n'}
                   {'\n'}- Vendeur : désigne les Vendeurs Particuliers et/ou les Vendeurs
-                  Professionnels{'\n'}
+                  Professionnels.{'\n'}
                   {'\n'}- Vendeur Particulier : désigne tout Utilisateur qui vend un ou plusieurs
-                  Article sur le Catalogue correspondant de la Plateforme en dehors du cadre de son
+                  Articles sur le Catalogue correspondant de la Plateforme en dehors du cadre de son
                   activité professionnelle.{'\n'}
                   {'\n'}- Vendeur Professionnel : désigne tout Utilisateur qui vend un ou plusieurs
                   Articles au Catalogue correspondant de la Plateforme dans le cadre de son activité
@@ -127,30 +127,21 @@ export const SettingNewLive = () => {
                   commerciales, des entreprises individuelles ou des associations au sens de la loi
                   du 1er juillet 1901, dûment enregistrées en France. Les Vendeurs Professionnels
                   sont identifiés sur la Plateforme par une mention “Professionnel” affichée à côté
-                  de leur nom. {'\n'}
+                  de leur nom.{'\n'}
                   {'\n'}- Vente en Direct : désigne la tenue d’une vente en direct, via le service
                   de diffusion vidéo proposé par la Plateforme, au cours de laquelle un Vendeur
-                  propose un ou plusieurs articles à la vente auprès des utilisateurs connectés.
+                  propose un ou plusieurs Articles à la vente auprès des Utilisateurs connectés.
                   {'\n'}
                   {'\n'}
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  1 - Objet
-                </Text>
+                <Text style={styles.section}>1 - Objet</Text>
                 <Text style={styles.headlineMessage}>
-                  Liveshopp est une plateforme en ligne qui donne aux Utilisateurs la possibilité
+                  Liveshopp est une Plateforme en ligne qui donne aux Utilisateurs la possibilité
                   technique d’acheter, de vendre des Articles, d’assister à des Ventes en Direct et
                   de communiquer en envoyant des messages privés. Liveshopp propose uniquement des
-                  services facilitant les Transactions entre les Acheteurs et les Vendeurs
+                  Services facilitant les Transactions entre les Acheteurs et les Vendeurs
                   Professionnels ou les Vendeurs Particuliers. Dès lors, Liveshopp n’est partie à
                   aucune Transaction entre les Acheteurs et les Vendeurs Professionnels ou les
                   Vendeurs Particuliers et n’achète, ne vend aucun des Articles présentés sur la
@@ -161,11 +152,9 @@ export const SettingNewLive = () => {
                   {'\n'}- Créer un Compte Client ou un Compte Vendeur{'\n'}
                   {'\n'}- Bénéficier d’un service de messagerie et d’un forum afin de discuter entre
                   Utilisateurs, ou de préciser certaines informations sur les Articles préalablement
-                  à leur vente, leur échange ou leur livraison
-                  {'\n'}
+                  à leur vente, leur échange ou leur livraison{'\n'}
                   {'\n'}- Bénéficier d’un service de Médiation Liveshopp facilitant les échanges
-                  entre un Acheteur et un Vendeur en cas de litige
-                  {'\n'}
+                  entre un Acheteur et un Vendeur en cas de litige{'\n'}
                   {'\n'}- Suivre un Vendeur ou une catégorie d’Articles spécifiques en cliquant sur
                   l’onglet « Follow » afin d’être informé des actualités à venir concernant ledit
                   Vendeur ou ladite catégorie d’Articles{'\n'}
@@ -173,27 +162,17 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  2 - Accès aux servies - création d'un compte
-                </Text>
+                <Text style={styles.section}>2 - Accès aux services - création d'un compte</Text>
                 <Text style={styles.headlineMessage}>
                   L'accès aux Services est réservé à une utilisation strictement personnelle. Le
-                  Services est fourni sous réserve de l’acceptation des CGU et de la création d’un
+                  Service est fourni sous réserve de l’acceptation des CGU et de la création d’un
                   Compte Client. Pour créer un Compte Client, l’utilisateur doit être majeur, ou
                   être un mineur bénéficiant de l’autorisation préalable de son ou ses représentants
                   légaux et fournir les données permettant son identification. Si l’Utilisateur est
-                  mineur, son ou ses représentants légaux seront liés par les CGU et responsable(s)
-                  du Compte de l’Utilisateur. L’Utilisateur s’engage à ne fournir que des
-                  informations exactes et à informer Liveshopp sans délai de tout changement. Si
-                  vous êtes un Acheteur, pour l’ouverture d’un Compte Client, vous devez renseigner
-                  : {'\n'}
+                  mineur, son ou ses représentants légaux seront liés par les CGU et responsables du
+                  Compte de l’Utilisateur. L’Utilisateur s’engage à ne fournir que des informations
+                  exactes et à informer Liveshopp sans délai de tout changement. Si vous êtes un
+                  Acheteur, pour l’ouverture d’un Compte Client, vous devez renseigner :{'\n'}
                   {'\n'}- vos nom et prénom{'\n'}
                   {'\n'}- une adresse électronique{'\n'}
                   {'\n'}- un mot de passe{'\n'}
@@ -201,14 +180,13 @@ export const SettingNewLive = () => {
                   Si vous êtes un Vendeur, pour l’ouverture d’un Compte Vendeur, vous devez
                   communiquer :{'\n'}
                   {'\n'}- vos nom et prénom{'\n'}
-                  {'\n'}- nom de l’entreprise{'\n'}
-                  {'\n'}- secteur d’activité de l’entreprise
-                  {'\n'}
-                  {'\n'}- rôle dans l’entreprise{'\n'}
+                  {'\n'}- le nom de l’entreprise{'\n'}
+                  {'\n'}- le secteur d’activité de l’entreprise{'\n'}
+                  {'\n'}- votre rôle dans l’entreprise{'\n'}
                   {'\n'}- une adresse électronique{'\n'}
                   {'\n'}- un numéro de téléphone{'\n'}
-                  {'\n'}- Vos coordonnées bancaires afin que nous puissions procéder aux paiements
-                  des ventes effectuées Information permettant l’identification (numéro carte
+                  {'\n'}- vos coordonnées bancaires afin que nous puissions procéder aux paiements
+                  des ventes effectuées. Information permettant l’identification (numéro de carte
                   d’identité ou numéro fiscal) pour les vendeurs non-professionnels{'\n'}
                   {'\n'}
                   Pour utiliser les Services, l’Utilisateur doit utiliser l'identifiant et le mot de
@@ -221,40 +199,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  Préambule.
-                </Text>
-                <Text style={styles.headlineMessage}>
-                  Liveshopp S.A.S, société par actions simplifiée dont le siège social est situé 1
-                  place jehan rictus, 93270, Sevran livry, (ci-après « Liveshopp » ou « Nous »)
-                  propose une Plateforme qui permet notamment à des Acheteurs, après création d’un
-                  compte, d'acheter des Articles proposées par des Vendeurs Professionnels ou des
-                  Vendeurs Particuliers, inscrits sur la Plateforme, au cours de Ventes en Direct.
-                  Les présentes CGU ont pour objet de définir les modalités et conditions
-                  d’utilisation de la Plateforme ainsi que les droits et obligations des
-                  Utilisateurs dans ce cadre. Pour utiliser la Plateforme, les Utilisateurs
-                  s’engagent à prendre connaissance des CGU. En créant leur compte, les Utilisateurs
-                  acceptent expressément sans réserve les CGU et la Politique de Confidentialité.
-                </Text>
-              </View>
-              <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  3 - Obligation des utilisateurs
-                </Text>
+                <Text style={styles.section}>3 - Obligations des utilisateurs</Text>
                 <Text style={styles.headlineMessage}>
                   L’Utilisateur reconnaît avoir pris connaissance sur la Plateforme des
                   caractéristiques et contraintes, notamment techniques, de l’ensemble des Services.
@@ -266,30 +211,30 @@ export const SettingNewLive = () => {
                   discernement appropriés dans ces relations et communications. L’Utilisateur
                   s’engage à respecter les lois et règlements en vigueur et à ne pas porter atteinte
                   aux droits de tiers ou à l’ordre public et s’interdit notamment à ce titre :{'\n'}
-                  {'\n'}- d’utiliser les Services d’une manière contraire à l’ordre public ou aux
+                  {'\n'}- D’utiliser les Services d’une manière contraire à l’ordre public ou aux
                   bonnes mœurs et notamment en tenant des propos ou en diffusant des contenus
                   injurieux, diffamatoires, obscènes, offensants, violents ou incitant à la
                   consommation de tabac, d’alcool, à la violence, politiques, racistes, xénophobes,
                   pornographiques ou portant atteinte d’une quelconque manière à quelque droit que
-                  ce soit, et ce, quelle qu’en soit la forme {'\n'}
-                  {'\n'}- d’avoir un comportement déplacé ou se livrer à du cyberharcèlement envers
-                  son interlocuteur{'\n'}
-                  {'\n'}- d’introduire des virus, cheval de Troie, ou un quelconque autre programme
-                  informatique malveillant ou nuisible ne pas enregistrer ou diffuser le contenu des
-                  conversations avec son interlocuteur{'\n'}
-                  {'\n'}- d’accéder frauduleusement à la Plateforme et aux Services ou d’en
-                  détourner la finalité{'\n'}
-                  {'\n'}- de publier des informations permettant l’identification de personnes
+                  ce soit, et ce, quelle qu’en soit la forme.{'\n'}
+                  {'\n'}- D’avoir un comportement déplacé ou de se livrer à du cyberharcèlement
+                  envers son interlocuteur.{'\n'}
+                  {'\n'}- D’introduire des virus, chevaux de Troie, ou tout autre programme
+                  informatique malveillant ou nuisible. Ne pas enregistrer ou diffuser le contenu
+                  des conversations avec son interlocuteur.{'\n'}
+                  {'\n'}- D’accéder frauduleusement à la Plateforme et aux Services ou d’en
+                  détourner la finalité.{'\n'}
+                  {'\n'}- De publier des informations permettant l’identification de personnes
                   physiques sans leur consentement, notamment leur nom de famille, adresse postale
                   et/ou électronique, numéro de téléphone, photographie, enregistrement audio ou
                   vidéo, ou de collecter et stocker des données personnelles afférentes aux autres
-                  Utilisateurs {'\n'}
-                  {'\n'}- de donner des informations renvoyant vers d’autres sites (que ce soit par
+                  Utilisateurs.{'\n'}
+                  {'\n'}- De donner des informations renvoyant vers d’autres sites (que ce soit par
                   la création de liens hypertextes ou par la simple fourniture d’informations) dont
                   le contenu serait susceptible de contrevenir à toute loi ou réglementation en
                   vigueur, et notamment serait susceptible de porter atteinte aux droits des
-                  personnes et des biens et/ou aux droits de propriété intellectuelle {'\n'}
-                  {'\n'}- de porter atteinte à des droits de tiers quels qu’ils soient, qu’il
+                  personnes et des biens et/ou aux droits de propriété intellectuelle.{'\n'}
+                  {'\n'}- De porter atteinte à des droits de tiers quels qu’ils soient, qu’il
                   s’agisse de droits de propriété intellectuelle ou de tous autres droits.
                   L’Utilisateur garantit à Liveshopp qu’il dispose de tous les droits et
                   autorisations nécessaires à la diffusion de tous les contenus qu’il publie sur la
@@ -297,7 +242,7 @@ export const SettingNewLive = () => {
                   droits, ou pour lesquels le titulaire des droits a donné son consentement exprès
                   pour leur diffusion, ou qui sont libres de tout droit.{'\n'}
                   {'\n'}
-                  L’Utilisateur s’engage le cas échéant à indemniser Liveshopp de tout préjudice
+                  L’Utilisateur s’engage, le cas échéant, à indemniser Liveshopp de tout préjudice
                   directement ou indirectement lié au non-respect de cette garantie. L’Utilisateur
                   s’engage à faire un usage strictement personnel des Services. Il s’interdit en
                   conséquence de céder, concéder ou transférer tout ou partie de ses droits ou
@@ -308,24 +253,24 @@ export const SettingNewLive = () => {
                   d’aucun caractère trompeur et valent preuve de son identité. Plus généralement,
                   l’Utilisateur s’engage à coopérer activement avec Liveshopp en vue de la bonne
                   exécution des CGU. Le Vendeur s’engage à : {'\n'}
-                  {'\n'}- Vendre uniquement les Articles authentiques sur la Plateforme{'\n'}
-                  {'\n'}- Ne pas émettre d’offre ou enchérir sur ses propres Ventes en Direct{'\n'}
+                  {'\n'}- Vendre uniquement des Articles authentiques sur la Plateforme{'\n'}
+                  {'\n'}- Ne pas émettre d’offres ou enchérir sur ses propres Ventes en Direct{'\n'}
                   {'\n'}- Respecter le contrat conclu avec l’Acheteur{'\n'}
                   {'\n'}- Livrer les Articles conformément aux engagements pris durant la Vente en
-                  Direct dans le délai maximal fixé par Liveshopp ( 2 semaines ) maximum.{'\n'}
+                  Direct dans le délai maximal fixé par Liveshopp (2 semaines maximum).{'\n'}
                   {'\n'}- Répondre aux demandes des Acheteurs ou de Liveshopp concernant les ventes
                   déjà effectuées dans le délai maximal indiqué par Liveshopp{'\n'}
-                  {'\n'}- Rembourser l’Acheteur en cas de litige résolu en faveur de l’Acheteur
+                  {'\n'}- Rembourser l’Acheteur en cas de litige résolu en faveur de l’Acheteur.
                   {'\n'}
                   {'\n'}- Indiquer aux Utilisateurs son statut de Vendeur Professionnel ou de
                   Vendeur Particulier. Il est rappelé que le fait pour un Vendeur Professionnel de
                   se présenter en tant que Vendeur Particulier constitue une pratique commerciale
                   trompeuse sanctionnée au titre de l’article L. 132-2 du Code de la consommation
                   d’une peine d’emprisonnement de deux ans et d'une amende de 300 000 euros pour les
-                  personnes physiques et de 1 500 000 euros pour les personnes morales{'\n'}
+                  personnes physiques et de 1 500 000 euros pour les personnes morales.{'\n'}
                   {'\n'}- Respecter, si vous êtes un Vendeur Professionnel, l’ensemble des
-                  obligations imposées au titre de la loi n° 2020-205 du 10 février 2020, parmi
-                  lesquelles la responsabilité élargie du producteur visé aux articles L. 541-10 et
+                  obligations imposées au titre de la loi n° 2020-105 du 10 février 2020, parmi
+                  lesquelles la responsabilité élargie du producteur visée aux articles L. 541-10 et
                   suivants du Code de l’Environnement et notamment être membre d’un éco-organisme
                   agréé et verser à cet organisme une écocontribution correspondant au nombre et au
                   type d’Articles vendus, obtenir un identifiant unique auprès de l'autorité
@@ -340,53 +285,26 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  4 - Vente d'un article
-                </Text>
+                <Text style={styles.section}>4 - Vente d'un article</Text>
                 <Text style={styles.headlineMessage}>
                   Les Vendeurs doivent disposer d'un Compte Vendeur pour mettre un Article en vente
                   conformément aux CGV.
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  5 - Achat d'un article
-                </Text>
+                <Text style={styles.section}>5 - Achat d'un article</Text>
                 <Text style={styles.headlineMessage}>
                   Pour pouvoir acheter un Article, l’Acheteur doit disposer d’un Compte Client. La
-                  Plateforme permet aux utilisateurs d'acheter des Articles auprès des Vendeurs lors
+                  Plateforme permet aux Utilisateurs d'acheter des Articles auprès des Vendeurs lors
                   de Ventes en Direct, aux enchères en conformité avec les CGV. Pour enchérir, vous
                   devez avoir préalablement renseigné votre adresse de livraison et renseigné votre
                   mode de paiement.
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  6 - Prix des services
-                </Text>
+                <Text style={styles.section}>6 - Prix des services</Text>
                 <Text style={styles.headlineMessage}>
-                  Si vous êtes un Acheteur Les Services sont fournis aux Acheteurs à titre gratuit.
+                  Si vous êtes un Acheteur, les Services sont fournis aux Acheteurs à titre gratuit.
                   {'\n'}
                   Si vous êtes un Vendeur{'\n'}
                   Les Services fournis aux Vendeurs sont payants.{'\n'}
@@ -396,7 +314,7 @@ export const SettingNewLive = () => {
                   de sa réception, ainsi que le montant de la TVA lorsque Liveshopp a l’obligation
                   légale de collecter la TVA. Ce versement sera effectué par virement sur le compte
                   bancaire dont les coordonnées ont été renseignées par le Vendeur au sein de son
-                  Compte Vendeur.{'\n'}A défaut de confirmation de la réception de l’Article par
+                  Compte Vendeur.{'\n'}À défaut de confirmation de la réception de l’Article par
                   l'Acheteur, l’Article sera réputé avoir été reçu 30 jours suivant la date
                   d’expédition effective.{'\n'}
                   Lorsque le Vendeur en fait la demande, Liveshopp fournit aux Vendeurs les factures
@@ -410,16 +328,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  7 - Résponsbailité de Liveshopp
-                </Text>
+                <Text style={styles.section}>7 - Responsabilité de Liveshopp</Text>
                 <Text style={styles.headlineMessage}>
                   Liveshopp s’engage à fournir les Services avec diligence, étant précisé qu’il pèse
                   sur elle une obligation de moyens, à l’exclusion de toute obligation de résultat,
@@ -435,7 +344,7 @@ export const SettingNewLive = () => {
                   loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique,
                   Liveshopp se réservant de prendre les mesures décrites à l’article 8 des CGU.
                   Liveshopp s’engage à procéder régulièrement à des contrôles afin de vérifier le
-                  fonctionnement et l’accessibilité de la Plateforme. A ce titre, Liveshopp se
+                  fonctionnement et l’accessibilité de la Plateforme. À ce titre, Liveshopp se
                   réserve la faculté d’interrompre momentanément l’accès à la Plateforme pour des
                   raisons de maintenance. De même, Liveshopp ne saurait être tenue responsable des
                   difficultés ou impossibilités momentanées d’accès à la Plateforme qui auraient
@@ -454,16 +363,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  8 - Résiliation
-                </Text>
+                <Text style={styles.section}>8 - Résiliation</Text>
                 <Text style={styles.headlineMessage}>
                   En cas de manquement par un Utilisateur à l’une quelconque des stipulations des
                   CGU ou, plus généralement, d’infraction aux lois et règlements en vigueur,
@@ -496,7 +396,7 @@ export const SettingNewLive = () => {
                   moment. Si vous êtes un Vendeur Liveshopp notifiera au Vendeur par courrier
                   électronique, la décision de suspension ou de résiliation incluant un exposé des
                   motifs justifiant la décision, afin de mettre le Vendeur en mesure de clarifier
-                  les faits et les circonstances ayant entrainé la suspension ou la résiliation.
+                  les faits et les circonstances ayant entraîné la suspension ou la résiliation.
                   Cette notification interviendra au plus tard 30 jours avant la prise d’effet de la
                   décision. En cas de suspension ou de résiliation de l’accès de l’Utilisateur aux
                   Services, l’Utilisateur ne peut plus utiliser les Services, et ce même avec
@@ -509,16 +409,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  9 - Classement - Référencement - Déréferencement
-                </Text>
+                <Text style={styles.section}>9 - Classement - Référencement - Déréférencement</Text>
                 <Text style={styles.headlineMessage}>
                   9.1 Classement {'\n'}
                   {'\n'}
@@ -529,13 +420,13 @@ export const SettingNewLive = () => {
                   {'\n'}
                   Les Utilisateurs peuvent également modifier ce classement en suivant un Vendeur ou
                   un type d’Article spécifique, qui apparaîtra en tête du classement des Articles ou
-                  des Ventes, ou sélectionnant un critère de tri différent selon le type d’Articles
-                  vendus (par exemple la catégorie Sports ou Mangas). Aucun Vendeur ne dispose de
-                  liens capitalistiques avec Liveshopp ou de rémunération de Liveshopp susceptibles
-                  d’influencer le référencement ou le classement des contenus ou des Articles sur la
-                  Plateforme. Si tel est le cas, une information serait fournie aux Utilisateurs par
-                  la mention « sponsorisé » apparaissant dans les pages de résultat, à côté de
-                  certains Vendeurs ou certains Articles.
+                  des Ventes, ou en sélectionnant un critère de tri différent selon le type
+                  d’Articles vendus (par exemple la catégorie Sports ou Mangas). Aucun Vendeur ne
+                  dispose de liens capitalistiques avec Liveshopp ou de rémunération de Liveshopp
+                  susceptibles d’influencer le référencement ou le classement des contenus ou des
+                  Articles sur la Plateforme. Si tel est le cas, une information serait fournie aux
+                  Utilisateurs par la mention « sponsorisé » apparaissant dans les pages de
+                  résultat, à côté de certains Vendeurs ou certains Articles.
                   {'\n'}
                   {'\n'}
                   9.2 Référencement{'\n'}
@@ -566,48 +457,37 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  10 - Mediation Liveshopp
-                </Text>
+                <Text style={styles.section}>10 - Médiation Liveshopp</Text>
                 <Text style={styles.headlineMessage}>
                   En cas de litige entre un Acheteur et un Vendeur lors d'une Transaction, et
-                  notamment en cas de réception d’un Article non-conforme ou contrefait ou de
-                  non-réception d’un Article la Médiation Liveshopp facilite la communication entre
+                  notamment en cas de réception d’un Article non conforme ou contrefait ou de
+                  non-réception d’un Article, la Médiation Liveshopp facilite la communication entre
                   les Acheteurs et les Vendeurs et participe à la recherche d’une solution amiable.
+                  {'\n'}
+                  {'\n'}
                   Dans un délai de dix (10) jours à compter de la notification du litige par
                   l’Acheteur au service de support Liveshopp, et si le litige n’a pas fait l’objet
                   d’une résolution amiable directement entre l’Acheteur et le Vendeur dans le délai
                   susvisé, Liveshopp servira d’interface entre l’Acheteur et le Vendeur afin de
-                  tenter de trouver une solution au problème remonté. Le Vendeur accepte de se
-                  conformer aux règles de la Médiation Liveshopp et autorise à prendre la décision
-                  finale dans tout litige. Si la décision finale est favorable à l’Acheteur, le
-                  Vendeur s’engage à rembourser les montants dus à l'Acheteur. La Médiation
-                  Liveshopp ne peut être assimilée à une garantie d’un Article. Il s'agit d'un
-                  service supplémentaire fourni par Liveshopp aux Utilisateurs et qui ne se
-                  substitute pas aux garanties légales prévues par le Code de la consommation ou le
-                  Code civil. Indépendamment de l'applicabilité de la Médiation Liveshopp les
+                  tenter de trouver une solution au problème remonté.
+                  {'\n'}
+                  {'\n'}
+                  Le Vendeur accepte de se conformer aux règles de la Médiation Liveshopp et
+                  autorise à prendre la décision finale dans tout litige. Si la décision finale est
+                  favorable à l’Acheteur, le Vendeur s’engage à rembourser les montants dus à
+                  l'Acheteur.
+                  {'\n'}
+                  {'\n'}
+                  La Médiation Liveshopp ne peut être assimilée à une garantie d’un Article. Il
+                  s'agit d'un service supplémentaire fourni par Liveshopp aux Utilisateurs et qui ne
+                  se substitue pas aux garanties légales prévues par le Code de la consommation ou
+                  le Code civil. Indépendamment de l'applicabilité de la Médiation Liveshopp, les
                   Acheteurs peuvent exercer leurs droits contre le Vendeur en vertu des dispositions
                   légales.
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  11 - Propriété intellectuelle et contenue
-                </Text>
+                <Text style={styles.section}>11 - Propriété intellectuelle et contenu</Text>
                 <Text style={styles.headlineMessage}>
                   Les systèmes, logiciels, structures, infrastructures, bases de données et contenus
                   de toute nature (textes, images, visuels, musiques, logos, marques, base de
@@ -617,87 +497,84 @@ export const SettingNewLive = () => {
                   de reproduction, représentation, diffusion et/ou utilisation de l’un quelconque de
                   ces éléments, en tout ou partie, sans l’autorisation écrite et préalable de
                   Liveshopp sont strictement interdits et pourront faire l’objet de poursuites
-                  judiciaires. Lorsque le Vendeur fournit du contenu sur la Plateforme au travers de
-                  la création d’annonces ou de la tenue de Vente en Direct, y compris tout contenu
-                  mis en ligne par les Services, le Vendeur consent concède à Liveshopp à titre non
-                  exclusif, gratuit, pour toutes les langues, pour le monde entier et pour la durée
-                  légale des droits (y compris les éventuelles prolongations qui pourraient
-                  intervenir), l'ensemble des droits à l'image et de propriété intellectuelle
-                  afférant audit contenu et aux éléments entrant dans sa composition (notamment
-                  textes, images, photographies, logos, illustrations, marques, modèles, titres,
-                  données), y compris toute base de données et tout contenu pouvant être qualifié
-                  d'œuvre dérivée. Ces droits comprennent le droit de reproduire, publier,
-                  représenter, diffuser, adapter, modifier, traduire, sous-licencier et communiquer
-                  au public, utiliser dans une base de données, pour tout ou partie des contenus par
-                  tous les procédés, sur tous les formats et supports (numérique, imprimé…) connus
-                  ou inconnus à ce jour, dans tous langages. En utilisant la Plateforme, les
-                  Utilisateurs consentent à ne pas utiliser le contenu du catalogue d'une manière
-                  qui porterait atteinte aux droits de propriété ou autre d'un tiers, ni pour créer
-                  des œuvres dérivées utilisant ces données ou informations quelles qu'elles soient
-                  (autres que pour la seule fin d'inclure ces informations dans les Annonces des
-                  Vendeurs). En particulier, les Vendeurs s’engagent à vérifier que les informations
-                  associées à leurs annonces sont exactes et à ne retirer aucune mentions ou signe
-                  indiquant la propriété (ex. « copyright », « marque déposée » …).
+                  judiciaires.
+                  {'\n'}
+                  {'\n'}
+                  Lorsque le Vendeur fournit du contenu sur la Plateforme au travers de la création
+                  d’annonces ou de la tenue de Ventes en Direct, y compris tout contenu mis en ligne
+                  par les Services, le Vendeur consent et concède à Liveshopp, à titre non exclusif,
+                  gratuit, pour toutes les langues, pour le monde entier et pour la durée légale des
+                  droits (y compris les éventuelles prolongations qui pourraient intervenir),
+                  l'ensemble des droits à l'image et de propriété intellectuelle afférant audit
+                  contenu et aux éléments entrant dans sa composition (notamment textes, images,
+                  photographies, logos, illustrations, marques, modèles, titres, données), y compris
+                  toute base de données et tout contenu pouvant être qualifié d'œuvre dérivée.
+                  {'\n'}
+                  {'\n'}
+                  Ces droits comprennent le droit de reproduire, publier, représenter, diffuser,
+                  adapter, modifier, traduire, sous-licencier et communiquer au public, utiliser
+                  dans une base de données, pour tout ou partie des contenus par tous les procédés,
+                  sur tous les formats et supports (numérique, imprimé…) connus ou inconnus à ce
+                  jour, dans toutes les langues.
+                  {'\n'}
+                  {'\n'}
+                  En utilisant la Plateforme, les Utilisateurs consentent à ne pas utiliser le
+                  contenu du catalogue d'une manière qui porterait atteinte aux droits de propriété
+                  ou autre d'un tiers, ni pour créer des œuvres dérivées utilisant ces données ou
+                  informations quelles qu'elles soient (autres que pour la seule fin d'inclure ces
+                  informations dans les Annonces des Vendeurs). En particulier, les Vendeurs
+                  s’engagent à vérifier que les informations associées à leurs annonces sont exactes
+                  et à ne retirer aucune mention ou signe indiquant la propriété (ex. « copyright »,
+                  « marque déposée » …).
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  12 - Protection des données personnelle
-                </Text>
+                <Text style={styles.section}>12 - Protection des données personnelles</Text>
                 <Text style={styles.headlineMessage}>
                   Le Vendeur Professionnel et Liveshopp sont amenés à traiter des données à
                   caractère personnel concernant les Acheteurs dans le cadre et/ou en relation avec
                   les CGU et les CGV, chacun agissant en tant que responsable de traitement distinct
                   et indépendant. En particulier, Liveshopp agit comme responsable de traitement
                   indépendant pour la gestion de la plateforme et le suivi de la relation avec les
-                  Utilisateurs et les Vendeurs Professionnels agissent comme responsable de
-                  traitement indépendant pour la livraison des Articles. En aucun cas, Liveshopp et
+                  Utilisateurs, et les Vendeurs Professionnels agissent comme responsables de
+                  traitement indépendants pour la livraison des Articles. En aucun cas, Liveshopp et
                   le Vendeur Professionnel ne traitent des données personnelles en vertu et/ou en
                   relation avec les CGU et les CGV en tant que responsables de traitement conjoints
-                  ou dans le cadre d'une relation de responsable de traitement à sous-traitant. Par
-                  conséquent, Liveshopp et le Vendeur Professionnel sont individuellement et
+                  ou dans le cadre d'une relation de responsable de traitement à sous-traitant.
+                  {'\n'}
+                  {'\n'}
+                  Par conséquent, Liveshopp et le Vendeur Professionnel sont individuellement et
                   séparément responsables du respect des obligations qui leur incombent en tant que
-                  responsable de traitement en vertu des lois applicables en matière de protection
+                  responsables de traitement en vertu des lois applicables en matière de protection
                   des données. Le Vendeur Professionnel doit se conformer aux obligations qui lui
                   incombent en vertu des lois applicables en matière de protection des données (y
                   compris, notamment, le règlement (UE) 2016/679 (Règlement général européen sur la
                   protection des données "RGPD") et des lois complémentaires de l'Union européenne
                   et locales sur la protection des données, comme la loi Informatique et Libertés du
-                  6 janvier 1978 telle que modifiée. Cela inclut le cas échéant l'obligation de
+                  6 janvier 1978 telle que modifiée). Cela inclut le cas échéant l'obligation de
                   fournir des garanties appropriées pour le transfert de données personnelles vers
-                  un pays tiers à l’UE. Le Vendeur Professionnel s’engage à traiter les données
-                  personnelles reçues de Liveshopp exclusivement pour la ou les finalité(s) pour
-                  laquelle/lesquelles il les a reçues en vertu de et/ou en relation avec les CGU et
-                  les CGV. Le Vendeur Professionnel devra effacer les données à caractère personnel
-                  reçues dans le cadre des présentes Conditions d'utilisation immédiatement après
-                  que la ou les finalités respectives ont été atteintes. Tout traitement ultérieur
-                  des données personnelles n'est pas autorisé, sauf si la loi l'exige (par exemple,
-                  si une obligation de conservation s'applique). Le non-respect des obligations
-                  susmentionnées peut entraîner des mesures disciplinaires pouvant aller jusqu'à la
-                  suspension de votre compte. Pour en savoir plus sur la gestion de vos données
-                  personnelles par le Vendeur Professionnel et pour exercer vos droits, nous vous
-                  invitons à consulter directement leur politique de protection des données
-                  personnelles.
+                  un pays tiers à l’UE.
+                  {'\n'}
+                  {'\n'}
+                  Le Vendeur Professionnel s’engage à traiter les données personnelles reçues de
+                  Liveshopp exclusivement pour la ou les finalité(s) pour laquelle/lesquelles il les
+                  a reçues en vertu de et/ou en relation avec les CGU et les CGV. Le Vendeur
+                  Professionnel devra effacer les données à caractère personnel reçues dans le cadre
+                  des présentes Conditions d'utilisation immédiatement après que la ou les finalités
+                  respectives ont été atteintes. Tout traitement ultérieur des données personnelles
+                  n'est pas autorisé, sauf si la loi l'exige (par exemple, si une obligation de
+                  conservation s'applique).
+                  {'\n'}
+                  {'\n'}
+                  Le non-respect des obligations susmentionnées peut entraîner des mesures
+                  disciplinaires pouvant aller jusqu'à la suspension de votre compte. Pour en savoir
+                  plus sur la gestion de vos données personnelles par le Vendeur Professionnel et
+                  pour exercer vos droits, nous vous invitons à consulter directement leur politique
+                  de protection des données personnelles.
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  13 - Cookies
-                </Text>
+                <Text style={styles.section}>13 - Cookies</Text>
                 <Text style={styles.headlineMessage}>
                   Liveshopp est susceptible de placer des cookies sur la Plateforme. Pour plus
                   d’informations sur les caractéristiques et la gestion de ces cookies,
@@ -706,32 +583,14 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  14 - Contact
-                </Text>
+                <Text style={styles.section}>14 - Contact</Text>
                 <Text style={styles.headlineMessage}>
                   Pour toute demande, question ou réclamation, l’Utilisateur peut joindre le Service
-                  Client à l’adresse électronique suivante: application@liveshopp.fr
+                  Client à l’adresse électronique suivante : application@liveshopp.fr
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  15 - Opposition au demarchage téléphonique
-                </Text>
+                <Text style={styles.section}>15 - Opposition au démarchage téléphonique</Text>
                 <Text style={styles.headlineMessage}>
                   Si le numéro de téléphone de l’Utilisateur est collecté par Liveshopp,
                   l’Utilisateur peut s’enregistrer sur la liste d'opposition au démarchage
@@ -739,16 +598,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  16 - Archivage du contrat
-                </Text>
+                <Text style={styles.section}>16 - Archivage du contrat</Text>
                 <Text style={styles.headlineMessage}>
                   Liveshopp conserve et archive pendant une durée de dix ans tout contrat conclu
                   avec l’Utilisateur. L’Utilisateur sera en mesure d'y accéder à tout moment. Ce
@@ -756,16 +606,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  17 - Publicité
-                </Text>
+                <Text style={styles.section}>17 - Publicité</Text>
                 <Text style={styles.headlineMessage}>
                   Liveshopp se réserve la faculté d’insérer sur toute page de la Plateforme et dans
                   toute communication aux Utilisateurs tous messages publicitaires ou promotionnels
@@ -773,16 +614,7 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  18 - Liens et sites tiers
-                </Text>
+                <Text style={styles.section}>18 - Liens et sites tiers</Text>
                 <Text style={styles.headlineMessage}>
                   Liveshopp ne pourra en aucun cas être tenue pour responsable de la disponibilité
                   technique de sites internet ou d’applications mobiles exploités par des tiers (y
@@ -794,33 +626,15 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  19 - Modifiation
-                </Text>
+                <Text style={styles.section}>19 - Modification</Text>
                 <Text style={styles.headlineMessage}>
                   Liveshopp se réserve la possibilité de modifier les CGU. Les modifications
-                  prendront effet dans à la date ou dans le délai indiqué par Liveshopp mais ne
+                  prendront effet à la date ou dans le délai indiqué par Liveshopp mais ne
                   s'appliqueront pas aux Transactions en cours au moment de leur entrée en vigueur.
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  20 - Langue
-                </Text>
+                <Text style={styles.section}>20 - Langue</Text>
                 <Text style={styles.headlineMessage}>
                   Dans l’hypothèse d’une traduction des CGU dans une ou plusieurs langues, la langue
                   d’interprétation sera la langue française en cas de contradiction ou de
@@ -828,18 +642,9 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  21 - Loi applicable et réglement des litiges
-                </Text>
+                <Text style={styles.section}>21 - Loi applicable et règlement des litiges</Text>
                 <Text style={styles.headlineMessage}>
-                  Les CGU sont régies par le droit français. A titre d’information, veuillez noter
+                  Les CGU sont régies par le droit français. À titre d’information, veuillez noter
                   que les CGU s’appliqueront à tout Utilisateur se connectant sur la page française
                   de la Plateforme ou tout Utilisateur résident français et/ou auquel le droit
                   français serait par ailleurs applicable, dans la limite la plus étendue permise
@@ -847,10 +652,9 @@ export const SettingNewLive = () => {
                   {'\n'}
                   {'\n'}- Lorsque l’Utilisateur est un Vendeur Professionnel : en cas de litige
                   découlant de la validité, la conclusion, l'interprétation, l'exécution ou la
-                  cessation des CGU, le Tribunal de Commerce de Paris aura compétence exclusive.{' '}
+                  cessation des CGU, le Tribunal de Commerce de Paris aura compétence exclusive.
                   {'\n'}
-                  {'\n'}- Lorsque l’Utilisateur est Acheteur ou Vendeur Particulier : {'\n'}
-                  {'\n'}
+                  {'\n'}- Lorsque l’Utilisateur est Acheteur ou Vendeur Particulier :{'\n'}
                   L’Utilisateur a la possibilité de saisir les services d’un médiateur pour régler
                   amiablement le litige avec Liveshopp. L’Utilisateur devra informer Liveshopp sans
                   délai de cette demande. La solution proposée par le service de médiation ne
@@ -865,32 +669,15 @@ export const SettingNewLive = () => {
                 </Text>
               </View>
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  22 - Stipulations générales
-                </Text>
+                <Text style={styles.section}>22 - Stipulations générales</Text>
                 <Text style={styles.headlineMessage}>
                   Si l’une des stipulations des CGU est nulle ou réputée non écrite, les autres
-                  stipulations demeureront applicables.{' '}
+                  stipulations demeureront applicables.
                 </Text>
               </View>
+              {/* FIXME needs to correct the text below */}
               <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  23 - Conditions générales de vente
-                </Text>
+                <Text style={styles.section}>23 - Conditions Générales de Vente</Text>
                 <Text style={styles.headlineMessage}>
                   Les présentes Conditions Générales de Vente (ci-après les "CGV") complètent les
                   CGU. Tous les termes en majuscule utilisés dans les CGV sont définis dans les CGU.
@@ -1149,54 +936,6 @@ export const SettingNewLive = () => {
                   étendue permise par la loi.
                 </Text>
               </View>
-              <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  Préambule.
-                </Text>
-                <Text style={styles.headlineMessage}>
-                  Liveshopp S.A.S, société par actions simplifiée dont le siège social est situé 1
-                  place jehan rictus, 93270, Sevran livry, (ci-après « Liveshopp » ou « Nous »)
-                  propose une Plateforme qui permet notamment à des Acheteurs, après création d’un
-                  compte, d'acheter des Articles proposées par des Vendeurs Professionnels ou des
-                  Vendeurs Particuliers, inscrits sur la Plateforme, au cours de Ventes en Direct.
-                  Les présentes CGU ont pour objet de définir les modalités et conditions
-                  d’utilisation de la Plateforme ainsi que les droits et obligations des
-                  Utilisateurs dans ce cadre. Pour utiliser la Plateforme, les Utilisateurs
-                  s’engagent à prendre connaissance des CGU. En créant leur compte, les Utilisateurs
-                  acceptent expressément sans réserve les CGU et la Politique de Confidentialité.
-                </Text>
-              </View>
-              <View style={styles.rgpdContainer}>
-                <Text
-                  style={{
-                    color: colors.DARK,
-                    fontSize: 30,
-                    textAlign: 'left',
-                    fontWeight: 800,
-                    marginBottom: 20,
-                  }}>
-                  Préambule.
-                </Text>
-                <Text style={styles.headlineMessage}>
-                  Liveshopp S.A.S, société par actions simplifiée dont le siège social est situé 1
-                  place jehan rictus, 93270, Sevran livry, (ci-après « Liveshopp » ou « Nous »)
-                  propose une Plateforme qui permet notamment à des Acheteurs, après création d’un
-                  compte, d'acheter des Articles proposées par des Vendeurs Professionnels ou des
-                  Vendeurs Particuliers, inscrits sur la Plateforme, au cours de Ventes en Direct.
-                  Les présentes CGU ont pour objet de définir les modalités et conditions
-                  d’utilisation de la Plateforme ainsi que les droits et obligations des
-                  Utilisateurs dans ce cadre. Pour utiliser la Plateforme, les Utilisateurs
-                  s’engagent à prendre connaissance des CGU. En créant leur compte, les Utilisateurs
-                  acceptent expressément sans réserve les CGU et la Politique de Confidentialité.
-                </Text>
-              </View>
             </View>
           </View>
         </ScrollView>
@@ -1230,6 +969,13 @@ const styles = StyleSheet.create({
     fontSize: 30,
     width: 350,
     textAlign: 'left',
+  },
+  section: {
+    color: colors.DARK,
+    fontSize: 30,
+    textAlign: 'left',
+    fontWeight: '800',
+    marginBottom: 20,
   },
   action: {},
   resetPassword: { color: 'white' },
