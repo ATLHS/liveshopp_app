@@ -27,6 +27,13 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response) {
       // The server responded with a status code outside the 2xx range
+
+      // 418-Teapot from server: ignore it
+      if (error.response.status === 418) {
+        console.warn('Ignoring HTTP status code 418:', error.response.data);
+        return Promise.resolve({ data: error.response.data });
+      }
+
       console.error('Error response:', error.response);
       Sentry.captureException(error, error.response);
 

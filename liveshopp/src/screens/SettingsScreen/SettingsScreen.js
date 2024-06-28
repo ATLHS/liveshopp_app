@@ -95,15 +95,18 @@ function SettingsScreen({ navigation }) {
   };
 
   const initializePaymentSheet = async () => {
-    const { setupIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: 'Liveshopp',
-      customerId: customer,
-      customerEphemeralKeySecret: ephemeralKey,
-      setupIntentClientSecret: setupIntent,
-    });
-    if (!error) {
-      setLoading(true);
+    const payment = await fetchPaymentSheetParams();
+
+    if (payment) {
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: 'Liveshopp',
+        customerId: payment.customer,
+        customerEphemeralKeySecret: payment.ephemeralKey,
+        setupIntentClientSecret: payment.setupIntent,
+      });
+      if (!error) {
+        setLoading(true);
+      }
     }
   };
 

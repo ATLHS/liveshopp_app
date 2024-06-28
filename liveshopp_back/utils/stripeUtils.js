@@ -20,7 +20,7 @@ const retrieveCustomer = async (id) => {
     return await stripe.customers.retrieve(id);
   } catch (error) {
     Sentry.captureException(error);
-    return false;
+    throw error;
   }
 };
 

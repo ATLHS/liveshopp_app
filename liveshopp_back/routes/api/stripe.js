@@ -5,6 +5,7 @@ const stripeUtils = require('../../utils/stripeUtils');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const User = require('../../models/user');
 const Seller = require('../../models/seller');
+const { log } = require('../../middleware/logger');
 
 router.post('/payment-sheet', verifyJwt, async (req, res) => {
   try {
@@ -31,6 +32,13 @@ router.post('/payment-sheet', verifyJwt, async (req, res) => {
       ephemeralKey: ephemeralKey.secret,
     });
   } catch (error) {
+    // Intercept customer was created with a dev mode key Stripe error
+    if (error.type && error.type === 'StripeInvalidRequestError' && error.message.includes('live mode key')) {
+      log.warn(error.message);
+      // Sending a 418-Teapot error in order to discard it in the client
+      return res.status(418).json({ message: error.message });
+    }
+
     Sentry.captureException(error);
     return res.status(500).json({ message: req.t('errorTryAgainLater') });
   }
