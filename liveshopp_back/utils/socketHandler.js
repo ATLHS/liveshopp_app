@@ -251,22 +251,26 @@ module.exports = (io) => {
   const onAuctionFinished = async function (channelName) {
     try {
       const channel = await getChannel(channelName);
-      if (channel.currentAuction.userId) {
-        if (
-          !channel.currentAuction.product_reserved_price ||
-          channel.currentAuction.currentProductAmount >= channel.currentAuction.product_reserved_price
-        ) {
-          // Charge customer and create a Product in DB
-          registerAuction({
-            auction: channel.currentAuction,
-            auctionId: channel.auctionId,
-            auctionsStatus: channel.auctionsStatus,
-            sellerId: channel.sellerId,
-            sellerName: channel.sellerName,
-          });
 
-          channel.currentAuction.salePrice = Number(channel.currentAuction.currentProductAmount);
-        }
+      if (
+        channel.currentAuction.userId &&
+        (!channel.currentAuction.product_reserved_price ||
+          channel.currentAuction.currentProductAmount >= channel.currentAuction.product_reserved_price)
+      ) {
+        // Charge customer and create a Product in DB
+        registerAuction({
+          auction: channel.currentAuction,
+          auctionId: channel.auctionId,
+          auctionsStatus: channel.auctionsStatus,
+          sellerId: channel.sellerId,
+          sellerName: channel.sellerName,
+        });
+
+        channel.currentAuction.salePrice = Number(channel.currentAuction.currentProductAmount);
+      } else {
+        // We must reset the user ID to no-one since the last bidder didn't reach the reserved price
+        channel.currentAuction.userId = '';
+        log.info(`Auction finished without buyer for product ${channel.currentAuction.productName}`);
       }
 
       channel.currentAuction.currentAuctionStatus = 'stopping';
