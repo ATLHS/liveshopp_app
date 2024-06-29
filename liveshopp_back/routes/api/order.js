@@ -6,7 +6,7 @@ const Product = require('../../models/product');
 router.get('/get-user-order', verifyJwt, async (req, res) => {
   try {
     const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
-      'seller_id',
+      'seller_id userId',
       '-password -checkedPayment -isConfirmed -registeredConfirmedCode',
     );
 
@@ -27,7 +27,7 @@ router.post('/update-order-status', verifyJwt, async (req, res) => {
     await Product.findOneAndUpdate({ _id: orderId }, { deliveryStatut: 'Expédié' }, { new: true });
 
     const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
-      'seller_id',
+      'seller_id userId',
       '-password -checkedPayment -isConfirmed -registeredConfirmedCode',
     );
 

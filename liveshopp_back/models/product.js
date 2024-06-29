@@ -13,7 +13,7 @@ const product = new mongoose.Schema(
       type: String,
       enum: ['live', 'ended'],
     },
-    userId: { type: String },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     productName: { type: String },
     salePrice: { type: String },
     deliveryStatut: { type: String, default: "En attente d'expédition" },

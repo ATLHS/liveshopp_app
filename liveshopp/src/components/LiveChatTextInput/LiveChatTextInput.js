@@ -15,7 +15,7 @@ const liveMessage = {
   },
 };
 
-export const LiveChatTextInput = ({ onPress }) => {
+const LiveChatTextInput = ({ onPress }) => {
   const { handleSubmit, control, reset } = useForm();
   const ref = useRef();
 
@@ -24,7 +24,7 @@ export const LiveChatTextInput = ({ onPress }) => {
   };
 
   return (
-    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+    <View style={styles.liveChatContainer}>
       <View
         style={{
           flexDirection: 'row',
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  liveChatContainer: { flexDirection: 'column', alignItems: 'center', width: '95%' },
   textInput: {
     flex: 1,
     borderWidth: 0,

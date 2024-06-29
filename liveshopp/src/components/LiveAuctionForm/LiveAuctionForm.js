@@ -40,14 +40,15 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
     !user.shipping_address;
 
   return (
-    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+    <View style={{ flexDirection: 'column', alignItems: 'center', width: '95%' }}>
       {user.hasValidPaymentMethod && user.shipping_address ? (
         <View
           style={{
             flexDirection: 'column',
             justifyContent: 'center',
+            width: '100%',
           }}>
-          <View>
+          <View style={{ width: '100%' }}>
             {currentUserLiveForm.map((field, idx) => (
               <Controller
                 key={idx}
@@ -58,6 +59,7 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
+                      width: '100%',
                     }}>
                     <View
                       style={{
@@ -82,8 +84,8 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
                     <Slider
                       value={field.value || bidAmountSelection}
                       step={10}
-                      trackStyle={{ height: 2 }}
-                      containerStyle={{ width: 265 }}
+                      trackStyle={{ height: 2, width: '100%' }}
+                      containerStyle={{ flex: 1 }}
                       renderThumbComponent={() => (
                         <View
                           style={{
@@ -94,7 +96,7 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
                             justifyContent: 'center',
                             borderRadius: 5,
                           }}>
-                          <FontAwesomeIcon icon={faAnglesRight} size={17} color={'white'} />
+                          <FontAwesomeIcon icon={faAnglesRight} size={17} color={colors.LIGHT} />
                         </View>
                       )}
                       maximumTrackTintColor={colors.DARK}
@@ -140,11 +142,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headlineContainerMessage: {
-    marginBottom: 30,
-    width: 280,
-    textAlign: 'center',
-  },
   headlineMessage: { color: colors.LIGHT },
   fieldContainer: { margin: 10 },
   headline: {
@@ -174,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.DARK,
     borderRadius: 8,
     justifyContent: 'center',
-    width: 324,
+    width: '100%',
   },
 });
 

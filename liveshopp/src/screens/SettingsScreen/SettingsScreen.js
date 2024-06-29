@@ -218,7 +218,7 @@ function SettingsScreen({ navigation }) {
                           {initialOrder.length &&
                           initialOrder.filter(
                             (order) =>
-                              order.userId === user.id ||
+                              order.userId._id === user.id ||
                               (order.sellerId === user.id &&
                                 order.deliveryStatut === "En attente d'expédition") ||
                               order.deliveryStatut === 'Expédié',
@@ -330,12 +330,13 @@ function SettingsScreen({ navigation }) {
                   style={{
                     flexDirection: 'row',
                     marginTop: 20,
+                    justifyContent: 'center',
                   }}>
-                  <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
-                    <CountryFlag isoCode={'fr'} size={11} />
+                  <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 20 }}>
+                    <CountryFlag isoCode={'fr'} size={12} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => changeLng('gb')}>
-                    <CountryFlag isoCode={'gb'} size={11} />
+                    <CountryFlag isoCode={'gb'} size={12} />
                   </TouchableOpacity>
                 </View>
               </View>

@@ -21,7 +21,7 @@ const LiveChatMessagesList = ({
   showObjectionableAdminAction,
 }) => {
   const getItemLayout = (data, index) => ({
-    length: 100,
+    length: 200,
     offset: 100 * index,
     index,
   });
@@ -32,7 +32,7 @@ const LiveChatMessagesList = ({
       showsVerticalScrollIndicator={false}
       initialScrollIndex={liveData.messages.length && liveData.messages.length - 1}
       getItemLayout={getItemLayout}
-      contentInset={{ top: 0, bottom: 50, left: 0, right: 0 }}
+      contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
       style={styles.flatList}
       data={liveData.messages}
       renderItem={({ item }) => {
@@ -45,9 +45,9 @@ const LiveChatMessagesList = ({
               <View style={styles.itemContainer}>
                 <View style={styles.userInfoContainer}>
                   {item.userId === user.id ? (
-                    <Text style={styles.usernameText}>{item.username} </Text>
+                    <Text style={styles.usernameText}>{item.username}</Text>
                   ) : (
-                    <Text style={styles.usersText}>{item.username} </Text>
+                    <Text style={styles.usersText}>{item.username}</Text>
                   )}
                   {isAdmin && (
                     <View style={styles.adminBadge}>
@@ -57,6 +57,7 @@ const LiveChatMessagesList = ({
                 </View>
                 {!isCurrentUser && !isAdmin && Platform.OS === 'ios' && (
                   <TouchableOpacity
+                    style={{ marginBottom: 5 }}
                     onPress={() =>
                       user.profil === 'admin'
                         ? showObjectionableAdminAction({
@@ -81,13 +82,13 @@ const LiveChatMessagesList = ({
 const styles = StyleSheet.create({
   flatList: {
     height: 230,
-    width: Dimensions.get('window').width,
-    paddingLeft: 30,
+    width: '95%',
     backgroundColor: 'transparent',
+    marginBottom: 25,
   },
   container: {
-    height: 50,
     backgroundColor: 'transparent',
+    marginBottom: 10,
   },
   itemContainer: {
     flexDirection: 'row',
@@ -102,12 +103,13 @@ const styles = StyleSheet.create({
     color: '#FFCD71',
     fontSize: 13,
     fontWeight: '700',
-    marginBottom: 3,
+    marginBottom: 0,
   },
   usersText: {
     color: colors.LIGHT,
     fontSize: 13,
     fontWeight: '700',
+    marginBottom: 0,
   },
   adminBadge: {
     backgroundColor: colors.LIGHT,

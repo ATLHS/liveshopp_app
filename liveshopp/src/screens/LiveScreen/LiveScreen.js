@@ -31,7 +31,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import LiveAuctionForm from '../../components/LiveAuctionForm/LiveAuctionForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
-import { LiveChatTextInput } from '../../components/LiveChatTextInput/LiveChatTextInput';
+import LiveChatTextInput from '../../components/LiveChatTextInput/LiveChatTextInput';
 import AccountSetupModal from '../../components/LiveScreen/AccountSetupModal';
 import CameraSwitch from '../../components/LiveScreen/CameraSwitch';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
@@ -314,7 +314,8 @@ export const LiveScreen = ({ navigation, route }) => {
   };
 
   const renderLiveUserActions = () => {
-    if (liveData.currentAuction.currentAuctionStatus === 'running') {
+    // render auction form and infos when current auction is running and seller ( host ) is live.
+    if (liveData.currentAuction.currentAuctionStatus === 'running' && liveData.hostIsLive) {
       return (
         <>
           <LiveAuctionInfo />
@@ -424,8 +425,9 @@ const colorList = [
 const styles = StyleSheet.create({
   chatContainer: {
     position: 'absolute',
-    bottom: 25,
-    width: '90%',
+    // Resolve chat input field hidden when keyboard is opened on Android devices
+    bottom: Platform.OS === 'ios' ? 10 : 40,
+    width: '95%',
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
