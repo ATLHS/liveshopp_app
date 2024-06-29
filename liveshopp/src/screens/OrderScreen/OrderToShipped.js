@@ -97,7 +97,7 @@ const OrderToShipped = () => {
                     <TouchableOpacity
                       style={styles.modalButton}
                       onPress={() => updateOrderStatusHasShipped(selectedOrder)}>
-                      <Text style={styles.modalButtonText}>{t('confirmed')}</Text>
+                      <Text style={styles.modalButtonText}>{t('confirm')}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
