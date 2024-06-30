@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Sentry = require('@sentry/node');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const Product = require('../../models/product');
+const { orderDeliveryStatus } = require('../../constants/OrderDeliveryStatus');
 
 router.get('/get-user-order', verifyJwt, async (req, res) => {
   try {
@@ -24,7 +25,7 @@ router.get('/get-user-order', verifyJwt, async (req, res) => {
 router.post('/update-order-status', verifyJwt, async (req, res) => {
   try {
     const orderId = req.body.data._id;
-    await Product.findOneAndUpdate({ _id: orderId }, { deliveryStatut: 'Expédié' }, { new: true });
+    await Product.findOneAndUpdate({ _id: orderId }, { deliveryStatut: orderDeliveryStatus.SHIPPED }, { new: true });
 
     const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
       'seller_id userId',

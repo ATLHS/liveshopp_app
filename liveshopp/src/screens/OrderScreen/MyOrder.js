@@ -14,7 +14,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
 import OrderCard from '../../components/OrderCard/OrderCard';
-import colors from '../../styles/colors';
 
 export const MyOrder = () => {
   const { t } = useTranslation();

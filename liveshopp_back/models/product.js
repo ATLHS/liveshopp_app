@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { orderDeliveryStatus } = require('../constants/OrderDeliveryStatus');
 
 const product = new mongoose.Schema(
   {
@@ -16,7 +17,7 @@ const product = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     productName: { type: String },
     salePrice: { type: String },
-    deliveryStatut: { type: String, default: "En attente d'expédition" },
+    deliveryStatut: { type: String, default: orderDeliveryStatus.PENDING },
     shipping_address: { type: String, default: '' },
   },
   { timestamps: true },

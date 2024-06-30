@@ -21,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
 import OrderCard from '../../components/OrderCard/OrderCard';
+import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
 import { setInitialOrder } from '../../redux/slices/oderSlice';
 import orderService from '../../services/order';
 import colors from '../../styles/colors';
@@ -40,13 +41,14 @@ const OrderToShipped = () => {
       if (
         initialOrder.filter(
           (order) =>
-            order.seller_id._id === user.id && order.deliveryStatut === "En attente d'expédition",
+            order.seller_id._id === user.id && order.deliveryStatut === OrderDeliveryStatus.PENDING,
         ).length
       ) {
         setOrder(
           initialOrder.filter(
             (order) =>
-              order.seller_id._id === user.id && order.deliveryStatut === "En attente d'expédition",
+              order.seller_id._id === user.id &&
+              order.deliveryStatut === OrderDeliveryStatus.PENDING,
           ),
         );
       }
@@ -116,7 +118,7 @@ const OrderToShipped = () => {
               {!initialOrder.filter(
                 (order) =>
                   order.seller_id._id === user.id &&
-                  order.deliveryStatut === "En attente d'expédition",
+                  order.deliveryStatut === OrderDeliveryStatus.PENDING,
               ).length && <NoData title={t('noItemsToShip')} message={t('itemsSoldAndToShip')} />}
               {isLoading && (
                 <View style={styles.loadingContainer}>

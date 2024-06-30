@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -24,6 +25,7 @@ const currentUserLiveForm = [
 ];
 
 export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { handleSubmit, control, setValue } = useForm();
   const [bidAmountSelection, setBidAmountSelection] = useState(10);
@@ -123,7 +125,7 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
         onPress={handleSubmit((data) => onPress(data))}
         style={[styles.startAuction, { opacity: disableUserForm ? 0.5 : 1 }]}>
         {!isLoading ? (
-          <Text style={styles.title}>Enchérir</Text>
+          <Text style={styles.title}>{t('bid')}</Text>
         ) : (
           <ActivityIndicator size="small" color={colors.DARK} />
         )}

@@ -28,6 +28,7 @@ import i18n from '../../../i18n';
 import Headline from '../../components/Auth/Headine/Headline';
 import Touchable from '../../components/Auth/Touchable/Touchable';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
+import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
 import { setIsAuthenticate, setUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
 import stripe from '../../services/stripe';
@@ -222,8 +223,8 @@ function SettingsScreen({ navigation }) {
                             (order) =>
                               order.userId._id === user.id ||
                               (order.sellerId === user.id &&
-                                order.deliveryStatut === "En attente d'expédition") ||
-                              order.deliveryStatut === 'Expédié',
+                                order.deliveryStatut === OrderDeliveryStatus.PENDING) ||
+                              order.deliveryStatut === OrderDeliveryStatus.SHIPPED,
                           ).length
                             ? t('deleteProfileWarning')
                             : t('deleteProfileAttention')}

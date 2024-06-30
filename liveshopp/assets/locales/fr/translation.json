@@ -39,6 +39,7 @@
   "remainingTime": "Temps restant",
   "auctionWinner": "Remporte l'enchère",
   "today": "Aujourd'hui",
+  "bid": "Enchérir",
   "live": "En direct",
   "at": " à ",
   "ref": "Réf",
@@ -170,5 +171,7 @@
   "reservePriceNotReached": "Prix de réserve non atteint...",
   "noReservePriceMessage": "",
   "logOut": "Déconnexion",
-  "countryRegion": "Pays/Région"
+  "countryRegion": "Pays/Région",
+  "pending": "En attente d'expédition",
+  "shipped": "Expédié"
 }

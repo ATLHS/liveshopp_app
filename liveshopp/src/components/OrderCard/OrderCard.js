@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
+import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
 import colors from '../../styles/colors';
 
 const OrderCard = ({
@@ -22,7 +23,7 @@ const OrderCard = ({
 }) => {
   const { t } = useTranslation();
   const deliveryStatutIcon = (deliveryStatus) => {
-    return deliveryStatus === "En attente d'expédition" ? faTruck : faTruckFast;
+    return deliveryStatus === OrderDeliveryStatus.PENDING ? faTruck : faTruckFast;
   };
 
   return (
@@ -200,7 +201,7 @@ const OrderCard = ({
                     size={15}
                     style={{ marginBottom: 0 }}
                     color={
-                      item.deliveryStatut === "En attente d'expédition"
+                      item.deliveryStatut === OrderDeliveryStatus.PENDING
                         ? colors.HOUR
                         : colors.SUCCESS
                     }
@@ -210,10 +211,11 @@ const OrderCard = ({
                       fontSize: 15,
                       fontWeight: '500',
                       marginLeft: 5,
-                      height: 16,
                       color: colors.DARK,
                     }}>
-                    {item.deliveryStatut}
+                    {item.deliveryStatut === OrderDeliveryStatus.PENDING
+                      ? t('pending')
+                      : t('shipped')}
                   </Text>
                 </View>
               </View>
