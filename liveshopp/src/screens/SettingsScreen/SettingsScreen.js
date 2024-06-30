@@ -172,7 +172,9 @@ function SettingsScreen({ navigation }) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
-          <ScrollView showsVerticalScrollIndicator={false} contentInset={{ bottom: 100 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 50 }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={styles.container}>
                 <Modal animationType="fade" transparent={true} visible={modalVisible}>
