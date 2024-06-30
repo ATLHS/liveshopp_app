@@ -314,8 +314,8 @@ export const LiveScreen = ({ navigation, route }) => {
   };
 
   const renderLiveUserActions = () => {
-    // render auction form and infos when current auction is running and seller ( host ) is live.
-    if (liveData.currentAuction.currentAuctionStatus === 'running' && liveData.hostIsLive) {
+    // TO DO: find a better way for when the seller's stream is interrupted during an ongoing auction
+    if (liveData.currentAuction.currentAuctionStatus === 'running') {
       return (
         <>
           <LiveAuctionInfo />
