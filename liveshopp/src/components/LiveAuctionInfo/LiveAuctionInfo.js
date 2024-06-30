@@ -97,11 +97,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 20,
   },
   auctionAmountContainer: {
     width: '30%',
     height: 40,
-    justifyContent: 'flex',
+    justifyContent: 'flex-end',
     backgroundColor: 'transparent',
   },
   auctionAmountText: {
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'flex-end',
     marginRight: 10,
+    backgroundColor: 'transparent',
   },
   timeText: {
     color: colors.LIGHT,

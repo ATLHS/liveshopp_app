@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     position: 'absolute',
     // Resolve chat input field hidden when keyboard is opened on Android devices
-    bottom: Platform.OS === 'ios' ? 10 : 40,
+    bottom: Platform.OS === 'ios' ? 10 : 60,
     width: '95%',
     backgroundColor: 'transparent',
     justifyContent: 'center',
