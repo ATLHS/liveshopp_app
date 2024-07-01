@@ -50,7 +50,6 @@ export const LiveScreen = ({ navigation, route }) => {
 
   /** @type {import("react").MutableRefObject<IRtcEngine | null>} */
   const agoraEngineRef = useRef(null);
-  const list = useRef(null);
   const panelRef = useRef(null);
 
   const [isHost] = useState(user.id === seller_id);
@@ -168,12 +167,6 @@ export const LiveScreen = ({ navigation, route }) => {
       releaseSDKEngine();
     };
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      list.current.scrollToEnd();
-    }, [liveData.messages.length]),
-  );
 
   const startCurrentAuction = (channelName, data) => {
     socket.emit('startCurrentAuction', { channelName, data });
@@ -395,8 +388,7 @@ export const LiveScreen = ({ navigation, route }) => {
 
           <View style={styles.chatContainer}>
             <LiveChatMessagesList
-              list={list}
-              liveData={liveData}
+              messages={liveData.messages}
               user={user}
               showObjectionableAction={showObjectionableAction}
               showObjectionableAdminAction={showObjectionableAdminAction}
