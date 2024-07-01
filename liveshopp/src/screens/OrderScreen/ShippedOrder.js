@@ -16,6 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import NoData from '../../components/NoData/NoData';
 import OrderCard from '../../components/OrderCard/OrderCard';
+import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
 import colors from '../../styles/colors';
 
 export const ShippedOrder = () => {
@@ -29,12 +30,15 @@ export const ShippedOrder = () => {
     React.useCallback(() => {
       if (
         initialOrder.filter(
-          (order) => order.seller_id._id === user.id && order.deliveryStatut === 'Expédié',
+          (order) =>
+            order.seller_id._id === user.id && order.deliveryStatut === OrderDeliveryStatus.SHIPPED,
         ).length
       ) {
         setOrder(
           initialOrder.filter(
-            (order) => order.seller_id._id === user.id && order.deliveryStatut === 'Expédié',
+            (order) =>
+              order.seller_id._id === user.id &&
+              order.deliveryStatut === OrderDeliveryStatus.SHIPPED,
           ),
         );
       }
@@ -59,7 +63,9 @@ export const ShippedOrder = () => {
                 />
               )}
               {!initialOrder.filter(
-                (order) => order.seller_id._id === user.id && order.deliveryStatut === 'Expédié',
+                (order) =>
+                  order.seller_id._id === user.id &&
+                  order.deliveryStatut === OrderDeliveryStatus.SHIPPED,
               ).length && <NoData title={t('noItemsShipped')} message={t('shippedItemsInfo')} />}
               {isLoading && (
                 <View style={styles.loadingContainer}>

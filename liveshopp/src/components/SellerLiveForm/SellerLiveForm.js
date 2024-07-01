@@ -69,11 +69,12 @@ export const SellerLiveForm = ({ onPress }) => {
   const [disabled, setDisabled] = useState(false);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ width: '100%', alignItems: 'center' }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'center',
+          width: '95%',
         }}>
         {currentSellerLiveForm.map((textField, idx) => (
           <Controller
@@ -81,7 +82,7 @@ export const SellerLiveForm = ({ onPress }) => {
             control={control}
             name={textField.name}
             render={({ field, _, formState }) => (
-              <View style={{}}>
+              <>
                 {textField.name === 'product_reserved_price' && (
                   <Text
                     style={{
@@ -89,8 +90,8 @@ export const SellerLiveForm = ({ onPress }) => {
                       fontWeight: '500',
                       marginBottom: 0,
                       position: 'absolute',
-                      bottom: 50,
-                      left: 10,
+                      bottom: 45,
+                      left: '57.5%',
                       color: colors.LIGHT,
                       fontStyle: 'italic',
                     }}>
@@ -101,21 +102,20 @@ export const SellerLiveForm = ({ onPress }) => {
                   style={{
                     width:
                       textField.name === 'product_name'
-                        ? 85
+                        ? '25%'
                         : textField.name === 'product_reserved_price'
-                        ? 100
+                        ? '28%'
                         : textField.name === 'product_auction_time'
-                        ? 35
-                        : 90,
+                        ? '10%'
+                        : '28%',
                     borderWidth: 0,
-                    margin: 6,
                     borderRadius: 5,
                     borderBottomLeftRadius: textField.name === 'product_reserved_price' ? 0 : 5,
                     borderTopLeftRadius: textField.name === 'product_reserved_price' ? 0 : 5,
                     borderBottomRightRadius: textField.name === 'product_price' ? 0 : 5,
                     borderTopRightRadius: textField.name === 'product_price' ? 0 : 5,
-                    marginRight: textField.name === 'product_price' ? 0 : 5,
-                    marginLeft: textField.name === 'product_reserved_price' ? 0 : 5,
+                    marginRight: textField.name === 'product_price' ? 0 : '2.3%',
+                    marginLeft: textField.name === 'product_reserved_price' ? 0 : '2.2%',
                     height: 40,
                     color: colors.LIGHT,
                     padding: 5,
@@ -135,20 +135,7 @@ export const SellerLiveForm = ({ onPress }) => {
                   maxLength={textField.name === 'product_auction_time' ? 1 : 500}
                   keyboardType={textField.name === 'product_name' ? 'default' : 'number-pad'}
                 />
-                {textField.name === 'product_reserved_price' && (
-                  <Text
-                    style={{
-                      position: 'absolute',
-                      color: '#CCCCCC',
-                      left: -2,
-                      top: 14,
-                      fontWeight: '500',
-                      fontSize: 18,
-                    }}>
-                    /
-                  </Text>
-                )}
-              </View>
+              </>
             )}
             rules={textField.validation}
           />
@@ -210,13 +197,12 @@ const styles = StyleSheet.create({
   },
   startAuction: {
     height: 50,
-    margin: 6,
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: colors.DARK,
     borderRadius: 5,
     justifyContent: 'center',
-    width: 330,
+    width: '95%',
   },
 });
 

@@ -23,12 +23,12 @@ const FieldWrapper = ({ control, schema }) => {
           <>
             <FormConstructor inputField={field} {...props} />
             <MessageHelper {...props} />
-            {field.helper ? (
+            {field.helper && (
               <View
                 style={
                   isAuthenticate ? outlinedStyles.helperContainer : containedStyles.helperContainer
                 }>
-                <Text
+                <View
                   style={isAuthenticate ? outlinedStyles.helperText : containedStyles.helperText}>
                   {field.helper.helperLink ? (
                     <View>
@@ -39,14 +39,12 @@ const FieldWrapper = ({ control, schema }) => {
                       <Text style={{ color: colors.LIGHT }}>{field.helper.helperMessage2}</Text>
                     </View>
                   ) : (
-                    <View style={{ marginBottom: 20 }}>
-                      <Text style={{ color: colors.LIGHT }}>{field.helper}</Text>
+                    <View style={styles.helperContainer}>
+                      <Text style={styles.helperMessage}>{field.helper}</Text>
                     </View>
                   )}
-                </Text>
+                </View>
               </View>
-            ) : (
-              <Text />
             )}
           </>
         )}
@@ -55,6 +53,11 @@ const FieldWrapper = ({ control, schema }) => {
     </View>
   ));
 };
+
+const styles = StyleSheet.create({
+  helperContainer: { marginBottom: 20 },
+  helperMessage: { color: colors.LIGHT },
+});
 
 const containedStyles = StyleSheet.create({
   helperContainer: { width: 350 },

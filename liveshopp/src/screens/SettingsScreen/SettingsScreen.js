@@ -28,6 +28,7 @@ import i18n from '../../../i18n';
 import Headline from '../../components/Auth/Headine/Headline';
 import Touchable from '../../components/Auth/Touchable/Touchable';
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
+import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
 import { setIsAuthenticate, setUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
 import stripe from '../../services/stripe';
@@ -172,7 +173,9 @@ function SettingsScreen({ navigation }) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
-          <ScrollView showsVerticalScrollIndicator={false} contentInset={{ bottom: 100 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 50 }}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={styles.container}>
                 <Modal animationType="fade" transparent={true} visible={modalVisible}>
@@ -218,10 +221,10 @@ function SettingsScreen({ navigation }) {
                           {initialOrder.length &&
                           initialOrder.filter(
                             (order) =>
-                              order.userId === user.id ||
+                              order.userId._id === user.id ||
                               (order.sellerId === user.id &&
-                                order.deliveryStatut === "En attente d'expédition") ||
-                              order.deliveryStatut === 'Expédié',
+                                order.deliveryStatut === OrderDeliveryStatus.PENDING) ||
+                              order.deliveryStatut === OrderDeliveryStatus.SHIPPED,
                           ).length
                             ? t('deleteProfileWarning')
                             : t('deleteProfileAttention')}
@@ -330,12 +333,13 @@ function SettingsScreen({ navigation }) {
                   style={{
                     flexDirection: 'row',
                     marginTop: 20,
+                    justifyContent: 'center',
                   }}>
-                  <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
-                    <CountryFlag isoCode={'fr'} size={11} />
+                  <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 20 }}>
+                    <CountryFlag isoCode={'fr'} size={12} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => changeLng('gb')}>
-                    <CountryFlag isoCode={'gb'} size={11} />
+                    <CountryFlag isoCode={'gb'} size={12} />
                   </TouchableOpacity>
                 </View>
               </View>

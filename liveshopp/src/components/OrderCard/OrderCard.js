@@ -2,9 +2,16 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { faLocationDot, faStore, faTruck, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import {
+  faLocationDot,
+  faStore,
+  faTruck,
+  faTruckFast,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
+import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
 import colors from '../../styles/colors';
 
 const OrderCard = ({
@@ -16,13 +23,11 @@ const OrderCard = ({
 }) => {
   const { t } = useTranslation();
   const deliveryStatutIcon = (deliveryStatus) => {
-    return deliveryStatus === "En attente d'expédition" ? faTruck : faTruckFast;
+    return deliveryStatus === OrderDeliveryStatus.PENDING ? faTruck : faTruckFast;
   };
+
   return (
     <FlatList
-      contentContainerStyle={{
-        flexGrow: 1,
-      }}
       showsVerticalScrollIndicator={false}
       contentInset={{ bottom: 100 }}
       data={order}
@@ -37,7 +42,7 @@ const OrderCard = ({
           <View
             style={{
               flex: 1,
-              width: 370,
+              width: '100%',
               borderRadius: 6,
               borderStyle: 'solid',
               borderWidth: 0,
@@ -68,6 +73,7 @@ const OrderCard = ({
                     style={{
                       fontSize: 20,
                       fontWeight: '800',
+                      color: colors.DARK,
                     }}>
                     {item.productName}
                   </Text>
@@ -80,6 +86,7 @@ const OrderCard = ({
                     style={{
                       fontSize: 20,
                       fontWeight: '800',
+                      color: colors.DARK,
                     }}>
                     {item.salePrice}€
                   </Text>
@@ -99,6 +106,7 @@ const OrderCard = ({
                     style={{
                       fontSize: 14,
                       fontWeight: '800',
+                      color: colors.DARK,
                     }}>
                     {t('ref')} :{' '}
                   </Text>
@@ -106,8 +114,31 @@ const OrderCard = ({
                     style={{
                       fontSize: 13,
                       fontWeight: '500',
+                      color: colors.DARK,
                     }}>
                     {item.auctionId}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  marginBottom: 20,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <FontAwesomeIcon icon={faStore} size={15} />
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: '500',
+                      marginLeft: 5,
+                      color: colors.DARK,
+                    }}>
+                    {item.seller_id && item.seller_id.company_name}
                   </Text>
                 </View>
               </View>
@@ -121,14 +152,15 @@ const OrderCard = ({
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <FontAwesomeIcon icon={faStore} size={15} />
+                  <FontAwesomeIcon icon={faUser} size={15} />
                   <Text
                     style={{
                       fontSize: 15,
                       fontWeight: '500',
                       marginLeft: 5,
+                      color: colors.DARK,
                     }}>
-                    {item.seller_id && item.seller_id.company_name}
+                    {`${item.userId.firstname} ${item.userId.lastname}`}
                   </Text>
                 </View>
               </View>
@@ -148,6 +180,7 @@ const OrderCard = ({
                       fontSize: 15,
                       fontWeight: '500',
                       marginLeft: 5,
+                      color: colors.DARK,
                     }}>
                     {item.shipping_address}
                   </Text>
@@ -167,15 +200,22 @@ const OrderCard = ({
                     icon={deliveryStatutIcon(item.deliveryStatut)}
                     size={15}
                     style={{ marginBottom: 0 }}
+                    color={
+                      item.deliveryStatut === OrderDeliveryStatus.PENDING
+                        ? colors.HOUR
+                        : colors.SUCCESS
+                    }
                   />
                   <Text
                     style={{
                       fontSize: 15,
                       fontWeight: '500',
                       marginLeft: 5,
-                      height: 16,
+                      color: colors.DARK,
                     }}>
-                    {item.deliveryStatut}
+                    {item.deliveryStatut === OrderDeliveryStatus.PENDING
+                      ? t('pending')
+                      : t('shipped')}
                   </Text>
                 </View>
               </View>

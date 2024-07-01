@@ -13,6 +13,7 @@ const { updateCustomer } = require('../../utils/updateCustomer.js');
 const stripeUtils = require('../../utils/stripeUtils');
 const BannedUsers = require('../../models/banned');
 const VideosItem = require('../../models/auction_videos_items');
+const { orderDeliveryStatus } = require('../../constants/OrderDeliveryStatus');
 
 router.post('/update-customer-profil', verifyJwt, async (req, res) => {
   try {
@@ -323,7 +324,7 @@ router.post('/delete-customer', verifyJwt, async (req, res) => {
     // delete all lives from the current sellers profile
     if (customer.profil === 'seller') {
       // check if the seller has any unshipped products
-      const product = await Product.findOne({ seller_id: customer._id, deliveryStatut: "En attente d'expédition" });
+      const product = await Product.findOne({ seller_id: customer._id, deliveryStatut: orderDeliveryStatus.PENDING });
       if (product) {
         return res.status(400).json({
           message: req.t('accountCannotBeDeletedPendingOrders'),

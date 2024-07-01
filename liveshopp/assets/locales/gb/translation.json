@@ -39,6 +39,7 @@
   "remainingTime": "Remaining time",
   "auctionWinner": "Winner",
   "today": "Today",
+  "bid": "Bid",
   "live": "Live",
   "at": " at ",
   "ref": "Ref",
@@ -116,7 +117,7 @@
   "noLiveFinished": "You have no finished live streams",
   "allLivesFinished": "All your finished live streams will appear here.",
   "closeLivePrompt": "CLOSE THE LIVE:",
-  "joinLive": "Join the live",
+  "joinLive": "Go live",
   "noLiveOngoing": "You have no live ongoing",
   "scheduledLiveSoon": "A scheduled live will appear here 5 minutes before the show starts",
   "createLiveNow": "Create a live now?",
@@ -170,5 +171,7 @@
   "reservePriceNotReached": "Reserve price not reached...",
   "noReservePriceMessage": "",
   "logOut": "Log Out",
-  "countryRegion": "Country/Region"
+  "countryRegion": "Country/Region",
+  "pending": "Awaiting for shipment",
+  "shipped": "Shipped"
 }

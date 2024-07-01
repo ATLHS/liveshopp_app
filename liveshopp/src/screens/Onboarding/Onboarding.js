@@ -41,14 +41,14 @@ const Onboarding = ({ navigation }) => {
           />
           {}
           <OutlinedButton title={t('login')} onPress={() => navigation.navigate('SignIn')} />
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 10 }}>
-            <CountryFlag isoCode={'fr'} size={11} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => changeLng('gb')}>
-            <CountryFlag isoCode={'gb'} size={11} />
-          </TouchableOpacity>
+          <View style={styles.langageContainerSelector}>
+            <TouchableOpacity onPress={() => changeLng('fr')} style={{ marginRight: 20 }}>
+              <CountryFlag isoCode={'fr'} size={12} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => changeLng('gb')}>
+              <CountryFlag isoCode={'gb'} size={12} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
+  langageContainerSelector: { flexDirection: 'row', justifyContent: 'center', marginTop: 30 },
   dropdownButtonStyle: {
     width: 130,
     height: 35,

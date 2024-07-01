@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
@@ -24,6 +25,7 @@ const currentUserLiveForm = [
 ];
 
 export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.user);
   const { handleSubmit, control, setValue } = useForm();
   const [bidAmountSelection, setBidAmountSelection] = useState(10);
@@ -40,14 +42,15 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
     !user.shipping_address;
 
   return (
-    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+    <View style={{ flexDirection: 'column', alignItems: 'center', width: '95%' }}>
       {user.hasValidPaymentMethod && user.shipping_address ? (
         <View
           style={{
             flexDirection: 'column',
             justifyContent: 'center',
+            width: '100%',
           }}>
-          <View>
+          <View style={{ width: '100%' }}>
             {currentUserLiveForm.map((field, idx) => (
               <Controller
                 key={idx}
@@ -58,6 +61,7 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
+                      width: '100%',
                     }}>
                     <View
                       style={{
@@ -82,8 +86,8 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
                     <Slider
                       value={field.value || bidAmountSelection}
                       step={10}
-                      trackStyle={{ height: 2 }}
-                      containerStyle={{ width: 265 }}
+                      trackStyle={{ height: 2, width: '100%' }}
+                      containerStyle={{ flex: 1 }}
                       renderThumbComponent={() => (
                         <View
                           style={{
@@ -94,7 +98,7 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
                             justifyContent: 'center',
                             borderRadius: 5,
                           }}>
-                          <FontAwesomeIcon icon={faAnglesRight} size={17} color={'white'} />
+                          <FontAwesomeIcon icon={faAnglesRight} size={17} color={colors.LIGHT} />
                         </View>
                       )}
                       maximumTrackTintColor={colors.DARK}
@@ -121,7 +125,7 @@ export const LiveAuctionForm = ({ navigation, onPress, liveData }) => {
         onPress={handleSubmit((data) => onPress(data))}
         style={[styles.startAuction, { opacity: disableUserForm ? 0.5 : 1 }]}>
         {!isLoading ? (
-          <Text style={styles.title}>Enchérir</Text>
+          <Text style={styles.title}>{t('bid')}</Text>
         ) : (
           <ActivityIndicator size="small" color={colors.DARK} />
         )}
@@ -139,11 +143,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  headlineContainerMessage: {
-    marginBottom: 30,
-    width: 280,
-    textAlign: 'center',
   },
   headlineMessage: { color: colors.LIGHT },
   fieldContainer: { margin: 10 },
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.DARK,
     borderRadius: 8,
     justifyContent: 'center',
-    width: 324,
+    width: '100%',
   },
 });
 

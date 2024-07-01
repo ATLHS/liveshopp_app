@@ -92,7 +92,7 @@ const LiveCard = ({
           </Text>
         </ImageBackground>
       </TouchableOpacity>
-      <Text style={styles.category}>{category}</Text>
+      <Text style={styles.category}>{category === 'Mode' ? t('fashion') : category}</Text>
     </View>
   );
 };

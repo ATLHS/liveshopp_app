@@ -28,12 +28,14 @@ export const LiveAuctionInfo = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.productName}>{liveData.currentAuction.productName}</Text>
-      {liveData.currentAuction.currentMessageInfo && (
-        <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>{t(liveData.currentAuction.currentMessageInfo)}</Text>
-        </View>
-      )}
+      <View style={{ justifyContent: 'flex-start', width: '100%' }}>
+        <Text style={styles.productName}>{liveData.currentAuction.productName}</Text>
+        {liveData.currentAuction.currentMessageInfo && (
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageText}>{t(liveData.currentAuction.currentMessageInfo)}</Text>
+          </View>
+        )}
+      </View>
       <View style={styles.auctionInfoContainer}>
         <View style={styles.auctionAmountContainer}>
           <Text style={styles.auctionAmountText}>
@@ -62,26 +64,24 @@ export const LiveAuctionInfo = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 350,
+    width: '95%',
     backgroundColor: 'transparent',
     flexDirection: 'column',
-    padding: 15,
     alignItems: 'center',
   },
   productName: {
-    width: 350,
+    width: '100%',
     color: colors.LIGHT,
     fontFamily: 'Roboto-Regular',
     fontSize: 20,
     fontWeight: '500',
-    padding: 15,
   },
   messageContainer: {
-    width: 320,
+    width: '100%',
     paddingBottom: 0,
     justifyContent: 'center',
+    backgroundColor: 'transparent',
     height: 30,
-    paddingRight: 15,
     borderRadius: 4,
   },
   messageText: {
@@ -91,19 +91,19 @@ const styles = StyleSheet.create({
   },
   auctionInfoContainer: {
     height: 70,
-    width: 350,
+    width: '100%',
     backgroundColor: 'transparent',
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 15,
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   auctionAmountContainer: {
-    width: 100,
+    width: '30%',
     height: 40,
     justifyContent: 'flex-end',
-    marginRight: 10,
+    backgroundColor: 'transparent',
   },
   auctionAmountText: {
     color: colors.LIGHT,
@@ -117,10 +117,11 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   timeContainer: {
-    width: 85,
+    width: '30%',
     height: 40,
     justifyContent: 'flex-end',
     marginRight: 10,
+    backgroundColor: 'transparent',
   },
   timeText: {
     color: colors.LIGHT,
@@ -135,9 +136,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   winnerContainer: {
-    width: 100,
+    width: '35%',
     height: 40,
     justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
   },
   winnerText: {
     color: colors.LIGHT,

@@ -66,7 +66,7 @@ export const SellerSignUp = ({ navigation }) => {
           message: t('businessSectorPlaceholder'),
         },
       },
-      options: [t('sport'), t('fashion'), t('technology'), t('antique')],
+      options: [t('fashion'), t('antique')],
     },
     {
       name: 'role',

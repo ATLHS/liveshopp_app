@@ -31,7 +31,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import LiveAuctionForm from '../../components/LiveAuctionForm/LiveAuctionForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
-import { LiveChatTextInput } from '../../components/LiveChatTextInput/LiveChatTextInput';
+import LiveChatTextInput from '../../components/LiveChatTextInput/LiveChatTextInput';
 import AccountSetupModal from '../../components/LiveScreen/AccountSetupModal';
 import CameraSwitch from '../../components/LiveScreen/CameraSwitch';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
@@ -50,7 +50,6 @@ export const LiveScreen = ({ navigation, route }) => {
 
   /** @type {import("react").MutableRefObject<IRtcEngine | null>} */
   const agoraEngineRef = useRef(null);
-  const list = useRef(null);
   const panelRef = useRef(null);
 
   const [isHost] = useState(user.id === seller_id);
@@ -168,12 +167,6 @@ export const LiveScreen = ({ navigation, route }) => {
       releaseSDKEngine();
     };
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      list.current.scrollToEnd();
-    }, [liveData.messages.length]),
-  );
 
   const startCurrentAuction = (channelName, data) => {
     socket.emit('startCurrentAuction', { channelName, data });
@@ -314,6 +307,7 @@ export const LiveScreen = ({ navigation, route }) => {
   };
 
   const renderLiveUserActions = () => {
+    // TO DO: find a better way for when the seller's stream is interrupted during an ongoing auction
     if (liveData.currentAuction.currentAuctionStatus === 'running') {
       return (
         <>
@@ -393,13 +387,14 @@ export const LiveScreen = ({ navigation, route }) => {
           )}
 
           <View style={styles.chatContainer}>
-            <LiveChatMessagesList
-              list={list}
-              liveData={liveData}
-              user={user}
-              showObjectionableAction={showObjectionableAction}
-              showObjectionableAdminAction={showObjectionableAdminAction}
-            />
+            {liveData.messages && liveData.messages.length > 0 && (
+              <LiveChatMessagesList
+                messages={liveData.messages}
+                user={user}
+                showObjectionableAction={showObjectionableAction}
+                showObjectionableAdminAction={showObjectionableAdminAction}
+              />
+            )}
             {renderLiveUserActions()}
           </View>
 
@@ -424,8 +419,9 @@ const colorList = [
 const styles = StyleSheet.create({
   chatContainer: {
     position: 'absolute',
-    bottom: 25,
-    width: '90%',
+    // Resolve chat input field hidden when keyboard is opened on Android devices
+    bottom: Platform.OS === 'ios' ? 30 : 60,
+    width: '95%',
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
