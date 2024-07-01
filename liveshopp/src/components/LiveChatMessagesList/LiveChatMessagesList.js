@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     padding: 2,
     paddingRight: 4,
     paddingLeft: 4,
+    marginLeft: 10,
   },
   adminBadgeText: {
     color: colors.DARK,
