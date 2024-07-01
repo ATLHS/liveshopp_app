@@ -35,12 +35,6 @@ const LiveChatMessagesList = ({
     index,
   });
 
-  const onPress = () => {
-    user.profil === 'admin'
-      ? showObjectionableAdminAction({ item })
-      : showObjectionableAction(item);
-  };
-
   const renderItem = ({ item, index }) => {
     const isAdmin = item.profil === 'admin';
     const isBlocked = user.blockedUser.concat(user.blockedSeller).includes(item.userId);
@@ -71,7 +65,13 @@ const LiveChatMessagesList = ({
               )}
             </View>
             {!isCurrentUser && !isAdmin && Platform.OS === 'ios' && (
-              <TouchableOpacity style={styles.pressable} onPress={onPress}>
+              <TouchableOpacity
+                style={styles.pressable}
+                onPress={() => {
+                  user.profil === 'admin'
+                    ? showObjectionableAdminAction({ item })
+                    : showObjectionableAction({ item });
+                }}>
                 <FontAwesomeIcon icon={faEllipsis} color={colors.LIGHT} size={20} />
               </TouchableOpacity>
             )}
@@ -86,7 +86,8 @@ const LiveChatMessagesList = ({
     <FlatList
       ref={listRef}
       style={styles.flatList}
-      initialNumToRender={5}
+      removeClippedSubviews={true}
+      initialNumToRender={messages.length}
       data={messages}
       renderItem={renderItem}
       getItemLayout={getItemLayout}
