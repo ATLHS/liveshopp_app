@@ -33,7 +33,7 @@ import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
 import LiveChatMessagesList from '../../components/LiveChatMessagesList/LiveChatMessagesList';
 import { LiveChatTextInput } from '../../components/LiveChatTextInput/LiveChatTextInput';
 import AccountSetupModal from '../../components/LiveScreen/AccountSetupModal';
-import CameraSwitch from '../../components/LiveScreen/CameraSwitch';
+import LiveStreamToolbar from '../../components/LiveScreen/LiveStreamToolbar';
 import SellerLiveForm from '../../components/SellerLiveForm/SellerLiveForm';
 import admin from '../../services/admin';
 import socket from '../../services/config/clientSocketIoConfig';
@@ -181,10 +181,6 @@ export const LiveScreen = ({ navigation, route }) => {
 
   const closeModal = () => {
     setModalVisible(false);
-  };
-
-  const switchCamera = () => {
-    agoraEngineRef.current?.switchCamera();
   };
 
   const showCurrentLiveNotificationToast = () => {
@@ -407,7 +403,7 @@ export const LiveScreen = ({ navigation, route }) => {
             <LinearGradient colorList={colorList} angle={90} />
           </View>
           <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
-          {isHost && <CameraSwitch onPress={switchCamera} />}
+          {isHost && <LiveStreamToolbar agoraEngineRef={agoraEngineRef} liveData={liveData} />}
         </View>
       </KeyboardAvoidingView>
     </View>
