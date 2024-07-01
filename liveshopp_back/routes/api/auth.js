@@ -8,6 +8,7 @@ const UserSeller = require('../../models/seller');
 const User = require('../../models/user');
 const { updateCustomer } = require('../../utils/updateCustomer.js');
 const { randomFourDigitNumber } = require('../../utils/helpers.js');
+const discord = require('../../utils/discord');
 const {
   sendCodeToConfirmEmailRegistration,
   sendWelcomeEmail,
@@ -126,6 +127,8 @@ router.post('/user-signup', async (req, res) => {
       });
 
       user = await customer.save();
+
+      discord.newUser(customer);
     }
 
     // send email confirmed code to the user
@@ -170,7 +173,7 @@ router.post('/seller-signup', async (req, res) => {
     } else {
       const stripeCustomer = await stripeUtils.createCustomer({ company_name, email, phone });
 
-      const cusomter = new UserSeller({
+      const customer = new UserSeller({
         firstname,
         lastname,
         role,
@@ -184,7 +187,9 @@ router.post('/seller-signup', async (req, res) => {
         imageUrl: stripeCustomer.imageUrl || null,
       });
 
-      seller = await cusomter.save();
+      seller = await customer.save();
+
+      discord.newSeller(seller);
     }
 
     // send email confirmed code to the user
