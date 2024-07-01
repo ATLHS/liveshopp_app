@@ -387,12 +387,14 @@ export const LiveScreen = ({ navigation, route }) => {
           )}
 
           <View style={styles.chatContainer}>
-            <LiveChatMessagesList
-              messages={liveData.messages}
-              user={user}
-              showObjectionableAction={showObjectionableAction}
-              showObjectionableAdminAction={showObjectionableAdminAction}
-            />
+            {liveData.messages && liveData.messages.length > 0 && (
+              <LiveChatMessagesList
+                messages={liveData.messages}
+                user={user}
+                showObjectionableAction={showObjectionableAction}
+                showObjectionableAdminAction={showObjectionableAdminAction}
+              />
+            )}
             {renderLiveUserActions()}
           </View>
 
@@ -418,7 +420,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     position: 'absolute',
     // Resolve chat input field hidden when keyboard is opened on Android devices
-    bottom: Platform.OS === 'ios' ? 10 : 60,
+    bottom: Platform.OS === 'ios' ? 30 : 60,
     width: '95%',
     backgroundColor: 'transparent',
     justifyContent: 'center',
