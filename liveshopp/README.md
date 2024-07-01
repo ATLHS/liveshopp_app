@@ -33,7 +33,7 @@ Please refer to the latest official documentation on [react-native](https://reac
 sudo gem uninstall cocoapods
 bundle install
 cd ios/
-bundle exec pod install
+bundle exec pod install --repo-update
 ```
 
 ### 🤖 Android installation
