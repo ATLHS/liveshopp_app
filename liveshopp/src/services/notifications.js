@@ -1,86 +1,74 @@
-import notifee, { AuthorizationStatus } from '@notifee/react-native';
+import i18n from 'i18next';
+
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AuthorizationStatus,
+} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 
+import Notification from '../constants/Notification';
 import customer from './customer';
 
 const onNotification = async (notif) => {
   try {
-    console.log('in onNotification 2');
     console.log(notif);
 
-    // Request permissions (required for iOS)
-    await notifee.requestPermission();
-
     // Create a channel (required for Android)
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
+    await notifee.createChannel({
+      id: 'important',
+      name: 'Live stream',
+      lights: true,
+      vibration: true,
+      sound: 'default',
+      importance: AndroidImportance.HIGH,
+      visibility: AndroidVisibility.PUBLIC,
     });
 
-    console.log('channelid', channelId);
+    const data = JSON.parse(notif.data.notifee);
 
-    notifee
-      .displayNotification({
-        title: 'Your order has been shipped',
-        body: `Your order was shipped today super quickly!`,
-        android: {
-          channelId: 'default',
-        },
-      })
-      .then(
-        (s) => {
-          console.log('success', s);
-        },
-        (e) => {
-          console.log('rejected', e);
-        },
-      )
-      .catch((error) => {
-        console.log('got a probleme', error);
-      });
+    if (data.type && data.type === Notification.LIVE_STARTED) {
+      data.body = `${data.live.sellerName} ${i18n.t('notifSellerIsLive')}`;
+    }
 
-    console.log('finished');
-    // const { type } = notif.data;
-
-    // if (type === 'seller_joined') {
-    //   // DO SOMETHING SPECIFIC
-    // }
-
-    // notifee.displayNotification(JSON.parse(notif.data.notifee));
-    // notifee.displayNotification(notif);
+    await notifee.displayNotification(data);
   } catch (error) {
     console.log(error);
   }
 };
 
 const fetchAndStoreNotificationToken = async () => {
-  // Register the device with FCM
-  // await messaging().registerDeviceForRemoteMessages();
-
-  // Get the token
+  // Get the device notification token
   const token = await messaging().getToken();
-
-  console.log(token);
 
   // Save the token in DB
   customer.updateCustomerNotificationToken(token);
 };
 
 const requestUserPermission = async () => {
-  await notifee.requestPermission({
-    provisional: true,
+  const settings = await notifee.requestPermission({
+    alert: true,
+    badge: true,
+    provisional: false,
+    sound: true,
   });
+
+  if (settings.authorizationStatus === AuthorizationStatus.DENIED) return false;
+
+  return true;
 };
 
 const initNotifications = () => {
-  fetchAndStoreNotificationToken();
-  requestUserPermission();
+  if (requestUserPermission()) {
+    fetchAndStoreNotificationToken();
 
-  // Reset badge count when opening the app
-  notifee.setBadgeCount(0);
+    // Reset badge count when opening the app
+    notifee.setBadgeCount(0);
 
-  messaging().onMessage(onNotification);
-  messaging().setBackgroundMessageHandler(onNotification);
+    // Set notification handlers for foreground and background app states
+    messaging().setBackgroundMessageHandler(onNotification);
+    return messaging().onMessage(onNotification);
+  }
 };
 
 module.exports = { initNotifications };

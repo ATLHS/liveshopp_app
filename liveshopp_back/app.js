@@ -82,7 +82,6 @@ const order = require('./routes/api/order');
 const stripe = require('./routes/api/stripe');
 const admin = require('./routes/api/admin');
 const videos = require('./routes/api/video');
-const { sendLiveIsStarting } = require('./utils/notifications');
 
 app.use('/api/auth/', auth);
 app.use('/api/customer/', customer);
@@ -104,8 +103,6 @@ Sentry.setupExpressErrorHandler(app);
 
 httpServer.listen(process.env.PORT, () => {
   log.info(`Server listening on port ${process.env.PORT}`);
-
-  sendLiveIsStarting();
 
   // Restart auction timers if server went off during a live
   handler.restartAllChannelsAuctions();

@@ -70,7 +70,7 @@ module.exports = (io) => {
         // FIXME
         // We dont want to resend notifications if the seller quits and rejoins the channel
         // We should send notifications only once, when it's time?
-        // sendLiveIsStarting();
+        sendLiveIsStarting(live);
 
         await live.save();
       }
