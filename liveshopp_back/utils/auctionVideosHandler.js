@@ -125,6 +125,7 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req)
       auctionId: auctionItem._id,
       auctionsStatus: 'ended',
       userId: auction.userId._id,
+      // TO DO : add docModel
       productName: auctionItem.productName,
       salePrice: auction.amount,
       shipping_address: auction.userId.shipping_address,
