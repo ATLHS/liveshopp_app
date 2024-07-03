@@ -39,6 +39,8 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
       return;
     }
 
+    const model = customer.profil === 'user' ? 'User' : 'Seller';
+
     // register current sale product info in db
     const product = new Product({
       seller_id: sellerId,
@@ -46,6 +48,7 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
       auctionId: auctionId,
       auctionsStatus: auctionsStatus,
       userId: auction.userId,
+      docModel: model,
       productName: auction.productName,
       salePrice: auction.currentProductAmount,
       shipping_address: auction.shipping_address,
