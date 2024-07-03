@@ -26,6 +26,10 @@ const onNotification = async (notif) => {
   }
 };
 
+const onBackgroundEvent = async ({ type, detail }) => {
+  console.log('Background event detected', type, detail);
+};
+
 // This is a trick when the app is killed, the notification text is in english
 // Once through `onNotification()` it might create a new notification in another language
 // which sets two notifications in the notif center
@@ -33,6 +37,7 @@ const onNotification = async (notif) => {
 //
 const resetDisplayedNotifications = async () => {
   const oldNotifs = await notifee.getDisplayedNotifications();
+  console.log('deleteting old notifs', oldNotifs.length);
   oldNotifs.map((notification) => notifee.cancelDisplayedNotification(notification.id));
 };
 
@@ -83,6 +88,7 @@ const initNotifications = () => {
       createAndroidChannels();
 
       // Set notification handlers for foreground, background and killed app states
+      notifee.onBackgroundEvent(onBackgroundEvent);
       messaging().setBackgroundMessageHandler(onNotification);
       return messaging().onMessage(onNotification);
     }

@@ -11,7 +11,6 @@ import { setIsAuthenticate, setUser } from './src/redux/slices/userSlice';
 import { store } from './src/redux/store';
 import authService from './src/services/auth';
 import axiosConfig from './src/services/config/axiosConfig';
-import { initNotifications } from './src/services/notifications';
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -21,8 +20,6 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = initNotifications();
-
     AsyncStorage.getItem('@token').then((token) => {
       if (token) {
         axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
@@ -53,10 +50,6 @@ const App = () => {
         setIsLoading(false);
       }
     });
-
-    return () => {
-      unsubscribe();
-    };
   });
 
   return (

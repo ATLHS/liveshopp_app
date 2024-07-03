@@ -18,7 +18,6 @@ const sendLiveIsStarting = async (live) => {
       category: 'call',
       importance: 4,
       style: { type: 0, picture: live.imageUrl },
-      pressAction: { id: 'default' },
     };
 
     const ios = {
@@ -83,7 +82,7 @@ const sendLiveIsStarting = async (live) => {
       },
     });
 
-    log.info(result);
+    log.debug(result);
   } catch (error) {
     log.error(error);
     Sentry.captureException(error);
