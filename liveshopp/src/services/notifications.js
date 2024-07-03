@@ -12,29 +12,41 @@ import customer from './customer';
 
 const onNotification = async (notif) => {
   try {
-    console.log(notif);
-
-    // Create a channel (required for Android)
-    await notifee.createChannel({
-      id: 'important',
-      name: 'Live stream',
-      lights: true,
-      vibration: true,
-      sound: 'default',
-      importance: AndroidImportance.HIGH,
-      visibility: AndroidVisibility.PUBLIC,
-    });
-
     const data = JSON.parse(notif.data.notifee);
 
     if (data.type && data.type === Notification.LIVE_STARTED) {
       data.body = `${data.live.sellerName} ${i18n.t('notifSellerIsLive')}`;
     }
 
+    resetDisplayedNotifications();
+
     await notifee.displayNotification(data);
   } catch (error) {
     console.log(error);
   }
+};
+
+// This is a trick when the app is killed, the notification text is in english
+// Once through `onNotification()` it might create a new notification in another language
+// which sets two notifications in the notif center
+// By discarding old notifs, we keep only the latest one
+//
+const resetDisplayedNotifications = async () => {
+  const oldNotifs = await notifee.getDisplayedNotifications();
+  oldNotifs.map((notification) => notifee.cancelDisplayedNotification(notification.id));
+};
+
+// Create a channel (required for Android)
+const createAndroidChannels = async () => {
+  await notifee.createChannel({
+    id: 'important',
+    name: 'Live stream',
+    lights: true,
+    vibration: true,
+    sound: 'default',
+    importance: AndroidImportance.HIGH,
+    visibility: AndroidVisibility.PUBLIC,
+  });
 };
 
 const fetchAndStoreNotificationToken = async () => {
@@ -59,15 +71,24 @@ const requestUserPermission = async () => {
 };
 
 const initNotifications = () => {
-  if (requestUserPermission()) {
-    fetchAndStoreNotificationToken();
+  try {
+    if (requestUserPermission()) {
+      // Refresh notification token
+      fetchAndStoreNotificationToken();
 
-    // Reset badge count when opening the app
-    notifee.setBadgeCount(0);
+      // Reset badge count when opening the app
+      notifee.setBadgeCount(0);
 
-    // Set notification handlers for foreground and background app states
-    messaging().setBackgroundMessageHandler(onNotification);
-    return messaging().onMessage(onNotification);
+      // Create Android notifications channels
+      createAndroidChannels();
+
+      // Set notification handlers for foreground, background and killed app states
+      messaging().setBackgroundMessageHandler(onNotification);
+      return messaging().onMessage(onNotification);
+    }
+    return () => {};
+  } catch (error) {
+    console.error(error);
   }
 };
 

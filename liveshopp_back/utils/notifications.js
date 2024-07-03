@@ -1,6 +1,7 @@
 const Sentry = require('@sentry/node');
 const { firebase } = require('./services');
 const User = require('../models/user');
+const { log } = require('../middleware/logger');
 
 const sendLiveIsStarting = async (live) => {
   try {
@@ -16,9 +17,8 @@ const sendLiveIsStarting = async (live) => {
       largeIcon: live.imageUrl,
       category: 'call',
       importance: 4,
-      pressAction: {
-        id: 'default',
-      },
+      style: { type: 0, picture: live.imageUrl },
+      pressAction: { id: 'default' },
     };
 
     const ios = {
@@ -50,8 +50,8 @@ const sendLiveIsStarting = async (live) => {
             sellerName: live.sellerName,
             imageUrl: live.imageUrl,
           },
-          ios,
           android,
+          ios,
         }),
       },
       notification: {
@@ -73,18 +73,19 @@ const sendLiveIsStarting = async (live) => {
             // Note: iOS frequently will receive the message but decline to deliver it to your app.
             // This is an Apple design choice to favor user battery life over data-only delivery
             // reliability. It is not under app control, though you may see the behavior in device logs.
-            'content-available': true,
+            contentAvailable: true,
+            mutableContent: true,
             // Required for background/quit data-only messages on Android
             priority: 'high',
             sound: 'default',
-            contentAvailable: true,
           },
         },
       },
     });
 
-    console.log(result, result.responses[0].error);
+    log.info(result);
   } catch (error) {
+    log.error(error);
     Sentry.captureException(error);
   }
 };
