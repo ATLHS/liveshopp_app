@@ -19,8 +19,10 @@ Sentry.init({
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    initNotifications();
+    const unsubscribe = initNotifications();
+
     AsyncStorage.getItem('@token').then((token) => {
       if (token) {
         axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
@@ -51,6 +53,10 @@ const App = () => {
         setIsLoading(false);
       }
     });
+
+    return () => {
+      unsubscribe();
+    };
   });
 
   return (
