@@ -14,10 +14,11 @@ const product = new mongoose.Schema(
       type: String,
       enum: ['live', 'ended'],
     },
-    userId: { type: mongoose.Schema.Types.ObjectId, refPath: 'docModel' },
-    docModel: {
+    userId: { type: mongoose.Schema.Types.ObjectId, refPath: 'userType' },
+    userType: {
       type: String,
       enum: ['Seller', 'User'],
+      default: 'User',
     },
     productName: { type: String },
     salePrice: { type: String },
