@@ -3,11 +3,11 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import ActionPanel from './ActionPanel';
 import CameraSwitch from './CameraSwitch';
 
-const LiveStreamToolbar = ({ agoraEngineRef, liveData }) => {
+const LiveStreamToolbar = ({ agoraEngineRef, liveData, actionPanelRef }) => {
   return (
     <View style={styles.container}>
       <CameraSwitch agoraEngineRef={agoraEngineRef} />
-      <ActionPanel />
+      <ActionPanel actionPanelRef={actionPanelRef} />
     </View>
   );
 };

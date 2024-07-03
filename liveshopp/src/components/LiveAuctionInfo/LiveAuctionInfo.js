@@ -8,7 +8,7 @@ import { Duration } from 'luxon';
 
 import colors from '../../styles/colors';
 
-export const LiveAuctionInfo = () => {
+export const LiveAuctionInfo = ({ showReservePrice }) => {
   const { t } = useTranslation();
   const { liveData } = useSelector((state) => state.lives);
   const [time, setTime] = useState(Number);
@@ -31,6 +31,24 @@ export const LiveAuctionInfo = () => {
       <Text style={styles.productName}>{liveData.currentAuction.productName}</Text>
       {liveData.currentAuction.currentMessageInfo && (
         <View style={styles.messageContainer}>
+          {showReservePrice && (
+            <View
+              style={{
+                marginRight: 10,
+                backgroundColor: colors.DARK,
+                padding: 5,
+                borderRadius: 4,
+              }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: 800,
+                  color: colors.LIGHT,
+                }}>
+                {liveData.currentAuction.product_reserved_price} €
+              </Text>
+            </View>
+          )}
           <Text style={styles.messageText}>{t(liveData.currentAuction.currentMessageInfo)}</Text>
         </View>
       )}
@@ -77,17 +95,19 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   messageContainer: {
-    width: 320,
+    width: '100%',
     paddingBottom: 0,
-    justifyContent: 'center',
-    height: 30,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingRight: 15,
     borderRadius: 4,
   },
   messageText: {
     color: colors.LIGHT,
     fontFamily: 'Roboto-Regular',
-    fontSize: 12,
+    fontSize: 13,
+    fontWeight: 900,
   },
   auctionInfoContainer: {
     height: 70,

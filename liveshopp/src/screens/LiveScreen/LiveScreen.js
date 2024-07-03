@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from 'react-native';
@@ -18,6 +19,7 @@ import {
   createAgoraRtcEngine,
 } from 'react-native-agora';
 import { LinearGradient } from 'react-native-gradients';
+import BottomSheet from 'react-native-simple-bottom-sheet';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 
@@ -52,10 +54,18 @@ export const LiveScreen = ({ navigation, route }) => {
   const agoraEngineRef = useRef(null);
   const list = useRef(null);
   const panelRef = useRef(null);
+  const actionPanelRef = useRef(null);
 
   const [isHost] = useState(user.id === seller_id);
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [showReservePrice, setShowReservePrice] = useState(false);
+
+  const toggleShowReservePrice = () => {
+    setIsEnabled(!isEnabled);
+    setShowReservePrice(!showReservePrice);
+  };
 
   const setupVideoSDKEngine = async () => {
     try {
@@ -313,7 +323,7 @@ export const LiveScreen = ({ navigation, route }) => {
     if (liveData.currentAuction.currentAuctionStatus === 'running') {
       return (
         <>
-          <LiveAuctionInfo />
+          <LiveAuctionInfo showReservePrice={showReservePrice} />
           {user.profil !== 'admin' && !isHost && (
             <LiveAuctionForm
               liveData={liveData}
@@ -403,8 +413,61 @@ export const LiveScreen = ({ navigation, route }) => {
             <LinearGradient colorList={colorList} angle={90} />
           </View>
           <AccountSetupModal profile={user.profile} visible={modalVisible} onPress={closeModal} />
-          {isHost && <LiveStreamToolbar agoraEngineRef={agoraEngineRef} liveData={liveData} />}
+          {isHost && (
+            <LiveStreamToolbar
+              agoraEngineRef={agoraEngineRef}
+              liveData={liveData}
+              actionPanelRef={actionPanelRef}
+            />
+          )}
         </View>
+        <BottomSheet
+          lineStyle={{ marginTop: 30 }}
+          lineContainerStyle={{ margin: 0, height: 20 }}
+          wrapperStyle={{
+            height: '15%',
+          }}
+          sliderMinHeight={0}
+          ref={(ref) => (actionPanelRef.current = ref)}
+          isOpen={false}>
+          <View style={{ height: '90%' }}>
+            <View style={{ width: 200 }}>
+              <Text
+                style={{
+                  color: colors.DARK,
+                  textAlign: 'left',
+                  fontSize: 25,
+                  fontWeight: 800,
+                }}>
+                {t('parameter')}
+              </Text>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                marginTop: 10,
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text
+                style={{
+                  color: colors.DARK,
+                  textAlign: 'left',
+                  fontSize: 15,
+                }}>
+                {t('showReservePrice')}
+              </Text>
+              <Switch
+                trackColor={{ false: 'black', true: colors.PRIMARY }}
+                thumbColor={colors.LIGHT}
+                ios_backgroundColor="black"
+                onValueChange={toggleShowReservePrice}
+                value={isEnabled}
+              />
+            </View>
+          </View>
+        </BottomSheet>
       </KeyboardAvoidingView>
     </View>
   );

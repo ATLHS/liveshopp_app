@@ -170,5 +170,7 @@
   "reservePriceNotReached": "Reserve price not reached...",
   "noReservePriceMessage": "",
   "logOut": "Log Out",
-  "countryRegion": "Country/Region"
+  "countryRegion": "Country/Region",
+  "showReservePrice": "Display reserve price",
+  "parameter": "Parameter"
 }

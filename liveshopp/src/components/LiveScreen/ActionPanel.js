@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import colors from '../../styles/colors';
 
-const ActionPanel = ({ agoraEngineRef }) => {
-  const switchCamera = () => {
-    agoraEngineRef.current?.switchCamera();
+const ActionPanel = ({ actionPanelRef }) => {
+  const toggleActionPanel = () => {
+    actionPanelRef.current?.togglePanel();
   };
   return (
-    <TouchableOpacity style={styles.actionPanelContainer} onPress={() => {}}>
+    <TouchableOpacity style={styles.actionPanelContainer} onPress={() => toggleActionPanel()}>
       <FontAwesomeIcon icon={faEllipsisV} color={colors.LIGHT} size={25} />
     </TouchableOpacity>
   );
