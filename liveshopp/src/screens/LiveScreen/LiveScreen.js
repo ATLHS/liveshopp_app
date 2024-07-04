@@ -318,18 +318,17 @@ export const LiveScreen = ({ navigation, route }) => {
               onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
             />
           )}
-          {!isHost && <LiveChatTextInput onPress={(message) => emitNewLiveMessage(message)} />}
         </>
       );
     } else {
-      return isHost ? (
+      return (
+        isHost && (
         <SellerLiveForm
           onPress={(data) => startCurrentAuction(liveData.channelName, data)}
           currentAuctionIsRunning={liveData.currentAuction.currentAuctionStatus === 'running'}
           panelRef={panelRef}
         />
-      ) : (
-        <LiveChatTextInput onPress={(message) => emitNewLiveMessage(message)} />
+        )
       );
     }
   };
@@ -396,6 +395,7 @@ export const LiveScreen = ({ navigation, route }) => {
               />
             )}
             {renderLiveUserActions()}
+            {!isHost && <LiveChatTextInput onPress={(message) => emitNewLiveMessage(message)} />}
           </View>
 
           <View style={styles.shadowGradient}>
