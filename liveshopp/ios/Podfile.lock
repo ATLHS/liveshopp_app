@@ -1017,6 +1017,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-keep-awake (1.2.4):
+    - React-Core
   - react-native-pager-view (6.3.0):
     - DoubleConversion
     - glog
@@ -1444,6 +1446,7 @@ DEPENDENCIES:
   - react-native-agora (from `../node_modules/react-native-agora`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-keep-awake (from `../node_modules/@sayem314/react-native-keep-awake`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -1563,6 +1566,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-date-picker"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-keep-awake:
+    :path: "../node_modules/@sayem314/react-native-keep-awake"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
@@ -1670,6 +1675,7 @@ SPEC CHECKSUMS:
   react-native-agora: eeafa2f850a8bdd97666bf1eb5d72e46c2cf86ec
   react-native-date-picker: 6891317e850deae5b53d51355226e07a495aba61
   react-native-image-picker: c3afe5472ef870d98a4b28415fc0b928161ee5f7
+  react-native-keep-awake: a15b33cd9b94a2da9b0a1c50ac64ac2391d3e330
   react-native-pager-view: c1e29e1a6105a02807392ba822ad322447a72f55
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   react-native-video: 8cd68fa00f56087184154c0e976d3756adaad144
@@ -1714,7 +1720,7 @@ SPEC CHECKSUMS:
   StripePaymentSheet: 3eaf870c4388e44b0cc37e4c69d00b6957fd8bd7
   StripePaymentsUI: 59ccddeacad592b09fa67e8d641340820ddb4751
   StripeUICore: 879bbf5889265db13f52fac8aad7a176ba62481f
-  Yoga: 2f71ecf38d934aecb366e686278102a51679c308
+  Yoga: ae3c32c514802d30f687a04a6a35b348506d411f
 
 PODFILE CHECKSUM: e702cf89e5ed4364f27ee334ace7f0a7ed985d52
 

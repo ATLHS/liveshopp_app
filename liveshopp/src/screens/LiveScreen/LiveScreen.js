@@ -27,6 +27,7 @@ import { REACT_APP_AGORA_APP_ID } from '@env';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useFocusEffect } from '@react-navigation/native';
+import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 
 import LiveAuctionForm from '../../components/LiveAuctionForm/LiveAuctionForm';
 import LiveAuctionInfo from '../../components/LiveAuctionInfo/LiveAuctionInfo';
@@ -55,6 +56,9 @@ export const LiveScreen = ({ navigation, route }) => {
   const [isHost] = useState(user.id === seller_id);
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
+
+  // Prevent app to dim or go to sleep during a live
+  useKeepAwake();
 
   const setupVideoSDKEngine = async () => {
     try {
