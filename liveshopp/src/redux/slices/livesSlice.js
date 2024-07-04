@@ -48,7 +48,7 @@ export const livesSlice = createSlice({
       state.liveData = action.payload;
     },
     setCurrentAuction: (state, action) => {
-      state.liveData.currentAuction.currentAuctionStatus = 'paused';
+      state.liveData.currentAuction = action.payload;
     },
     setNewChatMessage: (state, action) => {
       state.liveData.messages.push(action.payload);

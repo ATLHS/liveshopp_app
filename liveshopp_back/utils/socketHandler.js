@@ -135,7 +135,7 @@ module.exports = (io) => {
 
       await saveChannel(channel);
 
-      io.to(channelName).emit('currentAuctionData', channel);
+      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
@@ -176,7 +176,7 @@ module.exports = (io) => {
 
       await saveChannel(channel);
 
-      io.to(channelName).emit('currentAuctionData', channel);
+      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
@@ -201,7 +201,7 @@ module.exports = (io) => {
         : 'noReservePriceMessage';
       await saveChannel(channel);
 
-      io.to(channelName).emit('currentAuctionData', channel);
+      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
 
       startTimer(channelName);
     } catch (error) {
@@ -234,7 +234,7 @@ module.exports = (io) => {
 
       const channel = await getChannel(channelName);
 
-      io.to(channelName).emit('currentAuctionData', channel);
+      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
 
       // stop the timer
       if (updatedTimer <= 0) {
@@ -276,7 +276,7 @@ module.exports = (io) => {
       channel.currentAuction.currentAuctionStatus = 'stopping';
 
       // send notification to the room
-      io.to(channelName).emit('currentAuctionData', channel);
+      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
 
       await saveChannel(channel);
     } catch (error) {
