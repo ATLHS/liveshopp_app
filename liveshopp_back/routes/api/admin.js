@@ -96,7 +96,7 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
         if (updatedCustomer) {
           io.emit('banUser', { updatedCustomer, liveData });
           return res.status(200).json({
-            message: req.t('userSuccessfullyBannedd', {
+            message: req.t('userSuccessfullyBanned', {
               username: customer.company_name || customer.firstname,
             }),
           });
