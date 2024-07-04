@@ -318,7 +318,7 @@ export const LiveScreen = ({ navigation, route }) => {
           <LiveAuctionInfo />
           {user.profil !== 'admin' && !isHost && (
             <LiveAuctionForm
-              liveData={liveData}
+              currentAuction={liveData.currentAuction}
               onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
             />
           )}
