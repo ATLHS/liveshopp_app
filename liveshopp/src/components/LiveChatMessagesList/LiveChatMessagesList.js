@@ -50,7 +50,7 @@ const LiveChatMessagesList = ({
 
             // If we render the last item, trigger scroll in 50ms
             if (index === messages.length - 1) {
-              setTimeout(() => listRef.current.scrollToEnd(), 50);
+              setTimeout(() => listRef.current?.scrollToEnd(), 50);
             }
           }}>
           <View style={styles.itemContainer}>
