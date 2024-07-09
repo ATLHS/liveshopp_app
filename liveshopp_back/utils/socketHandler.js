@@ -15,24 +15,23 @@ const Live = require('../models/live');
  * @param {import('socket.io').Server} io
  */
 module.exports = (io) => {
-  const leaveRoom = async function ({ liveData, user }) {
+  const leaveRoom = async function ({ liveId, sellerId, user }) {
     try {
       const socket = this;
-      const channelName = liveData.channelName;
-      const channel = await getChannel(channelName);
+      const channel = await getChannel(liveId);
 
-      socket.leave(channelName);
+      socket.leave(liveId);
 
-      const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
+      const connectedUsersCount = (await io.in(liveId).fetchSockets()).length;
       channel.userCount = connectedUsersCount;
 
-      if ((user.profil === 'seller' && user.id === liveData.sellerId) || user._id === liveData.sellerId) {
+      if ((user.profil === 'seller' && user.id === sellerId) || user._id === sellerId) {
         channel.hostIsLive = false;
       }
 
       await saveChannel(channel);
 
-      io.to(channelName).emit('channelData', channel);
+      io.to(liveId).emit('channelData', channel);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
@@ -49,18 +48,17 @@ module.exports = (io) => {
     try {
       const socket = this;
       const live = await Live.findById(liveId);
-      const channelName = live.live_name;
 
       // 1 add user to a room
-      socket.join(channelName);
+      socket.join(liveId);
       // 2 check if channel room exist
-      let channel = await getChannel(channelName);
+      let channel = await getChannel(liveId);
       // 3 if not => create room data linked to the seller
       if (!channel) {
         channel = await createChannel(live);
       }
 
-      const connectedUsersCount = (await io.in(channelName).fetchSockets()).length;
+      const connectedUsersCount = (await io.in(liveId).fetchSockets()).length;
 
       channel.userCount = connectedUsersCount;
 
@@ -74,14 +72,14 @@ module.exports = (io) => {
       channel.auctionsStatus = live.live_status;
       await saveChannel(channel);
 
-      io.to(channelName).emit('channelData', channel);
+      io.to(liveId).emit('channelData', channel);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
     }
   };
 
-  const newLiveMessage = async function ({ user, message, channelName }) {
+  const newLiveMessage = async function ({ user, message, liveId }) {
     try {
       const pseudo = `${user.firstname} ${user.lastname.charAt(0)}`;
       const id = generateUniqueId({
@@ -96,9 +94,9 @@ module.exports = (io) => {
         id,
       };
 
-      await addChatMessage(channelName, payload);
+      await addChatMessage(liveId, payload);
 
-      io.to(channelName).emit('newChatMessage', payload);
+      io.to(liveId).emit('newChatMessage', payload);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
@@ -128,24 +126,24 @@ module.exports = (io) => {
     }
   };
 
-  const pausedCurrentAuctionStatut = async (channelName) => {
+  const pausedCurrentAuctionStatus = async (liveId) => {
     try {
-      const channel = await getChannel(channelName);
+      const channel = await getChannel(liveId);
       channel.currentAuction.currentAuctionStatus = 'paused';
 
       await saveChannel(channel);
 
-      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
+      io.to(liveId).emit('currentAuctionData', channel.currentAuction);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
     }
   };
 
-  const bid = async function ({ channelName, data }) {
+  const bid = async function ({ liveId, data }) {
     try {
       const bidAmount = Number(data.bid);
-      const channel = await getChannel(channelName);
+      const channel = await getChannel(liveId);
       const { currentAuction } = channel;
 
       // FIXME
@@ -176,16 +174,16 @@ module.exports = (io) => {
 
       await saveChannel(channel);
 
-      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
+      io.to(liveId).emit('currentAuctionData', channel.currentAuction);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
     }
   };
 
-  const startCurrentAuction = async function ({ channelName, data }) {
+  const startCurrentAuction = async function ({ liveId, data }) {
     try {
-      const channel = await getChannel(channelName);
+      const channel = await getChannel(liveId);
       const timer = data.product_auction_time * 60; // in seconds
 
       channel.currentAuction.productName = data.product_name;
@@ -201,9 +199,9 @@ module.exports = (io) => {
         : 'noReservePriceMessage';
       await saveChannel(channel);
 
-      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
+      io.to(liveId).emit('currentAuctionData', channel.currentAuction);
 
-      startTimer(channelName);
+      startTimer(liveId);
     } catch (error) {
       log.error(error);
       Sentry.captureException(error);
@@ -215,9 +213,8 @@ module.exports = (io) => {
       const channels = await getChannels();
       for (const channel of channels) {
         if (channel.currentAuction.currentAuctionStatus === 'running') {
-          const channelName = channel.channelName;
-          log.warn(`Restarting current auction timer for channel ${channelName}`);
-          startTimer(channelName);
+          log.warn(`Restarting current auction timer for channel ${channel.auctionId}`);
+          startTimer(channel.auctionId);
         }
       }
     } catch (error) {
@@ -227,19 +224,19 @@ module.exports = (io) => {
   };
 
   // Timer ticks every second, no matter how long the processing takes
-  const startTimer = async (channelName) => {
+  const startTimer = async (liveId) => {
     const interval = setInterval(async () => {
-      const result = await updateTimer(channelName);
+      const result = await updateTimer(liveId);
       const updatedTimer = result[0];
 
-      const channel = await getChannel(channelName);
+      const channel = await getChannel(liveId);
 
-      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
+      io.to(liveId).emit('currentAuctionData', channel.currentAuction);
 
       // stop the timer
       if (updatedTimer <= 0) {
         clearInterval(interval);
-        onAuctionFinished(channelName);
+        onAuctionFinished(liveId);
       }
     }, 1000);
   };
@@ -248,9 +245,9 @@ module.exports = (io) => {
   // Bid with reserve price not reached ( = or > ) = no charge
   // Bid with reached reserve price = charge
   // Bid without reserve price = charge
-  const onAuctionFinished = async function (channelName) {
+  const onAuctionFinished = async function (liveId) {
     try {
-      const channel = await getChannel(channelName);
+      const channel = await getChannel(liveId);
 
       if (
         channel.currentAuction.userId &&
@@ -276,7 +273,7 @@ module.exports = (io) => {
       channel.currentAuction.currentAuctionStatus = 'stopping';
 
       // send notification to the room
-      io.to(channelName).emit('currentAuctionData', channel.currentAuction);
+      io.to(liveId).emit('currentAuctionData', channel.currentAuction);
 
       await saveChannel(channel);
     } catch (error) {
@@ -291,7 +288,7 @@ module.exports = (io) => {
     joinChannel,
     leaveRoom,
     newLiveMessage,
-    pausedCurrentAuctionStatut,
+    pausedCurrentAuctionStatus,
     restartAllChannelsAuctions,
     startCurrentAuction,
   };

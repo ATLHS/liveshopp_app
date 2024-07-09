@@ -1,9 +1,9 @@
 import axiosConfig from './config/axiosConfig';
 
 const live = {
-  getAgoraToken(channelName) {
+  getAgoraToken(liveId) {
     return axiosConfig
-      .post('/api/live/get-agora-token', { data: { channelName } })
+      .post('/api/live/get-agora-token', { data: { liveId } })
       .then(({ data }) => data)
       .catch(({ response }) => Promise.reject(response.data));
   },

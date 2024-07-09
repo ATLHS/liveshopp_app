@@ -50,7 +50,7 @@ const channel = (live) => ({
   channelName: live.live_name,
   sellerId: live.seller_id,
   sellerName: live.sellerName,
-  auctionId: live._id,
+  auctionId: live._id.toString(),
   auctionsStatus: live.live_status,
   liveSchedule: live.live_date_time,
   userCount: 0,
@@ -78,32 +78,36 @@ const channel = (live) => ({
 const createChannel = async (live) => {
   const newChannel = channel(live);
 
-  const res = await redis.json.set(newChannel.channelName, '$', newChannel);
+  const res = await redis.json.set(newChannel.auctionId, '$', newChannel);
   if (res === 'OK') {
-    return await getChannel(newChannel.channelName);
+    return await getChannel(newChannel.auctionId);
   }
   return null;
 };
 
 /**
- * @param {string} name
+ * @param {string} id Live ID
  * @return {Promise<Channel>}
  */
-const getChannel = async (name) => {
-  return await redis.json.get(name);
+const getChannel = async (id) => {
+  return await redis.json.get(id);
 };
 
 /**
  * @return {Promise<Array.<Channel>>}
  */
 const getChannels = async () => {
-  const keys = await redis.keys('*');
-  const results = await redis.json.mGet(keys, '$');
   const channels = [];
+  const keys = await redis.keys('*');
 
-  for (const result of results) {
-    channels.push(result[0]);
+  if (keys.length) {
+    const results = await redis.json.mGet(keys, '$');
+
+    for (const result of results) {
+      channels.push(result[0]);
+    }
   }
+
   return channels;
 };
 
@@ -111,29 +115,29 @@ const getChannels = async () => {
  * @param {Channel} channel
  */
 const saveChannel = async (channel) => {
-  return await redis.json.set(channel.channelName, '$', channel);
+  return await redis.json.set(channel.auctionId, '$', channel);
 };
 
 /**
- * @param {string} channelName
+ * @param {string} id Live ID
  * @param {Object} message
  */
-const addChatMessage = async (channelName, message) => {
-  return await redis.json.arrAppend(channelName, '$.messages', message);
+const addChatMessage = async (id, message) => {
+  return await redis.json.arrAppend(id, '$.messages', message);
 };
 
 /**
- * @param {string} channelName
+ * @param {string} id Live ID
  */
-const updateTimer = async (channelName) => {
-  return await redis.json.NUMINCRBY(channelName, '$.currentAuction.currentAuctionTimer', -1);
+const updateTimer = async (id) => {
+  return await redis.json.NUMINCRBY(id, '$.currentAuction.currentAuctionTimer', -1);
 };
 
 /**
- * @param {string} channelName
+ * @param {string} id Live ID
  */
-const updateExtraUserCount = async (channelName, count) => {
-  return await redis.json.NUMINCRBY(channelName, '$.extraUserCount', count);
+const updateExtraUserCount = async (id, count) => {
+  return await redis.json.NUMINCRBY(id, '$.extraUserCount', count);
 };
 
 module.exports = {

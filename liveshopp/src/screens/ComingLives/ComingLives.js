@@ -38,7 +38,7 @@ export const LivesScreen = ({ navigation }) => {
       socket.emit('joinChannel', { liveId: liveData._id, user });
       dispatch(setIsJoin(false));
       navigation.navigate('LiveScreen', {
-        channelName: liveData.live_name,
+        liveId: liveData._id,
         seller_id: liveData.seller_id,
       });
     } catch (e) {

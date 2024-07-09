@@ -87,7 +87,8 @@ const RootStack = ({ isLoading }) => {
     try {
       if (data.updatedCustomer._id === user.id) {
         socket.emit('leaveRoom', {
-          liveData: data.liveData.liveData,
+          liveId: liveData.auctionId,
+          sellerId: liveData.sellerId,
           user: data.updatedCustomer,
         });
         dispatch(setIsJoin(false));
