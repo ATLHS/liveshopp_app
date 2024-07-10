@@ -37,7 +37,6 @@ const onBackgroundEvent = async ({ type, detail }) => {
 //
 const resetDisplayedNotifications = async () => {
   const oldNotifs = await notifee.getDisplayedNotifications();
-  console.log('deleteting old notifs', oldNotifs.length);
   oldNotifs.map((notification) => notifee.cancelDisplayedNotification(notification.id));
 };
 
