@@ -69,8 +69,8 @@ const LiveChatMessagesList = ({
                 style={styles.pressable}
                 onPress={() => {
                   user.profil === 'admin'
-                    ? showObjectionableAdminAction({ item })
-                    : showObjectionableAction({ item });
+                    ? showObjectionableAdminAction(item)
+                    : showObjectionableAction(item);
                 }}>
                 <FontAwesomeIcon icon={faEllipsis} color={colors.LIGHT} size={20} />
               </TouchableOpacity>
