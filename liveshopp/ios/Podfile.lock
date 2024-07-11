@@ -1342,11 +1342,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (5.24.1):
+  - RNSentry (5.25.0):
     - hermes-engine
     - React-Core
     - React-hermes
-    - Sentry/HybridSDK (= 8.29.1)
+    - Sentry/HybridSDK (= 8.30.0)
   - RNSVG (15.3.0):
     - React-Core
   - RNVectorIcons (10.1.0):
@@ -1370,7 +1370,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - Sentry/HybridSDK (8.29.1)
+  - Sentry/HybridSDK (8.30.0)
   - SocketRocket (0.7.0)
   - Stripe (23.27.6):
     - StripeApplePay (= 23.27.6)
@@ -1378,7 +1378,7 @@ PODS:
     - StripePayments (= 23.27.6)
     - StripePaymentsUI (= 23.27.6)
     - StripeUICore (= 23.27.6)
-  - stripe-react-native (0.38.0):
+  - stripe-react-native (0.38.1):
     - React-Core
     - Stripe (~> 23.27.0)
     - StripeApplePay (~> 23.27.0)
@@ -1706,13 +1706,13 @@ SPEC CHECKSUMS:
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
   RNReactNativeHapticFeedback: ec56a5f81c3941206fd85625fa669ffc7b4545f9
   RNScreens: 5aeecbb09aa7285379b6e9f3c8a3c859bb16401c
-  RNSentry: e9aa15bb2f3e18c822c002eea13bbd3b222ab493
+  RNSentry: 4ac2c0bd6c4fbea006ea9d821d7d4ea3207bcedc
   RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
   RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
-  Sentry: c446963245407030e17f1b926a83c6337dc99f4e
+  Sentry: 37b29280c25d35e49850151b65a27786d94e1a19
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: 9fec845645e39f371e6898926d096fd9c2feb5a5
-  stripe-react-native: c89f0b9abbac8a4093695a85ac34cc09f8935d0c
+  stripe-react-native: 0e66c2b3f529af8a64cfffffa9aecd98be937d39
   StripeApplePay: 5f017e8dfe259fafbab70137776189deef754bb2
   StripeCore: 01ec57f0dddfe742054dc6a322f811426c25313d
   StripeFinancialConnections: 56698cb6274bf89fb8c76b934f6156f368e97765
