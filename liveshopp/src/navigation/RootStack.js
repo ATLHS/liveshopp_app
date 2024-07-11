@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
+  setCurrentAuction,
   setIsGone,
   setIsJoin,
   setLiveData,
@@ -86,7 +87,8 @@ const RootStack = ({ isLoading }) => {
     try {
       if (data.updatedCustomer._id === user.id) {
         socket.emit('leaveRoom', {
-          liveData: data.liveData.liveData,
+          liveId: liveData.auctionId,
+          sellerId: liveData.sellerId,
           user: data.updatedCustomer,
         });
         dispatch(setIsJoin(false));
@@ -199,8 +201,8 @@ const RootStack = ({ isLoading }) => {
       dispatch(setLiveData(channelData));
     };
 
-    const onCurrentAuctionData = (channelData) => {
-      dispatch(setLiveData(channelData));
+    const onCurrentAuctionData = (currentAuction) => {
+      dispatch(setCurrentAuction(currentAuction));
     };
 
     const onFreshLives = ({ freshLives }) => {

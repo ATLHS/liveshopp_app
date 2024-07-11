@@ -44,7 +44,7 @@ import colors from '../../styles/colors';
 
 export const LiveScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
-  const { channelName, seller_id } = route.params;
+  const { liveId, seller_id } = route.params;
   const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const [modalVisible, setModalVisible] = useState(false);
@@ -71,7 +71,7 @@ export const LiveScreen = ({ navigation, route }) => {
 
       agoraEngine.registerEventHandler({
         onJoinChannelSuccess: () => {
-          console.log(`[AGORA] ${user.email} joined the channel: ${channelName}`);
+          console.log(`[AGORA] ${user.email} joined the channel: ${liveId}`);
           setIsJoined(true);
         },
         onUserJoined: (_connection, Uid) => {
@@ -117,11 +117,11 @@ export const LiveScreen = ({ navigation, route }) => {
         return;
       }
 
-      const { token } = await live.getAgoraToken(channelName);
+      const { token } = await live.getAgoraToken(liveId);
 
       if (isHost) {
         agoraEngineRef.current?.startPreview();
-        const status = agoraEngineRef.current?.joinChannel(token, channelName, 0, {
+        const status = agoraEngineRef.current?.joinChannel(token, liveId, 0, {
           clientRoleType: ClientRoleType.ClientRoleBroadcaster,
         });
 
@@ -130,7 +130,7 @@ export const LiveScreen = ({ navigation, route }) => {
           setIsJoined(true);
         }
       } else {
-        const status = agoraEngineRef.current?.joinChannel(token, channelName, 0, {
+        const status = agoraEngineRef.current?.joinChannel(token, liveId, 0, {
           clientRoleType: ClientRoleType.ClientRoleAudience,
         });
 
@@ -172,8 +172,8 @@ export const LiveScreen = ({ navigation, route }) => {
     };
   }, []);
 
-  const startCurrentAuction = (channelName, data) => {
-    socket.emit('startCurrentAuction', { channelName, data });
+  const startCurrentAuction = (liveId, data) => {
+    socket.emit('startCurrentAuction', { liveId, data });
   };
 
   const closeModal = () => {
@@ -200,19 +200,19 @@ export const LiveScreen = ({ navigation, route }) => {
         topOffset: 100,
       });
     }
-    socket.emit('pausedCurrentAuctionStatut', liveData.channelName);
+    socket.emit('pausedCurrentAuctionStatus', liveData.auctionId);
   };
 
-  const bidOnCurrentAuction = (channelName, data) => {
+  const bidOnCurrentAuction = (liveId, data) => {
     data.username = `${user.firstname} ${user.lastname.charAt(0)}`;
     data.userId = user.id;
     data.shipping_address = user.shipping_address;
     // send current bid info
-    socket.emit('bid', { channelName, data });
+    socket.emit('bid', { liveId, data });
   };
 
   const emitNewLiveMessage = (message) => {
-    socket.emit('newLiveMessage', { user, message, channelName });
+    socket.emit('newLiveMessage', { user, message, liveId });
   };
 
   const showObjectionableAction = (item) => {
@@ -318,8 +318,8 @@ export const LiveScreen = ({ navigation, route }) => {
           <LiveAuctionInfo />
           {user.profil !== 'admin' && !isHost && (
             <LiveAuctionForm
-              liveData={liveData}
-              onPress={(data) => bidOnCurrentAuction(liveData.channelName, data)}
+              currentAuction={liveData.currentAuction}
+              onPress={(data) => bidOnCurrentAuction(liveData.auctionId, data)}
             />
           )}
         </>
@@ -327,11 +327,11 @@ export const LiveScreen = ({ navigation, route }) => {
     } else {
       return (
         isHost && (
-        <SellerLiveForm
-          onPress={(data) => startCurrentAuction(liveData.channelName, data)}
-          currentAuctionIsRunning={liveData.currentAuction.currentAuctionStatus === 'running'}
-          panelRef={panelRef}
-        />
+          <SellerLiveForm
+            onPress={(data) => startCurrentAuction(liveData.auctionId, data)}
+            currentAuctionIsRunning={liveData.currentAuction.currentAuctionStatus === 'running'}
+            panelRef={panelRef}
+          />
         )
       );
     }

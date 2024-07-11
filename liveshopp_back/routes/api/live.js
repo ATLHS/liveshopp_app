@@ -129,7 +129,7 @@ router.post('/close-live', verifyJwt, async (req, res) => {
 
 router.post('/get-agora-token', verifyJwt, async (req, res) => {
   try {
-    const { channelName } = req.body.data;
+    const { liveId } = req.body.data;
 
     const user = await User.findById(req.user.id);
     const seller = await UserSeller.findById(req.user.id);
@@ -141,7 +141,7 @@ router.post('/get-agora-token', verifyJwt, async (req, res) => {
       useLetters: false,
     });
 
-    const { token } = await generateAgoraChannelToken(customer.profil, channelName, generateUid);
+    const { token } = await generateAgoraChannelToken(customer.profil, liveId, generateUid);
 
     return res.status(200).json({ token, generateUid });
   } catch (error) {

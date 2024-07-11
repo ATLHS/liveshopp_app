@@ -53,7 +53,7 @@ const SellerStack = () => {
   }, []);
 
   const leaveRoom = () => {
-    socket.emit('leaveRoom', { liveData, user });
+    socket.emit('leaveRoom', { liveId: liveData.auctionId, sellerId: liveData.sellerId, user });
     dispatch(setIsJoin(false));
     dispatch(setIsGone(true));
     Toast.hide();

@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
   socket.on('joinChannel', handler.joinChannel);
   socket.on('leaveRoom', handler.leaveRoom);
   socket.on('newLiveMessage', handler.newLiveMessage);
-  socket.on('pausedCurrentAuctionStatut', handler.pausedCurrentAuctionStatut);
+  socket.on('pausedCurrentAuctionStatus', handler.pausedCurrentAuctionStatus);
   socket.on('startCurrentAuction', handler.startCurrentAuction);
 
   if (socket.recovered) {
