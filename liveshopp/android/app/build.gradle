@@ -81,8 +81,8 @@ android {
         applicationId "com.liveshopp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
-        versionName "2.1.0"
+        versionCode 17
+        versionName "2.2.0"
     }
 
     signingConfigs {
