@@ -49,7 +49,14 @@ axiosInstance.interceptors.response.use(
       console.error('Error message:', error.message);
       Sentry.captureException(error, error.message);
     }
-    return Promise.reject(error);
+    return Promise.reject({
+      response: {
+        data: {
+          message:
+            'An unexpected error occured.\nOur team was notified of the incident.\nPlease try again later.',
+        },
+      },
+    });
   },
 );
 
