@@ -23,7 +23,7 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
     const amountToCharge = parseInt(auction.currentProductAmount.toString() * 100);
     const paymentIntent = await stripeUtils.chargeCustomer(
       amountToCharge,
-      customer.stripeCustomerId,
+      customer,
       paymentIntentMetadata,
     );
 

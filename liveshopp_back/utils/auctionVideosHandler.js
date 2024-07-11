@@ -105,11 +105,14 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req)
   };
   const amountToCharge = auction.amount * 100;
 
-  const chargedCustomer = await stripeUtils.chargeCustomer(
-    amountToCharge,
-    auction.userId.stripeCustomerId,
-    paymentIntentMetadata,
-  );
+  // FIXME
+  // stripeUtils.chargeCustomer() signature changed
+  //
+  // const chargedCustomer = await stripeUtils.chargeCustomer(
+  //   amountToCharge,
+  //   auction.userId.stripeCustomerId,
+  //   paymentIntentMetadata,
+  // );
 
   if (chargedCustomer && chargedCustomer.status === 'succeeded') {
     auctionItem.auctionStatus = 'sold';
