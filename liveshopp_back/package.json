@@ -1,6 +1,6 @@
 {
   "name": "liveshopp_back",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "",
   "main": "nodemon app.js",
   "scripts": {
@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.600.0",
-    "@sentry/node": "^8.13.0",
+    "@aws-sdk/client-s3": "^3.614.0",
+    "@sentry/node": "^8.17.0",
     "agora-token": "^2.0.3",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -30,10 +30,10 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.14",
-    "redis": "^4.6.14",
+    "redis": "^4.6.15",
     "socket.io": "^4.7.5",
     "stripe": "^15.10.0",
-    "winston": "^3.13.0"
+    "winston": "^3.13.1"
   },
   "prettier": {
     "arrowParens": "always",
