@@ -124,9 +124,9 @@ router.get('/get-flagged-user', verifyJwt, async (req, res) => {
 
 router.post('/update-extra-user-count', verifyJwt, async (req, res) => {
   try {
-    const { channelName, count } = req.body;
+    const { liveId, count } = req.body.data;
 
-    const channel = await getChannel(channelName);
+    const channel = await getChannel(liveId);
     channel.extraUserCount += count;
 
     // Keep at least 1 user in the channel
@@ -134,8 +134,8 @@ router.post('/update-extra-user-count', verifyJwt, async (req, res) => {
       return res.sendStatus(400);
     }
 
-    await updateExtraUserCount(channelName, count);
-    await io.to(channelName).emit('channelData', channel);
+    await updateExtraUserCount(liveId, count);
+    await io.to(liveId).emit('channelData', channel);
 
     return res.sendStatus(200);
   } catch (error) {

@@ -93,7 +93,7 @@ const SellerStack = () => {
   };
 
   const updateExtraUserCount = (count) => {
-    admin.updateExtraUserCount(liveData.channelName, count);
+    admin.updateExtraUserCount(liveData.auctionId, count);
   };
 
   return (
