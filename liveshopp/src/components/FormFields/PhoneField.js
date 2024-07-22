@@ -14,18 +14,18 @@ import colors from '../../styles/colors';
 const PhoneField = ({ inputField, field, fieldState }) => {
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   const { t } = useTranslation();
+  const returnCountry = (isoCode) => {
+    return countries.find((country) => country.dial_code === isoCode);
+  };
 
   const [showModalCountryPhoneSelector, setShowModalCountryPhoneSelector] = useState(false);
-  const [isoCode, setIsoCode] = useState('fr');
-  const [countryCode, setCountryCode] = useState({
-    name: 'France',
-    flag: '🇫🇷',
-    code: 'FR',
-    dial_code: '+33',
-  });
+
+  // Init isoCode and countryCode based on the isoCode input (default: '+33')
+  const [isoCode, setIsoCode] = useState(returnCountry(inputField.isoCode).code.toLowerCase());
+  const [countryCode, setCountryCode] = useState(returnCountry(inputField.isoCode));
 
   useEffect(() => {
-    field.onChange(`${countryCode.dial_code} ${inputField.value}`);
+    field.onChange(`${countryCode.dial_code} ${inputField.defaultValue}`);
   }, [countryCode]);
 
   return (
@@ -87,10 +87,11 @@ const PhoneField = ({ inputField, field, fieldState }) => {
         <TextInput
           style={isAuthenticate ? outlinedStyles.textInput : containedStyles.textInput}
           defaultValue={inputField.defaultValue}
-          value={inputField.value}
           placeholder={inputField.label}
           autoFocus={inputField.autoFocus || false}
-          onChangeText={(value) => field.onChange(`${countryCode.dial_code} ${value}`)}
+          onChangeText={(value) => {
+            field.onChange(`${countryCode.dial_code} ${value}`);
+          }}
           placeholderTextColor="white"
           secureTextEntry={inputField.type === 'password'}
           selectionColor={isAuthenticate ? colors.DARK : colors.LIGHT}

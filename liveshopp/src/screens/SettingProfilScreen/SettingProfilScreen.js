@@ -77,7 +77,8 @@ export const SettingProfilScreen = ({ navigation }) => {
         validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
-      defaultValue: user.phone || '',
+      defaultValue: user.phone.split(' ')[1],
+      isoCode: user.phone.split(' ')[0],
     },
     {
       name: 'email',
