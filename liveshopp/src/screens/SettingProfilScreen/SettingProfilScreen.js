@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
+import defaultIsoCode from '../../constants/DefaultIsoCode';
 import { setUser } from '../../redux/slices/userSlice';
 import customer from '../../services/customer';
 import colors from '../../styles/colors';
@@ -77,8 +78,8 @@ export const SettingProfilScreen = ({ navigation }) => {
         validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
-      defaultValue: user.phone.split(' ')[1],
-      isoCode: user.phone.split(' ')[0],
+      defaultValue: user.phone?.split(' ')[1] || '',
+      isoCode: user.phone?.split(' ')[0] || defaultIsoCode,
     },
     {
       name: 'email',
@@ -190,7 +191,8 @@ export const SettingProfilScreen = ({ navigation }) => {
         validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
-      defaultValue: user.phone,
+      defaultValue: user.phone?.split(' ')[1] || '',
+      isoCode: user.phone?.split(' ')[0] || defaultIsoCode,
     },
     {
       name: 'email',
