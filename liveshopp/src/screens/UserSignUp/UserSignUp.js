@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import ContainedButton from '../../components/ContainedButton/ContainedButton';
 import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
+import DefaultIsoCode from '../../constants/DefaultIsoCode';
 import auth from '../../services/auth';
 import colors from '../../styles/colors';
 import validateFrPhoneNumber from '../../utils/validateFrPhoneNumber';
@@ -75,6 +76,8 @@ export const UserSignUp = ({ navigation }) => {
         },
         validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
+      defaultValue: '',
+      isoCode: DefaultIsoCode,
     },
     {
       name: 'password',
