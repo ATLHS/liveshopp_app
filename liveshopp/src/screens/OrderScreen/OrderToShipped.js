@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -85,17 +86,18 @@ const OrderToShipped = () => {
             <Modal animationType="fade" transparent={true} visible={modalVisible}>
               <Pressable onPress={() => setModalVisible(false)} style={styles.modalBackground}>
                 <View style={styles.modalContent}>
-                  <View style={styles.modalTextContainer}>
+                  <View style={styles.modalTitleContainer}>
                     <Text style={styles.modalText}>{t('confirmShipmentOfItem')}</Text>
-                    <Text style={styles.modalProduct}>{selectedOrder.productName}</Text>
-                    <Text style={styles.modalAlert}>{t('actionPermanentWarning')}</Text>
                   </View>
-                  <View style={styles.modalButtons}>
-                    <TouchableOpacity
-                      style={styles.modalButton}
-                      onPress={() => setModalVisible(!modalVisible)}>
-                      <Text style={styles.modalButtonText}>{t('cancel')}</Text>
-                    </TouchableOpacity>
+                  <View style={styles.modalTextContainer}>
+                    <Text style={styles.modalProduct}>{selectedOrder.productName}</Text>
+                    <TextInput
+                      style={styles.modalTrackingUrlInput}
+                      placeholder={t('trackingUrl')}
+                      placeholderTextColor={'#707070'}
+                    />
+                  </View>
+                  <View style={styles.modalContainerButton}>
                     <TouchableOpacity
                       style={styles.modalButton}
                       onPress={() => updateOrderStatusHasShipped(selectedOrder)}>
@@ -152,27 +154,40 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.60)',
   },
   modalContent: {
-    height: 230,
-    width: 270,
+    width: '80%',
     borderRadius: 10,
     backgroundColor: colors.LIGHT,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 30,
+    padding: 20,
+  },
+  modalTitleContainer: {
+    width: '100%',
   },
   modalTextContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
+    marginTop: 10,
   },
   modalText: {
     fontSize: 15,
-    textAlign: 'center',
-    fontFamily: 'FugazOne-Regular',
+    fontWeight: '800',
+    color: colors.DARK,
   },
   modalProduct: {
-    fontSize: 18,
+    fontSize: 15,
     marginVertical: 5,
+    fontWeight: '800',
+    color: colors.DARK,
+  },
+  modalTrackingUrlInput: {
+    color: colors.DARK,
+    fontSize: 13,
+    width: '100%',
+    height: 40,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(209, 213, 219, 1)',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
   },
   modalAlert: {
     fontSize: 15,
@@ -180,16 +195,17 @@ const styles = StyleSheet.create({
     color: colors.PRIMARY,
     textAlign: 'center',
   },
-  modalButtons: {
+  modalContainerButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
+    marginTop: 10,
   },
   modalButton: {
     height: 40,
-    width: 100,
+    width: '100%',
     backgroundColor: 'black',
-    borderRadius: 10,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
