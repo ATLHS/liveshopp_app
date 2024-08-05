@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "build:android:release": "react-native build-android --mode=release",
+    "cleaninstall": "npm i && cd ios/ && rm -rf Pods/ Podfile.lock && bundle exec pod install --repo-update",
     "ios": "react-native run-ios",
     "logs": "react-native log-ios",
     "lint": "eslint .",
