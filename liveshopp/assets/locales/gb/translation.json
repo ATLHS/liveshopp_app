@@ -180,5 +180,5 @@
   "pinnedValidationErrorMessage": "Pinned messages are limited to 100 characters. Please shorten your message to keep it readable during the live.",
   "pinnedMessageHelper": "100 characters maximum",
   "pinned": "PINNED",
-  "notifSellerIsLive": "is now live"
+  "notifSellerIsLive": "is now live!"
 }

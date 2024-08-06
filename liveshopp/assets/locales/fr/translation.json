@@ -180,5 +180,5 @@
   "pinnedValidationErrorMessage": "Les messages épinglés sont limités à 100 caractères. Veuillez raccourcir votre message pour qu'il reste lisible pendant le live.",
   "pinnedMessageHelper": "100 caractères maximum",
   "pinned": "ÉPINGLÉ",
-  "notifSellerIsLive": "est en live"
+  "notifSellerIsLive": "est en live !"
 }
