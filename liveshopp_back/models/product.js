@@ -20,6 +20,7 @@ const product = new mongoose.Schema(
       enum: ['Seller', 'User'],
       default: 'User',
     },
+    trackingUrl: { type: String },
     productName: { type: String },
     salePrice: { type: String },
     deliveryStatut: { type: String, default: orderDeliveryStatus.PENDING },

@@ -1,8 +1,17 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import {
+  faLink,
   faLocationDot,
   faStore,
   faTruck,
@@ -190,6 +199,7 @@ const OrderCard = ({
               <View
                 style={{
                   flexDirection: 'column',
+                  marginBottom: 15,
                 }}>
                 <View
                   style={{
@@ -199,7 +209,6 @@ const OrderCard = ({
                   <FontAwesomeIcon
                     icon={deliveryStatutIcon(item.deliveryStatut)}
                     size={15}
-                    style={{ marginBottom: 0 }}
                     color={
                       item.deliveryStatut === OrderDeliveryStatus.PENDING
                         ? colors.HOUR
@@ -219,6 +228,31 @@ const OrderCard = ({
                   </Text>
                 </View>
               </View>
+              {item.trackingUrl && (
+                <View
+                  style={{
+                    alignItems: 'flex-start',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontWeight: '800',
+                      color: colors.DARK,
+                    }}>
+                    {t('trackingUrlInputPlaceholder')}
+                  </Text>
+                  <Pressable onPress={() => Linking.openURL(item.trackingUrl)}>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: '500',
+                        color: colors.DARK,
+                      }}>
+                      {item.trackingUrl}
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
             </View>
           </View>
         </TouchableOpacity>

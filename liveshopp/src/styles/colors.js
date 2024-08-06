@@ -1,6 +1,6 @@
 export default {
   // THEME
-  PRIMARY: '#FF3B3B',
+  PRIMARY: '#d92020',
   LIGHT: '#FFFFFF',
   DARK: '#000000',
   DISABLED: '#F0F0F0',
