@@ -39,6 +39,24 @@ const sendLiveIsStarting = async (live) => {
       ],
     };
 
+    const data = {
+      notifee: JSON.stringify({
+        body: message,
+        title: 'Liveshopp',
+        type: 'LIVE_STARTED',
+        live: {
+          id: live.id,
+          name: live.live_name,
+          description: live.live_description,
+          sellerId: live.seller_id,
+          sellerName: live.sellerName,
+          imageUrl: live.imageUrl,
+        },
+        android,
+        ios,
+      }),
+    };
+
     const notification = {
       ios: {
         body: message,
@@ -51,22 +69,6 @@ const sendLiveIsStarting = async (live) => {
           imageUrl: live.imageUrl,
         },
       },
-    };
-
-    const data = {
-      notifee: JSON.stringify({
-        body: message,
-        title: 'Liveshopp',
-        type: 'LIVE_STARTED',
-        live: {
-          name: live.live_name,
-          description: live.live_description,
-          sellerName: live.sellerName,
-          imageUrl: live.imageUrl,
-        },
-        android,
-        ios,
-      }),
     };
 
     await sendNotification(tokens, data, notification);

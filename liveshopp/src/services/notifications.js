@@ -5,6 +5,7 @@ import notifee, {
   AndroidVisibility,
   AuthorizationStatus,
 } from '@notifee/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
 import Notification from '../constants/Notification';
@@ -16,6 +17,11 @@ const onNotification = async (notif) => {
 
     if (data.type && data.type === Notification.LIVE_STARTED) {
       data.body = `${data.live.sellerName} ${i18n.t('notifSellerIsLive')}`;
+
+      AsyncStorage.setItem(
+        'notification:lastLive',
+        JSON.stringify({ id: data.live.id, sellerId: data.live.sellerId }),
+      );
     }
 
     resetDisplayedNotifications();
@@ -24,10 +30,6 @@ const onNotification = async (notif) => {
   } catch (error) {
     console.log(error);
   }
-};
-
-const onBackgroundEvent = async ({ type, detail }) => {
-  console.log('Background event detected', type, detail);
 };
 
 // This is a trick when the app is killed, the notification text is in english
@@ -87,7 +89,6 @@ const initNotifications = () => {
       createAndroidChannels();
 
       // Set notification handlers for foreground, background and killed app states
-      notifee.onBackgroundEvent(onBackgroundEvent);
       messaging().setBackgroundMessageHandler(onNotification);
       return messaging().onMessage(onNotification);
     }
