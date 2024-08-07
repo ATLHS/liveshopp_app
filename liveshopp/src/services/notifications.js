@@ -1,3 +1,5 @@
+import { getUniqueId } from 'react-native-device-info';
+
 import i18n from 'i18next';
 
 import notifee, {
@@ -55,12 +57,22 @@ const createAndroidChannels = async () => {
   });
 };
 
+// Link a notification token to a device ID
+// Since it is called at boot time, we don't know yet if the user is logged in.
+// So we update the DB for an anonymous user first, then we call updateUserDevice().
 const fetchAndStoreNotificationToken = async () => {
   // Get the device notification token
   const token = await messaging().getToken();
+  const deviceId = await getUniqueId();
 
   // Save the token in DB
-  customer.updateCustomerNotificationToken(token);
+  customer.updateDeviceNotificationToken(deviceId, token);
+};
+
+// Link a device ID to a user
+const updateUserDevice = async () => {
+  const deviceId = await getUniqueId();
+  customer.updateCustomerDevice(deviceId);
 };
 
 const requestUserPermission = async () => {
@@ -98,4 +110,4 @@ const initNotifications = () => {
   }
 };
 
-module.exports = { initNotifications };
+module.exports = { initNotifications, updateUserDevice };

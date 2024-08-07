@@ -21,6 +21,7 @@ import FieldWrapper from '../../components/FieldWrapper/FieldWrapper';
 import { setIsAuthenticate, setUser } from '../../redux/slices/userSlice';
 import auth from '../../services/auth';
 import axiosConfig from '../../services/config/axiosConfig';
+import { updateUserDevice } from '../../services/notifications';
 import colors from '../../styles/colors';
 
 export const SignIn = ({ navigation, route }) => {
@@ -79,6 +80,8 @@ export const SignIn = ({ navigation, route }) => {
           dispatch(setUser(data.user));
           dispatch(setIsAuthenticate(true));
         });
+
+        updateUserDevice();
       })
       .catch((err) => {
         console.error(err);

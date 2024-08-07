@@ -7,6 +7,7 @@ const { verifyJwt } = require('../../middleware/verifyJwt');
 const UserSeller = require('../../models/seller');
 const User = require('../../models/user');
 const Live = require('../../models/live');
+const Notification = require('../../models/notification');
 const Product = require('../../models/product');
 const Reported = require('../../models/reported');
 const { updateCustomer } = require('../../utils/updateCustomer.js');
@@ -160,16 +161,35 @@ router.post('/update-user-payment-method-status', verifyJwt, async (req, res) =>
   }
 });
 
-router.post('/update-customer-notification-token', verifyJwt, async (req, res) => {
+// Note: We don't use verifyJwt() here since this endpoint is called
+// at app boot start before a user is logged in.
+// This register the device immediatly to send notifications.
+router.post('/update-device-notification-token', async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).exec();
-    const seller = await UserSeller.findById(req.user.id).exec();
-    const customer = user || seller;
+    await Notification.findOneAndUpdate(
+      { deviceId: req.body.deviceId },
+      { token: req.body.token },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
 
-    customer.notificationToken = req.body.token;
-    customer.notificationTokenUpdatedAt = Date.now();
+    return res.sendStatus(200);
+  } catch (error) {
+    Sentry.captureException(error);
+    return res.status(500).json({ message: req.t('errorTryAgainLater') });
+  }
+});
 
-    await customer.save();
+router.post('/update-customer-device', verifyJwt, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const seller = await UserSeller.findById(req.user.id);
+    const userType = user ? 'User' : seller ? 'Seller' : 'Error';
+
+    await Notification.findOneAndUpdate(
+      { deviceId: req.body.deviceId },
+      { userType, userId: req.user.id },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
 
     return res.sendStatus(200);
   } catch (error) {

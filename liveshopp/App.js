@@ -11,6 +11,7 @@ import { setIsAuthenticate, setUser } from './src/redux/slices/userSlice';
 import { store } from './src/redux/store';
 import authService from './src/services/auth';
 import axiosConfig from './src/services/config/axiosConfig';
+import { updateUserDevice } from './src/services/notifications';
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -30,6 +31,11 @@ const App = () => {
             store.dispatch(setUser(data.user));
             store.dispatch(setIsAuthenticate(data.isAuthenticate));
             setIsLoading(false);
+
+            // FIXME
+            // Ideally, this would be done only once in SignIn.js
+            //
+            updateUserDevice();
 
             Sentry.setUser({
               id: data.user.id,

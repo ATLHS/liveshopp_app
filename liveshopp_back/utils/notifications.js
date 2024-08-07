@@ -1,6 +1,6 @@
 const Sentry = require('@sentry/node');
 const { firebase } = require('./services');
-const User = require('../models/user');
+const Notification = require('../models/notification');
 const { log } = require('../middleware/logger');
 const { chunkArray } = require('./helpers');
 
@@ -9,11 +9,12 @@ const FIREBASE_TOKENS_BATCH_SIZE = 500;
 
 const sendLiveIsStarting = async (live) => {
   try {
-    const users = await User.find({ notificationToken: { $ne: null } })
-      .select({ notificationToken: 1, _id: 0 })
+    // Get all users tokens except for the Seller himself
+    const notifications = await Notification.find({ userId: { $ne: live.seller_id } })
+      .select({ token: 1, _id: 0 })
       .exec();
 
-    const tokens = users.map((user) => user.notificationToken);
+    const tokens = notifications.map((notification) => notification.token);
     const message = `${live.sellerName} is now live!`;
 
     const android = {
