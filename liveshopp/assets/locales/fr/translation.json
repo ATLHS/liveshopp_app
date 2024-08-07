@@ -89,8 +89,7 @@
   "currentLivesWillAppearHere": "Les lives en cours apparaîtront ici. Revenez un peu plus tard.",
   "liveAuction": "Live enchère",
   "comingSoon": "Prochainement",
-  "confirmShipmentOfItem": "CONFIRMER L'EXPÉDITION DE L'ARTICLE :",
-  "actionPermanentWarning": "Veuillez noter que cette action est irréversible.",
+  "inputShipmentTracking": "Entrez l'URL de suivi du colis pour confirmer l'expédition",
   "confirm": "Confirmer",
   "noItemsToShip": "Vous n'avez aucun article à expédier.",
   "itemsSoldAndToShip": "Les articles vendus lors de vos enchères et à expédier apparaîtront ici.",
@@ -173,5 +172,9 @@
   "logOut": "Déconnexion",
   "countryRegion": "Pays/Région",
   "pending": "En attente d'expédition",
-  "shipped": "Expédié"
+  "shipped": "Expédié",
+  "trackingUrlLabel": "URL de Suivi",
+  "trackOrderButton": "Suivre ma commande",
+  "trackingUrlErrorMessage": "Ajoutez l'URL de suivi du colis pour confirmer l'expédition",
+  "trackingUrlHelperMessage": "Assurez-vous que l'URL de suivi est correcte. Elle permet au client de suivre son colis."
 }

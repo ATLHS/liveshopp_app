@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -10,6 +11,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -22,7 +24,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import NoData from '../../components/NoData/NoData';
 import OrderCard from '../../components/OrderCard/OrderCard';
 import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
-import { setInitialOrder } from '../../redux/slices/oderSlice';
+import { updateInitialOrder } from '../../redux/slices/oderSlice';
 import orderService from '../../services/order';
 import colors from '../../styles/colors';
 
@@ -55,13 +57,16 @@ const OrderToShipped = () => {
     }, [initialOrder, modalVisible, selectedOrder]),
   );
 
-  const updateOrderStatusHasShipped = (selectedOrder) => {
+  const { control, handleSubmit, reset } = useForm({});
+
+  const updateOrderStatusHasShipped = (selectedOrder, data) => {
     setIsLoading(true);
+    data.selectedOrder = selectedOrder;
     orderService
-      .updateOrderStatus(selectedOrder)
+      .updateOrderStatus(data)
       .then((res) => res)
       .then((data) => {
-        dispatch(setInitialOrder(data.order));
+        dispatch(updateInitialOrder(data.updatedOrder));
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
@@ -85,20 +90,42 @@ const OrderToShipped = () => {
             <Modal animationType="fade" transparent={true} visible={modalVisible}>
               <Pressable onPress={() => setModalVisible(false)} style={styles.modalBackground}>
                 <View style={styles.modalContent}>
-                  <View style={styles.modalTextContainer}>
-                    <Text style={styles.modalText}>{t('confirmShipmentOfItem')}</Text>
-                    <Text style={styles.modalProduct}>{selectedOrder.productName}</Text>
-                    <Text style={styles.modalAlert}>{t('actionPermanentWarning')}</Text>
+                  <View style={styles.modalTitleContainer}>
+                    <Text style={styles.modalText}>{t('inputShipmentTracking')}</Text>
                   </View>
-                  <View style={styles.modalButtons}>
+                  <View style={styles.modalTextContainer}>
+                    <Text style={styles.modalProduct}>{selectedOrder.productName}</Text>
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: t('trackingUrlErrorMessage'),
+                        },
+                      }}
+                      render={({ field: { onChange }, fieldState: { error } }) => (
+                        <>
+                          <TextInput
+                            style={styles.modalTrackingUrlInput}
+                            placeholder={t('trackingUrlLabel')}
+                            onChangeText={(value) => onChange(value)}
+                            placeholderTextColor={'#707070'}
+                          />
+                          {error && error.message && (
+                            <Text style={styles.error_message}>{error.message}</Text>
+                          )}
+                        </>
+                      )}
+                      name="trackingUrl"
+                    />
+                    <Text style={styles.helperMessage}>{t('trackingUrlHelperMessage')}</Text>
+                  </View>
+                  <View style={styles.modalContainerButton}>
                     <TouchableOpacity
                       style={styles.modalButton}
-                      onPress={() => setModalVisible(!modalVisible)}>
-                      <Text style={styles.modalButtonText}>{t('cancel')}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.modalButton}
-                      onPress={() => updateOrderStatusHasShipped(selectedOrder)}>
+                      onPress={handleSubmit((data) =>
+                        updateOrderStatusHasShipped(selectedOrder, data),
+                      )}>
                       <Text style={styles.modalButtonText}>{t('confirm')}</Text>
                     </TouchableOpacity>
                   </View>
@@ -109,7 +136,11 @@ const OrderToShipped = () => {
               {order.length && (
                 <OrderCard
                   order={order}
-                  setModalVisible={(modalVisible) => setModalVisible(modalVisible)}
+                  setModalVisible={(modalVisible) => {
+                    setModalVisible(modalVisible);
+                    // reset form validation to clear error
+                    reset();
+                  }}
                   setSelectedOrder={(order) => setSelectedOrder(order)}
                   modalVisible={modalVisible}
                   enableActionOnOrder={true}
@@ -151,28 +182,49 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.60)',
   },
+  error_message: {
+    backgroundColor: colors.LIGHT,
+    color: colors.PRIMARY,
+    marginBottom: 10,
+    width: '100%',
+  },
   modalContent: {
-    height: 230,
-    width: 270,
+    position: 'relative',
+    width: '80%',
     borderRadius: 10,
     backgroundColor: colors.LIGHT,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 30,
+    padding: 20,
+    marginTop: -250,
+  },
+  modalTitleContainer: {
+    width: '100%',
   },
   modalTextContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
+    marginVertical: 10,
   },
   modalText: {
     fontSize: 15,
-    textAlign: 'center',
-    fontFamily: 'FugazOne-Regular',
+    fontWeight: '800',
+    color: colors.DARK,
   },
+  helperMessage: { color: colors.HOUR, fontSize: 13 },
   modalProduct: {
-    fontSize: 18,
+    fontSize: 15,
+    fontWeight: '800',
+    color: colors.DARK,
+  },
+  modalTrackingUrlInput: {
+    color: colors.DARK,
+    fontSize: 13,
+    width: '100%',
+    height: 40,
+    paddingHorizontal: 10,
     marginVertical: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(209, 213, 219, 1)',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
   },
   modalAlert: {
     fontSize: 15,
@@ -180,16 +232,16 @@ const styles = StyleSheet.create({
     color: colors.PRIMARY,
     textAlign: 'center',
   },
-  modalButtons: {
+  modalContainerButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
   },
   modalButton: {
     height: 40,
-    width: 100,
+    width: '100%',
     backgroundColor: 'black',
-    borderRadius: 10,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,

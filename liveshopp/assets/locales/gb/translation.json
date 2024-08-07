@@ -89,8 +89,7 @@
   "currentLivesWillAppearHere": "Current lives will appear here. Check back later.",
   "liveAuction": "Live auction",
   "comingSoon": "Coming soon",
-  "confirmShipmentOfItem": "CONFIRM SHIPPING OF ITEM : ",
-  "actionPermanentWarning": "Note, this action cannot be undone.",
+  "inputShipmentTracking": "Enter the package tracking URL to confirm shipment",
   "confirm": "Confirm",
   "noItemsToShip": "No items available for shipment.",
   "itemsSoldAndToShip": "Sold items from your auctions that require shipment will be displayed here.",
@@ -173,5 +172,9 @@
   "logOut": "Log Out",
   "countryRegion": "Country/Region",
   "pending": "Awaiting for shipment",
-  "shipped": "Shipped"
+  "shipped": "Shipped",
+  "trackingUrlLabel": "Tracking URL",
+  "trackOrderButton": "Track my order",
+  "trackingUrlErrorMessage": "Add the package tracking URL to confirm shipment",
+  "trackingUrlHelperMessage": "Ensure that the tracking URL is correct. It allows the customer to track their parcel."
 }

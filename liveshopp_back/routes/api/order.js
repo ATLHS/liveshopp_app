@@ -6,9 +6,13 @@ const { orderDeliveryStatus } = require('../../constants/OrderDeliveryStatus');
 
 router.get('/get-user-order', verifyJwt, async (req, res) => {
   try {
+    // Retrieve all orders where the user is either a buyer or a seller.
+    // This includes orders ( as buyer )
+    // and orders to ship or shipped if the request is made ( as seller )
     const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
       'seller_id userId',
-      '-password -checkedPayment -isConfirmed -registeredConfirmedCode',
+      // TO DO : we should exclude sensitive data at the model level
+      '-password -checkedPayment -isConfirmed -registeredConfirmedCode -stripeCustomerId -hasValidPaymentMethod -resetPasswordCode -blockedUser -blockedSeller',
     );
 
     if (order) {
@@ -24,18 +28,25 @@ router.get('/get-user-order', verifyJwt, async (req, res) => {
 
 router.post('/update-order-status', verifyJwt, async (req, res) => {
   try {
-    const orderId = req.body.data._id;
-    await Product.findOneAndUpdate({ _id: orderId }, { deliveryStatut: orderDeliveryStatus.SHIPPED }, { new: true });
+    const {
+      selectedOrder: { _id },
+      trackingUrl,
+    } = req.body.data;
 
-    const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
+    const updatedOrder = await Product.findOneAndUpdate(
+      { _id },
+      { deliveryStatut: orderDeliveryStatus.SHIPPED, trackingUrl },
+      { new: true },
+    ).populate(
       'seller_id userId',
-      '-password -checkedPayment -isConfirmed -registeredConfirmedCode',
+      // TO DO : we should exclude sensitive data at the model level
+      '-password -checkedPayment -isConfirmed -registeredConfirmedCode -stripeCustomerId -hasValidPaymentMethod -resetPasswordCode -blockedUser -blockedSeller',
     );
 
-    if (order) {
+    if (updatedOrder) {
       return res.status(200).json({
-        order,
-        message: req.t('articleUpdatedStatusShipped', { productName: req.body.data.productName }),
+        updatedOrder,
+        message: req.t('articleUpdatedStatusShipped', { productName: updatedOrder.productName }),
       });
     }
 

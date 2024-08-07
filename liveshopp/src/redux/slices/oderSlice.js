@@ -9,7 +9,12 @@ export const orderSlice = createSlice({
     setInitialOrder: (state, action) => {
       state.initialOrder = action.payload;
     },
+    updateInitialOrder: (state, action) => {
+      state.initialOrder = state.initialOrder.map((order) =>
+        order._id === action.payload._id ? action.payload : order,
+      );
+    },
   },
 });
-export const { setInitialOrder } = orderSlice.actions;
+export const { setInitialOrder, updateInitialOrder } = orderSlice.actions;
 export default orderSlice.reducer;
