@@ -29,25 +29,24 @@ router.get('/get-user-order', verifyJwt, async (req, res) => {
 router.post('/update-order-status', verifyJwt, async (req, res) => {
   try {
     const {
-      selectedOrder: { _id, productName },
+      selectedOrder: { _id },
       trackingUrl,
     } = req.body.data;
-    await Product.findOneAndUpdate(
+
+    const updatedOrder = await Product.findOneAndUpdate(
       { _id },
       { deliveryStatut: orderDeliveryStatus.SHIPPED, trackingUrl },
       { new: true },
-    );
-
-    const order = await Product.find({ $or: [{ userId: req.user.id }, { seller_id: req.user.id }] }).populate(
+    ).populate(
       'seller_id userId',
       // TO DO : we should exclude sensitive data at the model level
       '-password -checkedPayment -isConfirmed -registeredConfirmedCode -stripeCustomerId -hasValidPaymentMethod -resetPasswordCode -blockedUser -blockedSeller',
     );
 
-    if (order) {
+    if (updatedOrder) {
       return res.status(200).json({
-        order,
-        message: req.t('articleUpdatedStatusShipped', { productName }),
+        updatedOrder,
+        message: req.t('articleUpdatedStatusShipped', { productName: updatedOrder.productName }),
       });
     }
 

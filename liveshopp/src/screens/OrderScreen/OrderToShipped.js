@@ -21,11 +21,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useFocusEffect } from '@react-navigation/native';
 
-import MessageHelper from '../../components/MessageHelper/MessageHelper';
 import NoData from '../../components/NoData/NoData';
 import OrderCard from '../../components/OrderCard/OrderCard';
 import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
-import { setInitialOrder } from '../../redux/slices/oderSlice';
+import { updateInitialOrder } from '../../redux/slices/oderSlice';
 import orderService from '../../services/order';
 import colors from '../../styles/colors';
 
@@ -67,7 +66,7 @@ const OrderToShipped = () => {
       .updateOrderStatus(data)
       .then((res) => res)
       .then((data) => {
-        dispatch(setInitialOrder(data.order));
+        dispatch(updateInitialOrder(data.updatedOrder));
         setIsLoading(false);
         setModalVisible(!modalVisible);
         Toast.show({
@@ -92,7 +91,7 @@ const OrderToShipped = () => {
               <Pressable onPress={() => setModalVisible(false)} style={styles.modalBackground}>
                 <View style={styles.modalContent}>
                   <View style={styles.modalTitleContainer}>
-                    <Text style={styles.modalText}>{t('confirmShipmentOfItem')}</Text>
+                    <Text style={styles.modalText}>{t('inputShipmentTracking')}</Text>
                   </View>
                   <View style={styles.modalTextContainer}>
                     <Text style={styles.modalProduct}>{selectedOrder.productName}</Text>
@@ -108,7 +107,7 @@ const OrderToShipped = () => {
                         <>
                           <TextInput
                             style={styles.modalTrackingUrlInput}
-                            placeholder={t('trackingUrlInputPlaceholder')}
+                            placeholder={t('trackingUrlLabel')}
                             onChangeText={(value) => onChange(value)}
                             placeholderTextColor={'#707070'}
                           />
