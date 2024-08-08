@@ -38,12 +38,12 @@ PODS:
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.2)
-  - Firebase/CoreOnly (10.27.0):
-    - FirebaseCore (= 10.27.0)
-  - Firebase/Messaging (10.27.0):
+  - Firebase/CoreOnly (10.29.0):
+    - FirebaseCore (= 10.29.0)
+  - Firebase/Messaging (10.29.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.27.0)
-  - FirebaseCore (10.27.0):
+    - FirebaseMessaging (~> 10.29.0)
+  - FirebaseCore (10.29.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
@@ -56,7 +56,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.27.0):
+  - FirebaseMessaging (10.29.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.3)
@@ -1337,11 +1337,11 @@ PODS:
     - React-Core
   - RNDeviceInfo (11.1.0):
     - React-Core
-  - RNFBApp (20.1.0):
-    - Firebase/CoreOnly (= 10.27.0)
+  - RNFBApp (20.3.0):
+    - Firebase/CoreOnly (= 10.29.0)
     - React-Core
-  - RNFBMessaging (20.1.0):
-    - Firebase/Messaging (= 10.27.0)
+  - RNFBMessaging (20.3.0):
+    - Firebase/Messaging (= 10.29.0)
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
@@ -1374,11 +1374,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (5.25.0):
+  - RNSentry (5.27.0):
     - hermes-engine
     - React-Core
     - React-hermes
-    - Sentry/HybridSDK (= 8.30.0)
+    - Sentry/HybridSDK (= 8.32.0)
   - RNSVG (15.3.0):
     - React-Core
   - RNVectorIcons (10.1.0):
@@ -1402,7 +1402,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - Sentry/HybridSDK (8.30.0)
+  - Sentry/HybridSDK (8.32.0)
   - SocketRocket (0.7.0)
   - Stripe (23.27.6):
     - StripeApplePay (= 23.27.6)
@@ -1693,12 +1693,12 @@ SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 4bc164e5b5e6cfc288d2b5ff28643ea15fa1a589
-  Firebase: 26b040b20866a55f55eb3611b9fcf3ae64816b86
-  FirebaseCore: a2b95ae4ce7c83ceecfbbbe3b6f1cddc7415a808
+  Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
+  FirebaseCore: 30e9c1cbe3d38f5f5e75f48bfcea87d7c358ec16
   FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
-  FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
+  FirebaseMessaging: 7b5d8033e183ab59eb5b852a53201559e976d366
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
@@ -1761,15 +1761,15 @@ SPEC CHECKSUMS:
   ReactCommon: e5866ad8f7487779853fa3fe33f1c075207c3262
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
-  RNFBApp: 9acbe359ef3559d6f8ca5c350db471f2b352f98a
-  RNFBMessaging: b82ef70d252500d3ad104284c0c7f8e1cd22b51e
+  RNFBApp: 793adb33298db7e67dc365dc1ec0dc8a55a7a044
+  RNFBMessaging: 62b6c25f58225a73067c7aef25947f41aa6088c5
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNReactNativeHapticFeedback: ec56a5f81c3941206fd85625fa669ffc7b4545f9
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
-  RNSentry: 4ac2c0bd6c4fbea006ea9d821d7d4ea3207bcedc
+  RNSentry: 23e21e49e5375ea9947461073ad0fd427e6e2875
   RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
   RNVectorIcons: 7ac7aaa83f8f3d4c7c0f7daea5a431e91a29b0cd
-  Sentry: 37b29280c25d35e49850151b65a27786d94e1a19
+  Sentry: 96ae1dcdf01a644bc3a3b1dc279cecaf48a833fb
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: 9fec845645e39f371e6898926d096fd9c2feb5a5
   stripe-react-native: 0e66c2b3f529af8a64cfffffa9aecd98be937d39
