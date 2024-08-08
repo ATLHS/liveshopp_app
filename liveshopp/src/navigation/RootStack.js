@@ -41,7 +41,7 @@ const RootStack = ({ isLoading }) => {
   Appearance.setColorScheme('light');
 
   useEffect(() => {
-    const onNotificationEvent = async ({ type, detail }) => {
+    const onNotificationEvent = async ({ type }) => {
       try {
         // User clicked on notification
         if (isAuthenticate && type === EventType.PRESS) {

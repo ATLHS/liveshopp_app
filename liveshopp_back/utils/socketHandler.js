@@ -67,10 +67,10 @@ module.exports = (io) => {
         channel.hostIsLive = true;
         live.live_status = 'live';
 
-        // FIXME
-        // We dont want to resend notifications if the seller quits and rejoins the channel
-        // We should send notifications only once, when it's time?
-        sendLiveIsStarting(live);
+        if (channel.notificationSent === false) {
+          sendLiveIsStarting(live);
+          channel.notificationSent = true;
+        }
 
         await live.save();
       }
