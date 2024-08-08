@@ -40,32 +40,33 @@ const RootStack = ({ isLoading }) => {
   // and can lead to invisible text (reported by users on Android with dark mode enabled)
   Appearance.setColorScheme('light');
 
-  const onNotificationEvent = async ({ type, detail }) => {
-    try {
-      // User clicked on notification
-      if (type === EventType.PRESS) {
-        const live = await AsyncStorage.getItem('notification:lastLive');
-        const { id, sellerId } = JSON.parse(live);
-
-        socket.emit('joinChannel', { liveId: id, user });
-        dispatch(setIsJoin(true));
-        navigationRef.current?.navigate('LiveScreen', {
-          liveId: id,
-          seller_id: sellerId,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    const onNotificationEvent = async ({ type, detail }) => {
+      try {
+        // User clicked on notification
+        if (isAuthenticate && type === EventType.PRESS) {
+          const live = await AsyncStorage.getItem('notification:lastLive');
+          const { id, sellerId } = JSON.parse(live);
+
+          socket.emit('joinChannel', { liveId: id, user });
+          dispatch(setIsJoin(true));
+          navigationRef.current?.navigate('LiveScreen', {
+            liveId: id,
+            seller_id: sellerId,
+          });
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
     const unsubscribe = notifee.onForegroundEvent(onNotificationEvent);
+    notifee.onBackgroundEvent(onNotificationEvent);
 
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [isAuthenticate]);
 
   useEffect(() => {
     const checkForUpdates = async () => {

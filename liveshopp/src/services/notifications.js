@@ -15,23 +15,29 @@ import customer from './customer';
 
 const onNotification = async (notif) => {
   try {
-    const data = JSON.parse(notif.data.notifee);
+    if (notif && notif.data && notif.data.notifee) {
+      const data = JSON.parse(notif.data.notifee);
 
-    if (data.type && data.type === Notification.LIVE_STARTED) {
-      data.body = `${data.live.sellerName} ${i18n.t('notifSellerIsLive')}`;
+      if (data.type && data.type === Notification.LIVE_STARTED) {
+        data.body = `${data.live.sellerName} ${i18n.t('notifSellerIsLive')}`;
 
-      AsyncStorage.setItem(
-        'notification:lastLive',
-        JSON.stringify({ id: data.live.id, sellerId: data.live.sellerId }),
-      );
+        AsyncStorage.setItem(
+          'notification:lastLive',
+          JSON.stringify({ id: data.live.id, sellerId: data.live.sellerId }),
+        );
+      }
+
+      resetDisplayedNotifications();
+
+      await notifee.displayNotification(data);
     }
-
-    resetDisplayedNotifications();
-
-    await notifee.displayNotification(data);
   } catch (error) {
     console.log(error);
   }
+};
+
+const onBackgroundEvent = async ({ type, detail }) => {
+  console.log('on background notification event', type, detail);
 };
 
 // This is a trick when the app is killed, the notification text is in english
@@ -102,6 +108,7 @@ const initNotifications = () => {
 
       // Set notification handlers for foreground, background and killed app states
       messaging().setBackgroundMessageHandler(onNotification);
+      notifee.onBackgroundEvent(onBackgroundEvent);
       return messaging().onMessage(onNotification);
     }
     return () => {};

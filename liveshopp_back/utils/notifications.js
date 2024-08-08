@@ -21,7 +21,7 @@ const sendLiveIsStarting = async (live) => {
       channelId: 'important',
       smallIcon: 'ic_notification',
       largeIcon: live.imageUrl,
-      category: 'call',
+      category: 'event',
       importance: 4,
       style: { type: 0, picture: live.imageUrl },
     };
