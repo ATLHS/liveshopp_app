@@ -23,7 +23,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import OrderDeliveryStatus from '../../constants/OrderDeliveryStatus';
-import user from '../../services/user';
 import colors from '../../styles/colors';
 
 const OrderCard = ({

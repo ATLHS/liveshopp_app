@@ -9,6 +9,16 @@ const FIREBASE_TOKENS_BATCH_SIZE = 500;
 
 const sendLiveIsStarting = async (live) => {
   try {
+    // Do not send notifications to all users while testing
+    if (process.env.DISABLE_NOTIFICATION_SENDING_FOR_USER_IDS) {
+      const userIds = process.env.DISABLE_NOTIFICATION_SENDING_FOR_USER_IDS.split(',');
+
+      if (userIds.includes(live.seller_id)) {
+        log.info(`Skipping sending notification for seller ID ${live.seller_id}`);
+        return;
+      }
+    }
+
     // Get all users tokens except for the Seller himself
     const notifications = await Notification.find({ userId: { $ne: live.seller_id } })
       .select({ token: 1, _id: 0 })
