@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 
 import { REACT_APP_AGORA_APP_ID } from '@env';
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useFocusEffect } from '@react-navigation/native';
 import { useKeepAwake } from '@sayem314/react-native-keep-awake';
@@ -44,7 +44,7 @@ import colors from '../../styles/colors';
 
 export const LiveScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
-  const { liveId, seller_id } = route.params;
+  const { liveId, seller_id, pinned_message } = route.params;
   const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const [modalVisible, setModalVisible] = useState(false);
@@ -398,6 +398,19 @@ export const LiveScreen = ({ navigation, route }) => {
                 showObjectionableAdminAction={showObjectionableAdminAction}
               />
             )}
+            {pinned_message && (
+              <View style={styles.pinnedMessageContainer}>
+                <View style={styles.pinnedInfos}>
+                  <Text style={styles.sellerNameLabel}>
+                    {liveData.sellerName}
+                    {'   '}
+                  </Text>
+                  <FontAwesomeIcon icon={faThumbtack} size={10} color={colors.LIGHT} />
+                  <Text style={styles.pinnedLabel}> ÉPINGLÉ</Text>
+                </View>
+                <Text style={styles.pinnedMessage}>{pinned_message}</Text>
+              </View>
+            )}
             {renderLiveUserActions()}
             {!isHost && <LiveChatTextInput onPress={(message) => emitNewLiveMessage(message)} />}
           </View>
@@ -488,6 +501,23 @@ const styles = StyleSheet.create({
     color: colors.LIGHT,
     margin: 'auto',
   },
+  pinnedLabel: {
+    color: colors.LIGHT,
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 0,
+    lineHeight: 20,
+  },
+  pinnedMessage: { color: colors.LIGHT, fontSize: 14, lineHeight: 20 },
+  pinnedMessageContainer: { width: '95%', backgroundColor: 'transparent', marginBottom: '5%' },
+  sellerNameLabel: {
+    color: colors.LIGHT,
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 0,
+    lineHeight: 20,
+  },
+  pinnedInfos: { flexDirection: 'row', alignItems: 'center' },
 });
 
 export default LiveScreen;

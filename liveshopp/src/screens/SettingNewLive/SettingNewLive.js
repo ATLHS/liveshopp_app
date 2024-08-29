@@ -61,13 +61,26 @@ export const SettingNewLive = ({ navigation }) => {
       label: t('date'),
       type: 'datetime',
       helperMessage: t('minimumHourSpacing'),
-      style: { height: 150 },
       minuteInterval: 30,
       minimumDelay: DateTime.now()
         .setZone('Europe/Paris')
         .startOf('minutes') // Début de l'heure actuelle
         .plus({ minutes: 30 - (DateTime.now().minute % 30) })
         .toJSDate(),
+    },
+    {
+      name: 'pinned_message',
+      label: t('pinMessageLabel'),
+      type: 'text',
+      validation: {
+        maxLength: {
+          value: 100,
+          message: t('pinnedValidationErrorMessage'),
+        },
+      },
+      helper: t('pinnedMessageHelper'),
+      editable: true,
+      defaultValue: '',
     },
   ];
   const { handleSubmit, control } = useForm();
@@ -151,7 +164,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-  fieldContainer: { margin: 10, marginBottom: 30 },
+  fieldContainer: { margin: 10, marginBottom: 0 },
   headline: {
     color: colors.LIGHT,
     fontFamily: 'Roboto-Regular',

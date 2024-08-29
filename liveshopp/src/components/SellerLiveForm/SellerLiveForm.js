@@ -69,7 +69,7 @@ export const SellerLiveForm = ({ onPress }) => {
   const [disabled, setDisabled] = useState(false);
 
   return (
-    <View style={{ width: '100%', alignItems: 'center' }}>
+    <View style={styles.sellerLiveFormContainer}>
       <View
         style={{
           flexDirection: 'row',
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  sellerLiveFormContainer: { width: '100%', alignItems: 'center', marginTop: '2%' },
   headlineContainer: { marginBottom: 30 },
   formContainer: {
     flex: 1,

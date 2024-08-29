@@ -62,13 +62,12 @@ const TextType = ({ inputField, field }) => {
 const containedStyles = StyleSheet.create({
   textInput: {
     color: 'white',
-    backgroundColor: 'black',
+    backgroundColor: colors.DARK,
     borderColor: 'white',
     borderWidth: 1,
     width: 350,
     height: 55,
     borderRadius: 6,
-    marginBottom: 15,
     padding: 10,
   },
 });
@@ -81,7 +80,6 @@ const outlinedStyles = StyleSheet.create({
     width: 350,
     height: 55,
     borderRadius: 6,
-    marginBottom: 15,
     padding: 10,
   },
 });

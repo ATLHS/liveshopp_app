@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: 30,
   },
-  action: {},
+  action: { marginTop: 10 },
   resetPassword: { color: 'white' },
   helperText: {
     color: 'white',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     width: 350,
     textDecorationLine: 'underline',
   },
-  helper: { width: 350, position: 'relative', top: -20 },
+  helper: { width: 350 },
 });
 
 export default SignIn;

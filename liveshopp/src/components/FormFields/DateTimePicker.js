@@ -29,15 +29,17 @@ const DateTimePicker = ({ inputField, field }) => {
 
   return (
     <>
-      <DatePicker
-        style={inputField.style}
-        minimumDate={initialDate}
-        locale={i18n.language}
-        date={initialDate}
-        onDateChange={handleDateChange}
-        theme={'auto'}
-        minuteInterval={inputField.minuteInterval}
-      />
+      <View style={styles.dateTimePickerContainer}>
+        <DatePicker
+          style={styles.dateTimePicker}
+          minimumDate={initialDate}
+          locale={i18n.language}
+          date={initialDate}
+          onDateChange={handleDateChange}
+          theme={'auto'}
+          minuteInterval={inputField.minuteInterval}
+        />
+      </View>
       {inputField.helperMessage && (
         <View style={styles.condition}>
           <View style={{ marginTop: 2 }}>
@@ -51,6 +53,14 @@ const DateTimePicker = ({ inputField, field }) => {
 };
 
 const styles = StyleSheet.create({
+  dateTimePickerContainer: {
+    alignItems: 'center',
+    height: 150,
+    backgroundColor: '#F8F7F7',
+    width: 350,
+    borderRadius: 6,
+  },
+  dateTimePicker: { height: 150 },
   conditionText: { color: colors.DARK, fontSize: 14, marginLeft: 5 },
   condition: { width: 350, marginTop: 10, flexDirection: 'row' },
 });

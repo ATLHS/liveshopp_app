@@ -124,7 +124,7 @@
   "date": "date",
   "liveNamePlaceholder": "Veuillez indiquer le nom du live.",
   "invalidLiveName": "Le nom du live est invalide",
-  "allowedCharacters": "Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres\n",
+  "allowedCharacters": "Les caractères autorisés pour le nom du live sont : \n- Majuscules - Minuscules - Chiffres",
   "uniqueSellingPoint": "En quoi ton live sera unique ?",
   "descriptionPlaceholder": "Veuillez indiquer une description.",
   "minimumHourSpacing": "Chaque live doit être espacé d'au moins une heure. \nEx : Si un live commence à 14h, le suivant doit débuter à 15h ou plus tard.",
@@ -176,5 +176,8 @@
   "trackingUrlLabel": "URL de Suivi",
   "trackOrderButton": "Suivre ma commande",
   "trackingUrlErrorMessage": "Ajoutez l'URL de suivi du colis pour confirmer l'expédition",
-  "trackingUrlHelperMessage": "Assurez-vous que l'URL de suivi est correcte. Elle permet au client de suivre son colis."
+  "trackingUrlHelperMessage": "Assurez-vous que l'URL de suivi est correcte. Elle permet au client de suivre son colis.",
+  "pinMessageLabel": "Message à épingler (optionnel)",
+  "pinnedValidationErrorMessage": "Les messages épinglés sont limités à 100 caractères. Veuillez raccourcir votre message pour qu'il reste lisible pendant le live.",
+  "pinnedMessageHelper": "100 caractère maximum",
 }

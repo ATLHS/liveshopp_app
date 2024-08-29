@@ -7,11 +7,9 @@ import colors from '../../styles/colors';
 const MessageHelper = ({ fieldState: { error } }) => {
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   return (
-    <View>
-      <Text style={isAuthenticate ? outlinedStyles.error_message : containedStyles.error_message}>
-        {error && error.message}
-      </Text>
-    </View>
+    <Text style={isAuthenticate ? outlinedStyles.error_message : containedStyles.error_message}>
+      {error && error.message}
+    </Text>
   );
 };
 
@@ -19,15 +17,16 @@ const containedStyles = StyleSheet.create({
   error_message: {
     backgroundColor: 'black',
     color: colors.PRIMARY,
-    marginBottom: 15,
+    marginBottom: 10,
+    marginTop: 10,
     width: 350,
   },
 });
 const outlinedStyles = StyleSheet.create({
   error_message: {
-    backgroundColor: colors.LIGHT,
     color: colors.PRIMARY,
-    marginBottom: 15,
+    marginBottom: 10,
+    marginTop: 10,
     width: 350,
   },
 });

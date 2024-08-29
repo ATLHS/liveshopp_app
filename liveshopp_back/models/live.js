@@ -10,6 +10,7 @@ const lives = new mongoose.Schema(
     live_status: { type: String, default: 'coming_soon' },
     business_activity: { type: String },
     imageUrl: { type: String, default: '' },
+    pinned_message: { type: String },
   },
   { timestamps: true },
 );

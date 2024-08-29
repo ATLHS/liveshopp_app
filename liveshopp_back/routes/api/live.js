@@ -12,7 +12,7 @@ const { emitFreshLives } = require('../../utils/emitFreshLives');
 
 router.post('/create-live', verifyJwt, async (req, res) => {
   try {
-    const { live_name, live_description, live_date_time } = req.body.data;
+    const { live_name, live_description, live_date_time, pinned_message } = req.body.data;
     const seller = await UserSeller.findById(req.user.id);
     const liveStartDateTime = DateTime.fromJSDate(new Date(live_date_time)).toISO();
 
@@ -42,6 +42,7 @@ router.post('/create-live', verifyJwt, async (req, res) => {
       live_date_time: liveStartDateTime,
       business_activity: seller.business_activity,
       imageUrl: seller.imageUrl,
+      pinned_message: pinned_message || '',
     });
 
     await newLive.save();
