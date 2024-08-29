@@ -62,13 +62,13 @@ export const LivesScreen = ({ navigation }) => {
     if (isJoin) {
       return;
     }
+
     try {
       socket.emit('joinChannel', { liveId: liveData._id, user });
       dispatch(setIsJoin(true));
       navigation.navigate('LiveScreen', {
         liveId: liveData._id,
         seller_id: liveData.seller_id,
-        pinned_message: liveData.pinned_message,
       });
     } catch (e) {
       console.error(e);

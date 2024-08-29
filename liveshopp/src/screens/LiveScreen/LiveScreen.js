@@ -44,7 +44,7 @@ import colors from '../../styles/colors';
 
 export const LiveScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
-  const { liveId, seller_id, pinned_message } = route.params;
+  const { liveId, seller_id } = route.params;
   const { liveData } = useSelector((state) => state.lives);
   const { user } = useSelector((state) => state.user);
   const [modalVisible, setModalVisible] = useState(false);
@@ -398,7 +398,7 @@ export const LiveScreen = ({ navigation, route }) => {
                 showObjectionableAdminAction={showObjectionableAdminAction}
               />
             )}
-            {pinned_message && (
+            {liveData.pinnedMessage && (
               <View style={styles.pinnedMessageContainer}>
                 <View style={styles.pinnedInfos}>
                   <Text style={styles.sellerNameLabel}>
@@ -406,9 +406,9 @@ export const LiveScreen = ({ navigation, route }) => {
                     {'   '}
                   </Text>
                   <FontAwesomeIcon icon={faThumbtack} size={10} color={colors.LIGHT} />
-                  <Text style={styles.pinnedLabel}> ÉPINGLÉ</Text>
+                  <Text style={styles.pinnedLabel}> {t('pinned')}</Text>
                 </View>
-                <Text style={styles.pinnedMessage}>{pinned_message}</Text>
+                <Text style={styles.pinnedMessage}>{liveData.pinnedMessage}</Text>
               </View>
             )}
             {renderLiveUserActions()}

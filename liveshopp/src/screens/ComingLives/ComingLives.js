@@ -40,7 +40,6 @@ export const LivesScreen = ({ navigation }) => {
       navigation.navigate('LiveScreen', {
         liveId: liveData._id,
         seller_id: liveData.seller_id,
-        pinned_message: liveData.pinned_message,
       });
     } catch (e) {
       console.error(e);

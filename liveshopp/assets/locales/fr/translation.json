@@ -179,5 +179,6 @@
   "trackingUrlHelperMessage": "Assurez-vous que l'URL de suivi est correcte. Elle permet au client de suivre son colis.",
   "pinMessageLabel": "Message à épingler (optionnel)",
   "pinnedValidationErrorMessage": "Les messages épinglés sont limités à 100 caractères. Veuillez raccourcir votre message pour qu'il reste lisible pendant le live.",
-  "pinnedMessageHelper": "100 caractère maximum",
+  "pinnedMessageHelper": "100 caractères maximum",
+  "pinned": "ÉPINGLÉ"
 }
