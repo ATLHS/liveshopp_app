@@ -172,7 +172,6 @@
   "logOut": "Log Out",
   "countryRegion": "Country/Region",
   "pending": "Awaiting for shipment",
-  "shipped": "Shipped",
   "trackingUrlLabel": "Tracking URL",
   "trackOrderButton": "Track my order",
   "trackingUrlErrorMessage": "Add the package tracking URL to confirm shipment",
@@ -180,5 +179,6 @@
   "pinMessageLabel": "Message to Pin (optional)",
   "pinnedValidationErrorMessage": "Pinned messages are limited to 100 characters. Please shorten your message to keep it readable during the live.",
   "pinnedMessageHelper": "100 characters maximum",
-  "pinned": "PINNED"
+  "pinned": "PINNED",
+  "notifSellerIsLive": "is now live!"
 }

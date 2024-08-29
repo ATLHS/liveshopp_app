@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Appearance, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { APP_STORE_BUNDLE_ID, PLAY_STORE_BUNDLE_ID } from '@env';
+import notifee, { EventType } from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -32,11 +33,40 @@ const RootStack = ({ isLoading }) => {
   const isAuthenticate = useSelector((state) => state.user.isAuthenticate);
   const dispatch = useDispatch();
 
+  const navigationRef = useRef(null);
   const { t } = useTranslation();
 
   // Force light them since dark mode is not well implemented yet
   // and can lead to invisible text (reported by users on Android with dark mode enabled)
   Appearance.setColorScheme('light');
+
+  useEffect(() => {
+    const onNotificationEvent = async ({ type }) => {
+      try {
+        // User clicked on notification
+        if (isAuthenticate && type === EventType.PRESS) {
+          const live = await AsyncStorage.getItem('notification:lastLive');
+          const { id, sellerId } = JSON.parse(live);
+
+          socket.emit('joinChannel', { liveId: id, user });
+          dispatch(setIsJoin(true));
+          navigationRef.current?.navigate('LiveScreen', {
+            liveId: id,
+            seller_id: sellerId,
+          });
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    const unsubscribe = notifee.onForegroundEvent(onNotificationEvent);
+    notifee.onBackgroundEvent(onNotificationEvent);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [isAuthenticate]);
 
   useEffect(() => {
     const checkForUpdates = async () => {
@@ -235,7 +265,7 @@ const RootStack = ({ isLoading }) => {
   }, [dispatch]);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {isLoading ? (
         <Loading />
       ) : !isAuthenticate ? (

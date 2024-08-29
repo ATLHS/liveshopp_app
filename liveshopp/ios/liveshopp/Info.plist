@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key/>
-	<string/>
+	<key></key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>fr</string>
 	<key>CFBundleDisplayName</key>
@@ -28,7 +28,6 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
@@ -36,17 +35,22 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Ceci vous permet d'être vu par votre communauté lors des enchères en live.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ajouter une photo de profil.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Ceci vous permet d'être entendu par votre communauté lors des enchères en live.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ajouter une photo de profil.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FugazOne-Regular.ttf</string>
 		<string>Roboto-Bold.ttf</string>
 		<string>Roboto-Regular.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

@@ -30,8 +30,8 @@ const FormConstructor = ({ inputField, field, fieldState }) => {
       return <Places inputField={inputField} field={field} fieldState={fieldState} />;
     case 'checkbox':
       return <CheckboxField inputField={inputField} field={field} fieldState={fieldState} />;
-    case 'video':
-      return <VideoField inputField={inputField} field={field} fieldState={fieldState} />;
+    // case 'video':
+    //   return <VideoField inputField={inputField} field={field} fieldState={fieldState} />;
     default:
       return;
   }

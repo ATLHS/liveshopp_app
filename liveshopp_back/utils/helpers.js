@@ -16,4 +16,10 @@ const adjustAuctionEndTimeForTenMinutes = (auctionEndDate) => {
 
 const randomFourDigitNumber = () => Math.floor(1000 + Math.random() * 9000);
 
-module.exports = { adjustAuctionEndTimeForTenMinutes, randomFourDigitNumber };
+// Get an array of array grouped by size
+const chunkArray = (array, chunkSize) =>
+  Array.from({ length: Math.ceil(array.length / chunkSize) }, (_v, i) =>
+    array.slice(i * chunkSize, i * chunkSize + chunkSize),
+  );
+
+module.exports = { adjustAuctionEndTimeForTenMinutes, chunkArray, randomFourDigitNumber };

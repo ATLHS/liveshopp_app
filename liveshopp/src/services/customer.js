@@ -19,6 +19,16 @@ const customer = {
       .then(({ data }) => data)
       .catch(({ response }) => Promise.reject(response.data));
   },
+  updateDeviceNotificationToken(deviceId, token) {
+    return axiosConfig
+      .post('/api/customer/update-device-notification-token', { deviceId, token })
+      .catch(({ response }) => Promise.reject(response.data));
+  },
+  updateCustomerDevice(deviceId) {
+    return axiosConfig
+      .post('/api/customer/update-customer-device', { deviceId })
+      .catch(({ response }) => Promise.reject(response.data));
+  },
   deleteCustomer(data) {
     return axiosConfig
       .post('/api/customer/delete-customer', { data })

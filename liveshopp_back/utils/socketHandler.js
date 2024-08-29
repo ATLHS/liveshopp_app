@@ -6,6 +6,7 @@ const UserSeller = require('../models/seller');
 
 const { updateCustomer } = require('./updateCustomer');
 const { createChannel, getChannel, saveChannel, getChannels, updateTimer, addChatMessage } = require('./channels');
+const { sendLiveIsStarting } = require('./notifications');
 const { log } = require('../middleware/logger');
 const { registerAuction } = require('./auctions');
 const Sentry = require('@sentry/node');
@@ -65,6 +66,11 @@ module.exports = (io) => {
       if (!channel.hostIsLive && user.profil === 'seller' && user.id === live.seller_id) {
         channel.hostIsLive = true;
         live.live_status = 'live';
+
+        if (channel.notificationSent === false) {
+          sendLiveIsStarting(live);
+          channel.notificationSent = true;
+        }
 
         await live.save();
       }

@@ -14,6 +14,7 @@ const { redis } = require('./services');
  * @property {Number} extraUserCount
  * @property {Array} messages
  * @property {boolean} hostIsLive
+ * @property {boolean} notificationSent
  * @property {CurrentAuction} currentAuction
  */
 
@@ -60,6 +61,7 @@ const channel = (live) => ({
   extraUserCount: 0,
   messages: [],
   hostIsLive: false,
+  notificationSent: false,
   currentAuction: {
     userId: '',
     username: '',

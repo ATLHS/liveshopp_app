@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 
 import { SENTRY_DSN } from '@env';
@@ -11,6 +11,7 @@ import { setIsAuthenticate, setUser } from './src/redux/slices/userSlice';
 import { store } from './src/redux/store';
 import authService from './src/services/auth';
 import axiosConfig from './src/services/config/axiosConfig';
+import { updateUserDevice } from './src/services/notifications';
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -18,6 +19,7 @@ Sentry.init({
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     AsyncStorage.getItem('@token').then((token) => {
       if (token) {
@@ -29,6 +31,11 @@ const App = () => {
             store.dispatch(setUser(data.user));
             store.dispatch(setIsAuthenticate(data.isAuthenticate));
             setIsLoading(false);
+
+            // FIXME
+            // Ideally, this would be done only once in SignIn.js
+            //
+            updateUserDevice();
 
             Sentry.setUser({
               id: data.user.id,
@@ -52,10 +59,12 @@ const App = () => {
   });
 
   return (
+    // <React.StrictMode>
     <Provider store={store}>
       <RootStack isLoading={isLoading} />
       <ToastComponent />
     </Provider>
+    // </React.StrictMode>
   );
 };
 
