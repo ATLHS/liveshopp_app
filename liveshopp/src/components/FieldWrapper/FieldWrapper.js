@@ -22,7 +22,6 @@ const FieldWrapper = ({ control, schema }) => {
         render={({ ...props }) => (
           <>
             <FormConstructor inputField={field} {...props} />
-            <MessageHelper {...props} />
             {field.helper && (
               <View
                 style={
@@ -39,13 +38,21 @@ const FieldWrapper = ({ control, schema }) => {
                       <Text style={{ color: colors.LIGHT }}>{field.helper.helperMessage2}</Text>
                     </View>
                   ) : (
-                    <View style={styles.helperContainer}>
-                      <Text style={styles.helperMessage}>{field.helper}</Text>
+                    <View style={styles.helperMessageContainer}>
+                      <Text
+                        style={
+                          isAuthenticate
+                            ? outlinedStyles.helperMessage
+                            : containedStyles.helperMessage
+                        }>
+                        {field.helper}
+                      </Text>
                     </View>
                   )}
                 </View>
               </View>
             )}
+            <MessageHelper {...props} />
           </>
         )}
         rules={field.validation}
@@ -55,18 +62,19 @@ const FieldWrapper = ({ control, schema }) => {
 };
 
 const styles = StyleSheet.create({
-  helperContainer: { marginBottom: 20 },
-  helperMessage: { color: colors.LIGHT },
+  helperMessageContainer: { marginBottom: 0, marginTop: 10 },
 });
 
 const containedStyles = StyleSheet.create({
   helperContainer: { width: 350 },
   helperText: { color: colors.LIGHT },
+  helperMessage: { color: colors.LIGHT },
 });
 
 const outlinedStyles = StyleSheet.create({
   helperContainer: { width: 350 },
   helperText: { color: colors.DARK },
+  helperMessage: { color: colors.DARK },
 });
 
 export default FieldWrapper;

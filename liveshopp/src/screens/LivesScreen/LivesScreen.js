@@ -62,6 +62,7 @@ export const LivesScreen = ({ navigation }) => {
     if (isJoin) {
       return;
     }
+
     try {
       socket.emit('joinChannel', { liveId: liveData._id, user });
       dispatch(setIsJoin(true));

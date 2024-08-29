@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     width: 350,
     height: 150,
     borderRadius: 6,
-    marginBottom: 10,
     padding: 10,
     paddingTop: 10,
+    textAlignVertical: 'top',
   },
 });
 

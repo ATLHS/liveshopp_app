@@ -9,6 +9,7 @@ const { redis } = require('./services');
  * @property {string} auctionId
  * @property {('live'|'ended'|'coming_soon')} auctionsStatus
  * @property {string} liveSchedule
+ * @property {string} pinnedMessage
  * @property {Number} userCount
  * @property {Number} extraUserCount
  * @property {Array} messages
@@ -35,6 +36,7 @@ const { redis } = require('./services');
  * @property {string} sellerName
  * @property {string} live_name
  * @property {string} live_description
+ * @property {string} pinned_message
  * @property {string} live_date_time
  * @property {('coming_soon'|'ended')} live_status
  * @property {string} business_activity
@@ -53,6 +55,7 @@ const channel = (live) => ({
   auctionId: live._id.toString(),
   auctionsStatus: live.live_status,
   liveSchedule: live.live_date_time,
+  pinnedMessage: live.pinned_message,
   userCount: 0,
   extraUserCount: 0,
   messages: [],
