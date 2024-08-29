@@ -1,40 +1,46 @@
 PODS:
-  - AgoraIrisRTC_iOS (4.3.2-build.1)
-  - AgoraRtcEngine_iOS (4.3.2):
-    - AgoraRtcEngine_iOS/AIAEC (= 4.3.2)
-    - AgoraRtcEngine_iOS/AINS (= 4.3.2)
-    - AgoraRtcEngine_iOS/AudioBeauty (= 4.3.2)
-    - AgoraRtcEngine_iOS/ClearVision (= 4.3.2)
-    - AgoraRtcEngine_iOS/ContentInspect (= 4.3.2)
-    - AgoraRtcEngine_iOS/FaceCapture (= 4.3.2)
-    - AgoraRtcEngine_iOS/FaceDetection (= 4.3.2)
-    - AgoraRtcEngine_iOS/LipSync (= 4.3.2)
-    - AgoraRtcEngine_iOS/ReplayKit (= 4.3.2)
-    - AgoraRtcEngine_iOS/RtcBasic (= 4.3.2)
-    - AgoraRtcEngine_iOS/SpatialAudio (= 4.3.2)
-    - AgoraRtcEngine_iOS/VideoAv1CodecDec (= 4.3.2)
-    - AgoraRtcEngine_iOS/VideoAv1CodecEnc (= 4.3.2)
-    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.3.2)
-    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.3.2)
-    - AgoraRtcEngine_iOS/VirtualBackground (= 4.3.2)
-    - AgoraRtcEngine_iOS/VQA (= 4.3.2)
-  - AgoraRtcEngine_iOS/AIAEC (4.3.2)
-  - AgoraRtcEngine_iOS/AINS (4.3.2)
-  - AgoraRtcEngine_iOS/AudioBeauty (4.3.2)
-  - AgoraRtcEngine_iOS/ClearVision (4.3.2)
-  - AgoraRtcEngine_iOS/ContentInspect (4.3.2)
-  - AgoraRtcEngine_iOS/FaceCapture (4.3.2)
-  - AgoraRtcEngine_iOS/FaceDetection (4.3.2)
-  - AgoraRtcEngine_iOS/LipSync (4.3.2)
-  - AgoraRtcEngine_iOS/ReplayKit (4.3.2)
-  - AgoraRtcEngine_iOS/RtcBasic (4.3.2)
-  - AgoraRtcEngine_iOS/SpatialAudio (4.3.2)
-  - AgoraRtcEngine_iOS/VideoAv1CodecDec (4.3.2)
-  - AgoraRtcEngine_iOS/VideoAv1CodecEnc (4.3.2)
-  - AgoraRtcEngine_iOS/VideoCodecDec (4.3.2)
-  - AgoraRtcEngine_iOS/VideoCodecEnc (4.3.2)
-  - AgoraRtcEngine_iOS/VirtualBackground (4.3.2)
-  - AgoraRtcEngine_iOS/VQA (4.3.2)
+  - AgoraIrisRTC_iOS (4.4.0-build.6)
+  - AgoraRtcEngine_iOS (4.4.0):
+    - AgoraRtcEngine_iOS/AIAEC (= 4.4.0)
+    - AgoraRtcEngine_iOS/AIAECLL (= 4.4.0)
+    - AgoraRtcEngine_iOS/AINS (= 4.4.0)
+    - AgoraRtcEngine_iOS/AINSLL (= 4.4.0)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.4.0)
+    - AgoraRtcEngine_iOS/Basic (= 4.4.0)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.4.0)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.4.0)
+    - AgoraRtcEngine_iOS/FaceCapture (= 4.4.0)
+    - AgoraRtcEngine_iOS/FaceDetection (= 4.4.0)
+    - AgoraRtcEngine_iOS/LipSync (= 4.4.0)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.4.0)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.4.0)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.4.0)
+    - AgoraRtcEngine_iOS/VideoAv1CodecDec (= 4.4.0)
+    - AgoraRtcEngine_iOS/VideoAv1CodecEnc (= 4.4.0)
+    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.4.0)
+    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.4.0)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.4.0)
+    - AgoraRtcEngine_iOS/VQA (= 4.4.0)
+  - AgoraRtcEngine_iOS/AIAEC (4.4.0)
+  - AgoraRtcEngine_iOS/AIAECLL (4.4.0)
+  - AgoraRtcEngine_iOS/AINS (4.4.0)
+  - AgoraRtcEngine_iOS/AINSLL (4.4.0)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.4.0)
+  - AgoraRtcEngine_iOS/Basic (4.4.0)
+  - AgoraRtcEngine_iOS/ClearVision (4.4.0)
+  - AgoraRtcEngine_iOS/ContentInspect (4.4.0)
+  - AgoraRtcEngine_iOS/FaceCapture (4.4.0)
+  - AgoraRtcEngine_iOS/FaceDetection (4.4.0)
+  - AgoraRtcEngine_iOS/LipSync (4.4.0)
+  - AgoraRtcEngine_iOS/ReplayKit (4.4.0)
+  - AgoraRtcEngine_iOS/RtcBasic (4.4.0)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.4.0)
+  - AgoraRtcEngine_iOS/VideoAv1CodecDec (4.4.0)
+  - AgoraRtcEngine_iOS/VideoAv1CodecEnc (4.4.0)
+  - AgoraRtcEngine_iOS/VideoCodecDec (4.4.0)
+  - AgoraRtcEngine_iOS/VideoCodecEnc (4.4.0)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.4.0)
+  - AgoraRtcEngine_iOS/VQA (4.4.0)
   - boost (1.83.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.2)
@@ -1033,9 +1039,9 @@ PODS:
   - React-Mapbuffer (0.74.2):
     - glog
     - React-debug
-  - react-native-agora (4.3.2):
-    - AgoraIrisRTC_iOS (= 4.3.2-build.1)
-    - AgoraRtcEngine_iOS (= 4.3.2)
+  - react-native-agora (4.4.0):
+    - AgoraIrisRTC_iOS (= 4.4.0-build.6)
+    - AgoraRtcEngine_iOS (= 4.4.0)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1337,10 +1343,10 @@ PODS:
     - React-Core
   - RNDeviceInfo (11.1.0):
     - React-Core
-  - RNFBApp (20.3.0):
+  - RNFBApp (20.4.0):
     - Firebase/CoreOnly (= 10.29.0)
     - React-Core
-  - RNFBMessaging (20.3.0):
+  - RNFBMessaging (20.4.0):
     - Firebase/Messaging (= 10.29.0)
     - FirebaseCoreExtension
     - React-Core
@@ -1374,11 +1380,29 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (5.27.0):
+  - RNSentry (5.31.1):
+    - DoubleConversion
+    - glog
     - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
     - React-hermes
-    - Sentry/HybridSDK (= 8.32.0)
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.36.0)
+    - Yoga
   - RNSVG (15.3.0):
     - React-Core
   - RNVectorIcons (10.1.0):
@@ -1402,7 +1426,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - Sentry/HybridSDK (8.32.0)
+  - Sentry/HybridSDK (8.36.0)
   - SocketRocket (0.7.0)
   - Stripe (23.27.6):
     - StripeApplePay (= 23.27.6)
@@ -1688,8 +1712,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AgoraIrisRTC_iOS: 3cb15344a503a1a35ab6d60481732a8beeda98fe
-  AgoraRtcEngine_iOS: eaa97751fcfe1b50d9b067e0df92752a6a5f899f
+  AgoraIrisRTC_iOS: f8756246f576b7fd4ac4cc405451f5203d7808ab
+  AgoraRtcEngine_iOS: 645039304ab4e32cb43506659056fb71f5d1a3b0
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 4bc164e5b5e6cfc288d2b5ff28643ea15fa1a589
@@ -1730,7 +1754,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 34bc0fbc606f69e66f05286d94d5cd6cbf2ef562
   React-logger: 29fa3e048f5f67fe396bc08af7606426d9bd7b5d
   React-Mapbuffer: 86703e9e4f6522053568300827b436ccc01e1101
-  react-native-agora: b4835f0ce17ddca8da8d3737195f9a2a03acd41c
+  react-native-agora: c3b75032d66106d5d27c20bc60c0fd30ac6f247f
   react-native-date-picker: 6891317e850deae5b53d51355226e07a495aba61
   react-native-image-picker: 8b791a2bec6da84ca7d8cbcad30da159d6dd6da4
   react-native-keep-awake: a15b33cd9b94a2da9b0a1c50ac64ac2391d3e330
@@ -1761,15 +1785,15 @@ SPEC CHECKSUMS:
   ReactCommon: e5866ad8f7487779853fa3fe33f1c075207c3262
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
-  RNFBApp: 793adb33298db7e67dc365dc1ec0dc8a55a7a044
-  RNFBMessaging: 62b6c25f58225a73067c7aef25947f41aa6088c5
+  RNFBApp: 10819a4f67d634fe34aa607c6d1e8a8aef019308
+  RNFBMessaging: 652aac21d91b8ddb85a5e25c0f04150ef60b5384
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNReactNativeHapticFeedback: ec56a5f81c3941206fd85625fa669ffc7b4545f9
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
-  RNSentry: 23e21e49e5375ea9947461073ad0fd427e6e2875
+  RNSentry: 09c5679c6b4e84f64f99ef14f6eb759eec5063a5
   RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
   RNVectorIcons: 7ac7aaa83f8f3d4c7c0f7daea5a431e91a29b0cd
-  Sentry: 96ae1dcdf01a644bc3a3b1dc279cecaf48a833fb
+  Sentry: f8374b5415bc38dfb5645941b3ae31230fbeae57
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: 9fec845645e39f371e6898926d096fd9c2feb5a5
   stripe-react-native: 0e66c2b3f529af8a64cfffffa9aecd98be937d39
