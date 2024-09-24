@@ -6,7 +6,6 @@ PODS:
     - AgoraRtcEngine_iOS/AINS (= 4.4.0)
     - AgoraRtcEngine_iOS/AINSLL (= 4.4.0)
     - AgoraRtcEngine_iOS/AudioBeauty (= 4.4.0)
-    - AgoraRtcEngine_iOS/Basic (= 4.4.0)
     - AgoraRtcEngine_iOS/ClearVision (= 4.4.0)
     - AgoraRtcEngine_iOS/ContentInspect (= 4.4.0)
     - AgoraRtcEngine_iOS/FaceCapture (= 4.4.0)
@@ -26,7 +25,6 @@ PODS:
   - AgoraRtcEngine_iOS/AINS (4.4.0)
   - AgoraRtcEngine_iOS/AINSLL (4.4.0)
   - AgoraRtcEngine_iOS/AudioBeauty (4.4.0)
-  - AgoraRtcEngine_iOS/Basic (4.4.0)
   - AgoraRtcEngine_iOS/ClearVision (4.4.0)
   - AgoraRtcEngine_iOS/ContentInspect (4.4.0)
   - AgoraRtcEngine_iOS/FaceCapture (4.4.0)
@@ -1713,7 +1711,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AgoraIrisRTC_iOS: f8756246f576b7fd4ac4cc405451f5203d7808ab
-  AgoraRtcEngine_iOS: 645039304ab4e32cb43506659056fb71f5d1a3b0
+  AgoraRtcEngine_iOS: 8f579495aafaf383346241a419718e9775723493
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 4bc164e5b5e6cfc288d2b5ff28643ea15fa1a589
@@ -1804,7 +1802,7 @@ SPEC CHECKSUMS:
   StripePaymentSheet: 3eaf870c4388e44b0cc37e4c69d00b6957fd8bd7
   StripePaymentsUI: 59ccddeacad592b09fa67e8d641340820ddb4751
   StripeUICore: 879bbf5889265db13f52fac8aad7a176ba62481f
-  Yoga: 9ad2c02dbd9811bb5a35fe23081cb0f5d5a3f9dd
+  Yoga: 45564236f670899c9739b1581a12b00ead5d391f
 
 PODFILE CHECKSUM: 6dc20a44ed9b4757d96e78b3138e9fc0494cf5df
 
