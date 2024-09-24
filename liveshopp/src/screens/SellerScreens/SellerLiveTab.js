@@ -66,11 +66,11 @@ const SellerLiveTab = () => {
         component={EndedLives}
       />
       {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
-      {/*<Tab.Screen*/}
-      {/*  options={{ title: 'VIDÉOS ENCHÈRE' }}*/}
-      {/*  name="AuctionVideos"*/}
-      {/*  component={SellerAuctionVideos}*/}
-      {/*/>*/}
+      <Tab.Screen
+        options={{ title: 'VIDÉOS ENCHÈRE' }}
+        name="AuctionVideos"
+        component={SellerAuctionVideos}
+      />
     </Tab.Navigator>
   );
 };

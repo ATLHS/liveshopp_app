@@ -31,9 +31,9 @@ export const SellerStacks = ({ navigation }) => {
     navigation.navigate('SettingNewLive');
   };
   // DO NOT REMOVE : Hiding auction videos feature for now.
-  // const createNewAuctionVideo = () => {
-  //   navigation.navigate('auctionVideoSettings');
-  // };
+  const createNewAuctionVideo = () => {
+    navigation.navigate('auctionVideoSettings');
+  };
 
   return (
     <AutocompleteDropdownContextProvider>
@@ -80,8 +80,8 @@ export const SellerStacks = ({ navigation }) => {
               return (
                 <TouchableOpacity
                   // DO NOT REMOVE : Hiding auction videos feature for now.
-                  // onPress={() => panelRef.current?.togglePanel()}
-                  onPress={() => createNewLive()}
+                  onPress={() => panelRef.current?.togglePanel()}
+                  // onPress={() => createNewLive()}
                   style={{ marginRight: 15 }}>
                   <FontAwesomeIcon icon={faPlus} size={25} color={'black'} />
                 </TouchableOpacity>
@@ -152,14 +152,14 @@ export const SellerStacks = ({ navigation }) => {
               <Text style={styles.title}>{t('createALive')}</Text>
             </TouchableOpacity>
             {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
-            {/*<TouchableOpacity*/}
-            {/*  style={styles.touchableStyle}*/}
-            {/*  onPress={() => {*/}
-            {/*    panelRef.current?.togglePanel();*/}
-            {/*    createNewAuctionVideo();*/}
-            {/*  }}>*/}
-            {/*  <Text style={styles.title}>Créer une vidéo enchère</Text>*/}
-            {/*</TouchableOpacity>*/}
+            <TouchableOpacity
+              style={styles.touchableStyle}
+              onPress={() => {
+                panelRef.current?.togglePanel();
+                createNewAuctionVideo();
+              }}>
+              <Text style={styles.title}>Créer une vidéo enchère</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </BottomSheet>

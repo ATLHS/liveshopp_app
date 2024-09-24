@@ -27,7 +27,7 @@ import rgpdScreen from '../screens/Rgpd/Rgpd';
 import SellerProfilView from '../screens/SellerProfilView/SellerProfilView';
 import SellerStacks from '../screens/SellerStacks/SellerStacks';
 // DO NOT REMOVE : Hiding auction videos feature for now.
-// import SetNewAuctionVideo from '../screens/SetNewAuctionVideo/SetNewAuctionVideo';
+import SetNewAuctionVideo from '../screens/SetNewAuctionVideo/SetNewAuctionVideo';
 import SettingNewLive from '../screens/SettingNewLive/SettingNewLive';
 import SettingProfilScreen from '../screens/SettingProfilScreen/SettingProfilScreen';
 import SettingShippingAddress from '../screens/SettingShippingAddress/SettingShippingAddress';
@@ -357,24 +357,24 @@ const SellerStack = () => {
           },
         })}
       />
-      {/*DO NOT REMOVE : Hiding auction videos feature for now.*/}
-      {/*<Stack.Screen*/}
-      {/*  name="auctionVideoSettings"*/}
-      {/*  component={SetNewAuctionVideo}*/}
-      {/*  options={({ navigation }) => ({*/}
-      {/*    headerShown: true,*/}
-      {/*    headerShadowVisible: false, // applied here*/}
-      {/*    headerLeft: () => (*/}
-      {/*      <Pressable onPress={() => navigation.pop()}>*/}
-      {/*        <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />*/}
-      {/*      </Pressable>*/}
-      {/*    ),*/}
-      {/*    title: 'Enchère vidéo',*/}
-      {/*    headerStyle: {*/}
-      {/*      backgroundColor: colors.LIGHT,*/}
-      {/*    },*/}
-      {/*  })}*/}
-      {/*/>*/}
+      {/* DO NOT REMOVE : Hiding auction videos feature for now. */}
+      <Stack.Screen
+        name="auctionVideoSettings"
+        component={SetNewAuctionVideo}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerShadowVisible: false, // applied here
+          headerLeft: () => (
+            <Pressable onPress={() => navigation.pop()}>
+              <FontAwesomeIcon icon={faAngleLeft} color={colors.DARK} size={30} />
+            </Pressable>
+          ),
+          title: 'Enchère vidéo',
+          headerStyle: {
+            backgroundColor: colors.LIGHT,
+          },
+        })}
+      />
       <Stack.Screen
         name="BidConfirmationScreen"
         component={BidConfirmationScreen}
