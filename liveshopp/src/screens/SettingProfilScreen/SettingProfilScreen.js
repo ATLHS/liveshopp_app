@@ -37,6 +37,27 @@ export const SettingProfilScreen = ({ navigation }) => {
 
   useEffect(() => {}, [user, imageUri]);
 
+  const getIsoCode = (phone) => {
+    // Check if the number starts with a "+" as it is stored with the country code in the database
+    if (phone.startsWith('+')) {
+      // The number already has a country code, return the existing code
+      return user.phone?.split(' ')[0];
+    } else {
+      // Return the default country code if the number does not have one
+      return defaultIsoCode;
+    }
+  };
+
+  const formatPhoneNumber = (phone) => {
+    if (!phone) return '';
+
+    if (phone.startsWith('+')) {
+      return user.phone?.split(' ')[1];
+    } else {
+      return phone;
+    }
+  };
+
   const SettingProfilScreenFormUser = [
     {
       name: 'lastname',
@@ -78,8 +99,8 @@ export const SettingProfilScreen = ({ navigation }) => {
         validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
-      defaultValue: user.phone?.split(' ')[1] || '',
-      isoCode: user.phone?.split(' ')[0] || defaultIsoCode,
+      defaultValue: formatPhoneNumber(user.phone),
+      isoCode: getIsoCode(user.phone),
     },
     {
       name: 'email',
@@ -191,8 +212,8 @@ export const SettingProfilScreen = ({ navigation }) => {
         validate: (_, b) => validateFrPhoneNumber(b) || t('pleaseEnterValidNumber'),
       },
       editable: true,
-      defaultValue: user.phone?.split(' ')[1] || '',
-      isoCode: user.phone?.split(' ')[0] || defaultIsoCode,
+      defaultValue: formatPhoneNumber(user.phone),
+      isoCode: getIsoCode(user.phone),
     },
     {
       name: 'email',
