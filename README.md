@@ -1,16 +1,12 @@
-# LiveShopp
+# Liveshopp
 
-[English](#english) · [Français](#français)
+**Buy and sell live.** Liveshopp is a mobile live shopping marketplace for new and pre-owned items. It brings the core Whatnot-style experience to iOS and Android: sellers show products on video and run live auctions, while buyers watch, chat, bid, and track their orders.
 
-## English
+[Liveshopp App Store](https://apps.apple.com/ci/app/liveshopp/id6448577391)
 
-**Buy and sell live.** LiveShopp is a mobile live shopping marketplace for new and pre-owned items. It brings the core Whatnot-style experience to iOS and Android: sellers show products on video and run live auctions, while buyers watch, chat, bid, and track their orders.
+![Liveshopp app preview showing a seller's livestream and live auction screens](liveshopp/assets/images/liveshopp.png)
 
-**Explore:** [iPhone app on the App Store](https://apps.apple.com/ci/app/liveshopp/id6448577391) · [React Native mobile app source](liveshopp/) · [Backend source](liveshopp_back/)
-
-![LiveShopp app preview showing a seller's livestream and live auction screens](liveshopp/assets/images/liveshopp.png)
-
-### What the app does
+## What the app does
 
 | Experience | What happens |
 | --- | --- |
@@ -22,7 +18,7 @@ A sale spans the mobile app and the backend: **Agora** carries the video stream;
 
 > **Current scope:** the live selling flow is the focus of the app. Code for auctions on prerecorded videos exists, but its mobile interface is currently hidden.
 
-### Architecture
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -37,13 +33,13 @@ flowchart LR
 
 | Area | Main technologies |
 | --- | --- |
-| Mobile | React Native 0.74, React Navigation, Redux Toolkit, i18next (French and English) |
+| Mobile | React Native 0.74, React Navigation, Redux Toolkit, i18next |
 | API and real time | Node.js, Express, Socket.IO, JWT |
 | Data | MongoDB / Mongoose, Redis Stack / RedisJSON |
 | Integrations | Agora, Stripe, Firebase Cloud Messaging, AWS S3, Nodemailer, Sentry |
 | Tests | Jest on both the mobile app and backend |
 
-### Repository layout
+## Repository layout
 
 ```text
 liveshopp/       React Native app: screens, navigation, state, and API clients
@@ -53,7 +49,7 @@ appspec.yml      Backend deployment configuration
 
 For platform-specific setup, see the [mobile guide](liveshopp/README.md) and [backend guide](liveshopp_back/README.md).
 
-### Getting started
+## Getting started
 
 **Requirements:** Node.js 18+, npm, a React Native development environment for Android or iOS, MongoDB, and Redis Stack with RedisJSON. To run every product flow, configure your own Agora, Stripe, Firebase, AWS, and SMTP credentials.
 
@@ -88,7 +84,7 @@ For platform-specific setup, see the [mobile guide](liveshopp/README.md) and [ba
    # or: npm run ios (requires macOS, Xcode, and CocoaPods)
    ```
 
-### Tests
+## Tests
 
 The Jest suites cover mobile session startup, API and Socket.IO authorization, auctions, and orders.
 
@@ -98,13 +94,3 @@ The Jest suites cover mobile session startup, API and Socket.IO authorization, a
 ```
 
 These tests use mocked dependencies. End-to-end validation of video, payments, and push notifications requires the external services and a configured device or simulator.
-
-## Français
-
-**Acheter et vendre en direct.** LiveShopp est une place de marché mobile de live shopping pour des articles neufs et de seconde main. Dans l'esprit de Whatnot, les vendeurs présentent leurs produits en vidéo et lancent des enchères ; les acheteurs regardent, discutent, enchérissent et suivent leurs commandes.
-
-**Liens :** [application iPhone sur l'App Store](https://apps.apple.com/ci/app/liveshopp/id6448577391) · [code de l'application React Native](liveshopp/) · [code du backend](liveshopp_back/)
-
-Le dépôt réunit une application **React Native iOS/Android** et une API **Node.js / Express**. La vidéo passe par **Agora**, les enchères et le chat par **Socket.IO** et **Redis Stack**, les données par **MongoDB**, les paiements par **Stripe** et les notifications push par **Firebase**. Les parcours acheteur, vendeur et administrateur sont décrits dans la [présentation ci-dessus](#what-the-app-does).
-
-Pour installer et exécuter le projet, voir [Getting started](#getting-started) ; les commandes de test sont dans [Tests](#tests). Le parcours de vente en direct est celui utilisé dans l'application ; l'interface des enchères vidéo hors live est actuellement masquée.
