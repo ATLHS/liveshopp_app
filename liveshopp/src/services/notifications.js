@@ -47,7 +47,9 @@ const onBackgroundEvent = async ({ type, detail }) => {
 //
 const resetDisplayedNotifications = async () => {
   const oldNotifs = await notifee.getDisplayedNotifications();
-  oldNotifs.map((notification) => notifee.cancelDisplayedNotification(notification.id));
+  await Promise.all(
+    oldNotifs.map((notification) => notifee.cancelDisplayedNotification(notification.id)),
+  );
 };
 
 // Create a channel (required for Android)
@@ -72,13 +74,13 @@ const fetchAndStoreNotificationToken = async () => {
   const deviceId = await getUniqueId();
 
   // Save the token in DB
-  customer.updateDeviceNotificationToken(deviceId, token);
+  await customer.updateDeviceNotificationToken(deviceId, token);
 };
 
 // Link a device ID to a user
 const updateUserDevice = async () => {
   const deviceId = await getUniqueId();
-  customer.updateCustomerDevice(deviceId);
+  await customer.updateCustomerDevice(deviceId);
 };
 
 const requestUserPermission = async () => {
@@ -94,24 +96,16 @@ const requestUserPermission = async () => {
   return true;
 };
 
-const initNotifications = () => {
+const initNotifications = async () => {
   try {
-    if (requestUserPermission()) {
-      // Refresh notification token
-      fetchAndStoreNotificationToken();
+    messaging().setBackgroundMessageHandler(onNotification);
+    notifee.onBackgroundEvent(onBackgroundEvent);
+    if (!(await requestUserPermission())) return;
 
-      // Reset badge count when opening the app
-      notifee.setBadgeCount(0);
-
-      // Create Android notifications channels
-      createAndroidChannels();
-
-      // Set notification handlers for foreground, background and killed app states
-      messaging().setBackgroundMessageHandler(onNotification);
-      notifee.onBackgroundEvent(onBackgroundEvent);
-      return messaging().onMessage(onNotification);
-    }
-    return () => {};
+    await createAndroidChannels();
+    await notifee.setBadgeCount(0);
+    await fetchAndStoreNotificationToken();
+    messaging().onMessage(onNotification);
   } catch (error) {
     console.error(error);
   }

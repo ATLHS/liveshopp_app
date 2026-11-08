@@ -21,42 +21,42 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem('@token').then((token) => {
-      if (token) {
+    let active = true;
+    const restoreSession = async () => {
+      try {
+        const token = await AsyncStorage.getItem('@token');
+        if (!token) return;
+
         axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
-        authService
-          .isAuthenticate()
-          .then((res) => res)
-          .then((data) => {
-            store.dispatch(setUser(data.user));
-            store.dispatch(setIsAuthenticate(data.isAuthenticate));
-            setIsLoading(false);
+        const data = await authService.isAuthenticate();
+        if (!active) return;
 
-            // FIXME
-            // Ideally, this would be done only once in SignIn.js
-            //
-            updateUserDevice();
+        store.dispatch(setUser(data.user));
+        store.dispatch(setIsAuthenticate(data.isAuthenticate));
+        updateUserDevice().catch((error) => Sentry.captureException(error));
 
-            Sentry.setUser({
-              id: data.user.id,
-              email: data.user.email,
-              profil: data.user.profil,
-              username: `${data.user.firstname} ${data.user.lastname}`,
-              ip_address: '{{auto}}',
-            });
-          })
-          .catch((err) => {
-            store.dispatch(setUser({ profil: null }));
-            store.dispatch(setIsAuthenticate(false));
-            setIsLoading(false);
-          });
-      } else {
+        Sentry.setUser({
+          id: data.user.id,
+          email: data.user.email,
+          profil: data.user.profil,
+          username: `${data.user.firstname} ${data.user.lastname}`,
+          ip_address: '{{auto}}',
+        });
+      } catch (error) {
+        if (!active) return;
+        delete axiosConfig.defaults.headers.Authorization;
         store.dispatch(setUser({ profil: null }));
         store.dispatch(setIsAuthenticate(false));
-        setIsLoading(false);
+      } finally {
+        if (active) setIsLoading(false);
       }
-    });
-  });
+    };
+
+    restoreSession();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     // <React.StrictMode>

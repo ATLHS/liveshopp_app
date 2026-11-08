@@ -1,14 +1,16 @@
 const router = require('express').Router();
 const Sentry = require('@sentry/node');
 const { verifyJwt } = require('../../middleware/verifyJwt');
+const { requireAdmin } = require('../../middleware/requireAdmin');
 const BannedUsers = require('../../models/banned');
 const Reported = require('../../models/reported');
 const UserSeller = require('../../models/seller');
 const User = require('../../models/user');
 const { updateCustomer } = require('../../utils/updateCustomer');
 const { getChannel, updateExtraUserCount } = require('../../utils/channels');
+router.use(verifyJwt, requireAdmin);
 
-router.get('/get-banned-users', verifyJwt, async (req, res) => {
+router.get('/get-banned-users', async (req, res) => {
   try {
     const bannedUsers = await BannedUsers.find().exec();
     return res.status(200).json({ bannedUsers });
@@ -18,7 +20,7 @@ router.get('/get-banned-users', verifyJwt, async (req, res) => {
   }
 });
 
-router.post('/unban-user', verifyJwt, async (req, res) => {
+router.post('/unban-user', async (req, res) => {
   try {
     const { id } = req.body.data;
     const user = await User.findById(id).exec();
@@ -49,7 +51,7 @@ router.post('/unban-user', verifyJwt, async (req, res) => {
   }
 });
 
-router.post('/ban-user', verifyJwt, async (req, res) => {
+router.post('/ban-user', async (req, res) => {
   try {
     // get the id to ban
     let id;
@@ -94,7 +96,12 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
       if (isSave) {
         const updatedCustomer = await updateCustomer(customer, { isBanned: true }, false);
         if (updatedCustomer) {
-          io.emit('banUser', { updatedCustomer, liveData });
+          io.emit('banUser', { updatedCustomer: { _id: customer._id }, liveData });
+          for (const socket of io.sockets.sockets.values()) {
+            if (socket.data.user?.id === customer.id) {
+              socket.disconnect(true);
+            }
+          }
           return res.status(200).json({
             message: req.t('userSuccessfullyBanned', {
               username: customer.company_name || customer.firstname,
@@ -111,7 +118,7 @@ router.post('/ban-user', verifyJwt, async (req, res) => {
   }
 });
 
-router.get('/get-flagged-user', verifyJwt, async (req, res) => {
+router.get('/get-flagged-user', async (req, res) => {
   try {
     const flaggedUsers = await Reported.find({ isBlocked: false }).exec();
 
@@ -122,7 +129,7 @@ router.get('/get-flagged-user', verifyJwt, async (req, res) => {
   }
 });
 
-router.post('/update-extra-user-count', verifyJwt, async (req, res) => {
+router.post('/update-extra-user-count', async (req, res) => {
   try {
     const { liveId, count } = req.body.data;
 

@@ -1,10 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 
-// import Video from 'react-native-video';
 import { faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
@@ -12,7 +11,6 @@ import colors from '../../styles/colors';
 
 const TextArea = ({ field }) => {
   const { t } = useTranslation();
-  let player = useRef(null);
   const [videoUri, setVideoUri] = useState(null);
 
   const setAuctionVideoItem = async () => {
@@ -38,6 +36,8 @@ const TextArea = ({ field }) => {
       handleCancel();
     } else if (errorMessage) {
       handleError(errorMessage);
+    } else if (!assets?.length) {
+      return;
     } else if (assets[0].duration > 40) {
       handleSelectedVideoExceedDurationLimit();
     } else {
@@ -71,23 +71,7 @@ const TextArea = ({ field }) => {
       <TouchableOpacity onPress={setAuctionVideoItem} style={styles.container}>
         <>
           {videoUri && videoUri.uri ? (
-            <Video
-              source={{ uri: videoUri.uri }}
-              ref={(ref) => {
-                player = ref;
-              }}
-              onLoad={() => {
-                if (videoUri) {
-                  field.onChange(videoUri);
-                }
-              }}
-              style={styles.backgroundVideo}
-              fullscreen={true}
-              repeat={true}
-              audioOnly={true}
-              resizeMode={'cover'}
-              playInBackground={true}
-            />
+            <Text style={styles.selectedFile}>{videoUri.fileName || t('selectVideoFile')}</Text>
           ) : (
             <View style={styles.placeholder}>
               <FontAwesomeIcon
@@ -98,7 +82,7 @@ const TextArea = ({ field }) => {
               />
               <Text style={styles.text}>{t('selectVideoFile')}</Text>
               <TouchableOpacity style={styles.button} onPress={setAuctionVideoItem}>
-                <Text style={styles.buttonText}>{t('select')})</Text>
+                <Text style={styles.buttonText}>{t('select')}</Text>
               </TouchableOpacity>
               <Text style={styles.tip}>👋 {t('auctionTips')}</Text>
             </View>
@@ -117,13 +101,11 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 6,
   },
-  backgroundVideo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    borderRadius: 6,
+  selectedFile: {
+    color: colors.DARK,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 18,
+    padding: 20,
   },
   placeholder: {
     backgroundColor: 'black',

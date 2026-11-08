@@ -8,6 +8,7 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const { morganMiddleware, log } = require('./middleware/logger');
 const i18n = require('./i18n');
+const { verifySocket } = require('./middleware/verifySocket');
 
 const app = express();
 const httpServer = createServer(app);
@@ -17,6 +18,7 @@ const io = new Server(httpServer, {
   // pingTimeout
 });
 global.io = io;
+io.use(verifySocket);
 
 const handler = require('./utils/socketHandler')(io);
 
@@ -30,6 +32,14 @@ io.on('connection', (socket) => {
   socket.on('newLiveMessage', handler.newLiveMessage);
   socket.on('pausedCurrentAuctionStatus', handler.pausedCurrentAuctionStatus);
   socket.on('startCurrentAuction', handler.startCurrentAuction);
+
+  socket.on('disconnecting', () => {
+    for (const liveId of socket.rooms) {
+      if (liveId !== socket.id) {
+        handler.leaveRoom.call(socket, { liveId });
+      }
+    }
+  });
 
   if (socket.recovered) {
     log.debug('[socket.io] Socket recovered');

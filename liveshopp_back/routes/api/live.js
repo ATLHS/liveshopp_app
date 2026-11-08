@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const generateUniqueId = require('generate-unique-id');
-const { DateTime, Interval } = require('luxon');
+const { DateTime } = require('luxon');
 const Sentry = require('@sentry/node');
 const { verifyJwt } = require('../../middleware/verifyJwt');
 const { generateAgoraChannelToken } = require('../../utils/generateAgoraToken');
@@ -14,18 +14,24 @@ router.post('/create-live', verifyJwt, async (req, res) => {
   try {
     const { live_name, live_description, live_date_time, pinned_message } = req.body.data;
     const seller = await UserSeller.findById(req.user.id);
+    if (!seller) {
+      return res.status(403).json({ message: req.t('errorTryAgainLater') });
+    }
     const liveStartDateTime = DateTime.fromJSDate(new Date(live_date_time)).toISO();
+    if (!liveStartDateTime) {
+      return res.status(400).json({ message: req.t('errorTryAgainLater') });
+    }
 
     // Retrieve all existing lives of the seller
-    const existingLives = await Live.find({ seller_id: req.user.id, live_status: 'coming_soon' }).exec();
+    const existingLives = await Live.find({
+      seller_id: req.user.id,
+      live_status: { $in: ['coming_soon', 'live'] },
+    }).exec();
 
     // Check if there is any overlapping live within a 1-hour interval
     const hasOverlappingLive = existingLives.some((live) => {
-      const liveInterval = Interval.fromDateTimes(
-        DateTime.fromISO(live.live_date_time),
-        DateTime.fromISO(live.live_date_time).plus({ hour: 1 }),
-      );
-      return liveInterval.contains(DateTime.fromISO(liveStartDateTime));
+      const minutesApart = DateTime.fromISO(live.live_date_time).diff(DateTime.fromISO(liveStartDateTime), 'minutes').minutes;
+      return Math.abs(minutesApart) < 60;
     });
 
     if (hasOverlappingLive) {
@@ -47,11 +53,12 @@ router.post('/create-live', verifyJwt, async (req, res) => {
 
     await newLive.save();
 
+    const sellerLives = await Live.find({ seller_id: req.user.id }).exec();
     const lives = await Live.find().exec();
     emitFreshLives(lives);
 
     return res.status(200).json({
-      sellerLives: existingLives,
+      sellerLives,
       message: req.t('liveCreatedSuccessfully'),
     });
   } catch (error) {
@@ -82,9 +89,12 @@ router.get('/get-lives', verifyJwt, async (req, res) => {
 
 router.post('/delete-live', verifyJwt, async (req, res) => {
   try {
-    const { _id, seller_id } = req.body.data;
+    const { _id } = req.body.data || {};
 
-    await Live.findOneAndDelete({ _id, seller_id });
+    const deletedLive = await Live.findOneAndDelete({ _id, seller_id: req.user.id, live_status: 'coming_soon' });
+    if (!deletedLive) {
+      return res.status(404).json({ message: req.t('errorTryAgainLater') });
+    }
     const sellerLives = await Live.find({ seller_id: req.user.id });
     const lives = await Live.find();
 
@@ -101,16 +111,16 @@ router.post('/delete-live', verifyJwt, async (req, res) => {
 
 router.post('/close-live', verifyJwt, async (req, res) => {
   try {
-    const liveDataToClose = req.body.data;
-
-    await Product.updateMany({ auctionId: liveDataToClose._id, auctionsStatus: 'live' }, { auctionsStatus: 'ended' });
-
-    await Live.findOneAndUpdate(
-      { _id: liveDataToClose._id, seller_id: liveDataToClose.seller_id },
-      {
-        live_status: 'ended',
-      },
+    const liveId = req.body.data?._id;
+    const closedLive = await Live.findOneAndUpdate(
+      { _id: liveId, seller_id: req.user.id, live_status: { $in: ['coming_soon', 'live'] } },
+      { live_status: 'ended' },
     );
+    if (!closedLive) {
+      return res.status(404).json({ message: req.t('errorTryAgainLater') });
+    }
+
+    await Product.updateMany({ auctionId: liveId, auctionsStatus: 'live' }, { auctionsStatus: 'ended' });
 
     const sellerLives = await Live.find({ seller_id: req.user.id });
 
@@ -135,6 +145,10 @@ router.post('/get-agora-token', verifyJwt, async (req, res) => {
     const user = await User.findById(req.user.id);
     const seller = await UserSeller.findById(req.user.id);
     const customer = user || seller;
+    const live = await Live.findById(liveId);
+    if (!customer || !live || live.live_status === 'ended') {
+      return res.status(404).json({ message: req.t('errorTryAgainLater') });
+    }
 
     let generateUid = generateUniqueId({
       length: 20,
@@ -142,7 +156,8 @@ router.post('/get-agora-token', verifyJwt, async (req, res) => {
       useLetters: false,
     });
 
-    const { token } = await generateAgoraChannelToken(customer.profil, liveId, generateUid);
+    const role = seller && live.seller_id === req.user.id ? 'seller' : 'user';
+    const { token } = await generateAgoraChannelToken(role, liveId, generateUid);
 
     return res.status(200).json({ token, generateUid });
   } catch (error) {

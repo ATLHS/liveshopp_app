@@ -16,19 +16,18 @@ const Live = require('../models/live');
  * @param {import('socket.io').Server} io
  */
 module.exports = (io) => {
-  const leaveRoom = async function ({ liveId, sellerId, user }) {
+  const auctionTimers = new Map();
+  const leaveRoom = async function ({ liveId } = {}) {
     try {
       const socket = this;
       const channel = await getChannel(liveId);
+      if (!channel || !socket.rooms.has(liveId)) return;
 
-      socket.leave(liveId);
+      await socket.leave(liveId);
 
-      const connectedUsersCount = (await io.in(liveId).fetchSockets()).length;
-      channel.userCount = connectedUsersCount;
-
-      if ((user.profil === 'seller' && user.id === sellerId) || user._id === sellerId) {
-        channel.hostIsLive = false;
-      }
+      const connectedSockets = await io.in(liveId).fetchSockets();
+      channel.userCount = connectedSockets.length;
+      channel.hostIsLive = connectedSockets.some((connectedSocket) => connectedSocket.data.user?.id === channel.sellerId);
 
       await saveChannel(channel);
 
@@ -45,10 +44,12 @@ module.exports = (io) => {
    * @param {import('../models/live').LiveType._id} param0.liveId
    * @param {import('../models/user').UserType} param0.user
    */
-  const joinChannel = async function ({ liveId, user }) {
+  const joinChannel = async function ({ liveId } = {}) {
     try {
       const socket = this;
       const live = await Live.findById(liveId);
+      if (!live || live.live_status === 'ended') return;
+      const user = socket.data.user;
 
       // 1 add user to a room
       socket.join(liveId);
@@ -85,8 +86,10 @@ module.exports = (io) => {
     }
   };
 
-  const newLiveMessage = async function ({ user, message, liveId }) {
+  const newLiveMessage = async function ({ message, liveId } = {}) {
     try {
+      if (!this.rooms.has(liveId) || typeof message?.live_message !== 'string' || !message.live_message.trim()) return;
+      const user = this.data.user;
       const pseudo = `${user.firstname} ${user.lastname.charAt(0)}`;
       const id = generateUniqueId({
         length: 20,
@@ -96,7 +99,7 @@ module.exports = (io) => {
         userId: user.id,
         profil: user.profil,
         username: pseudo,
-        message: message.live_message,
+        message: message.live_message.trim().slice(0, 1000),
         id,
       };
 
@@ -109,10 +112,11 @@ module.exports = (io) => {
     }
   };
 
-  const blockCustomer = async function ({ user, userId, profil }) {
+  const blockCustomer = async function ({ userId, profil } = {}) {
     try {
       const socket = this;
-      const customer = (await User.findOne({ _id: user.id })) || (await UserSeller.findOne({ _id: user.id }));
+      const customer = (await User.findById(socket.data.user.id)) || (await UserSeller.findById(socket.data.user.id));
+      if (!customer || !userId || userId === socket.data.user.id || !['user', 'seller'].includes(profil)) return;
       const customerToBlock = profil === 'seller' ? { blockedSeller: userId } : { blockedUser: userId };
 
       // check if the customer to block is already blocked
@@ -132,9 +136,11 @@ module.exports = (io) => {
     }
   };
 
-  const pausedCurrentAuctionStatus = async (liveId) => {
+  const pausedCurrentAuctionStatus = async function (liveId) {
     try {
       const channel = await getChannel(liveId);
+      if (!channel || channel.sellerId !== this.data.user.id || !this.rooms.has(liveId)) return;
+      if (channel.currentAuction.currentAuctionStatus !== 'stopping') return;
       channel.currentAuction.currentAuctionStatus = 'paused';
 
       await saveChannel(channel);
@@ -146,25 +152,34 @@ module.exports = (io) => {
     }
   };
 
-  const bid = async function ({ liveId, data }) {
+  const bid = async function ({ liveId, data } = {}) {
     try {
-      const bidAmount = Number(data.bid);
+      const bidAmount = Number(data?.bid);
       const channel = await getChannel(liveId);
+      const user = this.data.user;
+      if (!channel || !this.rooms.has(liveId) || channel.sellerId === user.id) return;
+      const customer = (await User.findById(user.id)) || (await UserSeller.findById(user.id));
+      if (!customer || customer.isBanned || !customer.hasValidPaymentMethod || !customer.shipping_address) return;
       const { currentAuction } = channel;
+      if (currentAuction.currentAuctionStatus !== 'running' || currentAuction.currentAuctionTimer <= 0) return;
 
       // FIXME
       //
       // This is a quick fix.
       // It should be correctly handled in params validation.
       //
-      if (isNaN(bidAmount) || bidAmount <= 0) {
+      if (!Number.isFinite(bidAmount) || bidAmount <= 0 ||
+        !Number.isSafeInteger(Math.round(bidAmount * 100)) ||
+        Math.abs(bidAmount * 100 - Math.round(bidAmount * 100)) > 1e-7) {
         throw new Error('Dangerous bid amount detected');
       }
 
-      currentAuction.currentProductAmount = Number(currentAuction.currentProductAmount) + bidAmount;
-      currentAuction.userId = data.userId;
-      currentAuction.username = data.username;
-      currentAuction.shipping_address = data.shipping_address;
+      const nextAmountInCents = Math.round(Number(currentAuction.currentProductAmount) * 100) + Math.round(bidAmount * 100);
+      if (!Number.isSafeInteger(nextAmountInCents)) return;
+      currentAuction.currentProductAmount = nextAmountInCents / 100;
+      currentAuction.userId = user.id;
+      currentAuction.username = `${customer.firstname} ${customer.lastname.charAt(0)}`;
+      currentAuction.shipping_address = customer.shipping_address;
 
       if (
         currentAuction.product_reserved_price &&
@@ -187,20 +202,29 @@ module.exports = (io) => {
     }
   };
 
-  const startCurrentAuction = async function ({ liveId, data }) {
+  const startCurrentAuction = async function ({ liveId, data } = {}) {
     try {
       const channel = await getChannel(liveId);
-      const timer = data.product_auction_time * 60; // in seconds
+      if (!channel || !this.rooms.has(liveId) || channel.sellerId !== this.data.user.id) return;
+      if (channel.currentAuction.currentAuctionStatus === 'running') return;
+      const auctionMinutes = Number(data?.product_auction_time);
+      const startingPrice = Number(data?.product_price);
+      const reservePrice = data?.product_reserved_price ? Number(data.product_reserved_price) : 0;
+      if (!Number.isFinite(auctionMinutes) || auctionMinutes <= 0 || auctionMinutes > 60) return;
+      if (!Number.isFinite(startingPrice) || startingPrice < 0 || !Number.isFinite(reservePrice)) return;
+      if (reservePrice && reservePrice <= startingPrice) return;
+      if (typeof data.product_name !== 'string' || !data.product_name.trim()) return;
+      const timer = auctionMinutes * 60;
 
-      channel.currentAuction.productName = data.product_name;
-      channel.currentAuction.currentProductAmount = data.product_price;
-      channel.currentAuction.product_reserved_price = data.product_reserved_price || false;
+      channel.currentAuction.productName = data.product_name.trim();
+      channel.currentAuction.currentProductAmount = startingPrice;
+      channel.currentAuction.product_reserved_price = reservePrice;
       channel.currentAuction.currentAuctionTimer = timer;
       channel.currentAuction.currentAuctionStatus = 'running';
       channel.currentAuction.username = '';
       channel.currentAuction.userId = '';
       channel.currentAuction.salePrice = '';
-      channel.currentAuction.currentMessageInfo = data.product_reserved_price
+      channel.currentAuction.currentMessageInfo = reservePrice
         ? 'reservePriceNotReached'
         : 'noReservePriceMessage';
       await saveChannel(channel);
@@ -229,22 +253,39 @@ module.exports = (io) => {
     }
   };
 
-  // Timer ticks every second, no matter how long the processing takes
-  const startTimer = async (liveId) => {
+  const startTimer = (liveId) => {
+    if (auctionTimers.has(liveId)) return;
+    let processing = false;
     const interval = setInterval(async () => {
-      const result = await updateTimer(liveId);
-      const updatedTimer = result[0];
+      if (processing) return;
+      processing = true;
+      try {
+        const currentChannel = await getChannel(liveId);
+        if (!currentChannel || currentChannel.currentAuction.currentAuctionStatus !== 'running') {
+          clearInterval(interval);
+          auctionTimers.delete(liveId);
+          return;
+        }
 
-      const channel = await getChannel(liveId);
+        const result = await updateTimer(liveId);
+        const channel = await getChannel(liveId);
+        io.to(liveId).emit('currentAuctionData', channel.currentAuction);
 
-      io.to(liveId).emit('currentAuctionData', channel.currentAuction);
-
-      // stop the timer
-      if (updatedTimer <= 0) {
+        if (result[0] <= 0) {
+          clearInterval(interval);
+          auctionTimers.delete(liveId);
+          await onAuctionFinished(liveId);
+        }
+      } catch (error) {
         clearInterval(interval);
-        onAuctionFinished(liveId);
+        auctionTimers.delete(liveId);
+        log.error(error);
+        Sentry.captureException(error);
+      } finally {
+        processing = false;
       }
     }, 1000);
+    auctionTimers.set(liveId, interval);
   };
 
   // No bid = no charge
@@ -261,7 +302,7 @@ module.exports = (io) => {
           channel.currentAuction.currentProductAmount >= channel.currentAuction.product_reserved_price)
       ) {
         // Charge customer and create a Product in DB
-        registerAuction({
+        const saleSucceeded = await registerAuction({
           auction: channel.currentAuction,
           auctionId: channel.auctionId,
           auctionsStatus: channel.auctionsStatus,
@@ -269,7 +310,12 @@ module.exports = (io) => {
           sellerName: channel.sellerName,
         });
 
-        channel.currentAuction.salePrice = Number(channel.currentAuction.currentProductAmount);
+        if (saleSucceeded) {
+          channel.currentAuction.salePrice = Number(channel.currentAuction.currentProductAmount);
+        } else {
+          channel.currentAuction.userId = '';
+          channel.currentAuction.salePrice = 0;
+        }
       } else {
         // We must reset the user ID to no-one since the last bidder didn't reach the reserved price
         channel.currentAuction.userId = '';

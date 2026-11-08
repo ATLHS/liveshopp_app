@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Appearance, Linking, Platform } from 'react-native';
 import { checkVersion } from 'react-native-check-version';
@@ -61,12 +61,11 @@ const RootStack = ({ isLoading }) => {
     };
 
     const unsubscribe = notifee.onForegroundEvent(onNotificationEvent);
-    notifee.onBackgroundEvent(onNotificationEvent);
 
     return () => {
       unsubscribe();
     };
-  }, [isAuthenticate]);
+  }, [isAuthenticate, dispatch, user]);
 
   useEffect(() => {
     const checkForUpdates = async () => {
@@ -103,54 +102,69 @@ const RootStack = ({ isLoading }) => {
     };
 
     checkForUpdates();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
+    let cancelled = false;
     if (isAuthenticate) {
       AsyncStorage.getItem('@token').then((token) => {
-        axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
+        if (!cancelled && token) {
+          axiosConfig.defaults.headers.Authorization = `Bearer ${token}`;
+          socket.auth = { token };
+          socket.connect();
+        }
       });
+    } else {
+      socket.disconnect();
+      socket.auth = {};
+      delete axiosConfig.defaults.headers.Authorization;
     }
+    return () => {
+      cancelled = true;
+    };
   }, [isAuthenticate]);
 
-  const logOutUser = async (data) => {
-    try {
-      if (data.updatedCustomer._id === user.id) {
-        socket.emit('leaveRoom', {
-          liveId: liveData.auctionId,
-          sellerId: liveData.sellerId,
-          user: data.updatedCustomer,
-        });
-        dispatch(setIsJoin(false));
-        dispatch(setIsGone(true));
-        Toast.hide();
-        dispatch(
-          setLiveData({
-            channelName: '',
-            sellerId: '',
-            auctionId: '',
-            auctionsStatus: '',
-            userCount: '',
-            messages: [],
-            currentAuction: {
-              userId: '',
-              username: '',
-              productName: false,
-              currentProductAmount: '',
-              currentAuctionTimer: '',
-              currentAuctionStatus: '',
-              salePrice: '',
-            },
-          }),
-        );
-        await AsyncStorage.removeItem('@token');
-        dispatch(setIsAuthenticate(false));
-        dispatch(setUser({ profil: null }));
+  const logOutUser = useCallback(
+    async (data) => {
+      try {
+        if (data.updatedCustomer._id === user.id) {
+          socket.emit('leaveRoom', {
+            liveId: liveData.auctionId,
+            sellerId: liveData.sellerId,
+            user: data.updatedCustomer,
+          });
+          dispatch(setIsJoin(false));
+          dispatch(setIsGone(true));
+          Toast.hide();
+          dispatch(
+            setLiveData({
+              channelName: '',
+              sellerId: '',
+              auctionId: '',
+              auctionsStatus: '',
+              userCount: '',
+              messages: [],
+              currentAuction: {
+                userId: '',
+                username: '',
+                productName: false,
+                currentProductAmount: '',
+                currentAuctionTimer: '',
+                currentAuctionStatus: '',
+                salePrice: '',
+              },
+            }),
+          );
+          await AsyncStorage.removeItem('@token');
+          dispatch(setIsAuthenticate(false));
+          dispatch(setUser({ profil: null }));
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(e);
-    }
-  };
+    },
+    [dispatch, liveData.auctionId, liveData.sellerId, user.id],
+  );
 
   useEffect(() => {
     function onConnect() {
@@ -255,14 +269,14 @@ const RootStack = ({ isLoading }) => {
     socket.on('newChatMessage', onNewChatMessage);
 
     return () => {
-      socket.off('banUser');
-      socket.off('channelData');
-      socket.off('currentAuctionData');
-      socket.off('freshLives');
-      socket.off('hasBeenBlocked');
-      socket.off('newChatMessage');
+      socket.off('banUser', onBanUser);
+      socket.off('channelData', onChannelData);
+      socket.off('currentAuctionData', onCurrentAuctionData);
+      socket.off('freshLives', onFreshLives);
+      socket.off('hasBeenBlocked', onHasBeenBlocked);
+      socket.off('newChatMessage', onNewChatMessage);
     };
-  }, [dispatch]);
+  }, [dispatch, logOutUser]);
 
   return (
     <NavigationContainer ref={navigationRef}>

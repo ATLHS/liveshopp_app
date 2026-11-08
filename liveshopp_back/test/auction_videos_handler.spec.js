@@ -1,51 +1,68 @@
+jest.mock('../models/auction_videos_items', () => ({ find: jest.fn() }));
+jest.mock('../models/auction_video', () => ({ find: jest.fn() }));
+jest.mock('../models/product', () => jest.fn());
+jest.mock('../utils/stripeUtils', () => ({ chargeCustomer: jest.fn() }));
+jest.mock('../utils/emails', () => ({
+  sendNoBidNotificationEmail: jest.fn(),
+  sendNoShippingAddressEmail: jest.fn(),
+  sendWinningBidConfirmationEmail: jest.fn(),
+  sendAuctionSaleNotificationEmail: jest.fn(),
+  sendBidOutbidEmailNotification: jest.fn(),
+  sendPaymentIssueEmail: jest.fn(),
+  sendBidRejectedDueToLowReservePrice: jest.fn(),
+}));
+
 const handleAuctionVideos = require('../utils/auctionVideosHandler');
-const AuctionVideoItem = require('../models/auction_videos_items');
-const VideosItem = require('../models/auction_video');
-const mockingoose = require('mockingoose');
-const flushPromises = require('flush-promises');
+const VideosItem = require('../models/auction_videos_items');
+const AuctionVideoItem = require('../models/auction_video');
+const Product = require('../models/product');
+const stripeUtils = require('../utils/stripeUtils');
+const emails = require('../utils/emails');
 
-jest.mock('../models/auction_videos_items'); // Mock VideosItem
-jest.mock('../models/auction_video'); // Mock AuctionVideoItem
+const mockAuctions = (items, bids) => {
+  VideosItem.find.mockReturnValue({ populate: () => ({ exec: async () => items }) });
+  AuctionVideoItem.find.mockReturnValue({ sort: () => ({ populate: async () => bids }) });
+};
 
-describe('handleInterval', () => {
-    beforeEach(() => {
-        jest.clearAllMocks(); // Efface tous les appels simulés avant chaque test
-    });
+beforeEach(() => jest.clearAllMocks());
 
-    it('should handle expired auctions with no bids placed', async () => {
-        mockingoose(VideosItem).toReturn([], 'find');
+it('closes an expired video auction without bids', async () => {
+  const item = { _id: 'auction-1', save: jest.fn() };
+  mockAuctions([item], []);
 
-        await handleAuctionVideos();
-        await flushPromises();
+  await handleAuctionVideos('auction-1', {});
 
-        const logSpy = jest.spyOn(global.console, 'log');
+  expect(VideosItem.find).toHaveBeenCalledWith({
+    _id: 'auction-1',
+    auctionStatus: 'onGoing',
+    auctionEndDate: { $lte: expect.any(Date) },
+  });
+  expect(item.auctionStatus).toBe('closed');
+  expect(item.save).toHaveBeenCalledTimes(1);
+  expect(emails.sendNoBidNotificationEmail).toHaveBeenCalledWith(item, {});
+  expect(stripeUtils.chargeCustomer).not.toHaveBeenCalled();
+});
 
-        expect(logSpy).toHaveBeenCalledWith("No auction videos ended");
+it('charges the winner in cents and records the video sale', async () => {
+  const item = {
+    _id: 'auction-2', seller_id: { _id: 'seller-1' }, sellerName: 'Seller',
+    productName: 'Product', reservePrice: 10, save: jest.fn(),
+  };
+  const customer = { _id: 'buyer-1', email: 'buyer@example.com', firstname: 'Buyer', shipping_address: 'Paris' };
+  const bid = { userId: customer, docModel: 'User', amount: 19.99 };
+  mockAuctions([item], [bid]);
+  stripeUtils.chargeCustomer.mockResolvedValue({ status: 'succeeded' });
+  const save = jest.fn();
+  Product.mockImplementation(() => ({ save }));
 
-        expect(AuctionVideoItem.find).toHaveBeenCalledWith({
-            auctionEndDate: { $lte: expect.any(Date) },
-            auctionStatus: 'onGoing'
-        });
-    });
+  await handleAuctionVideos('auction-2', {});
 
-    // it('should handle expired auctions with no bids placed and send notifications', async () => {
-    //     VideosItem.find.mockResolvedValue([{ _id: 'mockAuctionId', seller_id: 'mockSellerId' }]);
-    //     AuctionVideoItem.find.mockResolvedValue([]); // Simuler aucune offre pour cette enchère expirée
-    //
-    //     await handleInterval();
-    //
-    //     expect(VideosItem.find).toHaveBeenCalledWith({
-    //         auctionEndDate: { $lte: expect.any(Date) },
-    //         auctionStatus: 'onGoing'
-    //     });
-    //
-    //     expect(AuctionVideoItem.find).toHaveBeenCalledWith({
-    //         auctionItemId: 'mockAuctionId',
-    //         auctionItemStatus: 'onGoing'
-    //     });
-    //
-    //     // Vous devriez ajouter d'autres assertions pour vérifier d'autres comportements attendus
-    // });
-
-    // Ajoutez d'autres cas de test pour les autres scénarios du code handleInterval
+  expect(stripeUtils.chargeCustomer).toHaveBeenCalledWith(1999, customer, expect.objectContaining({
+    seller_id: 'seller-1', amount: 19.99,
+  }));
+  expect(Product).toHaveBeenCalledWith(expect.objectContaining({ userId: 'buyer-1', userType: 'User' }));
+  expect(save).toHaveBeenCalledTimes(1);
+  expect(item.auctionStatus).toBe('sold');
+  expect(item.save).toHaveBeenCalledTimes(1);
+  expect(emails.sendWinningBidConfirmationEmail).toHaveBeenCalledWith(bid, {});
 });

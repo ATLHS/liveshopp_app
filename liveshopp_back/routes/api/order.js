@@ -28,15 +28,16 @@ router.get('/get-user-order', verifyJwt, async (req, res) => {
 
 router.post('/update-order-status', verifyJwt, async (req, res) => {
   try {
-    const {
-      selectedOrder: { _id },
-      trackingUrl,
-    } = req.body.data;
+    const { selectedOrder, trackingUrl } = req.body.data || {};
+    const orderId = selectedOrder?._id;
+    if (!orderId || typeof trackingUrl !== 'string' || !trackingUrl.trim()) {
+      return res.status(400).json({ message: req.t('errorTryAgainLater') });
+    }
 
     const updatedOrder = await Product.findOneAndUpdate(
-      { _id },
-      { deliveryStatut: orderDeliveryStatus.SHIPPED, trackingUrl },
-      { new: true },
+      { _id: orderId, seller_id: req.user.id, deliveryStatut: orderDeliveryStatus.PENDING },
+      { deliveryStatut: orderDeliveryStatus.SHIPPED, trackingUrl: trackingUrl.trim() },
+      { new: true, runValidators: true },
     ).populate(
       'seller_id userId',
       // TO DO : we should exclude sensitive data at the model level
@@ -50,7 +51,7 @@ router.post('/update-order-status', verifyJwt, async (req, res) => {
       });
     }
 
-    return res.status(400).json({ message: req.t('errorTryAgainLater') });
+    return res.status(404).json({ message: req.t('errorTryAgainLater') });
   } catch (error) {
     Sentry.captureException(error);
     return res.status(500).json({ message: req.t('errorTryAgainLater') });

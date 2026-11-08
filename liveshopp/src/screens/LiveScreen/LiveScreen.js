@@ -158,7 +158,7 @@ export const LiveScreen = ({ navigation, route }) => {
         setModalVisible(true);
       }
     }
-  }, [user.hasValidPaymentMethod, user.shipping_addres]);
+  }, [isHost, user.profil, user.hasValidPaymentMethod, user.shipping_address]);
 
   // Start the engine
   useEffect(() => {

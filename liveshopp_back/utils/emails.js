@@ -41,7 +41,7 @@ const sendNoReservePriceReachedNotificationEmail = async (customer, product, req
 const sendEmailAfterBid = async (customer, product, req) => {
   const template = req.t('bidConfirmation', {
     firstname: customer.firstname,
-    current_price: product.currentPricee,
+    current_price: product.currentPrice,
     product_name: product.productName,
   });
 
@@ -108,7 +108,7 @@ const sendBidOutbidEmailNotification = async (email, auction, req) => {
     product_name: auction.auctionItemId.productName,
   });
 
-  await sendEmail(auction.userId.email, req.t('auctionEndedMessage'), template);
+  await sendEmail(email, req.t('auctionEndedMessage'), template);
 };
 
 const sendEmail = async (email, subject, html) => {

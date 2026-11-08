@@ -17,6 +17,8 @@ const handleAuctionVideos = async (endingAuctionId, req) => {
   try {
     const expiredAuctions = await VideosItem.find({
       _id: endingAuctionId,
+      auctionStatus: 'onGoing',
+      auctionEndDate: { $lte: new Date() },
     })
       .populate('seller_id')
       .exec();
@@ -103,18 +105,10 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req)
     seller_name: auctionItem.sellerName,
     amount: auction.amount,
   };
-  const amountToCharge = auction.amount * 100;
+  const amountToCharge = Math.round(auction.amount * 100);
+  const chargedCustomer = await stripeUtils.chargeCustomer(amountToCharge, auction.userId, paymentIntentMetadata);
 
-  // FIXME
-  // stripeUtils.chargeCustomer() signature changed
-  //
-  // const chargedCustomer = await stripeUtils.chargeCustomer(
-  //   amountToCharge,
-  //   auction.userId.stripeCustomerId,
-  //   paymentIntentMetadata,
-  // );
-
-  if (chargedCustomer && chargedCustomer.status === 'succeeded') {
+  if (chargedCustomer.status === 'succeeded') {
     auctionItem.auctionStatus = 'sold';
     auctionItem.finalSalePrice = auction.amount;
     auctionItem.deliveryStatus = 'pending';
@@ -128,7 +122,7 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req)
       auctionId: auctionItem._id,
       auctionsStatus: 'ended',
       userId: auction.userId._id,
-      // TO DO : add docModel
+      userType: auction.docModel,
       productName: auctionItem.productName,
       salePrice: auction.amount,
       shipping_address: auction.userId.shipping_address,
@@ -154,6 +148,8 @@ const handleSuccessfulPayment = async (auctionItem, auction, auctionsItems, req)
     }
 
     log.info(`Payment successful for user id : ${auction.userId._id}`);
+  } else {
+    throw new Error(`Payment did not succeed: ${chargedCustomer.status}`);
   }
 };
 

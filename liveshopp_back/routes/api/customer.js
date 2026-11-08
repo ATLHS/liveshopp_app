@@ -200,8 +200,9 @@ router.post('/update-customer-device', verifyJwt, async (req, res) => {
 
 router.post('/get-customer', verifyJwt, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    const seller = await UserSeller.findById(req.user.id);
+    const safeFields = '-password -stripeCustomerId -registeredConfirmedCode -resetPasswordCode';
+    const user = await User.findById(req.user.id).select(safeFields);
+    const seller = await UserSeller.findById(req.user.id).select(safeFields);
     const customer = user || seller;
 
     if (customer) {

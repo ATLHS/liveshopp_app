@@ -89,7 +89,16 @@ router.get('/get-seller-auction-video', verifyJwt, async (req, res) => {
 
 router.post('/handle-ending-auction-video', verifyJwt, async (req, res) => {
   try {
-    const { endingAuctionId } = req.body.data;
+    const endingAuctionId = req.body.data?.endingAuctionId;
+    const auctionToClose = await VideosItem.findOne({
+      _id: endingAuctionId,
+      seller_id: req.user.id,
+      auctionStatus: 'onGoing',
+      auctionEndDate: { $lte: new Date() },
+    });
+    if (!auctionToClose) {
+      return res.status(404).json({ message: req.t('errorTryAgainLater') });
+    }
 
     await handleAuctionVideos(endingAuctionId, req);
 
@@ -117,9 +126,24 @@ router.get('/get-all-seller-auction-video', verifyJwt, async (req, res) => {
 // Endpoint to create a new bid on a video
 router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
   try {
-    const data = req.body.data;
+    const data = req.body.data || {};
+    const bidAmount = Number(data.bid_offer);
+    if (!Number.isFinite(bidAmount) || bidAmount <= 0 || Math.abs(bidAmount * 100 - Math.round(bidAmount * 100)) > 1e-7) {
+      return res.status(400).json({ message: req.t('errorTryAgainLater') });
+    }
     const customer = (await User.findById(req.user.id)) || (await UserSeller.findById(req.user.id));
-    const auctionItem = await VideosItem.findOne({ _id: data.selectedOffer._id, auctionStatus: 'onGoing' });
+    const auctionItem = await VideosItem.findOne({
+      _id: data.selectedOffer?._id,
+      auctionStatus: 'onGoing',
+      auctionEndDate: { $gt: new Date() },
+      isReportedForModeration: false,
+    });
+    if (!customer || !auctionItem || auctionItem.seller_id.toString() === req.user.id) {
+      return res.status(404).json({ message: req.t('errorTryAgainLater') });
+    }
+    if (bidAmount <= Math.max(auctionItem.startingPrice || 0, auctionItem.currentPrice || 0)) {
+      return res.status(400).json({ message: req.t('errorTryAgainLater') });
+    }
 
     // Check if there's already a bid for this item for the current user
     const existingBid = await AuctionVideoItem.findOne({ userId: customer._id, auctionItemId: auctionItem._id });
@@ -135,7 +159,7 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
         log.debug('The current bidder is also the highest bidder.');
       } else {
         // Send email notifications to the new second highest bidder who have lost the auction
-        const user = await (User.findById(highestBidderId) || UserSeller.findById(highestBidderId));
+        const user = (await User.findById(highestBidderId)) || (await UserSeller.findById(highestBidderId));
 
         await sendEmailToInformOutbid(user, auctionItem, req);
       }
@@ -144,24 +168,24 @@ router.post('/create-new-auction-video-bid', verifyJwt, async (req, res) => {
     const model = customer.profil === 'user' ? 'User' : 'Seller';
     // Update or create bid
     if (existingBid) {
-      existingBid.amount = data.bid_offer;
+      existingBid.amount = bidAmount;
       await existingBid.save();
     } else {
       const newBid = new AuctionVideoItem({
         userId: customer._id,
         docModel: model,
-        amount: data.bid_offer,
+        amount: bidAmount,
         auctionItemId: auctionItem._id,
       });
       await newBid.save();
     }
 
     // Update auction item details
-    auctionItem.currentPrice = data.bid_offer;
+    auctionItem.currentPrice = bidAmount;
     auctionItem.bestBidderUsername = customer.firstname;
     auctionItem.auctionEndDate = adjustAuctionEndTimeForTenMinutes(auctionItem.auctionEndDate);
 
-    if (data.bid_offer >= auctionItem.reservePrice) {
+    if (bidAmount >= auctionItem.reservePrice) {
       auctionItem.winningBidderId = customer._id;
       auctionItem.docModel = model;
       auctionItem.winningBidderUsername = customer.firstname;

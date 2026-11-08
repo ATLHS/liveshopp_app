@@ -20,7 +20,7 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
       seller_name: sellerName,
       amount: auction.currentProductAmount,
     };
-    const amountToCharge = parseInt(auction.currentProductAmount.toString() * 100);
+    const amountToCharge = Math.round(Number(auction.currentProductAmount) * 100);
     const paymentIntent = await stripeUtils.chargeCustomer(
       amountToCharge,
       customer,
@@ -36,7 +36,7 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
       //
       // We don't want to create a Product in DB if the payment didn't go through for now.
       //
-      return;
+      return false;
     }
 
     const userType = customer.profil === 'user' ? 'User' : 'Seller';
@@ -57,10 +57,12 @@ const registerAuction = async ({ auction, auctionId, auctionsStatus, sellerId, s
     await product.save();
 
     log.info(`Transaction succeeded for product ${auction.productName} sold to ${customer.email}`);
+    return true;
   } catch (error) {
     Sentry.captureException(error);
     log.error('Register auction error:');
     log.error(error);
+    return false;
   }
 };
 

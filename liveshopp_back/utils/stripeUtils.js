@@ -58,13 +58,14 @@ const chargeCustomer = async (amountToCharge, customer, paymentIntentMetadata) =
     return paymentIntent;
   } catch (error) {
     Sentry.captureException(error);
-    throw new Error(err.message);
+    throw error;
   }
 };
 
 const deleteCustomer = async (id) => {
   try {
-    return await stripe.customers.del(id).deleted;
+    const deletedCustomer = await stripe.customers.del(id);
+    return deletedCustomer.deleted;
   } catch (error) {
     Sentry.captureException(error);
     return false;

@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { setIsAuthenticate, setUser } from '../../redux/slices/userSlice';
+import axiosConfig from '../../services/config/axiosConfig';
 import colors from '../../styles/colors';
 
 export const Welcome = ({ navigation, route }) => {
@@ -22,12 +23,14 @@ export const Welcome = ({ navigation, route }) => {
 
   useEffect(() => {
     const { data } = route.params;
-    setTimeout(() => {
-      AsyncStorage.setItem('@token', data.token);
+    const timeout = setTimeout(async () => {
+      await AsyncStorage.setItem('@token', data.token);
+      axiosConfig.defaults.headers.Authorization = `Bearer ${data.token}`;
       dispatch(setUser(data.user));
       dispatch(setIsAuthenticate(true));
     }, 2000);
-  });
+    return () => clearTimeout(timeout);
+  }, [dispatch, route.params]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
       <KeyboardAvoidingView
