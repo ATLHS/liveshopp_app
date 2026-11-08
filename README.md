@@ -1,6 +1,6 @@
 # Liveshopp
 
-**Buy and sell live.** Liveshopp is a mobile live shopping marketplace for new and pre-owned items. It brings the core Whatnot-style experience to iOS and Android: sellers show products on video and run live auctions, while buyers watch, chat, bid, and track their orders.
+**Buy and sell live.** Liveshopp is a mobile live shopping marketplace for new and pre-owned items on iOS and Android. Sellers present products on video and run live auctions. Buyers watch, chat, bid, and track their orders.
 
 [Liveshopp App Store](https://apps.apple.com/ci/app/liveshopp/id6448577391)
 
