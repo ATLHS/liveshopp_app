@@ -80,7 +80,7 @@ Start your Android emulator phone from the Device Manager in Android Studio.
 
 ## 👩‍💻 Run locally
 
-Start server at http://localhost:5000
+Start the backend at the address configured by `REACT_APP_LOCAL_URL` in `.env` (the backend sample uses port `3000`).
 
 ### Without Xcode
 

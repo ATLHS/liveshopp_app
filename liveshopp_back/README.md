@@ -42,7 +42,7 @@ Open a terminal to start Redis Stack on its own:
 redis-stack-server
 ```
 
-Start server at http://localhost:5000
+The server listens on the port set by `PORT` in `.env` (the sample uses `3000`).
 
 ```sh
 npm run start
