@@ -1,57 +1,63 @@
 # LiveShopp
 
-**Le shopping en direct, de la diffusion vidéo jusqu'à la commande.** LiveShopp réunit une application mobile iOS et Android et une API temps réel. Un vendeur peut préparer un live, présenter ses produits et lancer une enchère ; les acheteurs regardent, discutent, enchérissent et retrouvent leurs commandes dans l'application.
+[English](#english) · [Français](#français)
 
-Ce dépôt contient les deux parties du produit : le client **React Native** et le serveur **Node.js / Express**. Il couvre des sujets concrets de développement mobile et backend : vidéo en direct, synchronisation temps réel, authentification, paiement, notifications et gestion des rôles.
+## English
 
-## Ce que fait l'application
+**Buy and sell live.** LiveShopp is a mobile live shopping marketplace for new and pre-owned items. It brings the core Whatnot-style experience to iOS and Android: sellers show products on video and run live auctions, while buyers watch, chat, bid, and track their orders.
 
-| Parcours | Fonctionnalités |
+**Explore:** [iPhone app on the App Store](https://apps.apple.com/ci/app/liveshopp/id6448577391) · [React Native mobile app source](liveshopp/) · [Backend source](liveshopp_back/)
+
+![LiveShopp app preview showing a seller's livestream and live auction screens](liveshopp/assets/images/liveshopp.png)
+
+### What the app does
+
+| Experience | What happens |
 | --- | --- |
-| Acheteur | Découvrir les lives, regarder la diffusion, participer au chat et aux enchères, gérer son profil et suivre ses commandes. |
-| Vendeur | Créer et gérer ses lives, animer les enchères et suivre les commandes à expédier. |
-| Administrateur | Accéder aux outils de modération des utilisateurs signalés ou bloqués. |
+| Buyers | Discover live shows, watch sellers present products, chat, place bids, and follow their orders. |
+| Sellers | Create and manage shows, host live auctions, and manage orders awaiting shipment. |
+| Administrators | Review reported users and manage blocked accounts. |
 
-Lors d'un live, **Agora** transporte la vidéo. **Socket.IO** synchronise le chat, la présence et les enchères ; **Redis Stack / RedisJSON** conserve l'état des salons et des enchères en cours. Le serveur enregistre les données durables dans **MongoDB**, utilise **Stripe** pour le paiement et crée la commande à l'issue d'une vente. **Firebase Cloud Messaging** sert aux notifications push.
+A sale spans the mobile app and the backend: **Agora** carries the video stream; **Socket.IO** keeps chat, presence, bids, and auction state in sync; **Redis Stack / RedisJSON** holds active rooms; **MongoDB** stores profiles, shows, and orders; and **Stripe** handles payments when an auction closes. **Firebase Cloud Messaging** delivers push notifications.
 
-> **Périmètre actuel :** le parcours de vente en direct est au cœur de l'application. Le code des enchères vidéo hors live existe, mais son interface est actuellement masquée.
+> **Current scope:** the live selling flow is the focus of the app. Code for auctions on prerecorded videos exists, but its mobile interface is currently hidden.
 
-## Architecture
+### Architecture
 
 ```mermaid
 flowchart LR
-    Mobile[Application React Native<br/>iOS et Android] <-->|API REST et Socket.IO| Server[API Express<br/>et serveur Socket.IO]
-    Mobile <-->|Vidéo en direct| Agora[Agora]
-    Server --> Mongo[(MongoDB<br/>profils, lives, commandes)]
-    Server --> Redis[(Redis Stack<br/>salons et enchères en cours)]
-    Server --> Stripe[Stripe<br/>paiements]
-    Server --> Firebase[Firebase<br/>notifications push]
-    Server --> S3[AWS S3<br/>médias]
+    Mobile[React Native app<br/>iOS and Android] <-->|REST API and Socket.IO| Server[Express API<br/>and Socket.IO server]
+    Mobile <-->|Live video| Agora[Agora]
+    Server --> Mongo[(MongoDB<br/>profiles, shows, orders)]
+    Server --> Redis[(Redis Stack<br/>live rooms and auctions)]
+    Server --> Stripe[Stripe<br/>payments]
+    Server --> Firebase[Firebase<br/>push notifications]
+    Server --> S3[AWS S3<br/>media]
 ```
 
-| Couche | Technologies principales |
+| Area | Main technologies |
 | --- | --- |
-| Mobile | React Native 0.74, React Navigation, Redux Toolkit, i18next (français et anglais) |
-| API et temps réel | Node.js, Express, Socket.IO, JWT |
-| Données | MongoDB / Mongoose, Redis Stack / RedisJSON |
-| Services | Agora, Stripe, Firebase Cloud Messaging, AWS S3, Nodemailer, Sentry |
-| Vérification | Jest pour le client et le serveur |
+| Mobile | React Native 0.74, React Navigation, Redux Toolkit, i18next (French and English) |
+| API and real time | Node.js, Express, Socket.IO, JWT |
+| Data | MongoDB / Mongoose, Redis Stack / RedisJSON |
+| Integrations | Agora, Stripe, Firebase Cloud Messaging, AWS S3, Nodemailer, Sentry |
+| Tests | Jest on both the mobile app and backend |
 
-## Organisation du dépôt
+### Repository layout
 
 ```text
-liveshopp/       Application React Native (écrans, navigation, état, services)
-liveshopp_back/  API Express, événements Socket.IO, modèles et tests
-appspec.yml      Configuration de déploiement du backend
+liveshopp/       React Native app: screens, navigation, state, and API clients
+liveshopp_back/  Express API, Socket.IO handlers, models, and tests
+appspec.yml      Backend deployment configuration
 ```
 
-Les guides propres à chaque partie se trouvent dans [le README mobile](liveshopp/README.md) et [le README backend](liveshopp_back/README.md).
+For platform-specific setup, see the [mobile guide](liveshopp/README.md) and [backend guide](liveshopp_back/README.md).
 
-## Démarrer en local
+### Getting started
 
-**Prérequis :** Node.js 18 ou plus, npm, un environnement de développement React Native pour iOS ou Android, MongoDB et Redis Stack (le module RedisJSON est utilisé). Pour exercer tous les parcours, il faut aussi configurer ses propres accès Agora, Stripe, Firebase, AWS et SMTP.
+**Requirements:** Node.js 18+, npm, a React Native development environment for Android or iOS, MongoDB, and Redis Stack with RedisJSON. To run every product flow, configure your own Agora, Stripe, Firebase, AWS, and SMTP credentials.
 
-1. Installer les dépendances et créer les fichiers de configuration locaux :
+1. Install dependencies and create local configuration files:
 
    ```sh
    git clone https://github.com/ATLHS/liveshopp_app.git
@@ -66,31 +72,39 @@ Les guides propres à chaque partie se trouvent dans [le README mobile](liveshop
    cp .env.sample .env
    ```
 
-2. Renseigner les variables nécessaires dans les deux fichiers `.env`. Le [modèle mobile](liveshopp/.env.sample) contient notamment l'URL de l'API et les identifiants publics des services mobiles ; le [modèle backend](liveshopp_back/.env.sample) liste les connexions et secrets serveur. En développement, faire pointer `REACT_APP_LOCAL_URL` vers l'adresse du serveur accessible depuis le simulateur ou l'appareil, avec le port configuré par `PORT` côté backend. Les valeurs d'exemple ne suffisent pas à exécuter tous les services.
+2. Fill in the required variables in both `.env` files. The [mobile template](liveshopp/.env.sample) contains the API URL and public mobile identifiers; the [backend template](liveshopp_back/.env.sample) lists server connections and secrets. Set `REACT_APP_LOCAL_URL` to a backend address reachable from the simulator or device, using the backend's `PORT` value. The sample values alone cannot run every integration.
 
-3. Démarrer Redis Stack, puis lancer le serveur et l'application dans des terminaux distincts :
+3. Start Redis Stack, then run the backend and mobile app in separate terminals:
 
    ```sh
-   # Terminal 1 — depuis liveshopp_back/
+   # Terminal 1 — from liveshopp_back/
    npm run dev
 
-   # Terminal 2 — depuis liveshopp/
+   # Terminal 2 — from liveshopp/
    npm start
 
-   # Terminal 3 — depuis liveshopp/
+   # Terminal 3 — from liveshopp/
    npm run android
-   # ou : npm run ios (macOS, Xcode et CocoaPods requis)
+   # or: npm run ios (requires macOS, Xcode, and CocoaPods)
    ```
 
-Pour la préparation native d'iOS et d'Android, voir les instructions détaillées du [client mobile](liveshopp/README.md).
+### Tests
 
-## Tests
-
-Les tests Jest couvrent notamment le démarrage de session mobile, les contrôles d'accès API et Socket.IO, les enchères et les commandes.
+The Jest suites cover mobile session startup, API and Socket.IO authorization, auctions, and orders.
 
 ```sh
 (cd liveshopp && npm test -- --runInBand --watch=false)
 (cd liveshopp_back && npm test -- --runInBand --watch=false)
 ```
 
-Ces tests s'exécutent avec des dépendances simulées. La validation complète de la vidéo, des paiements et des notifications requiert les services externes et un appareil ou simulateur configuré.
+These tests use mocked dependencies. End-to-end validation of video, payments, and push notifications requires the external services and a configured device or simulator.
+
+## Français
+
+**Acheter et vendre en direct.** LiveShopp est une place de marché mobile de live shopping pour des articles neufs et de seconde main. Dans l'esprit de Whatnot, les vendeurs présentent leurs produits en vidéo et lancent des enchères ; les acheteurs regardent, discutent, enchérissent et suivent leurs commandes.
+
+**Liens :** [application iPhone sur l'App Store](https://apps.apple.com/ci/app/liveshopp/id6448577391) · [code de l'application React Native](liveshopp/) · [code du backend](liveshopp_back/)
+
+Le dépôt réunit une application **React Native iOS/Android** et une API **Node.js / Express**. La vidéo passe par **Agora**, les enchères et le chat par **Socket.IO** et **Redis Stack**, les données par **MongoDB**, les paiements par **Stripe** et les notifications push par **Firebase**. Les parcours acheteur, vendeur et administrateur sont décrits dans la [présentation ci-dessus](#what-the-app-does).
+
+Pour installer et exécuter le projet, voir [Getting started](#getting-started) ; les commandes de test sont dans [Tests](#tests). Le parcours de vente en direct est celui utilisé dans l'application ; l'interface des enchères vidéo hors live est actuellement masquée.
