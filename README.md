@@ -14,7 +14,7 @@
 | Sellers | Create and manage shows, host live auctions, and manage orders awaiting shipment. |
 | Administrators | Review reported users and manage blocked accounts. |
 
-A sale spans the mobile app and the backend: **Agora** carries the video stream; **Socket.IO** keeps chat, presence, bids, and auction state in sync; **Redis Stack / RedisJSON** holds active rooms; **MongoDB** stores profiles, shows, and orders; and **Stripe** handles payments when an auction closes. **Firebase Cloud Messaging** delivers push notifications.
+A sale spans the mobile app and the backend. **Agora** carries the video stream. **Socket.IO** keeps chat, presence, bids, and auction state in sync. **Redis Stack / RedisJSON** holds active rooms. **MongoDB** stores profiles, shows, and orders. **Stripe** handles payments when an auction closes, and **Firebase Cloud Messaging** delivers push notifications.
 
 > **Current scope:** the live selling flow is the focus of the app. Code for auctions on prerecorded videos exists, but its mobile interface is currently hidden.
 
@@ -68,7 +68,7 @@ For platform-specific setup, see the [mobile guide](liveshopp/README.md) and [ba
    cp .env.sample .env
    ```
 
-2. Fill in the required variables in both `.env` files. The [mobile template](liveshopp/.env.sample) contains the API URL and public mobile identifiers; the [backend template](liveshopp_back/.env.sample) lists server connections and secrets. Set `REACT_APP_LOCAL_URL` to a backend address reachable from the simulator or device, using the backend's `PORT` value. The sample values alone cannot run every integration.
+2. Fill in the required variables in both `.env` files. The [mobile template](liveshopp/.env.sample) contains the API URL and public mobile identifiers. The [backend template](liveshopp_back/.env.sample) lists server connections and secrets. Set `REACT_APP_LOCAL_URL` to a backend address reachable from the simulator or device, using the backend's `PORT` value. The sample values alone cannot run every integration.
 
 3. Start Redis Stack, then run the backend and mobile app in separate terminals:
 
